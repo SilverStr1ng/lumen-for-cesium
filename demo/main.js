@@ -264,7 +264,7 @@ scene.postRender.addEventListener(() => {
   if (w)
     $("status").textContent +=
       `\nDDGI: ${w.status} · ${w.progress?.completed ?? 0}/${w.progress?.total ?? "…"}\nBVH: ${w.packet?.bvh.triangles ?? "…"} tris · Cache: ${w.packet?.cache.surfels ?? "…"} ${gpuMode ? "slots" : "surfels"}\nProbes: ${gpuMode ? (w.packet?.grid.total ?? "…") : `${w.packet?.active ?? "…"}/${w.packet?.grid.total ?? "…"}`} · bounce ${w.packet?.bounce ?? 0}\nGPU textures: ${(w.memoryBytes / 1048576).toFixed(2)} MiB${w.metrics?.updates.length ? `\n上次 GI 更新 ${(w.metrics.updates.at(-1).milliseconds / 1000).toFixed(2)} s` : ""}`;
-  if (gpuMode) {
+  if (gpuMode && w) {
     $("status").textContent +=
       `\n请求 ${w.requestedRevision} · 计算 ${w.activeRevision}\n显示 ${w.publishedRevision} / 第 ${w.publishedBounce} 轮 · 完成 ${w.settledRevision}`;
   }

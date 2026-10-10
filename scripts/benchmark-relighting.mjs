@@ -47,13 +47,23 @@ try {
     viewport: { width: sponza ? 960 : 512, height: sponza ? 640 : 384 },
   });
   await page.addInitScript(installGlObserver);
-  page.on("pageerror", (e) => report.errors.push(String(e)));
+  let rejectStartup;
+  const startupFailure = new Promise((resolve, reject) => {
+    rejectStartup = reject;
+  });
+  startupFailure.catch(() => {});
+  page.on("pageerror", (e) => {
+    report.errors.push(String(e));
+    rejectStartup(e);
+  });
   page.on("console", (m) => {
     if (
       m.type() === "error" ||
       /feedback loop|INVALID_OPERATION|CONTEXT_LOST/.test(m.text())
-    )
+    ) {
       report.errors.push(m.text());
+      rejectStartup(new Error(m.text()));
+    }
   });
   const start = Date.now();
   await page.goto(
@@ -61,19 +71,46 @@ try {
       ? `http://localhost:8090/demo/index.html?backend=gpu&publication=${publicationMode}&model=${encodeURIComponent(asset)}`
       : `http://localhost:8090/demo/regression.html?fixture=untextured&publication=${publicationMode}`,
   );
-  await page.waitForFunction(
-    () => {
-      const d = window.lumenTest ?? window.lumenDemo;
-      return d?.scene.lumen.world?.status === "ready" || d?.errors.length;
-    },
-    null,
-    { timeout: 240000 },
-  );
+  const monitor = setInterval(async () => {
+    try {
+      console.log(
+        "startup",
+        JSON.stringify(
+          await page.evaluate(() => {
+            const w = (window.lumenTest ?? window.lumenDemo)?.scene.lumen.world;
+            return {
+              status: w?.status,
+              progress: w?.progress,
+              batches: w?.metrics.submittedBatches,
+              stages: w?.metrics.initialStages,
+              error: w?.error,
+            };
+          }),
+        ),
+      );
+    } catch {}
+  }, 30000);
+  try {
+    await Promise.race([
+      startupFailure,
+      page.waitForFunction(
+        () => {
+          const d = window.lumenTest ?? window.lumenDemo;
+          return d?.scene.lumen.world?.status === "ready" || d?.errors.length;
+        },
+        null,
+        { timeout: Number(process.env.LUMEN_STARTUP_TIMEOUT ?? 600000) },
+      ),
+    ]);
+  } finally {
+    clearInterval(monitor);
+  }
   assert.deepEqual(
     await page.evaluate(() => (window.lumenTest ?? window.lumenDemo).errors),
     [],
   );
   report.initializationWallMilliseconds = Date.now() - start;
+  console.log("initialization", report.initializationWallMilliseconds);
   report.environment = await environment(page, browser);
   report.config = await page.evaluate(() => {
     const d = window.lumenTest ?? window.lumenDemo,
