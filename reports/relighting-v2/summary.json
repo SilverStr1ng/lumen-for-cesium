@@ -1,0 +1,2766 @@
+{
+  "schema": 1,
+  "quality": {
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "browser": "153.0.8010.12",
+    "headless": true,
+    "resolution": [
+      960,
+      640
+    ],
+    "shadowSize": 2048,
+    "camera": {
+      "position": [
+        -2410780.00371788,
+        5389383.28294581,
+        2405200.8409983306
+      ],
+      "direction": [
+        -0.9480752766547735,
+        -0.31543361002278797,
+        0.040680553879788
+      ],
+      "up": [
+        -0.277751285878923,
+        0.8834716408781208,
+        0.3772692446472751
+      ],
+      "fov": 1.0471975511965976
+    },
+    "spacing": 2,
+    "rays": 128,
+    "bounces": 3,
+    "gpuBudget": 3,
+    "maxBatch": 128,
+    "grid": [
+      17,
+      12,
+      9
+    ],
+    "triangles": 262266,
+    "bvhNodes": 65779
+  },
+  "comparedLightingSequencesIdentical": true,
+  "scope": "Same device/browser/quality/camera/lighting sequence. CPU submission/atlas publication latency, not GPU completion or presentation. Independent GL-observed no-readback performance runs.",
+  "statisticalScope": "Three samples per revision category: median and range only. Frame p50/p95 are taken from measured frame intervals, not revision latency.",
+  "continuousLatencyScope": "Raw latestFinalSubmissionAfterInputStoppedMilliseconds includes subsequent asynchronous timer-drain frames; it is an upper bound. R3 per-job requestToFinalSubmissionMilliseconds is measured at atlas publication before drain.",
+  "commits": [
+    "96fd7ed55a717c924b9c388a2f97d868650958e0 test(gpu): verify exhaustion without mutating immutable jobs",
+    "da866fc033277a32c079517526d2225548ea7846 fix(demo): guard relighting status during model loading",
+    "01a4e8b961d54b5b21cde9008992a85d5869c333 feat(ddgi): publish complete progressive relighting rounds",
+    "ea3c0f74f6ed1347c2d4ab80f16b84aa2dd43960 perf(ddgi): integrate probe interiors and copy octahedral borders",
+    "c2eadb1336b5aac17fed6ff9a9a0db10acc55487 perf(gpu): reuse geometry and sun visibility for relighting",
+    "00272391a85277085603365c16f152e158af0580 fix(gpu): establish portable relighting regression baseline"
+  ],
+  "reports": [
+    "r0-sponza-performance.json",
+    "r3-sponza-snapshot-performance.json",
+    "r3-sponza-progressive-performance.json"
+  ],
+  "comparisons": {
+    "warm": {
+      "snapshot": {
+        "gpuReductionFraction": 0.9036458050065201,
+        "wallReductionFraction": 0.7101987323075318,
+        "target30Percent": "met",
+        "previewAheadOfFinalFraction": 0.000016464159001028378
+      },
+      "progressive": {
+        "gpuReductionFraction": 0.88622101292494,
+        "wallReductionFraction": 0.6846065862838507,
+        "target30Percent": "met",
+        "previewAheadOfFinalFraction": 0.4965962725391079
+      }
+    },
+    "skyOnly": {
+      "snapshot": {
+        "gpuReductionFraction": 0.8540920820284859,
+        "wallReductionFraction": 0.4075964876454973,
+        "target30Percent": "met",
+        "previewAheadOfFinalFraction": 0.00011829303184851536
+      },
+      "progressive": {
+        "gpuReductionFraction": 0.8958177133153704,
+        "wallReductionFraction": 0.5717728055080931,
+        "target30Percent": "met",
+        "previewAheadOfFinalFraction": 0.5867057540211426
+      }
+    },
+    "sunIntensityOnly": {
+      "snapshot": {
+        "gpuReductionFraction": 0.8789069683432754,
+        "wallReductionFraction": 0.7524600306399765,
+        "target30Percent": "met",
+        "previewAheadOfFinalFraction": 0.000019857031163805772
+      },
+      "progressive": {
+        "gpuReductionFraction": 0.9014134416220367,
+        "wallReductionFraction": 0.6845808618452263,
+        "target30Percent": "met",
+        "previewAheadOfFinalFraction": 0.654706423305152
+      }
+    },
+    "sunDirection": {
+      "snapshot": {
+        "gpuReductionFraction": 0.03640384776530703,
+        "wallReductionFraction": -0.4082754317798156,
+        "target30Percent": "not-met",
+        "previewAheadOfFinalFraction": 0.000004028506066511284
+      },
+      "progressive": {
+        "gpuReductionFraction": 0.1512178221229099,
+        "wallReductionFraction": -0.0268398513940602,
+        "target30Percent": "not-met",
+        "previewAheadOfFinalFraction": 0.1530711498706715
+      }
+    }
+  },
+  "summaries": {
+    "before": {
+      "sourceHead": "00272391a85277085603365c16f152e158af0580",
+      "initializationWallMilliseconds": 151272,
+      "initializationStages": null,
+      "display": {
+        "disabled": {
+          "fps": 6.614254975343066,
+          "frameMilliseconds": {
+            "mean": 151.18860759493663,
+            "p50": 151.5,
+            "p95": 188,
+            "samples": 79
+          },
+          "gpuMilliseconds": {
+            "mean": 145.8717691666667,
+            "p50": 147.672864,
+            "p95": 162.931093,
+            "samples": 96
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "idle": {
+          "fps": 6.67872782915983,
+          "frameMilliseconds": {
+            "mean": 149.7291139240507,
+            "p50": 145.60000000000582,
+            "p95": 248.29999999998836,
+            "samples": 79
+          },
+          "gpuMilliseconds": {
+            "mean": 142.5998496875,
+            "p50": 142.527343,
+            "p95": 175.781614,
+            "samples": 96
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "changing": {
+          "fps": 6.14364704033376,
+          "frameMilliseconds": {
+            "mean": 162.76976744186038,
+            "p50": 157.5,
+            "p95": 278.79999999998836,
+            "samples": 129
+          },
+          "gpuMilliseconds": {
+            "mean": 147.683437,
+            "p50": 147.699947,
+            "p95": 184.407864,
+            "samples": 4
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false,
+          "changes": 120,
+          "latestFinalSubmissionAfterInputStoppedMilliseconds": 54167.60000000894
+        }
+      },
+      "memory": {
+        "currentBytes": 94513728,
+        "peakBytes": 94513728,
+        "textures": 16,
+        "framebuffers": 8
+      },
+      "disjoint": 0,
+      "timerMissing": 2,
+      "queryQueuePeak": 27,
+      "gl": [
+        {
+          "phase": "performance",
+          "phases": {
+            "initialization": {
+              "draws": 612969
+            },
+            "performance": {
+              "draws": 712476
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 102,
+            "framebuffers": 17,
+            "queries": 0,
+            "programs": 17,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 102,
+            "framebuffers": 17,
+            "queries": 27,
+            "programs": 17,
+            "syncs": 0
+          }
+        }
+      ],
+      "updates": {
+        "warm": {
+          "finalSubmissionMilliseconds": {
+            "median": 20976.79999999702,
+            "range": [
+              17677.79999999702,
+              27060.20000000298
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 20983,
+            "range": [
+              17689.09999999404,
+              27077.70000000298
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 20976.79999999702,
+            "range": [
+              17677.79999999702,
+              27060.20000000298
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 438.88776199999995,
+            "range": [
+              416.20814300000006,
+              499.0887139999998
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 145,
+            "range": [
+              116,
+              150
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 351,
+            "range": [
+              306,
+              405
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 35.99999983608723,
+            "range": [
+              31.400000035762787,
+              39.60000005364418
+            ],
+            "samples": 3
+          },
+          "work": [
+            null,
+            null,
+            null
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 370.63692999999995,
+                "range": [
+                  347.5397460000001,
+                  422.6617009999998
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 116,
+                "range": [
+                  97,
+                  139
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                139,
+                97,
+                116
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 27.15596,
+                "range": [
+                  26.618929999999995,
+                  32.78632999999999
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 62,
+                "range": [
+                  62,
+                  176
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                62,
+                62,
+                176
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 42.04946700000002,
+                "range": [
+                  35.46450200000001,
+                  49.27105299999998
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 147,
+                "range": [
+                  59,
+                  204
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                204,
+                147,
+                59
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "skyOnly": {
+          "finalSubmissionMilliseconds": {
+            "median": 17130.29999999702,
+            "range": [
+              16539.89999999106,
+              17773.70000000298
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 17139.5,
+            "range": [
+              16545.79999999702,
+              17778.29999999702
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 17130.29999999702,
+            "range": [
+              16539.89999999106,
+              17773.70000000298
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 410.58024699999993,
+            "range": [
+              400.922664,
+              417.6264859999998
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 115,
+            "range": [
+              113,
+              119
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 269,
+            "range": [
+              259,
+              323
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 28.700000032782555,
+            "range": [
+              28.400000140070915,
+              30.300000056624413
+            ],
+            "samples": 3
+          },
+          "work": [
+            null,
+            null,
+            null
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 345.9676619999999,
+                "range": [
+                  332.790316,
+                  352.71760499999976
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 101,
+                "range": [
+                  96,
+                  106
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                106,
+                101,
+                96
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 28.406722999999996,
+                "range": [
+                  27.79146699999999,
+                  30.110977999999996
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 101,
+                "range": [
+                  100,
+                  144
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                101,
+                100,
+                144
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 36.821118000000006,
+                "range": [
+                  36.502158000000016,
+                  38.02136999999998
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 62,
+                "range": [
+                  58,
+                  83
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                62,
+                58,
+                83
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "sunIntensityOnly": {
+          "finalSubmissionMilliseconds": {
+            "median": 20358.70000000298,
+            "range": [
+              18241.89999999106,
+              24404.39999999106
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 20365.59999999404,
+            "range": [
+              18248.5,
+              24411
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 20358.70000000298,
+            "range": [
+              18241.89999999106,
+              24404.39999999106
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 425.47990000000016,
+            "range": [
+              414.202672,
+              430.94309500000014
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 136,
+            "range": [
+              121,
+              147
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 313,
+            "range": [
+              295,
+              543
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 28.999999955296516,
+            "range": [
+              26.200000032782555,
+              31.200000017881393
+            ],
+            "samples": 3
+          },
+          "work": [
+            null,
+            null,
+            null
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 354.49530700000014,
+                "range": [
+                  339.017869,
+                  359.81442600000014
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 116,
+                "range": [
+                  99,
+                  120
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                120,
+                116,
+                99
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 30.009270999999995,
+                "range": [
+                  27.074865999999993,
+                  35.328042
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 117,
+                "range": [
+                  56,
+                  306
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                56,
+                117,
+                306
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 41.119398,
+                "range": [
+                  39.856761,
+                  43.909727000000004
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 137,
+                "range": [
+                  62,
+                  138
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                137,
+                62,
+                138
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "sunDirection": {
+          "finalSubmissionMilliseconds": {
+            "median": 17614.09999999404,
+            "range": [
+              16092.90000000596,
+              22425.10000000894
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 17630.5,
+            "range": [
+              16098.300000011921,
+              22430.90000000596
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 17614.09999999404,
+            "range": [
+              16092.90000000596,
+              22425.10000000894
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 397.31019899999995,
+            "range": [
+              384.00169000000005,
+              405.48033699999996
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 121,
+            "range": [
+              111,
+              143
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 292,
+            "range": [
+              248,
+              397
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 26.799999937415123,
+            "range": [
+              25.69999986886978,
+              29.19999997317791
+            ],
+            "samples": 3
+          },
+          "work": [
+            null,
+            null,
+            null
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 331.654794,
+                "range": [
+                  316.1848990000001,
+                  332.421255
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 102,
+                "range": [
+                  98,
+                  113
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                113,
+                102,
+                98
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 29.340618,
+                "range": [
+                  28.515847,
+                  30.289835999999987
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 131,
+                "range": [
+                  88,
+                  132
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                131,
+                88,
+                132
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 37.52695499999999,
+                "range": [
+                  36.373096999999994,
+                  44.48492499999999
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 62,
+                "range": [
+                  58,
+                  153
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                153,
+                58,
+                62
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        }
+      }
+    },
+    "snapshot": {
+      "sourceHead": "da866fc033277a32c079517526d2225548ea7846",
+      "sourceHashes": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "2ae28572f3ee3d214589e352c74072287e9163dd02b6a79e60dab7d85b4e2ceb",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "0f2f744c8de2863ef4fbd10e3398709ed1c7cd1f6fa23e34f58161f8d8be7397",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+        "lumen/gpu-worker.js": "36fb56890fd1554da520161962a5d75720c276a42cce588a876cbfe742cf2225",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+      },
+      "initializationWallMilliseconds": 125501,
+      "initializationStages": {
+        "relocate": {
+          "submittedBatches": 533,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 2597.273765000001,
+          "timerSamples": 533,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 3569.5000000298023,
+          "itemType": "probes"
+        },
+        "intersect": {
+          "submittedBatches": 1181,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 5115.025127999996,
+          "timerSamples": 1181,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 920.0999999642372,
+          "itemType": "probes"
+        },
+        "classify": {
+          "submittedBatches": 87,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 9.294909000000002,
+          "timerSamples": 87,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 193.3000000566244,
+          "itemType": "probes"
+        },
+        "moments": {
+          "submittedBatches": 87,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 11.374073,
+          "timerSamples": 87,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 126.39999997615814,
+          "itemType": "probes"
+        },
+        "momentsBorder": {
+          "submittedBatches": 87,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 1.129336,
+          "timerSamples": 87,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 79.09999997913837,
+          "itemType": "probes"
+        }
+      },
+      "display": {
+        "disabled": {
+          "fps": 6.571012684549795,
+          "frameMilliseconds": {
+            "mean": 152.18354430379765,
+            "p50": 151.5,
+            "p95": 206,
+            "samples": 79
+          },
+          "gpuMilliseconds": {
+            "mean": 148.75571934374997,
+            "p50": 148.233437,
+            "p95": 177.903488,
+            "samples": 96
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "idle": {
+          "fps": 6.811225589515886,
+          "frameMilliseconds": {
+            "mean": 146.81645569620252,
+            "p50": 145.40000000002328,
+            "p95": 187.89999999999418,
+            "samples": 79
+          },
+          "gpuMilliseconds": {
+            "mean": 145.10452582291666,
+            "p50": 142.574582,
+            "p95": 171.812812,
+            "samples": 96
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "changing": {
+          "fps": 6.644141824100196,
+          "frameMilliseconds": {
+            "mean": 150.5085271317832,
+            "p50": 151.40000000002328,
+            "p95": 181.79999999998836,
+            "samples": 129
+          },
+          "gpuMilliseconds": {
+            "mean": 126.8477075,
+            "p50": 137.08677,
+            "p95": 137.08677,
+            "samples": 2
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false,
+          "changes": 111,
+          "latestFinalSubmissionAfterInputStoppedMilliseconds": 38564.40000000596
+        }
+      },
+      "memory": {
+        "currentBytes": 93338688,
+        "peakBytes": 93338688,
+        "textures": 17,
+        "framebuffers": 12
+      },
+      "work": {
+        "probeHitInvocations": 235008,
+        "sunVisibilitySubmittedSlots": 1645056,
+        "momentProbeUpdates": 1836
+      },
+      "disjoint": 0,
+      "timerMissing": 1,
+      "queryQueuePeak": 27,
+      "gl": [
+        {
+          "phase": "performance",
+          "phases": {
+            "initialization": {
+              "draws": 629709
+            },
+            "performance": {
+              "draws": 487804
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 103,
+            "framebuffers": 21,
+            "queries": 0,
+            "programs": 20,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 103,
+            "framebuffers": 21,
+            "queries": 27,
+            "programs": 20,
+            "syncs": 0
+          }
+        }
+      ],
+      "updates": {
+        "warm": {
+          "finalSubmissionMilliseconds": {
+            "median": 6073.79999999702,
+            "range": [
+              5702.0999999940395,
+              6632.29999999702
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 6080.899999991059,
+            "range": [
+              5706.20000000298,
+              6639
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 6073.699999988079,
+            "range": [
+              5702.0999999940395,
+              6632.29999999702
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 42.288677,
+            "range": [
+              40.407783,
+              44.094947
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 38,
+            "range": [
+              35,
+              43
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 301,
+            "range": [
+              273,
+              340
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 11.90000006556511,
+            "range": [
+              9.500000074505806,
+              12.59999993443489
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.6239900000000005,
+                "range": [
+                  3.514253,
+                  3.9638789999999995
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 49,
+                "range": [
+                  40,
+                  57
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                40,
+                57,
+                49
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 22.294500000000003,
+                "range": [
+                  20.135341000000004,
+                  22.435852999999998
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 60,
+                "range": [
+                  59,
+                  68
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                68,
+                59,
+                60
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 14.572785999999995,
+                "range": [
+                  14.569504,
+                  16.182769999999998
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 65,
+                "range": [
+                  56,
+                  91
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                91,
+                65,
+                56
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 1.7974009999999996,
+                "range": [
+                  1.7390590000000001,
+                  1.9620709999999995
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 120,
+                "range": [
+                  108,
+                  141
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                141,
+                120,
+                108
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "skyOnly": {
+          "finalSubmissionMilliseconds": {
+            "median": 10144.29999999702,
+            "range": [
+              7988.5,
+              13877.09999999404
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 10153.5,
+            "range": [
+              7992.899999991059,
+              13883.20000000298
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 10143.09999999404,
+            "range": [
+              7988.4000000059605,
+              13876.89999999106
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 59.906909,
+            "range": [
+              48.501547,
+              70.441172
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 63,
+            "range": [
+              49,
+              91
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 493,
+            "range": [
+              390,
+              725
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 31.799999997019768,
+            "range": [
+              13.599999964237213,
+              68.19999997317791
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 2.956237,
+                "range": [
+                  2.9267619999999996,
+                  3.4304580000000007
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 23,
+                "range": [
+                  23,
+                  31
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                31,
+                23,
+                23
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 31.398941000000004,
+                "range": [
+                  28.67940300000001,
+                  34.42848
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 181,
+                "range": [
+                  155,
+                  250
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                181,
+                250,
+                155
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 22.864284999999995,
+                "range": [
+                  15.100588999999994,
+                  30.483142999999984
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 189,
+                "range": [
+                  72,
+                  293
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                72,
+                293,
+                189
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 2.2132250000000004,
+                "range": [
+                  1.7653179999999995,
+                  2.602787
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 126,
+                "range": [
+                  106,
+                  159
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                106,
+                159,
+                126
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "sunIntensityOnly": {
+          "finalSubmissionMilliseconds": {
+            "median": 5036,
+            "range": [
+              4704.29999999702,
+              6785.29999999702
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 5041.29999999702,
+            "range": [
+              4708.4000000059605,
+              6792.79999999702
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 5035.899999991059,
+            "range": [
+              4704.199999988079,
+              6785.29999999702
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 51.52265100000001,
+            "range": [
+              49.817698,
+              55.23745899999999
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 31,
+            "range": [
+              30,
+              43
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 240,
+            "range": [
+              231,
+              331
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 13.5,
+            "range": [
+              10.199999928474426,
+              14.400000005960464
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.6549890000000005,
+                "range": [
+                  3.441344999999999,
+                  3.6945700000000006
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 23,
+                "range": [
+                  23,
+                  23
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                23,
+                23,
+                23
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 29.387974999999997,
+                "range": [
+                  24.195282000000002,
+                  30.295268000000004
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 97,
+                "range": [
+                  63,
+                  107
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                97,
+                107,
+                63
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 16.266433000000003,
+                "range": [
+                  16.182836999999996,
+                  20.53777
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 66,
+                "range": [
+                  51,
+                  94
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                51,
+                66,
+                94
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 1.5196049999999999,
+                "range": [
+                  1.3900759999999999,
+                  6.011658
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 60,
+                "range": [
+                  60,
+                  135
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                60,
+                135,
+                60
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "sunDirection": {
+          "finalSubmissionMilliseconds": {
+            "median": 24823.10000000894,
+            "range": [
+              23777.29999999702,
+              25031.70000000298
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 24828.59999999404,
+            "range": [
+              23785.09999999404,
+              25037.79999999702
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 24823,
+            "range": [
+              23777.29999999702,
+              25030.5
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 382.84657900000013,
+            "range": [
+              359.4373369999998,
+              418.8281719999999
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 164,
+            "range": [
+              149,
+              166
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 535,
+            "range": [
+              479,
+              607
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 42.50000001490116,
+            "range": [
+              41.69999994337559,
+              51.10000003874302
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 235008,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 235008,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 235008,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "visibility": {
+              "gpuMilliseconds": {
+                "median": 329.26409900000016,
+                "range": [
+                  294.20417599999985,
+                  367.59763499999985
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 146,
+                "range": [
+                  106,
+                  164
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                164,
+                106,
+                146
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.58223,
+                "range": [
+                  3.2941559999999996,
+                  3.759262000000001
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 23,
+                "range": [
+                  23,
+                  23
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                23,
+                23,
+                23
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 31.160594999999997,
+                "range": [
+                  24.765437000000013,
+                  39.052380999999976
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 173,
+                "range": [
+                  68,
+                  263
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                68,
+                263,
+                173
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 20.36557300000001,
+                "range": [
+                  17.480159999999998,
+                  21.522845000000004
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 117,
+                "range": [
+                  117,
+                  169
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                169,
+                117,
+                117
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 1.6475689999999994,
+                "range": [
+                  1.360025,
+                  2.0559450000000004
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 76,
+                "range": [
+                  55,
+                  98
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                55,
+                98,
+                76
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        }
+      }
+    },
+    "progressive": {
+      "sourceHead": "da866fc033277a32c079517526d2225548ea7846",
+      "sourceHashes": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "2ae28572f3ee3d214589e352c74072287e9163dd02b6a79e60dab7d85b4e2ceb",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "0f2f744c8de2863ef4fbd10e3398709ed1c7cd1f6fa23e34f58161f8d8be7397",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+        "lumen/gpu-worker.js": "36fb56890fd1554da520161962a5d75720c276a42cce588a876cbfe742cf2225",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+      },
+      "initializationWallMilliseconds": 122515,
+      "initializationStages": {
+        "relocate": {
+          "submittedBatches": 407,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 1957.3217379999992,
+          "timerSamples": 407,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 4525.399999991059,
+          "itemType": "probes"
+        },
+        "intersect": {
+          "submittedBatches": 1141,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 4884.439865000003,
+          "timerSamples": 1141,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1273.9999995231628,
+          "itemType": "probes"
+        },
+        "classify": {
+          "submittedBatches": 87,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 7.896257000000001,
+          "timerSamples": 87,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 189.90000000596046,
+          "itemType": "probes"
+        },
+        "moments": {
+          "submittedBatches": 87,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 10.760641999999997,
+          "timerSamples": 87,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 120.99999998509884,
+          "itemType": "probes"
+        },
+        "momentsBorder": {
+          "submittedBatches": 86,
+          "probes": 1836,
+          "items": 1836,
+          "gpuMilliseconds": 0.9710570000000001,
+          "timerSamples": 86,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 104,
+          "itemType": "probes"
+        }
+      },
+      "display": {
+        "disabled": {
+          "fps": 7.287016197468916,
+          "frameMilliseconds": {
+            "mean": 137.2303797468354,
+            "p50": 139.20000000001164,
+            "p95": 181.6999999999971,
+            "samples": 79
+          },
+          "gpuMilliseconds": {
+            "mean": 133.12548122916658,
+            "p50": 133.583072,
+            "p95": 153.531927,
+            "samples": 96
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "idle": {
+          "fps": 7.650516651978962,
+          "frameMilliseconds": {
+            "mean": 130.71012658227855,
+            "p50": 127.39999999999418,
+            "p95": 157.80000000001746,
+            "samples": 79
+          },
+          "gpuMilliseconds": {
+            "mean": 130.04525323157895,
+            "p50": 127.285468,
+            "p95": 157.259895,
+            "samples": 95
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "changing": {
+          "fps": 7.6163710648749445,
+          "frameMilliseconds": {
+            "mean": 131.29612403100785,
+            "p50": 133.29999999998836,
+            "p95": 236.30000000004657,
+            "samples": 129
+          },
+          "gpuMilliseconds": {
+            "mean": 117.239036,
+            "p50": 118.959843,
+            "p95": 124.812552,
+            "samples": 4
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false,
+          "changes": 98,
+          "latestFinalSubmissionAfterInputStoppedMilliseconds": 26329.39999999106
+        }
+      },
+      "memory": {
+        "currentBytes": 93338688,
+        "peakBytes": 93338688,
+        "textures": 17,
+        "framebuffers": 12
+      },
+      "work": {
+        "probeHitInvocations": 235008,
+        "sunVisibilitySubmittedSlots": 1645056,
+        "momentProbeUpdates": 1836
+      },
+      "disjoint": 0,
+      "timerMissing": 2,
+      "queryQueuePeak": 27,
+      "gl": [
+        {
+          "phase": "performance",
+          "phases": {
+            "initialization": {
+              "draws": 598788
+            },
+            "performance": {
+              "draws": 437111
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 103,
+            "framebuffers": 21,
+            "queries": 0,
+            "programs": 20,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 103,
+            "framebuffers": 21,
+            "queries": 27,
+            "programs": 20,
+            "syncs": 0
+          }
+        }
+      ],
+      "updates": {
+        "warm": {
+          "finalSubmissionMilliseconds": {
+            "median": 6610.399999991059,
+            "range": [
+              6307.0999999940395,
+              10341.79999999702
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 6617.9000000059605,
+            "range": [
+              6320.79999999702,
+              10349.29999999702
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 3327.7000000029802,
+            "range": [
+              2483.3999999910593,
+              4740.79999999702
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 49.936205,
+            "range": [
+              41.95134200000001,
+              53.816326
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 45,
+            "range": [
+              40,
+              63
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 354,
+            "range": [
+              306,
+              498
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 16.00000001490116,
+            "range": [
+              15.700000077486038,
+              26.900000020861626
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.2894650000000003,
+                "range": [
+                  2.960613,
+                  4.254705000000001
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 31,
+                "range": [
+                  23,
+                  77
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                77,
+                31,
+                23
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 30.271634000000002,
+                "range": [
+                  20.023929000000003,
+                  30.314608
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 162,
+                "range": [
+                  62,
+                  177
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                62,
+                177,
+                162
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 16.022661000000003,
+                "range": [
+                  15.372001000000001,
+                  18.18310599999999
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 98,
+                "range": [
+                  62,
+                  143
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                98,
+                143,
+                62
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 1.6500470000000003,
+                "range": [
+                  1.2889830000000002,
+                  2.072121000000001
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 117,
+                "range": [
+                  59,
+                  147
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                117,
+                147,
+                59
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "skyOnly": {
+          "finalSubmissionMilliseconds": {
+            "median": 7334,
+            "range": [
+              6568.399999991059,
+              10558.90000000596
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 7339.5999999940395,
+            "range": [
+              6571.9000000059605,
+              10563.60000000894
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 3031.1000000089407,
+            "range": [
+              2648.7999999970198,
+              4916.100000008941
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 42.775189000000005,
+            "range": [
+              42.396851999999996,
+              51.304049000000006
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 49,
+            "range": [
+              41,
+              61
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 382,
+            "range": [
+              305,
+              480
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 14.60000005364418,
+            "range": [
+              13.7999999076128,
+              23.199999928474426
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.2068119999999998,
+                "range": [
+                  2.8852509999999993,
+                  3.5985320000000005
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 23,
+                "range": [
+                  23,
+                  23
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                23,
+                23,
+                23
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 22.728342000000005,
+                "range": [
+                  21.812374,
+                  23.836690000000004
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 63,
+                "range": [
+                  60,
+                  85
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                85,
+                60,
+                63
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 15.277629999999997,
+                "range": [
+                  14.513097999999996,
+                  20.883303000000005
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 64,
+                "range": [
+                  62,
+                  173
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                62,
+                64,
+                173
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 2.648498000000002,
+                "range": [
+                  2.1000360000000002,
+                  2.9855239999999994
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 212,
+                "range": [
+                  158,
+                  221
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                212,
+                158,
+                221
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "sunIntensityOnly": {
+          "finalSubmissionMilliseconds": {
+            "median": 6415.699999988079,
+            "range": [
+              5278.300000011921,
+              6620.0999999940395
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 6423.70000000298,
+            "range": [
+              5284.899999991059,
+              6625
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 2215.2999999970198,
+            "range": [
+              1839.1000000089407,
+              2665
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 41.94659899999999,
+            "range": [
+              40.50098499999999,
+              46.20188500000001
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 42,
+            "range": [
+              35,
+              45
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 318,
+            "range": [
+              264,
+              348
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 19.900000020861626,
+            "range": [
+              12.299999997019768,
+              21.000000044703484
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.0512400000000004,
+                "range": [
+                  2.88577,
+                  3.4873329999999996
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 23,
+                "range": [
+                  23,
+                  23
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                23,
+                23,
+                23
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 22.110287,
+                "range": [
+                  19.412156999999993,
+                  25.551037000000008
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 63,
+                "range": [
+                  63,
+                  132
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                132,
+                63,
+                63
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 15.507097000000002,
+                "range": [
+                  15.387044999999997,
+                  15.826832999999997
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 86,
+                "range": [
+                  76,
+                  87
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                76,
+                87,
+                86
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 1.6564179999999993,
+                "range": [
+                  1.5634969999999995,
+                  2.2107550000000002
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 92,
+                "range": [
+                  87,
+                  175
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                87,
+                175,
+                92
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        "sunDirection": {
+          "finalSubmissionMilliseconds": {
+            "median": 18094.19999998808,
+            "range": [
+              12816.90000000596,
+              20551.89999999106
+            ],
+            "samples": 3
+          },
+          "callToFinalSubmissionMilliseconds": {
+            "median": 18103.70000000298,
+            "range": [
+              12827,
+              20556
+            ],
+            "samples": 3
+          },
+          "firstPublishSubmissionMilliseconds": {
+            "median": 15324.5,
+            "range": [
+              9886.20000000298,
+              16847.29999999702
+            ],
+            "samples": 3
+          },
+          "totalGpuMilliseconds": {
+            "median": 337.229816,
+            "range": [
+              276.220118,
+              344.1267399999999
+            ],
+            "samples": 3
+          },
+          "submittedFrames": {
+            "median": 126,
+            "range": [
+              95,
+              146
+            ],
+            "samples": 3
+          },
+          "submittedBatches": {
+            "median": 396,
+            "range": [
+              316,
+              427
+            ],
+            "samples": 3
+          },
+          "cpuSchedulingMilliseconds": {
+            "median": 30.799999952316284,
+            "range": [
+              30.699999898672104,
+              33.59999993443489
+            ],
+            "samples": 3
+          },
+          "work": [
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 235008,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 235008,
+              "momentProbeUpdates": 0
+            },
+            {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 235008,
+              "momentProbeUpdates": 0
+            }
+          ],
+          "stages": {
+            "visibility": {
+              "gpuMilliseconds": {
+                "median": 292.65849600000007,
+                "range": [
+                  237.56596,
+                  300.7766689999999
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 103,
+                "range": [
+                  68,
+                  110
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                103,
+                68,
+                110
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "direct": {
+              "gpuMilliseconds": {
+                "median": 3.2239999999999998,
+                "range": [
+                  2.8045740000000006,
+                  4.58018
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 23,
+                "range": [
+                  23,
+                  62
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                23,
+                23,
+                62
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "bounce": {
+              "gpuMilliseconds": {
+                "median": 21.20481600000001,
+                "range": [
+                  19.264706,
+                  23.08439499999999
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 69,
+                "range": [
+                  63,
+                  69
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                69,
+                69,
+                63
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "integrate": {
+              "gpuMilliseconds": {
+                "median": 15.552005000000005,
+                "range": [
+                  14.870428999999998,
+                  17.318379999999998
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 83,
+                "range": [
+                  59,
+                  124
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                124,
+                83,
+                59
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            },
+            "border": {
+              "gpuMilliseconds": {
+                "median": 1.3639710000000003,
+                "range": [
+                  1.295023,
+                  2.0130699999999995
+                ],
+                "samples": 3
+              },
+              "batches": {
+                "median": 77,
+                "range": [
+                  73,
+                  133
+                ],
+                "samples": 3
+              },
+              "timerSamples": [
+                77,
+                73,
+                133
+              ],
+              "timerMissing": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

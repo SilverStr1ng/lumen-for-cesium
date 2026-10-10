@@ -99,11 +99,11 @@ Model PBR: coverage-aware DDGI diffuse → existing HDR/display pipeline
 
 GPU Surface Cache 按 `(probe, ray)` 寻址：RGBA32F 命中纹理保存三角形、重心坐标和距离，结合驻留 GPU 几何得到世界位置；RGBA16F 直接光缓存和出射光缓存保留线性辐亮度与有效性。同一表面被多个探针命中时会有重复缓存项，目前没有 Cards、空间去重或动态失效。这与 CPU 的每三角形四个采样点近似不同，不能要求两种后端逐 texel 相等。
 
-DDGI 采用三张 RGBA32F irradiance atlas：一个保持已发布场景，另外两个作为内部反弹快照；所有轮次共享一张只由几何决定的距离矩 atlas。太阳可见性使用 RGBA8 缓存已知/未知和诊断查询标志，与灯光能量分离。读写附件始终不同；只在完整 generation 结束后更换模型采样的纹理。支持 float 线性过滤时使用硬件双线性采样，否则使用原有四次 texelFetch 插值。材质合同和局部 ENU 坐标保持上一阶段一致。
+DDGI 采用三张 RGBA32F irradiance atlas：一个保持已发布场景，另外两个作为内部反弹快照；所有轮次共享一张只由几何决定的距离矩 atlas。太阳可见性使用 RGBA8 缓存已知/未知和诊断查询标志，与灯光能量分离。读写附件始终不同；默认在完整 generation 结束后更换模型采样纹理，显式 progressive 模式在每完整轮全部探针和边界完成后发布。支持 float 线性过滤时使用硬件双线性采样，否则使用原有四次 texelFetch 插值。材质合同和局部 ENU 坐标保持上一阶段一致。
 
 R1 显式记录 `world.versions` 的 geometry、rayLayout、material、sunVisibility、lighting 版本；`packet.versions` 对应已经发布的快照。每个 job 使用不可变参数。只改天空/太阳强度复用有效太阳缓存；改方向重新查询太阳，probe hits 和距离矩不变。几何与光照有效性分别保存在 M.a 和 E.a 中，Unknown 光照不会伪装成有效照明。`cacheDiagnostics()` 明确读回缓存，报告有效命中、真实太阳查询数和 Unknown 数；更新器只报告实际提交的槽数，二者不会混为一谈。
 
-GPU `solve({ materialOverrides: [{ id, baseColorFactor: [r,g,b], emissiveFactor: [r,g,b], metallicFactor }] })` 可改变静态材质的 RGB/自发光/金属度因子，不重建几何。每次 overrides 都相对原始材质求值，空列表恢复原始值；`neutralMaterials` 仍保留。alpha、双面性、纹理布局和 `traversalBudget` 会影响命中语义，必须重新载入，不能在 solve 中改变。
+GPU `solve({ materialOverrides: [{ id, baseColorFactor: [r,g,b], emissiveFactor: [r,g,b], metallicFactor }] })` 可改变静态材质的 RGB/自发光/金属度因子，不重建几何。因子仅改变 GI 缓存，前台原始模型材质保持原样。每次 overrides 都相对原始材质求值，空列表恢复原始值；`neutralMaterials` 仍保留。alpha、双面性、纹理布局和 `traversalBudget` 会影响命中语义，必须重新载入，不能在 solve 中改变。
 
 下面是保留的 CPU 参考路径：
 
@@ -121,7 +121,7 @@ GPU `solve({ materialOverrides: [{ id, baseColorFactor: [r,g,b], emissiveFactor:
 
 静态 loader 支持本次标准 metallic-roughness Sponza；遇到动画、skin、morph、Draco、BLEND、非三角形、sparse accessor、非 UV0 或未支持的 required extension 会明确报错。尚未对所有 glTF 扩展、复杂节点变换和材质组合完成验收。
 
-默认 2 米 / 128 rays 布局是 17×12×9，共 1,836 probes。GPU 后端自有纹理约 **89.02 MiB**，包含完整 BVH / 顶点 / UV、512 像素边长材质 atlas、命中与表面缓存、迁移/分类位置、三张 E atlas、共享几何 M、太阳可见性缓存及两张内部工作纹理。235,008 是缓存槽容量，包含 Miss / 背面 / Unknown，并非独立表面数量。默认 GPU 纹理预算 192 MiB，最多 4,096 probes / 512 rays；超过纹理尺寸或预算时报错并回退材质 IBL。CPU 参考的三张探针纹理仍为 5.63 MiB，上传峰值按两份计算，默认预算 128 MiB。
+默认 2 米 / 128 rays 布局是 17×12×9，共 1,836 probes。GPU 后端自有纹理约 **89.01 MiB**，包含完整 BVH / 顶点 / UV、512 像素边长材质 atlas、命中与表面缓存、迁移/分类位置、三张 E atlas、共享几何 M、太阳可见性缓存及两张内部工作纹理。235,008 是缓存槽容量，包含 Miss / 背面 / Unknown，并非独立表面数量。默认 GPU 纹理预算 192 MiB，最多 4,096 probes / 512 rays；超过纹理尺寸或预算时报错并回退材质 IBL。CPU 参考的三张探针纹理仍为 5.63 MiB，上传峰值按两份计算，默认预算 128 MiB。
 
 上述预算不含显示模型纹理、主帧缓冲、阴影图和 Worker CPU 几何内存。GPU demo 默认关闭独立 GBuffer 捕获，需要材质调试时再启用；GI 本身不依赖它。可用 `?spacing=3&rays=64&gpuBudget=6` 降低更新负载，或 `?shadowSize=1024&scale=0.5` 降低显示渲染成本；这会改变质量，不能与默认配置的结果混为一谈。
 
@@ -261,3 +261,7 @@ await final;
 ```
 
 Sponza 可用发布方式下拉框，或 `demo/index.html?backend=gpu&publication=progressive`。`npm run test:progressive` 在自包含 GPU fixture 验证实际首轮 HDR、不同显示帧、N 轮完整字段/HDR 一致、60 次连续改灯、GL 资源稳定、按需渲染停止、Promise 清理及失败恢复。
+
+## 本轮 v2 交付
+
+R0–R3 已在独立分支 feat/static-relighting-v2 完成。阶段提交、状态与纹理所有权、构建／回归／benchmark 命令、真实通过／失败／未运行记录及默认质量前后数据见 [持久交付报告](reports/relighting-v2/README.md)；机器摘要为 [summary.json](reports/relighting-v2/summary.json)。太阳方向不变的更新 GPU 时间下降约 85–90%，progressive 的天空／强度首轮发布约 3.03／2.22 秒，三轮最终约 7.34／6.42 秒。时间指 CPU 提交与 atlas 发布。太阳方向刷新未达到 30% 改进，当前设备显示仍约 6–8 FPS，未宣称实时显示达标。原 GPU／CPU 世界及 GBuffer 回归本轮均重跑通过。

@@ -1,0 +1,155 @@
+{
+  "model": "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf",
+  "tests": [
+    {
+      "name": "Sponza material MRT, finite positions and unit shading normals",
+      "passed": true,
+      "detail": {
+        "valid": 614400,
+        "maxNormalError": 1.504872740865082e-7,
+        "maxProjectionError": 0.004661288009122433,
+        "minDepth": 2.721604824066162,
+        "maxDepth": 17.843944549560547,
+        "hashes": [
+          573675036,
+          889430814,
+          1911505944,
+          2646121925
+        ],
+        "difference": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "frustums": 1
+      }
+    },
+    {
+      "name": "Eye-space position projects back to its pixel with log depth",
+      "passed": true,
+      "detail": 0.004661288009122433
+    },
+    {
+      "name": "Material inputs unchanged by solar direction",
+      "passed": true,
+      "detail": [
+        0,
+        5.684341886080802e-14,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "Material inputs unchanged by exposure",
+      "passed": true,
+      "detail": [
+        0,
+        5.684341886080802e-14,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "Solar shadow does not attenuate indirect diffuse",
+      "passed": true,
+      "detail": {
+        "withShadow": 809000676,
+        "withoutShadow": 809000676
+      }
+    },
+    {
+      "name": "Indirect diffuse equals reflectance times E/pi in the HDR framebuffer",
+      "passed": true,
+      "detail": {
+        "count": 614400,
+        "maxError": 0.00006094490420378851
+      }
+    },
+    {
+      "name": "Direct lighting responds to solar shadow",
+      "passed": true,
+      "detail": {
+        "changed": 601151,
+        "darker": 601151,
+        "enabled": false,
+        "lightMaps": 1,
+        "receives": 103,
+        "modelShadows": 1,
+        "directHash": 265768863
+      }
+    },
+    {
+      "name": "Multiple frustums retain pixel-correct eye positions",
+      "passed": true,
+      "detail": {
+        "valid": 614400,
+        "maxNormalError": 1.504872740865082e-7,
+        "maxProjectionError": 0.0025611148620239927,
+        "minDepth": 2.721604824066162,
+        "maxDepth": 17.843944549560547,
+        "hashes": [
+          308453252,
+          705539489,
+          2233910840,
+          2646121925
+        ],
+        "difference": [
+          0.0018932074308395386,
+          0.007313251495361328,
+          0.000392913818359375,
+          0
+        ],
+        "frustums": 8
+      }
+    },
+    {
+      "name": "Clipping applies to both the model and material inputs",
+      "passed": true,
+      "detail": {
+        "before": 2233910840,
+        "partial": 1786057510,
+        "clipped": 0,
+        "restored": 614400
+      }
+    },
+    {
+      "name": "Hidden model leaves no stale material inputs",
+      "passed": true,
+      "detail": 0
+    },
+    {
+      "name": "Disable frees attachments and re-enable rebuilds them",
+      "passed": true,
+      "detail": {
+        "released": true,
+        "ready": true,
+        "count": 614400
+      }
+    },
+    {
+      "name": "Resize recreates attachments and accounts for memory",
+      "passed": true,
+      "detail": {
+        "width": 1120,
+        "height": 720,
+        "bytes": 54835200
+      }
+    },
+    {
+      "name": "Memory budget rejects allocations and recovers",
+      "passed": true
+    },
+    {
+      "name": "Scene destruction releases Lumen and GBuffer",
+      "passed": true
+    },
+    {
+      "name": "No browser rendering errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "passed": true
+}

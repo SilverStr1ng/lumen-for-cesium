@@ -1,0 +1,53 @@
+{
+  "scope": "Summary extracted from actual numeric reports; GI source and compiled bundle match both final performance runs",
+  "sourceVersion": {
+    "head": "96fd7ed55a717c924b9c388a2f97d868650958e0",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "2ae28572f3ee3d214589e352c74072287e9163dd02b6a79e60dab7d85b4e2ceb",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "0f2f744c8de2863ef4fbd10e3398709ed1c7cd1f6fa23e34f58161f8d8be7397",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "36fb56890fd1554da520161962a5d75720c276a42cce588a876cbfe742cf2225",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+    },
+    "compiledBundle": "c4323ae6c5f1b1632dea784e3bab8b7388c0a992e37b55c468589c496101f658",
+    "modifiedSources": []
+  },
+  "validations": [
+    {
+      "file": "r3-gbuffer-verification.json",
+      "checks": 15,
+      "status": "passed"
+    },
+    {
+      "file": "r3-fixture-verification.json",
+      "checks": 24,
+      "status": "passed"
+    },
+    {
+      "file": "r3-relighting-verification.json",
+      "checks": 11,
+      "status": "passed"
+    },
+    {
+      "file": "r2-integration-verification.json",
+      "checks": 5,
+      "status": "passed"
+    },
+    {
+      "file": "r3-progressive-verification.json",
+      "checks": 14,
+      "status": "passed"
+    },
+    {
+      "file": "r3-sponza-gpu-verification.json",
+      "checks": 11,
+      "status": "passed"
+    },
+    {
+      "file": "r3-sponza-world-verification.json",
+      "checks": 12,
+      "status": "passed"
+    }
+  ]
+}
