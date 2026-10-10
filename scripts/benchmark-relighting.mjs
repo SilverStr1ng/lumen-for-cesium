@@ -5,6 +5,7 @@ import {
   launchBrowser,
   installGlObserver,
   environment,
+  sourceVersion,
 } from "./browser-tools.mjs";
 
 const asset =
@@ -13,6 +14,7 @@ const asset =
 const sponza = process.env.LUMEN_BENCH_SCENE === "sponza";
 const repetitions = Number(process.env.LUMEN_REPETITIONS ?? 3);
 const report = {
+  version: sourceVersion(),
   schema: 2,
   head: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
   date: new Date().toISOString(),

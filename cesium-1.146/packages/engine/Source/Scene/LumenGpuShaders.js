@@ -12,7 +12,7 @@ uniform bool u_lumenWorldEnabled, u_lumenLinearAtlas;
 const common = `
 precision highp sampler2D;
 uniform sampler2D u_nodes, u_vertices, u_uv, u_materials, u_atlas;
-uniform sampler2D u_hits, u_direct, u_cache;
+uniform sampler2D u_hits, u_direct, u_cache, u_visibility;
 uniform int u_nodesCount, u_budget, u_rays, u_first;
 uniform vec3 u_sunDirection, u_sunRadiance, u_skyRadiance;
 uniform ivec2 u_neutral;
@@ -123,15 +123,28 @@ int back=0,unknown=0;
 for(int i=0;i<512;i++) {if(i>=u_rays) break;vec4 h=texelFetch(u_hits,ivec2(i,probe),0);
 if(h.x==-1.0) unknown++;if(h.x < -1.0) {int m=int(fetch1(u_vertices,(int(-h.x)-2)*3).w);if(mat(m,1).z<0.5) back++;}}
 out_FragColor=vec4(texelFetch(u_lumenProbePositions,c,0).xyz,unknown==0&&float(back)/float(u_rays)<0.25?1.0:0.0);}`;
-export const direct = `${common}
+// Energy-independent sun visibility. RGB = visibility, validity, actual trace flag.
+export const visibility = `${common + worldUniforms}
+void main() {ivec2 c=ivec2(gl_FragCoord.xy);int width=textureSize(u_lumenProbePositions,0).x;
+if(texelFetch(u_lumenProbePositions,ivec2(c.y%width,c.y/width),0).a<0.5) {out_FragColor=vec4(0.0);return;}
+vec4 h=texelFetch(u_hits,c,0);
+if(abs(h.x)<=1.0) {out_FragColor=vec4(0.0,h.x==0.0?1.0:0.0,0.0,0.0);return;}
+vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
+if(black||dot(n,u_sunDirection)<=0.0) {out_FragColor=vec4(0.0,1.0,0.0,0.0);return;}
+vec4 shadow=trace(p+n*0.015,u_sunDirection,100.0,t,true);
+out_FragColor=vec4(shadow.x==0.0?1.0:0.0,shadow.x==-1.0?0.0:1.0,1.0,0.0);
+}`;
+export const direct = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 h=texelFetch(u_hits,c,0);
+int width=textureSize(u_lumenProbePositions,0).x;
+if(texelFetch(u_lumenProbePositions,ivec2(c.y%width,c.y/width),0).a<0.5) {out_FragColor=vec4(0.0);return;}
 if(h.x==0.0) {out_FragColor=vec4(u_skyRadiance,1.0);return;}
 if(h.x==-1.0) {out_FragColor=vec4(0.0);return;}
 vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
 if(black) {out_FragColor=vec4(0.0,0.0,0.0,1.0);return;}
-float cosine=max(0.0,dot(n,u_sunDirection));vec4 shadow=vec4(0.0);
-if(cosine>0.0 && any(greaterThan(u_sunRadiance,vec3(0.0)))) shadow=trace(p+n*0.015,u_sunDirection,100.0,t,true);
-out_FragColor=vec4(rho*u_sunRadiance*cosine*(shadow.x==0.0?1.0:0.0)/czm_pi+emission,shadow.x==-1.0?0.0:1.0);}`;
+float cosine=max(0.0,dot(n,u_sunDirection));vec4 visible=texelFetch(u_visibility,c,0);
+bool needsSun=cosine>0.0&&any(greaterThan(u_sunRadiance,vec3(0.0)));
+out_FragColor=vec4(rho*u_sunRadiance*cosine*visible.r/czm_pi+emission,needsSun?visible.g:1.0);}`;
 export const bounce = `${common + gather}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 value=texelFetch(u_direct,c,0),h=texelFetch(u_hits,c,0);
 if(u_first==0 && abs(h.x)>1.0 && value.a>0.5) {
@@ -139,14 +152,9 @@ vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
 if(!black) value.rgb+=rho*lumen_worldIrradiance(p,n).rgb/czm_pi;
 }
 out_FragColor=value;}`;
-export const integrate = `${common + worldUniforms}
-layout(location=0) out vec4 out_FragData_0;
-layout(location=1) out vec4 out_FragData_1;
+const integrationDirection = `
 vec3 octDecode(vec2 p) {vec3 v=vec3(p,1.0-abs(p.x)-abs(p.y));if(v.z<0.0) v.xy=(1.0-abs(v.yx))*mix(vec2(-1.0),vec2(1.0),greaterThanEqual(v.xy,vec2(0.0)));return normalize(v);}
-void main() {
-ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/10,c=pixel%10;
-int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
-if(texelFetch(u_lumenProbePositions,tile,0).a<0.5) {out_FragData_0=vec4(0.0);out_FragData_1=vec4(0.0);return;}
+vec3 integrationDirection(ivec2 c) {
 if(c.x==0&&c.y==0) c=ivec2(8,8);
 else if(c.x==9&&c.y==0) c=ivec2(1,8);
 else if(c.x==0&&c.y==9) c=ivec2(8,1);
@@ -155,15 +163,30 @@ else if(c.x==0) c=ivec2(1,9-c.y);
 else if(c.x==9) c=ivec2(8,9-c.y);
 else if(c.y==0) c=ivec2(9-c.x,1);
 else if(c.y==9) c=ivec2(9-c.x,8);
-vec3 direction=octDecode((vec2(c)-0.5)/8.0*2.0-1.0),E=vec3(0.0);
+return octDecode((vec2(c)-0.5)/8.0*2.0-1.0);
+}`;
+// Geometric validity is independent of energy/solar visibility. Unknown is excluded.
+export const moments = `${common + worldUniforms + integrationDirection}
+void main() {
+ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/10;int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
+if(texelFetch(u_lumenProbePositions,tile,0).a<0.5) {out_FragColor=vec4(0.0);return;}
+vec3 direction=integrationDirection(pixel%10);
 float mean=0.0,second=0.0,weights=0.0,known=0.0;
 for(int i=0;i<512;i++) {if(i>=u_rays) break;
-vec4 L=texelFetch(u_cache,ivec2(i,probe),0);vec4 h=texelFetch(u_hits,ivec2(i,probe),0);
-if(L.a<0.5) continue;known++;float cosine=max(0.0,dot(direction,rayDirection(i)));
-E+=L.rgb*cosine*(4.0*czm_pi/float(u_rays));
+vec4 h=texelFetch(u_hits,ivec2(i,probe),0);if(h.x==-1.0) continue;
+known++;float cosine=max(0.0,dot(direction,rayDirection(i)));
 float w=pow(cosine,16.0),d=min(h.w,u_lumenProbeSpacing*8.0);mean+=d*w;second+=d*d*w;weights+=w;
 }
-float valid=known/float(u_rays);out_FragData_0=vec4(E,valid);out_FragData_1=vec4(mean/max(weights,1e-20),second/max(weights,1e-20),0.0,valid);
+out_FragColor=vec4(mean/max(weights,1e-20),second/max(weights,1e-20),0.0,known/float(u_rays));
+}`;
+export const integrate = `${common + worldUniforms + integrationDirection}
+void main() {
+ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/10;int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
+if(texelFetch(u_lumenProbePositions,tile,0).a<0.5) {out_FragColor=vec4(0.0);return;}
+vec3 direction=integrationDirection(pixel%10),E=vec3(0.0);float known=0.0;
+for(int i=0;i<512;i++) {if(i>=u_rays) break;vec4 L=texelFetch(u_cache,ivec2(i,probe),0);
+if(L.a<0.5) continue;known++;E+=L.rgb*max(0.0,dot(direction,rayDirection(i)))*(4.0*czm_pi/float(u_rays));}
+out_FragColor=vec4(E,known/float(u_rays));
 }`;
 export const queryTrace = `${common}
 uniform sampler2D u_queryOrigin,u_queryDirection;
@@ -175,6 +198,8 @@ export default {
   relocate,
   intersect,
   classify,
+  visibility,
+  moments,
   direct,
   bounce,
   integrate,

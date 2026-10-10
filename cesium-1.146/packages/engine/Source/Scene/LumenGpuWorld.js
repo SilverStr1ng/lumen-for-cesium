@@ -27,6 +27,35 @@ const linear = new Sampler({
   minificationFilter: TextureMinificationFilter.LINEAR,
   magnificationFilter: TextureMagnificationFilter.LINEAR,
 });
+function immutableOptions(options) {
+  const result = { ...options };
+  for (const key of [
+    "sunDirection",
+    "sunRadiance",
+    "skyRadiance",
+    "neutralMaterials",
+  ]) {
+    if (result[key]) {
+      result[key] = Object.freeze([...result[key]]);
+    }
+  }
+  if (result.materialOverrides) {
+    result.materialOverrides = Object.freeze(
+      result.materialOverrides.map((m) =>
+        Object.freeze({
+          ...m,
+          baseColorFactor: m.baseColorFactor
+            ? Object.freeze([...m.baseColorFactor])
+            : undefined,
+          emissiveFactor: m.emissiveFactor
+            ? Object.freeze([...m.emissiveFactor])
+            : undefined,
+        }),
+      ),
+    );
+  }
+  return Object.freeze(result);
+}
 
 /** Static geometry, GPU intersections, ray-addressed surface cache and snapshot DDGI.
  * No readback or CPU lighting in update(). Diagnostic APIs explicitly synchronize.
@@ -50,6 +79,7 @@ class LumenGpuWorld {
       ...options,
     };
     this._validate(this.options);
+    this.options = immutableOptions(this.options);
     this.inverseFrame = Matrix4.inverse(options.modelMatrix, new Matrix4());
     this.eyeToLocal = new Matrix4();
     this.origin = new Cartesian3();
@@ -70,6 +100,13 @@ class LumenGpuWorld {
     this._queries = [];
     this._batches = {};
     this._costs = {};
+    this.versions = {
+      geometry: 1,
+      rayLayout: 1,
+      material: 1,
+      sunVisibility: 0,
+      lighting: 1,
+    };
     this.metrics = {
       passes: {},
       disjoint: 0,
@@ -83,6 +120,11 @@ class LumenGpuWorld {
       queryQueuePeak: 0,
       memory: { currentBytes: 0, peakBytes: 0, textures: 0, framebuffers: 0 },
       initialStages: {},
+      work: {
+        probeHitInvocations: 0,
+        sunVisibilitySubmittedSlots: 0,
+        momentProbeUpdates: 0,
+      },
     };
     this._timer = scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
@@ -178,6 +220,55 @@ class LumenGpuWorld {
         "GPU neutralMaterials supports at most two nonnegative material IDs",
       );
     }
+    if (o.materialOverrides) {
+      if (!Array.isArray(o.materialOverrides)) {
+        throw new DeveloperError("materialOverrides must be an array");
+      }
+      for (const m of o.materialOverrides) {
+        if (
+          !Number.isInteger(m.id) ||
+          m.id < 0 ||
+          (this._materials && m.id >= this._materials.height) ||
+          Object.keys(m).some(
+            (k) =>
+              ![
+                "id",
+                "baseColorFactor",
+                "emissiveFactor",
+                "metallicFactor",
+              ].includes(k),
+          )
+        ) {
+          throw new DeveloperError(
+            "Only existing static material RGB/emission/metallic factors may change; alpha or sidedness require reload",
+          );
+        }
+        for (const key of ["baseColorFactor", "emissiveFactor"]) {
+          if (
+            m[key] &&
+            (m[key].length !== 3 ||
+              m[key].some(
+                (v) =>
+                  !Number.isFinite(v) ||
+                  v < 0 ||
+                  (key === "baseColorFactor" && v > 1),
+              ))
+          ) {
+            throw new DeveloperError(
+              `${key} must be finite RGB; reflectance must be in [0,1]`,
+            );
+          }
+        }
+        if (
+          m.metallicFactor !== undefined &&
+          (!Number.isFinite(m.metallicFactor) ||
+            m.metallicFactor < 0 ||
+            m.metallicFactor > 1)
+        ) {
+          throw new DeveloperError("metallicFactor must be in [0,1]");
+        }
+      }
+    }
   }
   _promise() {
     this.completed = new Promise((resolve, reject) => {
@@ -267,6 +358,8 @@ class LumenGpuWorld {
     this.origin = Cartesian3.fromArray(g.origin, 0, this.origin);
     this.counts = Cartesian3.fromArray(g.counts, 0, this.counts);
     this.normalBias = g.normalBias;
+    this._baseMaterials = p.materials.data.slice();
+    this._overrideKey = "[]";
     for (const name of ["nodes", "vertices", "uv", "materials", "atlas"]) {
       const a = p[name];
       this[`_${name}`] = this._texture(
@@ -281,13 +374,27 @@ class LumenGpuWorld {
     this._initialPositions = this._texture(pw, ph);
     this.positionTexture = this._texture(pw, ph);
     this._hits = this._texture(g.rays, g.total);
+    this._visibility = this._texture(
+      g.rays,
+      g.total,
+      PixelDatatype.UNSIGNED_BYTE,
+    );
     this._direct = this._texture(g.rays, g.total, PixelDatatype.HALF_FLOAT);
     this._cache = this._texture(g.rays, g.total, PixelDatatype.HALF_FLOAT);
     this._positionFB = this._framebuffer([this._initialPositions]);
     this._classifiedFB = this._framebuffer([this.positionTexture]);
     this._hitFB = this._framebuffer([this._hits]);
+    this._visibilityFB = this._framebuffer([this._visibility]);
     this._directFB = this._framebuffer([this._direct]);
     this._cacheFB = this._framebuffer([this._cache]);
+    const M = this._texture(
+      g.width,
+      g.height,
+      PixelDatatype.FLOAT,
+      undefined,
+      this.linearAtlas ? linear : nearest,
+    );
+    this._distanceFB = this._framebuffer([M]);
     this._atlases = Array.from({ length: 3 }, () => {
       const E = this._texture(
         g.width,
@@ -296,14 +403,7 @@ class LumenGpuWorld {
         undefined,
         this.linearAtlas ? linear : nearest,
       );
-      const M = this._texture(
-        g.width,
-        g.height,
-        PixelDatatype.FLOAT,
-        undefined,
-        this.linearAtlas ? linear : nearest,
-      );
-      return { E, M, fb: this._framebuffer([E, M]) };
+      return { E, M, fb: this._framebuffer([E]) };
     });
     this._published = 2;
     this._previous = 2;
@@ -339,8 +439,12 @@ class LumenGpuWorld {
       u_hits: () => this._hits,
       u_direct: () => this._direct,
       u_cache: () => this._cache,
+      u_visibility: () => this._visibility,
       u_nodesCount: () => this.packet.bvh.nodes,
-      u_budget: () => this.options.traversalBudget,
+      u_budget: () =>
+        this._diagnosticBudget ??
+        this._jobOptions?.traversalBudget ??
+        this.options.traversalBudget,
       u_rays: () => this.options.rays,
       u_first: () => (this._bounce === 1 ? 1 : 0),
       u_sunDirection: () => this._lighting.sunDirection,
@@ -452,7 +556,33 @@ class LumenGpuWorld {
     this._jobOptions = this.options;
     this._pendingLighting = false;
     this._lighting = this._light(this.options);
-    this._phase = "direct";
+    const materialKey = JSON.stringify({
+      neutral: this.options.neutralMaterials ?? [],
+      overrides: this.options.materialOverrides ?? [],
+    });
+    if (this._materialKey !== undefined && this._materialKey !== materialKey) {
+      this.versions.material++;
+    }
+    this._materialKey = materialKey;
+    this._applyMaterials();
+    const sunKey = [
+      this.versions.geometry,
+      this.versions.rayLayout,
+      ...[
+        this._lighting.sunDirection.x,
+        this._lighting.sunDirection.y,
+        this._lighting.sunDirection.z,
+      ].map((v) => v.toPrecision(14)),
+    ].join(":");
+    if (sunKey !== this._visibilityKey) {
+      this.versions.sunVisibility++;
+      this._pendingVisibilityKey = sunKey;
+      this._phase = "visibility";
+    } else {
+      this._phase = "direct";
+    }
+    this.versions.lighting = this._jobRevision;
+    this._jobVersions = Object.freeze({ ...this.versions });
     this._cursor = 0;
     this._bounce = 1;
     this._history = [];
@@ -463,8 +593,45 @@ class LumenGpuWorld {
       submittedFrames: 0,
       submittedBatches: 0,
       cpuSchedulingMilliseconds: 0,
+      versions: this._jobVersions,
+      work: {
+        probeHitInvocations: 0,
+        sunVisibilitySubmittedSlots: 0,
+        momentProbeUpdates: 0,
+      },
     };
     this._target = this._published === 0 ? 1 : 0;
+  }
+  _applyMaterials() {
+    const overrides = this.options.materialOverrides ?? [],
+      key = JSON.stringify(overrides);
+    if (key === this._overrideKey) {
+      return;
+    }
+    const data = this._baseMaterials.slice();
+    for (const m of overrides) {
+      if (m.id >= this._materials.height) {
+        throw new DeveloperError("Unknown material override ID");
+      }
+      const offset = m.id * 48;
+      if (m.baseColorFactor) {
+        data.set(m.baseColorFactor, offset);
+      }
+      if (m.emissiveFactor) {
+        data.set(m.emissiveFactor, offset + 8);
+      }
+      if (m.metallicFactor !== undefined) {
+        data[offset + 4] = m.metallicFactor;
+      }
+    }
+    this._materials.copyFrom({
+      source: {
+        width: this._materials.width,
+        height: this._materials.height,
+        arrayBufferView: data,
+      },
+    });
+    this._overrideKey = key;
   }
   update() {
     if (this._closed) {
@@ -503,7 +670,9 @@ class LumenGpuWorld {
           this._batches[phase] ?? 8,
           g.total - this._cursor,
         );
-        const job = ["relocate", "intersect", "classify"].includes(phase)
+        const job = ["relocate", "intersect", "classify", "moments"].includes(
+          phase,
+        )
           ? undefined
           : this._jobMetrics;
         const stages = job?.stages ?? this.metrics.initialStages;
@@ -530,6 +699,21 @@ class LumenGpuWorld {
           : this.options.targetGpuMilliseconds;
         stage.submittedBatches++;
         stage.probes += count;
+        const workKey =
+          phase === "intersect"
+            ? "probeHitInvocations"
+            : phase === "visibility"
+              ? "sunVisibilitySubmittedSlots"
+              : phase === "moments"
+                ? "momentProbeUpdates"
+                : undefined;
+        if (workKey) {
+          const amount = phase === "moments" ? count : count * g.rays;
+          this.metrics.work[workKey] += amount;
+          if (job) {
+            job.work[workKey] += amount;
+          }
+        }
         this.metrics.submittedBatches++;
         if (job) {
           job.submittedBatches++;
@@ -548,23 +732,27 @@ class LumenGpuWorld {
           gl.beginQuery(this._timer.TIME_ELAPSED_EXT, query);
         }
         try {
-          if (["intersect", "direct", "bounce"].includes(phase)) {
+          if (["intersect", "visibility", "direct", "bounce"].includes(phase)) {
             const fb =
               phase === "intersect"
                 ? this._hitFB
-                : phase === "direct"
-                  ? this._directFB
-                  : this._cacheFB;
+                : phase === "visibility"
+                  ? this._visibilityFB
+                  : phase === "direct"
+                    ? this._directFB
+                    : this._cacheFB;
             this._draw(phase, fb, 0, this._cursor, g.rays, count);
           } else {
             const stride = g.counts[0] * g.counts[1],
-              scale = phase === "integrate" ? 10 : 1;
+              scale = ["integrate", "moments"].includes(phase) ? 10 : 1;
             const fb =
               phase === "relocate"
                 ? this._positionFB
                 : phase === "classify"
                   ? this._classifiedFB
-                  : this._atlases[this._target].fb;
+                  : phase === "moments"
+                    ? this._distanceFB
+                    : this._atlases[this._target].fb;
             let cursor = this._cursor,
               remaining = count;
             while (remaining) {
@@ -609,7 +797,12 @@ class LumenGpuWorld {
           } else if (phase === "intersect") {
             this._phase = "classify";
           } else if (phase === "classify") {
+            this._phase = "moments";
+          } else if (phase === "moments") {
             this._beginLighting();
+          } else if (phase === "visibility") {
+            this._visibilityKey = this._pendingVisibilityKey;
+            this._phase = "direct";
           } else if (phase === "direct") {
             this._phase = "bounce";
           } else if (phase === "bounce") {
@@ -634,6 +827,7 @@ class LumenGpuWorld {
               this.packet.revision = this._jobRevision;
               this.packet.bounce = this._bounce;
               this.packet.history = this._history;
+              this.packet.versions = this._jobVersions;
               this.status = this._phase = "ready";
               const result = {
                 ...this._jobMetrics,
@@ -673,7 +867,14 @@ class LumenGpuWorld {
     if (this._closed) {
       throw new Error("GPU world is closed");
     }
-    for (const k of ["spacing", "rays", "url", "axisMatrix", "modelMatrix"]) {
+    for (const k of [
+      "spacing",
+      "rays",
+      "url",
+      "axisMatrix",
+      "modelMatrix",
+      "traversalBudget",
+    ]) {
       if (k in options) {
         throw new Error("Reload world to change GPU geometry or probe layout");
       }
@@ -683,12 +884,12 @@ class LumenGpuWorld {
     this._reject?.(new Error("GPU lighting generation superseded"));
     this._promise();
     this.revision++;
-    this.options = next;
+    this.options = immutableOptions(next);
     if (this.packet && this._phase === "ready") {
       this._beginLighting();
     } else if (
       this.packet &&
-      !["relocate", "intersect", "classify"].includes(this._phase)
+      !["relocate", "intersect", "classify", "moments"].includes(this._phase)
     ) {
       this._pendingLighting = true;
     }
@@ -712,7 +913,7 @@ class LumenGpuWorld {
     return this._request("surfaces", { materials });
   }
   // Diagnostics only. Normal rendering never calls readPixels or waits for GPU completion.
-  _read(fb, width, height, attachment = 0) {
+  _read(fb, width, height, attachment = 0, datatype = PixelDatatype.FLOAT) {
     if (this._inUpdate) {
       this.metrics.productionReadbacks++;
     } else {
@@ -721,11 +922,14 @@ class LumenGpuWorld {
     const gl = this.scene.context._gl,
       old = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),
       oldBuffer = gl.getParameter(gl.READ_BUFFER);
-    const data = new Float32Array(width * height * 4);
+    const data =
+      datatype === PixelDatatype.UNSIGNED_BYTE
+        ? new Uint8Array(width * height * 4)
+        : new Float32Array(width * height * 4);
     try {
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, fb._framebuffer);
       gl.readBuffer(gl.COLOR_ATTACHMENT0 + attachment);
-      gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, data);
+      gl.readPixels(0, 0, width, height, gl.RGBA, datatype, data);
       const err = gl.getError();
       if (err) {
         throw new Error(`GPU diagnostic readPixels: ${err}`);
@@ -753,12 +957,47 @@ class LumenGpuWorld {
         g.width,
         g.height,
       ),
-      moments: this._read(
-        this._atlases[this._published].fb,
-        g.width,
-        g.height,
-        1,
-      ),
+      moments: this._read(this._distanceFB, g.width, g.height),
+    };
+  }
+  cacheDiagnostics() {
+    if (!this.ready) {
+      throw new Error("GPU field is not ready");
+    }
+    const g = this.packet.grid,
+      hits = this._read(this._hitFB, g.rays, g.total),
+      visibility = this._read(
+        this._visibilityFB,
+        g.rays,
+        g.total,
+        0,
+        PixelDatatype.UNSIGNED_BYTE,
+      );
+    let hitSlots = 0,
+      probeUnknown = 0,
+      effectiveSunQueries = 0,
+      sunUnknown = 0;
+    for (let i = 0; i < hits.length; i += 4) {
+      if (Math.abs(hits[i]) > 1) {
+        hitSlots++;
+      }
+      if (hits[i] === -1) {
+        probeUnknown++;
+      }
+      if (visibility[i + 2] > 127) {
+        effectiveSunQueries++;
+        if (visibility[i + 1] < 128) {
+          sunUnknown++;
+        }
+      }
+    }
+    return {
+      allocatedSlots: g.rays * g.total,
+      hitSlots,
+      probeUnknown,
+      effectiveSunQueries,
+      sunUnknown,
+      versions: { ...this.versions },
     };
   }
   _query(name, points) {
@@ -842,10 +1081,10 @@ class LumenGpuWorld {
       });
       groups.set(budget, group);
     });
-    const previousBudget = this.options.traversalBudget;
+    const previousBudget = this._diagnosticBudget;
     try {
       for (const [budget, group] of groups) {
-        this.options.traversalBudget = budget;
+        this._diagnosticBudget = budget;
         this._query(
           "queryTrace",
           group.map((e) => e.r),
@@ -862,7 +1101,7 @@ class LumenGpuWorld {
         });
       }
     } finally {
-      this.options.traversalBudget = previousBudget;
+      this._diagnosticBudget = previousBudget;
     }
     return Promise.resolve(result);
   }

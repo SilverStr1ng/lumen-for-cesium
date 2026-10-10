@@ -5,6 +5,7 @@ import {
   launchBrowser,
   installGlObserver,
   environment,
+  sourceVersion,
 } from "./browser-tools.mjs";
 
 await mkdir("artifacts", { recursive: true });
@@ -21,6 +22,7 @@ page.on("console", (m) => {
     errors.push(m.text());
 });
 const report = {
+  version: sourceVersion(),
   head: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
   mode: "numerical diagnostics; includes explicit GPU readback",
   checks: [],

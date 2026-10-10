@@ -1,11 +1,42 @@
 import { createRequire } from "node:module";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { homedir } from "node:os";
 import path from "node:path";
 
 const require = createRequire(
   new URL("../cesium-1.146/package.json", import.meta.url),
 );
+export function sourceVersion() {
+  const files = [
+    "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+    "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
+    "lumen/gpu-worker.js",
+    "lumen/math.js",
+    "lumen/gltf.js",
+  ];
+  const sha256 = (file) =>
+    createHash("sha256")
+      .update(readFileSync(file, "utf8").replaceAll("\r\n", "\n"))
+      .digest("hex");
+  return {
+    head: execFileSync("git", ["rev-parse", "HEAD"], {
+      encoding: "utf8",
+    }).trim(),
+    sources: Object.fromEntries(files.map((file) => [file, sha256(file)])),
+    compiledBundle: sha256("cesium-1.146/Build/CesiumUnminified/Cesium.js"),
+    modifiedSources: execFileSync(
+      "git",
+      ["diff", "--name-only", "--", ...files],
+      { encoding: "utf8" },
+    )
+      .trim()
+      .split("\n")
+      .filter(Boolean),
+  };
+}
 export function demoUrl(backend, extra = "") {
   const url = new URL(
     process.env.LUMEN_DEMO_URL ?? "http://localhost:8090/demo/index.html",
@@ -94,6 +125,7 @@ export function installGlObserver() {
           syncs: 0,
         },
         elapsed: new Map(),
+        labels: new Map(),
       };
       states.set(gl, s);
       all.push(s);
@@ -214,6 +246,7 @@ export function installGlObserver() {
   ])
     wrap(name, function (original, s, a) {
       count(s, "draws");
+      if (s.labels.has(s.program)) count(s, `draws:${s.labels.get(s.program)}`);
       const attachments = s.attachments.get(s.drawFB),
         uniforms = s.uniforms.get(s.program);
       if (attachments)
@@ -242,6 +275,9 @@ export function installGlObserver() {
     return original.apply(this, a);
   });
   window.glObserver = {
+    labelProgram(program, label) {
+      for (const s of all) s.labels.set(program, label);
+    },
     phase(name) {
       for (const s of all) s.phase = name;
     },

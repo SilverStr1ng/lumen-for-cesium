@@ -86,10 +86,11 @@ GPU 后端的管线：
 
 ```text
 Worker: glTF / material atlas / threaded BVH packing
-GPU once: probe relocation → closest-hit rays → backface/Unknown classification
-GPU per lighting revision: direct surface cache + sun any-hit visibility
+GPU once: probe relocation → closest-hit rays → classification → geometry distance moments
+GPU on sun direction change: energy-independent any-hit visibility cache
+GPU per lighting revision: direct surface cache (reuses hits / sun visibility / moments)
 GPU per bounce: outgoing surface cache(previous complete DDGI)
-               → directional irradiance + distance moments(MRT)
+               → directional irradiance
 GPU publish: atomically select the complete final atlas pair
 Model PBR: coverage-aware DDGI diffuse → existing HDR/display pipeline
 ```
@@ -98,7 +99,11 @@ Model PBR: coverage-aware DDGI diffuse → existing HDR/display pipeline
 
 GPU Surface Cache 按 `(probe, ray)` 寻址：RGBA32F 命中纹理保存三角形、重心坐标和距离，结合驻留 GPU 几何得到世界位置；RGBA16F 直接光缓存和出射光缓存保留线性辐亮度与有效性。同一表面被多个探针命中时会有重复缓存项，目前没有 Cards、空间去重或动态失效。这与 CPU 的每三角形四个采样点近似不同，不能要求两种后端逐 texel 相等。
 
-DDGI 采用三个 RGBA32F irradiance/moments atlas 对：一个保持已发布场景，另外两个作为内部反弹快照。读写附件始终不同；只在完整 generation 结束后更换模型采样的纹理。支持 float 线性过滤时使用硬件双线性采样，否则使用原有四次 texelFetch 插值。材质合同和局部 ENU 坐标保持上一阶段一致。
+DDGI 采用三张 RGBA32F irradiance atlas：一个保持已发布场景，另外两个作为内部反弹快照；所有轮次共享一张只由几何决定的距离矩 atlas。太阳可见性使用 RGBA8 缓存已知/未知和诊断查询标志，与灯光能量分离。读写附件始终不同；只在完整 generation 结束后更换模型采样的纹理。支持 float 线性过滤时使用硬件双线性采样，否则使用原有四次 texelFetch 插值。材质合同和局部 ENU 坐标保持上一阶段一致。
+
+R1 显式记录 `world.versions` 的 geometry、rayLayout、material、sunVisibility、lighting 版本；`packet.versions` 对应已经发布的快照。每个 job 使用不可变参数。只改天空/太阳强度复用有效太阳缓存；改方向重新查询太阳，probe hits 和距离矩不变。几何与光照有效性分别保存在 M.a 和 E.a 中，Unknown 光照不会伪装成有效照明。`cacheDiagnostics()` 明确读回缓存，报告有效命中、真实太阳查询数和 Unknown 数；更新器只报告实际提交的槽数，二者不会混为一谈。
+
+GPU `solve({ materialOverrides: [{ id, baseColorFactor: [r,g,b], emissiveFactor: [r,g,b], metallicFactor }] })` 可改变静态材质的 RGB/自发光/金属度因子，不重建几何。每次 overrides 都相对原始材质求值，空列表恢复原始值；`neutralMaterials` 仍保留。alpha、双面性、纹理布局和 `traversalBudget` 会影响命中语义，必须重新载入，不能在 solve 中改变。
 
 下面是保留的 CPU 参考路径：
 
