@@ -7,6 +7,7 @@ import {
   PixelFormat,
   Color,
   DeveloperError,
+  Event,
 } from "@cesium/core";
 import Texture from "../Renderer/Texture.js";
 import Framebuffer from "../Renderer/Framebuffer.js";
@@ -78,6 +79,7 @@ class LumenGpuWorld {
       maxBatch: 128,
       integrationMode: "arithmetic",
       diagnosticIntegrationLut: false,
+      publicationMode: "snapshot",
       ...options,
     };
     this._validate(this.options);
@@ -91,6 +93,9 @@ class LumenGpuWorld {
     this.ready = false;
     this.status = "loading GPU geometry";
     this.revision = 1;
+    this.settledRevision = 0;
+    this.publicationEvent = new Event();
+    this._requestedAt = performance.now();
     this.memoryBytes = 0;
     this.maxMemoryBytes = options.maxMemoryBytes ?? 192 * 1048576;
     this.linearAtlas = scene.context.textureFloatLinear;
@@ -164,6 +169,11 @@ class LumenGpuWorld {
     });
   }
   _validate(o) {
+    if (!["snapshot", "progressive"].includes(o.publicationMode)) {
+      throw new DeveloperError(
+        "publicationMode must be snapshot or progressive",
+      );
+    }
     if (!["lut", "arithmetic"].includes(o.integrationMode)) {
       throw new DeveloperError("integrationMode must be lut or arithmetic");
     }
@@ -287,6 +297,39 @@ class LumenGpuWorld {
     });
     // A caller may use solve() without observing the initial load promise.
     this.completed.catch(() => {});
+    this.firstPublished = new Promise((resolve, reject) => {
+      this._resolveFirst = resolve;
+      this._rejectFirst = reject;
+    });
+    this.firstPublished.catch(() => {});
+  }
+  get requestedRevision() {
+    return this.revision;
+  }
+  get activeRevision() {
+    return this._phase === "ready" || this._closed
+      ? 0
+      : (this._jobRevision ?? 0);
+  }
+  get publishedRevision() {
+    return this.packet?.revision ?? 0;
+  }
+  get publishedBounce() {
+    return this.packet?.bounce ?? 0;
+  }
+  atlasState() {
+    return {
+      requestedRevision: this.requestedRevision,
+      activeRevision: this.activeRevision,
+      publishedRevision: this.publishedRevision,
+      publishedBounce: this.publishedBounce,
+      settledRevision: this.settledRevision,
+      published: this._published,
+      read: this._phase === "ready" ? undefined : this._previous,
+      write: this._phase === "ready" ? undefined : this._target,
+      atlases: this._atlasMetadata?.map((m) => ({ ...m })),
+      pending: this._pendingLighting ? this.revision : undefined,
+    };
   }
   _texture(
     width,
@@ -435,6 +478,11 @@ class LumenGpuWorld {
     });
     this._published = 2;
     this._previous = 2;
+    this._atlasMetadata = Array.from({ length: 3 }, () => ({
+      revision: 0,
+      bounce: 0,
+      complete: false,
+    }));
     this.irradianceTexture = this._atlases[2].E;
     this.distanceTexture = this._atlases[2].M;
     this._lighting = this._light(this.options);
@@ -596,6 +644,7 @@ class LumenGpuWorld {
   _beginLighting() {
     this._jobRevision = this.revision;
     this._jobOptions = this.options;
+    this._jobRequestedAt = this._requestedAt;
     this._pendingLighting = false;
     this._lighting = this._light(this.options);
     const materialKey = JSON.stringify({
@@ -642,7 +691,122 @@ class LumenGpuWorld {
         momentProbeUpdates: 0,
       },
     };
-    this._target = this._published === 0 ? 1 : 0;
+    this._previous = this._published;
+    this._prepareBounce();
+  }
+  _prepareBounce() {
+    if (this._bounce > 1) {
+      const read = this._atlasMetadata[this._previous];
+      if (
+        !read.complete ||
+        read.revision !== this._jobRevision ||
+        read.bounce !== this._bounce - 1
+      ) {
+        throw new Error(
+          "DDGI must read the complete previous round of this revision",
+        );
+      }
+    }
+    this._target = [0, 1, 2].find(
+      (i) => i !== this._published && i !== this._previous,
+    );
+    this._atlasMetadata[this._target] = {
+      revision: this._jobRevision,
+      bounce: this._bounce,
+      complete: false,
+    };
+  }
+  _publishRound(final) {
+    const metadata = this._atlasMetadata[this._previous];
+    if (!metadata.complete || metadata.revision < this.publishedRevision) {
+      throw new Error("Cannot publish a partial or older DDGI atlas");
+    }
+    this._published = this._previous;
+    this.irradianceTexture = this._atlases[this._published].E;
+    this.distanceTexture = this._atlases[this._published].M;
+    this.ready = true;
+    this.packet.revision = this._jobRevision;
+    this.packet.bounce = this._bounce;
+    this.packet.history = this._history.slice();
+    this.packet.versions = this._jobVersions;
+    this.packet.integration.mode = this._jobOptions.integrationMode;
+    const submissionMilliseconds = performance.now() - this._started;
+    this._jobMetrics.firstPublishSubmissionMilliseconds ??=
+      submissionMilliseconds;
+    this._jobMetrics.requestToFirstSubmissionMilliseconds ??=
+      performance.now() - this._jobRequestedAt;
+    const publication = Object.freeze({
+      revision: this._jobRevision,
+      bounce: this._bounce,
+      requestedBounces: this._jobOptions.bounces,
+      final,
+      ...this.atlasState(),
+      submissionMilliseconds,
+      requestToSubmissionMilliseconds: performance.now() - this._jobRequestedAt,
+      timingScope:
+        "CPU submission and atlas selection; not GPU completion or presentation",
+    });
+    if (this._jobRevision === this.revision) {
+      this._resolveFirst(publication);
+    }
+    this.publicationEvent.raiseEvent(publication);
+  }
+  _finishJob(settled) {
+    const submissionMilliseconds = performance.now() - this._started;
+    const result = {
+      ...this._jobMetrics,
+      revision: this._jobRevision,
+      milliseconds: submissionMilliseconds,
+      bounces: this._bounce,
+      requestedBounces: this._jobOptions.bounces,
+      settled,
+      supersededAtRoundBoundary: !settled,
+      submissionMilliseconds,
+      finalSubmissionMilliseconds: settled ? submissionMilliseconds : null,
+      requestToFinalSubmissionMilliseconds: settled
+        ? performance.now() - this._jobRequestedAt
+        : null,
+      publicationMode: this._jobOptions.publicationMode,
+      timingScope:
+        "CPU submission and atlas selection; not GPU completion or presentation",
+    };
+    this.metrics.updates.push(result);
+    if (this.metrics.updates.length > 100) {
+      this.metrics.updates.shift();
+    }
+    this.status = this._phase = "ready";
+    if (settled && this._jobRevision === this.revision) {
+      this._resolve(result);
+    }
+    if (this._pendingLighting) {
+      this._beginLighting();
+    }
+  }
+  _completeRound() {
+    this._atlasMetadata[this._target].complete = true;
+    this._previous = this._target;
+    this._target = undefined;
+    this._history.push({
+      bounce: this._bounce,
+      milliseconds: performance.now() - this._started,
+    });
+    const final = this._bounce === this._jobOptions.bounces;
+    const progressive = this._jobOptions.publicationMode === "progressive";
+    if (final) {
+      this.settledRevision = this._jobRevision;
+    }
+    if (progressive || final) {
+      this._publishRound(final);
+    }
+    if (final || (progressive && this._pendingLighting)) {
+      this._finishJob(final);
+    } else {
+      this._bounce++;
+      this._prepareBounce();
+      this._phase = "bounce";
+    }
+    // Let the forward pass display each progressive round before submitting another.
+    return progressive;
   }
   _applyMaterials() {
     const overrides = this.options.materialOverrides ?? [],
@@ -696,6 +860,9 @@ class LumenGpuWorld {
         this._initialize(p);
       }
       if (!this._phase || this._phase === "ready") {
+        if (this._queries.length) {
+          this.scene.requestRender();
+        }
         return;
       }
       let estimatedTime = 0;
@@ -885,47 +1052,8 @@ class LumenGpuWorld {
           } else if (phase === "integrate") {
             this._phase = "border";
           } else if (phase === "border") {
-            this._previous = this._target;
-            this._history.push({
-              bounce: this._bounce,
-              milliseconds: performance.now() - this._started,
-            });
-            if (this._bounce < this._jobOptions.bounces) {
-              this._bounce++;
-              this._target = [0, 1, 2].find(
-                (i) => i !== this._previous && i !== this._published,
-              );
-              this._phase = "bounce";
-            } else {
-              this._published = this._previous;
-              this.irradianceTexture = this._atlases[this._published].E;
-              this.distanceTexture = this._atlases[this._published].M;
-              this.ready = true;
-              this.packet.revision = this._jobRevision;
-              this.packet.bounce = this._bounce;
-              this.packet.history = this._history;
-              this.packet.versions = this._jobVersions;
-              this.packet.integration.mode = this._jobOptions.integrationMode;
-              this.status = this._phase = "ready";
-              const result = {
-                ...this._jobMetrics,
-                revision: this._jobRevision,
-                milliseconds: performance.now() - this._started,
-                bounces: this._bounce,
-                submissionMilliseconds: performance.now() - this._started,
-                timingScope:
-                  "CPU submission and atlas selection; not GPU completion or presentation",
-              };
-              this.metrics.updates.push(result);
-              if (this.metrics.updates.length > 100) {
-                this.metrics.updates.shift();
-              }
-              if (this._jobRevision === this.revision) {
-                this._resolve(result);
-              }
-              if (this._pendingLighting) {
-                this._beginLighting();
-              }
+            if (this._completeRound()) {
+              break;
             }
           }
         }
@@ -961,8 +1089,10 @@ class LumenGpuWorld {
     const next = { ...this.options, ...options };
     this._validate(next);
     this._reject?.(new Error("GPU lighting generation superseded"));
+    this._rejectFirst?.(new Error("GPU lighting generation superseded"));
     this._promise();
     this.revision++;
+    this._requestedAt = performance.now();
     this.options = immutableOptions(next);
     if (this.packet && this._phase === "ready") {
       this._beginLighting();
@@ -1195,6 +1325,7 @@ class LumenGpuWorld {
     this.error = String(error);
     this.status = "error";
     this._reject?.(error);
+    this._rejectFirst?.(error);
     this._release();
     this.scene.requestRender();
   }
@@ -1206,6 +1337,8 @@ class LumenGpuWorld {
       r.reject(new Error("GPU world closed"));
     }
     this._requests.clear();
+    this._pendingLighting = false;
+    this._target = this._previous = undefined;
     const gl = this.scene.context._gl;
     for (const q of this._queries) {
       gl.deleteQuery(q.query);
@@ -1239,6 +1372,7 @@ class LumenGpuWorld {
       return;
     }
     this._reject?.(new Error("GPU world destroyed"));
+    this._rejectFirst?.(new Error("GPU world destroyed"));
     this._release();
     this.status = "destroyed";
   }

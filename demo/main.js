@@ -3,6 +3,8 @@ const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const constantMode = params.get("backend") === "constant";
 const gpuMode = !constantMode && params.get("backend") !== "cpu";
+$("publication").value = params.get("publication") ?? "snapshot";
+$("publication").disabled = !gpuMode;
 const asset =
   params.get("model") ??
   "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf";
@@ -40,6 +42,7 @@ function worldLighting() {
     sunRadiance: [2, 2, 2],
     skyRadiance: [0.15, 0.18, 0.25].map((v) => v * Number($("sky").value)),
     bounces: Number($("bounces").value),
+    publicationMode: $("publication").value,
     neutralMaterials: $("neutral").checked ? [16, 18] : [],
   };
 }
@@ -147,7 +150,7 @@ for (const id of [
   "capture",
 ])
   $(id).addEventListener("input", apply);
-for (const id of ["bounces", "sky", "neutral"])
+for (const id of ["bounces", "sky", "neutral", "publication"])
   $(id).addEventListener("input", relight);
 apply();
 function outside() {
@@ -261,6 +264,10 @@ scene.postRender.addEventListener(() => {
   if (w)
     $("status").textContent +=
       `\nDDGI: ${w.status} · ${w.progress?.completed ?? 0}/${w.progress?.total ?? "…"}\nBVH: ${w.packet?.bvh.triangles ?? "…"} tris · Cache: ${w.packet?.cache.surfels ?? "…"} ${gpuMode ? "slots" : "surfels"}\nProbes: ${gpuMode ? (w.packet?.grid.total ?? "…") : `${w.packet?.active ?? "…"}/${w.packet?.grid.total ?? "…"}`} · bounce ${w.packet?.bounce ?? 0}\nGPU textures: ${(w.memoryBytes / 1048576).toFixed(2)} MiB${w.metrics?.updates.length ? `\n上次 GI 更新 ${(w.metrics.updates.at(-1).milliseconds / 1000).toFixed(2)} s` : ""}`;
+  if (gpuMode) {
+    $("status").textContent +=
+      `\n请求 ${w.requestedRevision} · 计算 ${w.activeRevision}\n显示 ${w.publishedRevision} / 第 ${w.publishedBounce} 轮 · 完成 ${w.settledRevision}`;
+  }
 });
 window.lumenDemo = {
   widget,

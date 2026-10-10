@@ -90,8 +90,8 @@ GPU once: probe relocation → closest-hit rays → classification → geometry 
 GPU on sun direction change: energy-independent any-hit visibility cache
 GPU per lighting revision: direct surface cache (reuses hits / sun visibility / moments)
 GPU per bounce: outgoing surface cache(previous complete DDGI)
-               → directional irradiance
-GPU publish: atomically select the complete final atlas pair
+               → 8×8 directional irradiance → separate-image 10×10 border copy
+GPU publish: complete final snapshot, or each complete round in explicit progressive mode
 Model PBR: coverage-aware DDGI diffuse → existing HDR/display pipeline
 ```
 
@@ -121,7 +121,7 @@ GPU `solve({ materialOverrides: [{ id, baseColorFactor: [r,g,b], emissiveFactor:
 
 静态 loader 支持本次标准 metallic-roughness Sponza；遇到动画、skin、morph、Draco、BLEND、非三角形、sparse accessor、非 UV0 或未支持的 required extension 会明确报错。尚未对所有 glTF 扩展、复杂节点变换和材质组合完成验收。
 
-默认 2 米 / 128 rays 布局是 17×12×9，共 1,836 probes。GPU 后端自有纹理约 **90.14 MiB**，包含完整 BVH / 顶点 / UV、512 像素边长材质 atlas、命中与表面缓存、迁移/分类位置和三个探针对。235,008 是缓存槽容量，包含 Miss / 背面 / Unknown，并非独立表面数量。默认 GPU 纹理预算 192 MiB，最多 4,096 probes / 512 rays；超过纹理尺寸或预算时报错并回退材质 IBL。CPU 参考的三张探针纹理仍为 5.63 MiB，上传峰值按两份计算，默认预算 128 MiB。
+默认 2 米 / 128 rays 布局是 17×12×9，共 1,836 probes。GPU 后端自有纹理约 **89.02 MiB**，包含完整 BVH / 顶点 / UV、512 像素边长材质 atlas、命中与表面缓存、迁移/分类位置、三张 E atlas、共享几何 M、太阳可见性缓存及两张内部工作纹理。235,008 是缓存槽容量，包含 Miss / 背面 / Unknown，并非独立表面数量。默认 GPU 纹理预算 192 MiB，最多 4,096 probes / 512 rays；超过纹理尺寸或预算时报错并回退材质 IBL。CPU 参考的三张探针纹理仍为 5.63 MiB，上传峰值按两份计算，默认预算 128 MiB。
 
 上述预算不含显示模型纹理、主帧缓冲、阴影图和 Worker CPU 几何内存。GPU demo 默认关闭独立 GBuffer 捕获，需要材质调试时再启用；GI 本身不依赖它。可用 `?spacing=3&rays=64&gpuBudget=6` 降低更新负载，或 `?shadowSize=1024&scale=0.5` 降低显示渲染成本；这会改变质量，不能与默认配置的结果混为一谈。
 
@@ -231,7 +231,7 @@ DDGI 的方向辐照度和距离矩方法参考 [NVIDIA RTXGI 的公开算法资
 
 ## 下一阶段
 
-继续降低表面缓存重复求交与更新延迟，增加时间过滤、动态物体与局部失效，再扩展 3D Tiles / 地形覆盖。Surface Cache 的空间采样精度、薄壁漏光和更密探针也需要继续验证。屏幕追踪、镜面反射和 Unreal Cards 仍未实现。
+本轮仅实现静态几何低延迟重照明。局部更新、刚体 BLAS/TLAS、动态物体和 3D Tiles/地形驻留按后续里程碑分开推进；时间过滤、屏幕追踪、镜面反射和 Unreal Cards 尚未实现。
 
 ## R2 内部积分与边界复制
 
@@ -240,3 +240,24 @@ DDGI 的方向辐照度和距离矩方法参考 [NVIDIA RTXGI 的公开算法资
 同设备、同质量、交替顺序各三次的 Sponza A/B，算术版积分 GPU 中位数 17.46 ms，LUT 为 20.40 ms；边界复制分别 1.71/1.79 ms。LUT 没有积分收益，生产默认使用算术版且不分配权重表。`diagnosticIntegrationLut: true` 仅供显式 A/B 回归，额外分配 131,072 字节并初始化一次 GPU 权重表。A/B 墙钟中位数 5.81/5.36 秒、范围重叠且 LUT 有 10.66 秒离群值，不能据此认定 LUT 更快。
 
 `npm run test:integration` 检查两条诊断路径的完整 E/实际 HDR（绝对 2e-4 + 相对 1e-3）、逐 texel 镜像边界、接缝及固定距离矩。`npm run benchmark:integration` 为独立无读回运行；设置 `LUMEN_BENCH_SCENE=sponza` 使用默认 Sponza。持久报告在 `reports/relighting-v2/r2-*.json`。R0 全字段比较及 R1 灯光依赖/Unknown 回归继续通过。
+
+## R3 逐轮发布接口
+
+生产默认 `publicationMode: "snapshot"` 保留完整 N 轮原子发布。显式 `"progressive"` 在所有探针及八面体边界完成后发布第 1、2、…、N 轮，每轮至少留一个前台渲染帧。三个 E atlas 的 published/read/write 角色独立管理；published 和 read 可以共用完整图像，write 必须与两者不同。内部积分、边界复制与前台采样从不读写同一图像。M 为一次生成的共享几何纹理。
+
+`requestedRevision` 是最新请求，`activeRevision` 是当前执行代（空闲为 0），`publishedRevision/publishedBounce` 是实际前台场，`settledRevision` 是最近完成指定全部轮次的代。`ready` 仅表示已有可用场。`solve()/completed` 在最终 N 轮 draw 已提交并选为前台后完成；`firstPublished` 在该请求首次完整发布时完成；两者均不代表 GPU 完成或像素已呈现。`publicationEvent` 携带 revision、bounce、final 和上述状态；`atlasState()` 仅返回 CPU 所有权元数据，无 GPU 读回。
+
+`solve()` 的输入按任务冻结。连续请求只保留最新 pending；progressive 完成已开始的一轮后发布，再切换最新请求，跳过旧代更深轮次。被替代的最终/预览 Promise reject 为 superseded；停止输入后最新代仍完成指定 N 轮。第一轮忽略旧场，无隐藏 warm start。enabled 是原有显示开关；停止并释放几何、Worker、query、纹理及 pending 请求请调用 `world.destroy()` 或销毁 Scene，再用 `loadWorld()` 重建。
+
+示例：
+
+```js
+world.publicationEvent.addEventListener(({ revision, bounce, final }) => {
+  console.log(revision, bounce, final);
+});
+const final = world.solve({ publicationMode: "progressive", skyRadiance: [.2, .2, .3], bounces: 3 });
+const preview = await world.firstPublished;
+await final;
+```
+
+Sponza 可用发布方式下拉框，或 `demo/index.html?backend=gpu&publication=progressive`。`npm run test:progressive` 在自包含 GPU fixture 验证实际首轮 HDR、不同显示帧、N 轮完整字段/HDR 一致、60 次连续改灯、GL 资源稳定、按需渲染停止、Promise 清理及失败恢复。

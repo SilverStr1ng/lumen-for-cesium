@@ -13,6 +13,7 @@ const asset =
   "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf";
 const sponza = process.env.LUMEN_BENCH_SCENE === "sponza";
 const repetitions = Number(process.env.LUMEN_REPETITIONS ?? 3);
+const publicationMode = process.env.LUMEN_PUBLICATION_MODE ?? "snapshot";
 const report = {
   version: sourceVersion(),
   schema: 2,
@@ -21,6 +22,7 @@ const report = {
   mode: "performance: no synchronous texture readback or blocking waits",
   scene: sponza ? asset : "fixtures/untextured.gltf",
   repetitions,
+  publicationMode,
   errors: [],
   updates: {},
 };
@@ -56,8 +58,8 @@ try {
   const start = Date.now();
   await page.goto(
     sponza
-      ? `http://localhost:8090/demo/index.html?backend=gpu&model=${encodeURIComponent(asset)}`
-      : "http://localhost:8090/demo/regression.html?fixture=untextured",
+      ? `http://localhost:8090/demo/index.html?backend=gpu&publication=${publicationMode}&model=${encodeURIComponent(asset)}`
+      : `http://localhost:8090/demo/regression.html?fixture=untextured&publication=${publicationMode}`,
   );
   await page.waitForFunction(
     () => {
@@ -92,6 +94,8 @@ try {
         fov: d.scene.camera.frustum.fov,
       },
       memory: w.metrics.memory,
+      integration: w.packet.integration,
+      initialStages: w.metrics.initialStages,
     };
   });
   await page.evaluate(async () => {
