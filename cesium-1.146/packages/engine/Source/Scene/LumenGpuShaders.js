@@ -12,7 +12,7 @@ uniform bool u_lumenWorldEnabled, u_lumenLinearAtlas;
 const common = `
 precision highp sampler2D;
 uniform sampler2D u_nodes, u_vertices, u_uv, u_materials, u_atlas;
-uniform sampler2D u_hits, u_direct, u_cache, u_visibility;
+uniform sampler2D u_hits, u_direct, u_cache, u_visibility, u_weights;
 uniform int u_nodesCount, u_budget, u_rays, u_first;
 uniform vec3 u_sunDirection, u_sunRadiance, u_skyRadiance;
 uniform ivec2 u_neutral;
@@ -165,29 +165,62 @@ else if(c.y==0) c=ivec2(9-c.x,1);
 else if(c.y==9) c=ivec2(9-c.x,8);
 return octDecode((vec2(c)-0.5)/8.0*2.0-1.0);
 }`;
+export const weights = `${common + integrationDirection}
+void main() {
+ivec2 c=ivec2(gl_FragCoord.xy);vec3 direction=integrationDirection(ivec2(c.y%8+1,c.y/8+1));
+float cosine=max(0.0,dot(direction,rayDirection(c.x)));
+out_FragColor=vec4(cosine*(4.0*czm_pi/float(u_rays)),pow(cosine,16.0),0.0,0.0);
+}`;
 // Geometric validity is independent of energy/solar visibility. Unknown is excluded.
 export const moments = `${common + worldUniforms + integrationDirection}
 void main() {
-ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/10;int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
+ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/8,c=pixel%8+1;int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
 if(texelFetch(u_lumenProbePositions,tile,0).a<0.5) {out_FragColor=vec4(0.0);return;}
-vec3 direction=integrationDirection(pixel%10);
+vec3 direction=integrationDirection(c);
 float mean=0.0,second=0.0,weights=0.0,known=0.0;
 for(int i=0;i<512;i++) {if(i>=u_rays) break;
 vec4 h=texelFetch(u_hits,ivec2(i,probe),0);if(h.x==-1.0) continue;
-known++;float cosine=max(0.0,dot(direction,rayDirection(i)));
-float w=pow(cosine,16.0),d=min(h.w,u_lumenProbeSpacing*8.0);mean+=d*w;second+=d*d*w;weights+=w;
+known++;
+#ifdef LUMEN_USE_LUT
+float w=texelFetch(u_weights,ivec2(i,(c.y-1)*8+c.x-1),0).g;
+#else
+float w=pow(max(0.0,dot(direction,rayDirection(i))),16.0);
+#endif
+float d=min(h.w,u_lumenProbeSpacing*8.0);mean+=d*w;second+=d*d*w;weights+=w;
 }
 out_FragColor=vec4(mean/max(weights,1e-20),second/max(weights,1e-20),0.0,known/float(u_rays));
 }`;
 export const integrate = `${common + worldUniforms + integrationDirection}
 void main() {
-ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/10;int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
+ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/8,c=pixel%8+1;int probe=tile.x+tile.y*textureSize(u_lumenProbePositions,0).x;
 if(texelFetch(u_lumenProbePositions,tile,0).a<0.5) {out_FragColor=vec4(0.0);return;}
-vec3 direction=integrationDirection(pixel%10),E=vec3(0.0);float known=0.0;
+vec3 direction=integrationDirection(c),E=vec3(0.0);float known=0.0;
 for(int i=0;i<512;i++) {if(i>=u_rays) break;vec4 L=texelFetch(u_cache,ivec2(i,probe),0);
-if(L.a<0.5) continue;known++;E+=L.rgb*max(0.0,dot(direction,rayDirection(i)))*(4.0*czm_pi/float(u_rays));}
+if(L.a<0.5) continue;known++;
+#ifdef LUMEN_USE_LUT
+E+=L.rgb*texelFetch(u_weights,ivec2(i,(c.y-1)*8+c.x-1),0).r;
+#else
+E+=L.rgb*max(0.0,dot(direction,rayDirection(i)))*(4.0*czm_pi/float(u_rays));
+#endif
+}
 out_FragColor=vec4(E,known/float(u_rays));
 }`;
+// Copy from a separate 8x8 image; never sample the image attached for writing.
+export const border = `precision highp sampler2D;
+uniform sampler2D u_borderSource;
+void main() {
+ivec2 pixel=ivec2(gl_FragCoord.xy),tile=pixel/10,c=pixel%10;
+if(c.x==0&&c.y==0) c=ivec2(8,8);
+else if(c.x==9&&c.y==0) c=ivec2(1,8);
+else if(c.x==0&&c.y==9) c=ivec2(8,1);
+else if(c.x==9&&c.y==9) c=ivec2(1,1);
+else if(c.x==0) c=ivec2(1,9-c.y);
+else if(c.x==9) c=ivec2(8,9-c.y);
+else if(c.y==0) c=ivec2(9-c.x,1);
+else if(c.y==9) c=ivec2(9-c.x,8);
+out_FragColor=texelFetch(u_borderSource,tile*8+c-1,0);
+}`;
+export const momentsBorder = border;
 export const queryTrace = `${common}
 uniform sampler2D u_queryOrigin,u_queryDirection;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 a=texelFetch(u_queryOrigin,c,0),b=texelFetch(u_queryDirection,c,0);out_FragColor=trace(a.xyz,b.xyz,a.w,int(b.w),false);}`;
@@ -199,7 +232,10 @@ export default {
   intersect,
   classify,
   visibility,
+  weights,
   moments,
+  momentsBorder,
+  border,
   direct,
   bounce,
   integrate,

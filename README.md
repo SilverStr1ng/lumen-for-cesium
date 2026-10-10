@@ -232,3 +232,11 @@ DDGI 的方向辐照度和距离矩方法参考 [NVIDIA RTXGI 的公开算法资
 ## 下一阶段
 
 继续降低表面缓存重复求交与更新延迟，增加时间过滤、动态物体与局部失效，再扩展 3D Tiles / 地形覆盖。Surface Cache 的空间采样精度、薄壁漏光和更密探针也需要继续验证。屏幕追踪、镜面反射和 Unreal Cards 仍未实现。
+
+## R2 内部积分与边界复制
+
+距离矩只在几何初始化时积分一次。E 每轮只计算 8×8 内部，随后从独立工作纹理复制到 10×10 发布 atlas；读图像和 FBO 写图像始终分离。两张 RGBA32F 工作纹理在默认 Sponza 网格上共增加 3,760,128 字节。
+
+同设备、同质量、交替顺序各三次的 Sponza A/B，算术版积分 GPU 中位数 17.46 ms，LUT 为 20.40 ms；边界复制分别 1.71/1.79 ms。LUT 没有积分收益，生产默认使用算术版且不分配权重表。`diagnosticIntegrationLut: true` 仅供显式 A/B 回归，额外分配 131,072 字节并初始化一次 GPU 权重表。A/B 墙钟中位数 5.81/5.36 秒、范围重叠且 LUT 有 10.66 秒离群值，不能据此认定 LUT 更快。
+
+`npm run test:integration` 检查两条诊断路径的完整 E/实际 HDR（绝对 2e-4 + 相对 1e-3）、逐 texel 镜像边界、接缝及固定距离矩。`npm run benchmark:integration` 为独立无读回运行；设置 `LUMEN_BENCH_SCENE=sponza` 使用默认 Sponza。持久报告在 `reports/relighting-v2/r2-*.json`。R0 全字段比较及 R1 灯光依赖/Unknown 回归继续通过。

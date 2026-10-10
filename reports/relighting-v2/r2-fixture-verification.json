@@ -1,0 +1,3806 @@
+{
+  "version": {
+    "head": "c2eadb1336b5aac17fed6ff9a9a0db10acc55487",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "975805226d2c14a1f528be818656696778b77e89aad1b1822c42b2cba596f397",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "0f2f744c8de2863ef4fbd10e3398709ed1c7cd1f6fa23e34f58161f8d8be7397",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "36fb56890fd1554da520161962a5d75720c276a42cce588a876cbfe742cf2225",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+    },
+    "compiledBundle": "9ddd04ed29c1f0ddd2dcefad8f84768ccaab1e39094ec296c3dc9220625e27f4",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js"
+    ]
+  },
+  "head": "c2eadb1336b5aac17fed6ff9a9a0db10acc55487",
+  "mode": "numerical diagnostics; includes explicit GPU readback",
+  "checks": [
+    {
+      "name": "untextured: irradiance agrees with frozen R0 input/result",
+      "passed": true,
+      "details": {
+        "maximumAbsolute": 0,
+        "failures": 0,
+        "tolerance": {
+          "absolute": 0.0002,
+          "relative": 0.001
+        }
+      }
+    },
+    {
+      "name": "untextured: moments agrees with frozen R0 input/result",
+      "passed": true,
+      "details": {
+        "maximumAbsolute": 0,
+        "failures": 0,
+        "tolerance": {
+          "absolute": 0.0002,
+          "relative": 0.0001
+        }
+      }
+    },
+    {
+      "name": "untextured: actual WebGL2 GPU world, valid probes and nonempty geometry",
+      "passed": true,
+      "details": {
+        "backend": "LumenGpuWorld",
+        "grid": {
+          "origin": [
+            -2.5,
+            -2.5,
+            -0.5
+          ],
+          "counts": [
+            6,
+            6,
+            5
+          ],
+          "total": 180,
+          "spacing": 1,
+          "normalBias": 0.075,
+          "rays": 128,
+          "width": 360,
+          "height": 50
+        },
+        "active": 180,
+        "unknown": 0,
+        "hits": 4455,
+        "samples": [
+          {
+            "irradiance": [
+              0.9099591970443726,
+              0.49198809266090393,
+              0.6712356209754944
+            ],
+            "coverage": 1
+          }
+        ],
+        "atlas": [
+          1,
+          1
+        ],
+        "memoryBytes": 2454532,
+        "allocatedBytes": 2454532,
+        "metrics": {
+          "passes": {
+            "relocate": {
+              "batches": 14,
+              "totalMilliseconds": 0.8625980000000001,
+              "maximumMilliseconds": 0.094166,
+              "samples": [
+                0.089062,
+                0.031354,
+                0.023437,
+                0.072187,
+                0.072239,
+                0.069843,
+                0.094166,
+                0.080729,
+                0.076875,
+                0.09151,
+                0.073437,
+                0.029739,
+                0.02875,
+                0.02927
+              ]
+            },
+            "intersect": {
+              "batches": 16,
+              "totalMilliseconds": 0.9294210000000002,
+              "maximumMilliseconds": 0.084895,
+              "samples": [
+                0.069635,
+                0.07125,
+                0.053802,
+                0.070625,
+                0.074635,
+                0.084114,
+                0.075833,
+                0.084895,
+                0.06901,
+                0.045937,
+                0.04,
+                0.041822,
+                0.032187,
+                0.045,
+                0.035104,
+                0.035572
+              ]
+            },
+            "classify": {
+              "batches": 16,
+              "totalMilliseconds": 1.714004,
+              "maximumMilliseconds": 0.138645,
+              "samples": [
+                0.138645,
+                0.124479,
+                0.105625,
+                0.094322,
+                0.098958,
+                0.109479,
+                0.090156,
+                0.100989,
+                0.10026,
+                0.108802,
+                0.119375,
+                0.121822,
+                0.096458,
+                0.112552,
+                0.098437,
+                0.093645
+              ]
+            },
+            "moments": {
+              "batches": 16,
+              "totalMilliseconds": 1.79473,
+              "maximumMilliseconds": 0.186874,
+              "samples": [
+                0.186874,
+                0.153593,
+                0.162135,
+                0.101093,
+                0.106145,
+                0.101093,
+                0.104687,
+                0.10026,
+                0.107864,
+                0.100364,
+                0.088125,
+                0.111458,
+                0.096197,
+                0.099583,
+                0.090312,
+                0.084947
+              ]
+            },
+            "momentsBorder": {
+              "batches": 16,
+              "totalMilliseconds": 0.18061599999999997,
+              "maximumMilliseconds": 0.017343,
+              "samples": [
+                0.014166,
+                0.017343,
+                0.010364,
+                0.010156,
+                0.015,
+                0.014791,
+                0.009895,
+                0.013697,
+                0.010833,
+                0.009947,
+                0.007968,
+                0.008541,
+                0.008177,
+                0.013177,
+                0.006822,
+                0.009739
+              ]
+            },
+            "visibility": {
+              "batches": 16,
+              "totalMilliseconds": 0.6193669999999999,
+              "maximumMilliseconds": 0.058697,
+              "samples": [
+                0.058697,
+                0.025885,
+                0.032812,
+                0.03625,
+                0.041041,
+                0.044635,
+                0.047291,
+                0.047291,
+                0.047552,
+                0.041614,
+                0.0325,
+                0.035833,
+                0.029322,
+                0.034739,
+                0.026822,
+                0.037083
+              ]
+            },
+            "direct": {
+              "batches": 16,
+              "totalMilliseconds": 0.468326,
+              "maximumMilliseconds": 0.077031,
+              "samples": [
+                0.037083,
+                0.077031,
+                0.025572,
+                0.021718,
+                0.016354,
+                0.021406,
+                0.016145,
+                0.024583,
+                0.016197,
+                0.022239,
+                0.04427,
+                0.033177,
+                0.02151,
+                0.032135,
+                0.019479,
+                0.039427
+              ]
+            },
+            "bounce": {
+              "batches": 33,
+              "totalMilliseconds": 2.352693,
+              "maximumMilliseconds": 0.166406,
+              "samples": [
+                0.085208,
+                0.058125,
+                0.048958,
+                0.06375,
+                0.0525,
+                0.041614,
+                0.045104,
+                0.038489,
+                0.040885,
+                0.040729,
+                0.038593,
+                0.067031,
+                0.044895,
+                0.052916,
+                0.039322,
+                0.050677,
+                0.100208,
+                0.081145,
+                0.086197,
+                0.089791,
+                0.080416,
+                0.067239,
+                0.050625,
+                0.070468,
+                0.071406,
+                0.057916,
+                0.13651,
+                0.109479,
+                0.100937,
+                0.166406,
+                0.107187,
+                0.096145,
+                0.071822
+              ]
+            },
+            "integrate": {
+              "batches": 62,
+              "totalMilliseconds": 5.418928000000001,
+              "maximumMilliseconds": 0.173593,
+              "samples": [
+                0.084791,
+                0.099531,
+                0.081718,
+                0.083802,
+                0.083333,
+                0.089218,
+                0.072812,
+                0.074375,
+                0.075364,
+                0.107604,
+                0.080364,
+                0.075364,
+                0.073854,
+                0.072708,
+                0.074062,
+                0.075104,
+                0.07927,
+                0.094166,
+                0.081666,
+                0.0825,
+                0.082135,
+                0.100156,
+                0.091822,
+                0.088802,
+                0.073854,
+                0.08901,
+                0.075468,
+                0.071822,
+                0.073541,
+                0.069895,
+                0.075572,
+                0.076302,
+                0.073541,
+                0.083281,
+                0.073281,
+                0.087031,
+                0.072656,
+                0.147395,
+                0.064062,
+                0.075885,
+                0.071145,
+                0.082395,
+                0.080989,
+                0.06302,
+                0.11802,
+                0.0975,
+                0.173593,
+                0.092916,
+                0.1,
+                0.085052,
+                0.096822,
+                0.092135,
+                0.100468,
+                0.113489,
+                0.119531,
+                0.095937,
+                0.095729,
+                0.092656,
+                0.094739,
+                0.087916,
+                0.087343,
+                0.090416
+              ]
+            },
+            "border": {
+              "batches": 53,
+              "totalMilliseconds": 0.606125,
+              "maximumMilliseconds": 0.031666,
+              "samples": [
+                0.031666,
+                0.019791,
+                0.016197,
+                0.020104,
+                0.01151,
+                0.0125,
+                0.009739,
+                0.012135,
+                0.010416,
+                0.008958,
+                0.008958,
+                0.008697,
+                0.018645,
+                0.011614,
+                0.011406,
+                0.012708,
+                0.010312,
+                0.014843,
+                0.00901,
+                0.005052,
+                0.002083,
+                0.00901,
+                0.009947,
+                0.008125,
+                0.022552,
+                0.011302,
+                0.012187,
+                0.006458,
+                0.010625,
+                0.009947,
+                0.010156,
+                0.009687,
+                0.02177,
+                0.009739,
+                0.011875,
+                0.005625,
+                0.008854,
+                0.009843,
+                0.010104,
+                0.010052,
+                0.01151,
+                0.009322,
+                0.008854,
+                0.00526,
+                0.001927,
+                0.015833,
+                0.017291,
+                0.006354,
+                0.008906,
+                0.012708,
+                0.013802,
+                0.010625,
+                0.009531
+              ]
+            }
+          },
+          "disjoint": 0,
+          "updates": [
+            {
+              "revision": 1,
+              "stages": {
+                "visibility": {
+                  "submittedBatches": 16,
+                  "probes": 180,
+                  "gpuMilliseconds": 0.6193669999999999,
+                  "timerSamples": 16,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 1167.300000011921,
+                  "itemType": "probes"
+                },
+                "direct": {
+                  "submittedBatches": 16,
+                  "probes": 180,
+                  "gpuMilliseconds": 0.468326,
+                  "timerSamples": 16,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 324.5,
+                  "itemType": "probes"
+                },
+                "bounce": {
+                  "submittedBatches": 33,
+                  "probes": 540,
+                  "gpuMilliseconds": 2.352693,
+                  "timerSamples": 33,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 615.8000000268221,
+                  "itemType": "probes"
+                },
+                "integrate": {
+                  "submittedBatches": 62,
+                  "probes": 540,
+                  "gpuMilliseconds": 5.418928000000001,
+                  "timerSamples": 62,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 114.59999999403954,
+                  "itemType": "probes"
+                },
+                "border": {
+                  "submittedBatches": 65,
+                  "probes": 540,
+                  "gpuMilliseconds": 0.606125,
+                  "timerSamples": 53,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 4.5999999940395355,
+                  "itemType": "probes"
+                }
+              },
+              "submittedFrames": 37,
+              "submittedBatches": 192,
+              "cpuSchedulingMilliseconds": 2226.800000026822,
+              "versions": {
+                "geometry": 1,
+                "rayLayout": 1,
+                "material": 1,
+                "sunVisibility": 1,
+                "lighting": 1
+              },
+              "work": {
+                "probeHitInvocations": 0,
+                "sunVisibilitySubmittedSlots": 23040,
+                "momentProbeUpdates": 0
+              },
+              "milliseconds": 2711.7000000029802,
+              "bounces": 3,
+              "submissionMilliseconds": 2711.7000000029802,
+              "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+            }
+          ],
+          "productionReadbacks": 0,
+          "diagnosticReadbacks": 5,
+          "cpuSchedulingMilliseconds": 7112.999999970198,
+          "submittedFrames": 56,
+          "submittedBatches": 270,
+          "timerMissing": 0,
+          "queryQueuePeak": 27,
+          "memory": {
+            "currentBytes": 2454532,
+            "peakBytes": 2454532,
+            "textures": 17,
+            "framebuffers": 12
+          },
+          "initialStages": {
+            "relocate": {
+              "submittedBatches": 14,
+              "probes": 180,
+              "gpuMilliseconds": 0.8625980000000001,
+              "timerSamples": 14,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 3902.7999999821186,
+              "itemType": "probes"
+            },
+            "intersect": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 0.9294210000000002,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 774.3000000119209,
+              "itemType": "probes"
+            },
+            "classify": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 1.714004,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 55.5,
+              "itemType": "probes"
+            },
+            "moments": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 1.79473,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 87.39999997615814,
+              "itemType": "probes"
+            },
+            "momentsBorder": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 0.18061599999999997,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 37.5,
+              "itemType": "probes"
+            }
+          },
+          "work": {
+            "probeHitInvocations": 23040,
+            "sunVisibilitySubmittedSlots": 23040,
+            "momentProbeUpdates": 180
+          }
+        },
+        "environment": {
+          "browser": "153.0.8010.12",
+          "headless": true,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (Intel)",
+          "visibility": "visible",
+          "resolution": [
+            512,
+            384
+          ],
+          "shadowSize": 2048,
+          "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "untextured: finite HDR irradiance and accounted texture memory",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.9099591970443726,
+            0.49198809266090393,
+            0.6712356209754944
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "untextured: valid 1x1 material atlas",
+      "passed": true,
+      "details": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "sky lighting produces actual receiver irradiance changes",
+      "passed": true,
+      "details": {
+        "low": [
+          {
+            "irradiance": [
+              0.5455338358879089,
+              0.2669347822666168,
+              0.2660745680332184
+            ],
+            "coverage": 1
+          }
+        ],
+        "high": [
+          {
+            "irradiance": [
+              2.6278481483459473,
+              2.1354782581329346,
+              2.128596544265747
+            ],
+            "coverage": 1
+          }
+        ],
+        "revision": 3,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 16,
+                "probes": 180,
+                "gpuMilliseconds": 0.6193669999999999,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1167.300000011921,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 16,
+                "probes": 180,
+                "gpuMilliseconds": 0.468326,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 324.5,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 33,
+                "probes": 540,
+                "gpuMilliseconds": 2.352693,
+                "timerSamples": 33,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 615.8000000268221,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 62,
+                "probes": 540,
+                "gpuMilliseconds": 5.418928000000001,
+                "timerSamples": 62,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 114.59999999403954,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 65,
+                "probes": 540,
+                "gpuMilliseconds": 0.7145560000000003,
+                "timerSamples": 65,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 4.5999999940395355,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 37,
+            "submittedBatches": 192,
+            "cpuSchedulingMilliseconds": 2226.800000026822,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 1
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "milliseconds": 2711.7000000029802,
+            "bounces": 3,
+            "submissionMilliseconds": 2711.7000000029802,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          {
+            "revision": 2,
+            "stages": {
+              "direct": {
+                "submittedBatches": 15,
+                "probes": 180,
+                "gpuMilliseconds": 0.26644999999999996,
+                "timerSamples": 15,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "gpuMilliseconds": 1.709364,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.3000000268220901,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 28,
+                "probes": 540,
+                "gpuMilliseconds": 2.8427489999999995,
+                "timerSamples": 28,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 2.0999999940395355,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 32,
+                "probes": 540,
+                "gpuMilliseconds": 0.35212199999999994,
+                "timerSamples": 31,
+                "timerMissing": 1,
+                "cpuSchedulingMilliseconds": 1.7000000178813934,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 12,
+            "submittedBatches": 96,
+            "cpuSchedulingMilliseconds": 6.100000038743019,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 2
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            "milliseconds": 298.29999999701977,
+            "bounces": 3,
+            "submissionMilliseconds": 298.29999999701977,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          {
+            "revision": 3,
+            "stages": {
+              "direct": {
+                "submittedBatches": 10,
+                "probes": 180,
+                "gpuMilliseconds": 0.258746,
+                "timerSamples": 10,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.5000000149011612,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 18,
+                "probes": 540,
+                "gpuMilliseconds": 1.133432,
+                "timerSamples": 13,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.300000011920929,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 16,
+                "probes": 540,
+                "gpuMilliseconds": 1.5118179999999999,
+                "timerSamples": 12,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.7000000029802322,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "gpuMilliseconds": 0.17457799999999998,
+                "timerSamples": 13,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.1000000089406967,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 9,
+            "submittedBatches": 65,
+            "cpuSchedulingMilliseconds": 3.600000038743019,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 3
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 0,
+              "momentProbeUpdates": 0
+            },
+            "milliseconds": 99.20000000298023,
+            "bounces": 3,
+            "submissionMilliseconds": 99.20000000298023,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "exhausted GPU traversal is Unknown",
+      "passed": true,
+      "details": [
+        {
+          "status": "Unknown",
+          "gpuTriangle": -1,
+          "u": 0,
+          "v": 0,
+          "distance": 100,
+          "backface": false
+        }
+      ]
+    },
+    {
+      "name": "untextured: GL has no framebuffer feedback or errors",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 1318
+            },
+            "numerical": {
+              "readPixels": 8,
+              "draws": 2094
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 34,
+            "framebuffers": 21,
+            "queries": 0,
+            "programs": 21,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 37,
+            "framebuffers": 22,
+            "queries": 32,
+            "programs": 21,
+            "syncs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "two-rooms: irradiance agrees with frozen R0 input/result",
+      "passed": true,
+      "details": {
+        "maximumAbsolute": 0,
+        "failures": 0,
+        "tolerance": {
+          "absolute": 0.0002,
+          "relative": 0.001
+        }
+      }
+    },
+    {
+      "name": "two-rooms: moments agrees with frozen R0 input/result",
+      "passed": true,
+      "details": {
+        "maximumAbsolute": 0,
+        "failures": 0,
+        "tolerance": {
+          "absolute": 0.0002,
+          "relative": 0.0001
+        }
+      }
+    },
+    {
+      "name": "two-rooms: actual WebGL2 GPU world, valid probes and nonempty geometry",
+      "passed": true,
+      "details": {
+        "backend": "LumenGpuWorld",
+        "grid": {
+          "origin": [
+            -3.5,
+            -2.5,
+            -0.5
+          ],
+          "counts": [
+            8,
+            6,
+            5
+          ],
+          "total": 240,
+          "spacing": 1,
+          "normalBias": 0.075,
+          "rays": 128,
+          "width": 480,
+          "height": 50
+        },
+        "active": 240,
+        "unknown": 0,
+        "hits": 12614,
+        "samples": [
+          {
+            "irradiance": [
+              0.5393961071968079,
+              0.029452715069055557,
+              0.04031171277165413
+            ],
+            "coverage": 1
+          },
+          {
+            "irradiance": [
+              0.0378536656498909,
+              0.044024594128131866,
+              0.06003278121352196
+            ],
+            "coverage": 1
+          }
+        ],
+        "atlas": [
+          1,
+          1
+        ],
+        "memoryBytes": 3239812,
+        "allocatedBytes": 3239812,
+        "metrics": {
+          "passes": {
+            "relocate": {
+              "batches": 18,
+              "totalMilliseconds": 1.732126,
+              "maximumMilliseconds": 0.166145,
+              "samples": [
+                0.110052,
+                0.031197,
+                0.034427,
+                0.032447,
+                0.025156,
+                0.142187,
+                0.145052,
+                0.140572,
+                0.13802,
+                0.135312,
+                0.136979,
+                0.166145,
+                0.139062,
+                0.142656,
+                0.142395,
+                0.024166,
+                0.024062,
+                0.022239
+              ]
+            },
+            "intersect": {
+              "batches": 21,
+              "totalMilliseconds": 1.5656689999999998,
+              "maximumMilliseconds": 0.107656,
+              "samples": [
+                0.083125,
+                0.068489,
+                0.05026,
+                0.059635,
+                0.067031,
+                0.085156,
+                0.081927,
+                0.082031,
+                0.069114,
+                0.107656,
+                0.081875,
+                0.086614,
+                0.090781,
+                0.094947,
+                0.087708,
+                0.082552,
+                0.048385,
+                0.062447,
+                0.052291,
+                0.070625,
+                0.05302
+              ]
+            },
+            "classify": {
+              "batches": 22,
+              "totalMilliseconds": 2.325562,
+              "maximumMilliseconds": 0.154114,
+              "samples": [
+                0.117395,
+                0.085833,
+                0.118125,
+                0.092812,
+                0.122552,
+                0.097604,
+                0.112187,
+                0.111614,
+                0.116145,
+                0.101145,
+                0.119739,
+                0.119062,
+                0.154114,
+                0.109843,
+                0.100364,
+                0.085364,
+                0.09776,
+                0.08526,
+                0.090625,
+                0.099947,
+                0.106562,
+                0.08151
+              ]
+            },
+            "moments": {
+              "batches": 21,
+              "totalMilliseconds": 2.2980659999999995,
+              "maximumMilliseconds": 0.14026,
+              "samples": [
+                0.086354,
+                0.117552,
+                0.14026,
+                0.122135,
+                0.12125,
+                0.123802,
+                0.128645,
+                0.136354,
+                0.124427,
+                0.117135,
+                0.124322,
+                0.115677,
+                0.101354,
+                0.088385,
+                0.085364,
+                0.08125,
+                0.081041,
+                0.077031,
+                0.116979,
+                0.11677,
+                0.091979
+              ]
+            },
+            "momentsBorder": {
+              "batches": 22,
+              "totalMilliseconds": 0.257334,
+              "maximumMilliseconds": 0.037447,
+              "samples": [
+                0.014531,
+                0.019531,
+                0.037447,
+                0.014843,
+                0.011875,
+                0.007708,
+                0.008281,
+                0.008958,
+                0.007239,
+                0.007447,
+                0.0075,
+                0.00677,
+                0.021406,
+                0.009322,
+                0.011979,
+                0.008229,
+                0.009375,
+                0.007604,
+                0.009791,
+                0.008593,
+                0.011458,
+                0.007447
+              ]
+            },
+            "visibility": {
+              "batches": 21,
+              "totalMilliseconds": 0.9061879999999998,
+              "maximumMilliseconds": 0.083906,
+              "samples": [
+                0.031874,
+                0.051145,
+                0.047552,
+                0.020885,
+                0.027083,
+                0.065468,
+                0.083906,
+                0.079322,
+                0.017916,
+                0.07125,
+                0.073593,
+                0.052916,
+                0.017812,
+                0.036354,
+                0.043802,
+                0.040989,
+                0.017656,
+                0.022187,
+                0.037291,
+                0.022187,
+                0.045
+              ]
+            },
+            "direct": {
+              "batches": 21,
+              "totalMilliseconds": 0.48697,
+              "maximumMilliseconds": 0.043593,
+              "samples": [
+                0.029999,
+                0.043593,
+                0.029687,
+                0.021979,
+                0.016927,
+                0.021822,
+                0.015781,
+                0.012395,
+                0.015937,
+                0.014687,
+                0.035833,
+                0.021302,
+                0.019375,
+                0.022187,
+                0.015052,
+                0.023125,
+                0.01677,
+                0.02677,
+                0.031041,
+                0.020052,
+                0.032656
+              ]
+            },
+            "bounce": {
+              "batches": 59,
+              "totalMilliseconds": 4.3641950000000005,
+              "maximumMilliseconds": 0.186302,
+              "samples": [
+                0.080104,
+                0.080989,
+                0.054427,
+                0.105989,
+                0.064114,
+                0.078125,
+                0.06302,
+                0.04651,
+                0.054739,
+                0.057916,
+                0.049062,
+                0.078697,
+                0.079166,
+                0.05875,
+                0.07,
+                0.041666,
+                0.04401,
+                0.045677,
+                0.047239,
+                0.077604,
+                0.056979,
+                0.127291,
+                0.084791,
+                0.062916,
+                0.100052,
+                0.08125,
+                0.070833,
+                0.130208,
+                0.087135,
+                0.072916,
+                0.062968,
+                0.186302,
+                0.075781,
+                0.094427,
+                0.048593,
+                0.083593,
+                0.094739,
+                0.063437,
+                0.121979,
+                0.070833,
+                0.0675,
+                0.065781,
+                0.069375,
+                0.092395,
+                0.059635,
+                0.055312,
+                0.160729,
+                0.06651,
+                0.055312,
+                0.084114,
+                0.081354,
+                0.053906,
+                0.046354,
+                0.048281,
+                0.087708,
+                0.056562,
+                0.060104,
+                0.049322,
+                0.049114
+              ]
+            },
+            "integrate": {
+              "batches": 80,
+              "totalMilliseconds": 6.986730999999998,
+              "maximumMilliseconds": 0.28875,
+              "samples": [
+                0.078177,
+                0.098229,
+                0.098906,
+                0.100312,
+                0.076718,
+                0.077604,
+                0.074843,
+                0.070104,
+                0.071614,
+                0.085104,
+                0.069375,
+                0.070572,
+                0.068593,
+                0.069062,
+                0.075729,
+                0.068645,
+                0.069947,
+                0.116927,
+                0.094583,
+                0.079947,
+                0.075625,
+                0.078072,
+                0.070104,
+                0.064739,
+                0.057812,
+                0.058072,
+                0.087083,
+                0.074843,
+                0.072447,
+                0.070208,
+                0.066302,
+                0.065468,
+                0.065468,
+                0.066562,
+                0.069322,
+                0.069843,
+                0.07427,
+                0.077552,
+                0.064218,
+                0.069791,
+                0.066614,
+                0.063645,
+                0.088541,
+                0.079739,
+                0.073541,
+                0.065677,
+                0.07276,
+                0.070416,
+                0.073281,
+                0.067447,
+                0.07,
+                0.065833,
+                0.12625,
+                0.075572,
+                0.10302,
+                0.071822,
+                0.119322,
+                0.083593,
+                0.082187,
+                0.137083,
+                0.100364,
+                0.077083,
+                0.085729,
+                0.096927,
+                0.09026,
+                0.079427,
+                0.181562,
+                0.28875,
+                0.215677,
+                0.184427,
+                0.109166,
+                0.088229,
+                0.09927,
+                0.080989,
+                0.129687,
+                0.100156,
+                0.083437,
+                0.074322,
+                0.071197,
+                0.080937
+              ]
+            },
+            "border": {
+              "batches": 56,
+              "totalMilliseconds": 0.6433050000000001,
+              "maximumMilliseconds": 0.0225,
+              "samples": [
+                0.010052,
+                0.015156,
+                0.016406,
+                0.012395,
+                0.0225,
+                0.015885,
+                0.012031,
+                0.014947,
+                0.011197,
+                0.012343,
+                0.008541,
+                0.020989,
+                0.013072,
+                0.010364,
+                0.00776,
+                0.01052,
+                0.007708,
+                0.005156,
+                0.007916,
+                0.008385,
+                0.02026,
+                0.013333,
+                0.01276,
+                0.017656,
+                0.007864,
+                0.008906,
+                0.011354,
+                0.01677,
+                0.011718,
+                0.009791,
+                0.015468,
+                0.014583,
+                0.009322,
+                0.008333,
+                0.006093,
+                0.017708,
+                0.011614,
+                0.009427,
+                0.013385,
+                0.013593,
+                0.008697,
+                0.004947,
+                0.010416,
+                0.014375,
+                0.008541,
+                0.017031,
+                0.00875,
+                0.006406,
+                0.008593,
+                0.006145,
+                0.00552,
+                0.012135,
+                0.012291,
+                0.008229,
+                0.010416,
+                0.007552
+              ]
+            }
+          },
+          "disjoint": 0,
+          "updates": [
+            {
+              "revision": 1,
+              "stages": {
+                "visibility": {
+                  "submittedBatches": 21,
+                  "probes": 240,
+                  "gpuMilliseconds": 0.9061879999999998,
+                  "timerSamples": 21,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 864.9000000208616,
+                  "itemType": "probes"
+                },
+                "direct": {
+                  "submittedBatches": 21,
+                  "probes": 240,
+                  "gpuMilliseconds": 0.48697,
+                  "timerSamples": 21,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 236.29999996721745,
+                  "itemType": "probes"
+                },
+                "bounce": {
+                  "submittedBatches": 59,
+                  "probes": 720,
+                  "gpuMilliseconds": 4.3641950000000005,
+                  "timerSamples": 59,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 493.5,
+                  "itemType": "probes"
+                },
+                "integrate": {
+                  "submittedBatches": 80,
+                  "probes": 720,
+                  "gpuMilliseconds": 6.986730999999998,
+                  "timerSamples": 80,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 76.29999996721745,
+                  "itemType": "probes"
+                },
+                "border": {
+                  "submittedBatches": 83,
+                  "probes": 720,
+                  "gpuMilliseconds": 0.6433050000000001,
+                  "timerSamples": 56,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 4.299999997019768,
+                  "itemType": "probes"
+                }
+              },
+              "submittedFrames": 46,
+              "submittedBatches": 264,
+              "cpuSchedulingMilliseconds": 1675.2999999523163,
+              "versions": {
+                "geometry": 1,
+                "rayLayout": 1,
+                "material": 1,
+                "sunVisibility": 1,
+                "lighting": 1
+              },
+              "work": {
+                "probeHitInvocations": 0,
+                "sunVisibilitySubmittedSlots": 30720,
+                "momentProbeUpdates": 0
+              },
+              "milliseconds": 2446.199999988079,
+              "bounces": 3,
+              "submissionMilliseconds": 2446.199999988079,
+              "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+            }
+          ],
+          "productionReadbacks": 0,
+          "diagnosticReadbacks": 5,
+          "cpuSchedulingMilliseconds": 6684.600000023842,
+          "submittedFrames": 74,
+          "submittedBatches": 368,
+          "timerMissing": 0,
+          "queryQueuePeak": 27,
+          "memory": {
+            "currentBytes": 3239812,
+            "peakBytes": 3239812,
+            "textures": 17,
+            "framebuffers": 12
+          },
+          "initialStages": {
+            "relocate": {
+              "submittedBatches": 18,
+              "probes": 240,
+              "gpuMilliseconds": 1.732126,
+              "timerSamples": 18,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 3982.2999999970198,
+              "itemType": "probes"
+            },
+            "intersect": {
+              "submittedBatches": 21,
+              "probes": 240,
+              "gpuMilliseconds": 1.5656689999999998,
+              "timerSamples": 21,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 782.3000000119209,
+              "itemType": "probes"
+            },
+            "classify": {
+              "submittedBatches": 22,
+              "probes": 240,
+              "gpuMilliseconds": 2.325562,
+              "timerSamples": 22,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 58.50000001490116,
+              "itemType": "probes"
+            },
+            "moments": {
+              "submittedBatches": 21,
+              "probes": 240,
+              "gpuMilliseconds": 2.2980659999999995,
+              "timerSamples": 21,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 69.29999999701977,
+              "itemType": "probes"
+            },
+            "momentsBorder": {
+              "submittedBatches": 22,
+              "probes": 240,
+              "gpuMilliseconds": 0.257334,
+              "timerSamples": 22,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 38.5,
+              "itemType": "probes"
+            }
+          },
+          "work": {
+            "probeHitInvocations": 30720,
+            "sunVisibilitySubmittedSlots": 30720,
+            "momentProbeUpdates": 240
+          }
+        },
+        "environment": {
+          "browser": "153.0.8010.12",
+          "headless": true,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (Intel)",
+          "visibility": "visible",
+          "resolution": [
+            512,
+            384
+          ],
+          "shadowSize": 2048,
+          "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "two-rooms: finite HDR irradiance and accounted texture memory",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.5393961071968079,
+            0.029452715069055557,
+            0.04031171277165413
+          ],
+          "coverage": 1
+        },
+        {
+          "irradiance": [
+            0.0378536656498909,
+            0.044024594128131866,
+            0.06003278121352196
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "two-rooms: real wall agrees with independent CPU intersection",
+      "passed": true,
+      "details": {
+        "trace": [
+          {
+            "status": "Hit",
+            "triangle": 14,
+            "gpuTriangle": 6,
+            "u": 0.10000000149011612,
+            "v": 0.4000000059604645,
+            "distance": 1.4199999570846558,
+            "backface": true
+          }
+        ],
+        "reference": [
+          {
+            "status": "Hit",
+            "triangle": 14,
+            "u": 0.1,
+            "v": 0.4,
+            "distance": 1.4200000017881393,
+            "backface": true,
+            "material": 0
+          }
+        ],
+        "samples": [
+          {
+            "irradiance": [
+              0.5019983649253845,
+              0,
+              0
+            ],
+            "coverage": 1
+          },
+          {
+            "irradiance": [
+              0.0006874666432850063,
+              0,
+              0
+            ],
+            "coverage": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "two-rooms: wall blocks red emissive transport",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.5019983649253845,
+            0,
+            0
+          ],
+          "coverage": 1
+        },
+        {
+          "irradiance": [
+            0.0006874666432850063,
+            0,
+            0
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "two-rooms: GL has no framebuffer feedback or errors",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 1749
+            },
+            "numerical": {
+              "readPixels": 7,
+              "draws": 1518
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 34,
+            "framebuffers": 21,
+            "queries": 0,
+            "programs": 21,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 37,
+            "framebuffers": 22,
+            "queries": 27,
+            "programs": 21,
+            "syncs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "alpha-mask: irradiance agrees with frozen R0 input/result",
+      "passed": true,
+      "details": {
+        "maximumAbsolute": 0,
+        "failures": 0,
+        "tolerance": {
+          "absolute": 0.0002,
+          "relative": 0.001
+        }
+      }
+    },
+    {
+      "name": "alpha-mask: moments agrees with frozen R0 input/result",
+      "passed": true,
+      "details": {
+        "maximumAbsolute": 0,
+        "failures": 0,
+        "tolerance": {
+          "absolute": 0.0002,
+          "relative": 0.0001
+        }
+      }
+    },
+    {
+      "name": "alpha-mask: actual WebGL2 GPU world, valid probes and nonempty geometry",
+      "passed": true,
+      "details": {
+        "backend": "LumenGpuWorld",
+        "grid": {
+          "origin": [
+            -2.5,
+            -1.5,
+            -0.5
+          ],
+          "counts": [
+            6,
+            4,
+            4
+          ],
+          "total": 96,
+          "spacing": 1,
+          "normalBias": 0.075,
+          "rays": 128,
+          "width": 240,
+          "height": 40
+        },
+        "active": 96,
+        "unknown": 0,
+        "hits": 1857,
+        "samples": [
+          {
+            "irradiance": [
+              0.44388607144355774,
+              0.5324196219444275,
+              0.7389882802963257
+            ],
+            "coverage": 1
+          }
+        ],
+        "atlas": [
+          512,
+          512
+        ],
+        "memoryBytes": 2403712,
+        "allocatedBytes": 2403712,
+        "metrics": {
+          "passes": {
+            "relocate": {
+              "batches": 8,
+              "totalMilliseconds": 0.908642,
+              "maximumMilliseconds": 0.447812,
+              "samples": [
+                0.447812,
+                0.05026,
+                0.077864,
+                0.078541,
+                0.075677,
+                0.087708,
+                0.046458,
+                0.044322
+              ]
+            },
+            "intersect": {
+              "batches": 9,
+              "totalMilliseconds": 0.269475,
+              "maximumMilliseconds": 0.038593,
+              "samples": [
+                0.029739,
+                0.028385,
+                0.038593,
+                0.032708,
+                0.030677,
+                0.029479,
+                0.033541,
+                0.025364,
+                0.020989
+              ]
+            },
+            "classify": {
+              "batches": 9,
+              "totalMilliseconds": 0.6597339999999999,
+              "maximumMilliseconds": 0.102656,
+              "samples": [
+                0.099322,
+                0.102656,
+                0.06776,
+                0.07552,
+                0.062395,
+                0.07177,
+                0.059062,
+                0.058177,
+                0.063072
+              ]
+            },
+            "moments": {
+              "batches": 9,
+              "totalMilliseconds": 0.948329,
+              "maximumMilliseconds": 0.126354,
+              "samples": [
+                0.112395,
+                0.126354,
+                0.121875,
+                0.114843,
+                0.103958,
+                0.109062,
+                0.087552,
+                0.09052,
+                0.08177
+              ]
+            },
+            "momentsBorder": {
+              "batches": 9,
+              "totalMilliseconds": 0.093485,
+              "maximumMilliseconds": 0.015885,
+              "samples": [
+                0.015885,
+                0.01302,
+                0.012552,
+                0.010364,
+                0.007812,
+                0.009635,
+                0.00776,
+                0.008489,
+                0.007968
+              ]
+            },
+            "visibility": {
+              "batches": 10,
+              "totalMilliseconds": 0.29676600000000003,
+              "maximumMilliseconds": 0.044218,
+              "samples": [
+                0.04151,
+                0.030781,
+                0.022968,
+                0.034427,
+                0.044218,
+                0.022864,
+                0.038177,
+                0.022395,
+                0.022916,
+                0.01651
+              ]
+            },
+            "direct": {
+              "batches": 10,
+              "totalMilliseconds": 0.269839,
+              "maximumMilliseconds": 0.050364,
+              "samples": [
+                0.023958,
+                0.021197,
+                0.036927,
+                0.050364,
+                0.029218,
+                0.030468,
+                0.018593,
+                0.024479,
+                0.014583,
+                0.020052
+              ]
+            },
+            "bounce": {
+              "batches": 37,
+              "totalMilliseconds": 2.0278980000000004,
+              "maximumMilliseconds": 0.189635,
+              "samples": [
+                0.064531,
+                0.060312,
+                0.04625,
+                0.076145,
+                0.049531,
+                0.037708,
+                0.060416,
+                0.046197,
+                0.037395,
+                0.030781,
+                0.110312,
+                0.04901,
+                0.08125,
+                0.045937,
+                0.050989,
+                0.049479,
+                0.045468,
+                0.045156,
+                0.045104,
+                0.044947,
+                0.074166,
+                0.049114,
+                0.039062,
+                0.041145,
+                0.03401,
+                0.038541,
+                0.071145,
+                0.052187,
+                0.063906,
+                0.054218,
+                0.04901,
+                0.037812,
+                0.03927,
+                0.036666,
+                0.041875,
+                0.039218,
+                0.189635
+              ]
+            },
+            "integrate": {
+              "batches": 23,
+              "totalMilliseconds": 1.969575,
+              "maximumMilliseconds": 0.205625,
+              "samples": [
+                0.084739,
+                0.080937,
+                0.065989,
+                0.063333,
+                0.059479,
+                0.060208,
+                0.057708,
+                0.067083,
+                0.068385,
+                0.070833,
+                0.067031,
+                0.095468,
+                0.07901,
+                0.074427,
+                0.090833,
+                0.069531,
+                0.076197,
+                0.205625,
+                0.178229,
+                0.14901,
+                0.079739,
+                0.074427,
+                0.051354
+              ]
+            },
+            "border": {
+              "batches": 27,
+              "totalMilliseconds": 0.278529,
+              "maximumMilliseconds": 0.021302,
+              "samples": [
+                0.021302,
+                0.011666,
+                0.017708,
+                0.019635,
+                0.016302,
+                0.010885,
+                0.00552,
+                0.010729,
+                0.008906,
+                0.008281,
+                0.012135,
+                0.013802,
+                0.011562,
+                0.009947,
+                0.005364,
+                0.007968,
+                0.006145,
+                0.007187,
+                0.007656,
+                0.006979,
+                0.01427,
+                0.005468,
+                0.00276,
+                0.007239,
+                0.009531,
+                0.007395,
+                0.012187
+              ]
+            }
+          },
+          "disjoint": 0,
+          "updates": [
+            {
+              "revision": 1,
+              "stages": {
+                "visibility": {
+                  "submittedBatches": 10,
+                  "probes": 96,
+                  "gpuMilliseconds": 0.29676600000000003,
+                  "timerSamples": 10,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 48.30000002682209,
+                  "itemType": "probes"
+                },
+                "direct": {
+                  "submittedBatches": 10,
+                  "probes": 96,
+                  "gpuMilliseconds": 0.269839,
+                  "timerSamples": 10,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 91.99999998509884,
+                  "itemType": "probes"
+                },
+                "bounce": {
+                  "submittedBatches": 37,
+                  "probes": 288,
+                  "gpuMilliseconds": 2.0278980000000004,
+                  "timerSamples": 37,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 54.3999999910593,
+                  "itemType": "probes"
+                },
+                "integrate": {
+                  "submittedBatches": 23,
+                  "probes": 288,
+                  "gpuMilliseconds": 1.969575,
+                  "timerSamples": 23,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 45.79999999701977,
+                  "itemType": "probes"
+                },
+                "border": {
+                  "submittedBatches": 37,
+                  "probes": 288,
+                  "gpuMilliseconds": 0.278529,
+                  "timerSamples": 27,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 2.700000047683716,
+                  "itemType": "probes"
+                }
+              },
+              "submittedFrames": 32,
+              "submittedBatches": 117,
+              "cpuSchedulingMilliseconds": 243.20000004768372,
+              "versions": {
+                "geometry": 1,
+                "rayLayout": 1,
+                "material": 1,
+                "sunVisibility": 1,
+                "lighting": 1
+              },
+              "work": {
+                "probeHitInvocations": 0,
+                "sunVisibilitySubmittedSlots": 12288,
+                "momentProbeUpdates": 0
+              },
+              "milliseconds": 669.5,
+              "bounces": 3,
+              "submissionMilliseconds": 669.5,
+              "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+            }
+          ],
+          "productionReadbacks": 0,
+          "diagnosticReadbacks": 5,
+          "cpuSchedulingMilliseconds": 4208.9000000059605,
+          "submittedFrames": 46,
+          "submittedBatches": 161,
+          "timerMissing": 0,
+          "queryQueuePeak": 25,
+          "memory": {
+            "currentBytes": 2403712,
+            "peakBytes": 2403712,
+            "textures": 17,
+            "framebuffers": 12
+          },
+          "initialStages": {
+            "relocate": {
+              "submittedBatches": 8,
+              "probes": 96,
+              "gpuMilliseconds": 0.908642,
+              "timerSamples": 8,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 3807.7000000029802,
+              "itemType": "probes"
+            },
+            "intersect": {
+              "submittedBatches": 9,
+              "probes": 96,
+              "gpuMilliseconds": 0.269475,
+              "timerSamples": 9,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 20.19999998807907,
+              "itemType": "probes"
+            },
+            "classify": {
+              "submittedBatches": 9,
+              "probes": 96,
+              "gpuMilliseconds": 0.6597339999999999,
+              "timerSamples": 9,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 17.299999997019768,
+              "itemType": "probes"
+            },
+            "moments": {
+              "submittedBatches": 9,
+              "probes": 96,
+              "gpuMilliseconds": 0.948329,
+              "timerSamples": 9,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 41.5,
+              "itemType": "probes"
+            },
+            "momentsBorder": {
+              "submittedBatches": 9,
+              "probes": 96,
+              "gpuMilliseconds": 0.093485,
+              "timerSamples": 9,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 11.800000011920929,
+              "itemType": "probes"
+            }
+          },
+          "work": {
+            "probeHitInvocations": 12288,
+            "sunVisibilitySubmittedSlots": 12288,
+            "momentProbeUpdates": 96
+          }
+        },
+        "environment": {
+          "browser": "153.0.8010.12",
+          "headless": true,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (Intel)",
+          "visibility": "visible",
+          "resolution": [
+            512,
+            384
+          ],
+          "shadowSize": 2048,
+          "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "alpha-mask: finite HDR irradiance and accounted texture memory",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.44388607144355774,
+            0.5324196219444275,
+            0.7389882802963257
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "alpha mask: transparent texel passes through; opaque texel occludes",
+      "passed": true,
+      "details": {
+        "trace": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "gpuTriangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "gpuTriangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true
+          }
+        ],
+        "reference": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true,
+            "material": 0
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true,
+            "material": 1
+          }
+        ],
+        "blackMaximum": 0,
+        "coverage": 1
+      }
+    },
+    {
+      "name": "black light preserves valid coverage and zero irradiance",
+      "passed": true,
+      "details": {
+        "trace": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "gpuTriangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "gpuTriangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true
+          }
+        ],
+        "reference": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true,
+            "material": 0
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true,
+            "material": 1
+          }
+        ],
+        "blackMaximum": 0,
+        "coverage": 1
+      }
+    },
+    {
+      "name": "destroy releases owned resources and reload restores GPU lighting",
+      "passed": true,
+      "details": {
+        "released": {
+          "memory": 0,
+          "textures": 0,
+          "framebuffers": 0,
+          "queries": 0,
+          "closed": true
+        },
+        "ready": true,
+        "resources": {
+          "currentBytes": 2403712,
+          "peakBytes": 2403712,
+          "textures": 17,
+          "framebuffers": 12
+        }
+      }
+    },
+    {
+      "name": "alpha-mask: GL has no framebuffer feedback or errors",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 1142
+            },
+            "numerical": {
+              "readPixels": 10,
+              "draws": 2268
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 35,
+            "framebuffers": 21,
+            "queries": 0,
+            "programs": 21,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 38,
+            "framebuffers": 22,
+            "queries": 26,
+            "programs": 22,
+            "syncs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "no render, worker, browser or GL exceptions",
+      "passed": true,
+      "details": []
+    }
+  ],
+  "fixtures": {
+    "untextured": {
+      "backend": "LumenGpuWorld",
+      "grid": {
+        "origin": [
+          -2.5,
+          -2.5,
+          -0.5
+        ],
+        "counts": [
+          6,
+          6,
+          5
+        ],
+        "total": 180,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 360,
+        "height": 50
+      },
+      "active": 180,
+      "unknown": 0,
+      "hits": 4455,
+      "samples": [
+        {
+          "irradiance": [
+            0.9099591970443726,
+            0.49198809266090393,
+            0.6712356209754944
+          ],
+          "coverage": 1
+        }
+      ],
+      "atlas": [
+        1,
+        1
+      ],
+      "memoryBytes": 2454532,
+      "allocatedBytes": 2454532,
+      "metrics": {
+        "passes": {
+          "relocate": {
+            "batches": 14,
+            "totalMilliseconds": 0.8625980000000001,
+            "maximumMilliseconds": 0.094166,
+            "samples": [
+              0.089062,
+              0.031354,
+              0.023437,
+              0.072187,
+              0.072239,
+              0.069843,
+              0.094166,
+              0.080729,
+              0.076875,
+              0.09151,
+              0.073437,
+              0.029739,
+              0.02875,
+              0.02927
+            ]
+          },
+          "intersect": {
+            "batches": 16,
+            "totalMilliseconds": 0.9294210000000002,
+            "maximumMilliseconds": 0.084895,
+            "samples": [
+              0.069635,
+              0.07125,
+              0.053802,
+              0.070625,
+              0.074635,
+              0.084114,
+              0.075833,
+              0.084895,
+              0.06901,
+              0.045937,
+              0.04,
+              0.041822,
+              0.032187,
+              0.045,
+              0.035104,
+              0.035572
+            ]
+          },
+          "classify": {
+            "batches": 16,
+            "totalMilliseconds": 1.714004,
+            "maximumMilliseconds": 0.138645,
+            "samples": [
+              0.138645,
+              0.124479,
+              0.105625,
+              0.094322,
+              0.098958,
+              0.109479,
+              0.090156,
+              0.100989,
+              0.10026,
+              0.108802,
+              0.119375,
+              0.121822,
+              0.096458,
+              0.112552,
+              0.098437,
+              0.093645
+            ]
+          },
+          "moments": {
+            "batches": 16,
+            "totalMilliseconds": 1.79473,
+            "maximumMilliseconds": 0.186874,
+            "samples": [
+              0.186874,
+              0.153593,
+              0.162135,
+              0.101093,
+              0.106145,
+              0.101093,
+              0.104687,
+              0.10026,
+              0.107864,
+              0.100364,
+              0.088125,
+              0.111458,
+              0.096197,
+              0.099583,
+              0.090312,
+              0.084947
+            ]
+          },
+          "momentsBorder": {
+            "batches": 16,
+            "totalMilliseconds": 0.18061599999999997,
+            "maximumMilliseconds": 0.017343,
+            "samples": [
+              0.014166,
+              0.017343,
+              0.010364,
+              0.010156,
+              0.015,
+              0.014791,
+              0.009895,
+              0.013697,
+              0.010833,
+              0.009947,
+              0.007968,
+              0.008541,
+              0.008177,
+              0.013177,
+              0.006822,
+              0.009739
+            ]
+          },
+          "visibility": {
+            "batches": 16,
+            "totalMilliseconds": 0.6193669999999999,
+            "maximumMilliseconds": 0.058697,
+            "samples": [
+              0.058697,
+              0.025885,
+              0.032812,
+              0.03625,
+              0.041041,
+              0.044635,
+              0.047291,
+              0.047291,
+              0.047552,
+              0.041614,
+              0.0325,
+              0.035833,
+              0.029322,
+              0.034739,
+              0.026822,
+              0.037083
+            ]
+          },
+          "direct": {
+            "batches": 16,
+            "totalMilliseconds": 0.468326,
+            "maximumMilliseconds": 0.077031,
+            "samples": [
+              0.037083,
+              0.077031,
+              0.025572,
+              0.021718,
+              0.016354,
+              0.021406,
+              0.016145,
+              0.024583,
+              0.016197,
+              0.022239,
+              0.04427,
+              0.033177,
+              0.02151,
+              0.032135,
+              0.019479,
+              0.039427
+            ]
+          },
+          "bounce": {
+            "batches": 33,
+            "totalMilliseconds": 2.352693,
+            "maximumMilliseconds": 0.166406,
+            "samples": [
+              0.085208,
+              0.058125,
+              0.048958,
+              0.06375,
+              0.0525,
+              0.041614,
+              0.045104,
+              0.038489,
+              0.040885,
+              0.040729,
+              0.038593,
+              0.067031,
+              0.044895,
+              0.052916,
+              0.039322,
+              0.050677,
+              0.100208,
+              0.081145,
+              0.086197,
+              0.089791,
+              0.080416,
+              0.067239,
+              0.050625,
+              0.070468,
+              0.071406,
+              0.057916,
+              0.13651,
+              0.109479,
+              0.100937,
+              0.166406,
+              0.107187,
+              0.096145,
+              0.071822
+            ]
+          },
+          "integrate": {
+            "batches": 62,
+            "totalMilliseconds": 5.418928000000001,
+            "maximumMilliseconds": 0.173593,
+            "samples": [
+              0.084791,
+              0.099531,
+              0.081718,
+              0.083802,
+              0.083333,
+              0.089218,
+              0.072812,
+              0.074375,
+              0.075364,
+              0.107604,
+              0.080364,
+              0.075364,
+              0.073854,
+              0.072708,
+              0.074062,
+              0.075104,
+              0.07927,
+              0.094166,
+              0.081666,
+              0.0825,
+              0.082135,
+              0.100156,
+              0.091822,
+              0.088802,
+              0.073854,
+              0.08901,
+              0.075468,
+              0.071822,
+              0.073541,
+              0.069895,
+              0.075572,
+              0.076302,
+              0.073541,
+              0.083281,
+              0.073281,
+              0.087031,
+              0.072656,
+              0.147395,
+              0.064062,
+              0.075885,
+              0.071145,
+              0.082395,
+              0.080989,
+              0.06302,
+              0.11802,
+              0.0975,
+              0.173593,
+              0.092916,
+              0.1,
+              0.085052,
+              0.096822,
+              0.092135,
+              0.100468,
+              0.113489,
+              0.119531,
+              0.095937,
+              0.095729,
+              0.092656,
+              0.094739,
+              0.087916,
+              0.087343,
+              0.090416
+            ]
+          },
+          "border": {
+            "batches": 53,
+            "totalMilliseconds": 0.606125,
+            "maximumMilliseconds": 0.031666,
+            "samples": [
+              0.031666,
+              0.019791,
+              0.016197,
+              0.020104,
+              0.01151,
+              0.0125,
+              0.009739,
+              0.012135,
+              0.010416,
+              0.008958,
+              0.008958,
+              0.008697,
+              0.018645,
+              0.011614,
+              0.011406,
+              0.012708,
+              0.010312,
+              0.014843,
+              0.00901,
+              0.005052,
+              0.002083,
+              0.00901,
+              0.009947,
+              0.008125,
+              0.022552,
+              0.011302,
+              0.012187,
+              0.006458,
+              0.010625,
+              0.009947,
+              0.010156,
+              0.009687,
+              0.02177,
+              0.009739,
+              0.011875,
+              0.005625,
+              0.008854,
+              0.009843,
+              0.010104,
+              0.010052,
+              0.01151,
+              0.009322,
+              0.008854,
+              0.00526,
+              0.001927,
+              0.015833,
+              0.017291,
+              0.006354,
+              0.008906,
+              0.012708,
+              0.013802,
+              0.010625,
+              0.009531
+            ]
+          }
+        },
+        "disjoint": 0,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 16,
+                "probes": 180,
+                "gpuMilliseconds": 0.6193669999999999,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1167.300000011921,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 16,
+                "probes": 180,
+                "gpuMilliseconds": 0.468326,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 324.5,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 33,
+                "probes": 540,
+                "gpuMilliseconds": 2.352693,
+                "timerSamples": 33,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 615.8000000268221,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 62,
+                "probes": 540,
+                "gpuMilliseconds": 5.418928000000001,
+                "timerSamples": 62,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 114.59999999403954,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 65,
+                "probes": 540,
+                "gpuMilliseconds": 0.606125,
+                "timerSamples": 53,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 4.5999999940395355,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 37,
+            "submittedBatches": 192,
+            "cpuSchedulingMilliseconds": 2226.800000026822,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 1
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "milliseconds": 2711.7000000029802,
+            "bounces": 3,
+            "submissionMilliseconds": 2711.7000000029802,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ],
+        "productionReadbacks": 0,
+        "diagnosticReadbacks": 5,
+        "cpuSchedulingMilliseconds": 7112.999999970198,
+        "submittedFrames": 56,
+        "submittedBatches": 270,
+        "timerMissing": 0,
+        "queryQueuePeak": 27,
+        "memory": {
+          "currentBytes": 2454532,
+          "peakBytes": 2454532,
+          "textures": 17,
+          "framebuffers": 12
+        },
+        "initialStages": {
+          "relocate": {
+            "submittedBatches": 14,
+            "probes": 180,
+            "gpuMilliseconds": 0.8625980000000001,
+            "timerSamples": 14,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 3902.7999999821186,
+            "itemType": "probes"
+          },
+          "intersect": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 0.9294210000000002,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 774.3000000119209,
+            "itemType": "probes"
+          },
+          "classify": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 1.714004,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 55.5,
+            "itemType": "probes"
+          },
+          "moments": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 1.79473,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 87.39999997615814,
+            "itemType": "probes"
+          },
+          "momentsBorder": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 0.18061599999999997,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 37.5,
+            "itemType": "probes"
+          }
+        },
+        "work": {
+          "probeHitInvocations": 23040,
+          "sunVisibilitySubmittedSlots": 23040,
+          "momentProbeUpdates": 180
+        }
+      },
+      "environment": {
+        "browser": "153.0.8010.12",
+        "headless": true,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)",
+        "visibility": "visible",
+        "resolution": [
+          512,
+          384
+        ],
+        "shadowSize": 2048,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+      }
+    },
+    "two-rooms": {
+      "backend": "LumenGpuWorld",
+      "grid": {
+        "origin": [
+          -3.5,
+          -2.5,
+          -0.5
+        ],
+        "counts": [
+          8,
+          6,
+          5
+        ],
+        "total": 240,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 480,
+        "height": 50
+      },
+      "active": 240,
+      "unknown": 0,
+      "hits": 12614,
+      "samples": [
+        {
+          "irradiance": [
+            0.5393961071968079,
+            0.029452715069055557,
+            0.04031171277165413
+          ],
+          "coverage": 1
+        },
+        {
+          "irradiance": [
+            0.0378536656498909,
+            0.044024594128131866,
+            0.06003278121352196
+          ],
+          "coverage": 1
+        }
+      ],
+      "atlas": [
+        1,
+        1
+      ],
+      "memoryBytes": 3239812,
+      "allocatedBytes": 3239812,
+      "metrics": {
+        "passes": {
+          "relocate": {
+            "batches": 18,
+            "totalMilliseconds": 1.732126,
+            "maximumMilliseconds": 0.166145,
+            "samples": [
+              0.110052,
+              0.031197,
+              0.034427,
+              0.032447,
+              0.025156,
+              0.142187,
+              0.145052,
+              0.140572,
+              0.13802,
+              0.135312,
+              0.136979,
+              0.166145,
+              0.139062,
+              0.142656,
+              0.142395,
+              0.024166,
+              0.024062,
+              0.022239
+            ]
+          },
+          "intersect": {
+            "batches": 21,
+            "totalMilliseconds": 1.5656689999999998,
+            "maximumMilliseconds": 0.107656,
+            "samples": [
+              0.083125,
+              0.068489,
+              0.05026,
+              0.059635,
+              0.067031,
+              0.085156,
+              0.081927,
+              0.082031,
+              0.069114,
+              0.107656,
+              0.081875,
+              0.086614,
+              0.090781,
+              0.094947,
+              0.087708,
+              0.082552,
+              0.048385,
+              0.062447,
+              0.052291,
+              0.070625,
+              0.05302
+            ]
+          },
+          "classify": {
+            "batches": 22,
+            "totalMilliseconds": 2.325562,
+            "maximumMilliseconds": 0.154114,
+            "samples": [
+              0.117395,
+              0.085833,
+              0.118125,
+              0.092812,
+              0.122552,
+              0.097604,
+              0.112187,
+              0.111614,
+              0.116145,
+              0.101145,
+              0.119739,
+              0.119062,
+              0.154114,
+              0.109843,
+              0.100364,
+              0.085364,
+              0.09776,
+              0.08526,
+              0.090625,
+              0.099947,
+              0.106562,
+              0.08151
+            ]
+          },
+          "moments": {
+            "batches": 21,
+            "totalMilliseconds": 2.2980659999999995,
+            "maximumMilliseconds": 0.14026,
+            "samples": [
+              0.086354,
+              0.117552,
+              0.14026,
+              0.122135,
+              0.12125,
+              0.123802,
+              0.128645,
+              0.136354,
+              0.124427,
+              0.117135,
+              0.124322,
+              0.115677,
+              0.101354,
+              0.088385,
+              0.085364,
+              0.08125,
+              0.081041,
+              0.077031,
+              0.116979,
+              0.11677,
+              0.091979
+            ]
+          },
+          "momentsBorder": {
+            "batches": 22,
+            "totalMilliseconds": 0.257334,
+            "maximumMilliseconds": 0.037447,
+            "samples": [
+              0.014531,
+              0.019531,
+              0.037447,
+              0.014843,
+              0.011875,
+              0.007708,
+              0.008281,
+              0.008958,
+              0.007239,
+              0.007447,
+              0.0075,
+              0.00677,
+              0.021406,
+              0.009322,
+              0.011979,
+              0.008229,
+              0.009375,
+              0.007604,
+              0.009791,
+              0.008593,
+              0.011458,
+              0.007447
+            ]
+          },
+          "visibility": {
+            "batches": 21,
+            "totalMilliseconds": 0.9061879999999998,
+            "maximumMilliseconds": 0.083906,
+            "samples": [
+              0.031874,
+              0.051145,
+              0.047552,
+              0.020885,
+              0.027083,
+              0.065468,
+              0.083906,
+              0.079322,
+              0.017916,
+              0.07125,
+              0.073593,
+              0.052916,
+              0.017812,
+              0.036354,
+              0.043802,
+              0.040989,
+              0.017656,
+              0.022187,
+              0.037291,
+              0.022187,
+              0.045
+            ]
+          },
+          "direct": {
+            "batches": 21,
+            "totalMilliseconds": 0.48697,
+            "maximumMilliseconds": 0.043593,
+            "samples": [
+              0.029999,
+              0.043593,
+              0.029687,
+              0.021979,
+              0.016927,
+              0.021822,
+              0.015781,
+              0.012395,
+              0.015937,
+              0.014687,
+              0.035833,
+              0.021302,
+              0.019375,
+              0.022187,
+              0.015052,
+              0.023125,
+              0.01677,
+              0.02677,
+              0.031041,
+              0.020052,
+              0.032656
+            ]
+          },
+          "bounce": {
+            "batches": 59,
+            "totalMilliseconds": 4.3641950000000005,
+            "maximumMilliseconds": 0.186302,
+            "samples": [
+              0.080104,
+              0.080989,
+              0.054427,
+              0.105989,
+              0.064114,
+              0.078125,
+              0.06302,
+              0.04651,
+              0.054739,
+              0.057916,
+              0.049062,
+              0.078697,
+              0.079166,
+              0.05875,
+              0.07,
+              0.041666,
+              0.04401,
+              0.045677,
+              0.047239,
+              0.077604,
+              0.056979,
+              0.127291,
+              0.084791,
+              0.062916,
+              0.100052,
+              0.08125,
+              0.070833,
+              0.130208,
+              0.087135,
+              0.072916,
+              0.062968,
+              0.186302,
+              0.075781,
+              0.094427,
+              0.048593,
+              0.083593,
+              0.094739,
+              0.063437,
+              0.121979,
+              0.070833,
+              0.0675,
+              0.065781,
+              0.069375,
+              0.092395,
+              0.059635,
+              0.055312,
+              0.160729,
+              0.06651,
+              0.055312,
+              0.084114,
+              0.081354,
+              0.053906,
+              0.046354,
+              0.048281,
+              0.087708,
+              0.056562,
+              0.060104,
+              0.049322,
+              0.049114
+            ]
+          },
+          "integrate": {
+            "batches": 80,
+            "totalMilliseconds": 6.986730999999998,
+            "maximumMilliseconds": 0.28875,
+            "samples": [
+              0.078177,
+              0.098229,
+              0.098906,
+              0.100312,
+              0.076718,
+              0.077604,
+              0.074843,
+              0.070104,
+              0.071614,
+              0.085104,
+              0.069375,
+              0.070572,
+              0.068593,
+              0.069062,
+              0.075729,
+              0.068645,
+              0.069947,
+              0.116927,
+              0.094583,
+              0.079947,
+              0.075625,
+              0.078072,
+              0.070104,
+              0.064739,
+              0.057812,
+              0.058072,
+              0.087083,
+              0.074843,
+              0.072447,
+              0.070208,
+              0.066302,
+              0.065468,
+              0.065468,
+              0.066562,
+              0.069322,
+              0.069843,
+              0.07427,
+              0.077552,
+              0.064218,
+              0.069791,
+              0.066614,
+              0.063645,
+              0.088541,
+              0.079739,
+              0.073541,
+              0.065677,
+              0.07276,
+              0.070416,
+              0.073281,
+              0.067447,
+              0.07,
+              0.065833,
+              0.12625,
+              0.075572,
+              0.10302,
+              0.071822,
+              0.119322,
+              0.083593,
+              0.082187,
+              0.137083,
+              0.100364,
+              0.077083,
+              0.085729,
+              0.096927,
+              0.09026,
+              0.079427,
+              0.181562,
+              0.28875,
+              0.215677,
+              0.184427,
+              0.109166,
+              0.088229,
+              0.09927,
+              0.080989,
+              0.129687,
+              0.100156,
+              0.083437,
+              0.074322,
+              0.071197,
+              0.080937
+            ]
+          },
+          "border": {
+            "batches": 56,
+            "totalMilliseconds": 0.6433050000000001,
+            "maximumMilliseconds": 0.0225,
+            "samples": [
+              0.010052,
+              0.015156,
+              0.016406,
+              0.012395,
+              0.0225,
+              0.015885,
+              0.012031,
+              0.014947,
+              0.011197,
+              0.012343,
+              0.008541,
+              0.020989,
+              0.013072,
+              0.010364,
+              0.00776,
+              0.01052,
+              0.007708,
+              0.005156,
+              0.007916,
+              0.008385,
+              0.02026,
+              0.013333,
+              0.01276,
+              0.017656,
+              0.007864,
+              0.008906,
+              0.011354,
+              0.01677,
+              0.011718,
+              0.009791,
+              0.015468,
+              0.014583,
+              0.009322,
+              0.008333,
+              0.006093,
+              0.017708,
+              0.011614,
+              0.009427,
+              0.013385,
+              0.013593,
+              0.008697,
+              0.004947,
+              0.010416,
+              0.014375,
+              0.008541,
+              0.017031,
+              0.00875,
+              0.006406,
+              0.008593,
+              0.006145,
+              0.00552,
+              0.012135,
+              0.012291,
+              0.008229,
+              0.010416,
+              0.007552
+            ]
+          }
+        },
+        "disjoint": 0,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 21,
+                "probes": 240,
+                "gpuMilliseconds": 0.9061879999999998,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 864.9000000208616,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 21,
+                "probes": 240,
+                "gpuMilliseconds": 0.48697,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 236.29999996721745,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 59,
+                "probes": 720,
+                "gpuMilliseconds": 4.3641950000000005,
+                "timerSamples": 59,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 493.5,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 80,
+                "probes": 720,
+                "gpuMilliseconds": 6.986730999999998,
+                "timerSamples": 80,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 76.29999996721745,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 83,
+                "probes": 720,
+                "gpuMilliseconds": 0.6433050000000001,
+                "timerSamples": 56,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 4.299999997019768,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 46,
+            "submittedBatches": 264,
+            "cpuSchedulingMilliseconds": 1675.2999999523163,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 1
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 30720,
+              "momentProbeUpdates": 0
+            },
+            "milliseconds": 2446.199999988079,
+            "bounces": 3,
+            "submissionMilliseconds": 2446.199999988079,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ],
+        "productionReadbacks": 0,
+        "diagnosticReadbacks": 5,
+        "cpuSchedulingMilliseconds": 6684.600000023842,
+        "submittedFrames": 74,
+        "submittedBatches": 368,
+        "timerMissing": 0,
+        "queryQueuePeak": 27,
+        "memory": {
+          "currentBytes": 3239812,
+          "peakBytes": 3239812,
+          "textures": 17,
+          "framebuffers": 12
+        },
+        "initialStages": {
+          "relocate": {
+            "submittedBatches": 18,
+            "probes": 240,
+            "gpuMilliseconds": 1.732126,
+            "timerSamples": 18,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 3982.2999999970198,
+            "itemType": "probes"
+          },
+          "intersect": {
+            "submittedBatches": 21,
+            "probes": 240,
+            "gpuMilliseconds": 1.5656689999999998,
+            "timerSamples": 21,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 782.3000000119209,
+            "itemType": "probes"
+          },
+          "classify": {
+            "submittedBatches": 22,
+            "probes": 240,
+            "gpuMilliseconds": 2.325562,
+            "timerSamples": 22,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 58.50000001490116,
+            "itemType": "probes"
+          },
+          "moments": {
+            "submittedBatches": 21,
+            "probes": 240,
+            "gpuMilliseconds": 2.2980659999999995,
+            "timerSamples": 21,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 69.29999999701977,
+            "itemType": "probes"
+          },
+          "momentsBorder": {
+            "submittedBatches": 22,
+            "probes": 240,
+            "gpuMilliseconds": 0.257334,
+            "timerSamples": 22,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 38.5,
+            "itemType": "probes"
+          }
+        },
+        "work": {
+          "probeHitInvocations": 30720,
+          "sunVisibilitySubmittedSlots": 30720,
+          "momentProbeUpdates": 240
+        }
+      },
+      "environment": {
+        "browser": "153.0.8010.12",
+        "headless": true,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)",
+        "visibility": "visible",
+        "resolution": [
+          512,
+          384
+        ],
+        "shadowSize": 2048,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+      }
+    },
+    "alpha-mask": {
+      "backend": "LumenGpuWorld",
+      "grid": {
+        "origin": [
+          -2.5,
+          -1.5,
+          -0.5
+        ],
+        "counts": [
+          6,
+          4,
+          4
+        ],
+        "total": 96,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 240,
+        "height": 40
+      },
+      "active": 96,
+      "unknown": 0,
+      "hits": 1857,
+      "samples": [
+        {
+          "irradiance": [
+            0.44388607144355774,
+            0.5324196219444275,
+            0.7389882802963257
+          ],
+          "coverage": 1
+        }
+      ],
+      "atlas": [
+        512,
+        512
+      ],
+      "memoryBytes": 2403712,
+      "allocatedBytes": 2403712,
+      "metrics": {
+        "passes": {
+          "relocate": {
+            "batches": 8,
+            "totalMilliseconds": 0.908642,
+            "maximumMilliseconds": 0.447812,
+            "samples": [
+              0.447812,
+              0.05026,
+              0.077864,
+              0.078541,
+              0.075677,
+              0.087708,
+              0.046458,
+              0.044322
+            ]
+          },
+          "intersect": {
+            "batches": 9,
+            "totalMilliseconds": 0.269475,
+            "maximumMilliseconds": 0.038593,
+            "samples": [
+              0.029739,
+              0.028385,
+              0.038593,
+              0.032708,
+              0.030677,
+              0.029479,
+              0.033541,
+              0.025364,
+              0.020989
+            ]
+          },
+          "classify": {
+            "batches": 9,
+            "totalMilliseconds": 0.6597339999999999,
+            "maximumMilliseconds": 0.102656,
+            "samples": [
+              0.099322,
+              0.102656,
+              0.06776,
+              0.07552,
+              0.062395,
+              0.07177,
+              0.059062,
+              0.058177,
+              0.063072
+            ]
+          },
+          "moments": {
+            "batches": 9,
+            "totalMilliseconds": 0.948329,
+            "maximumMilliseconds": 0.126354,
+            "samples": [
+              0.112395,
+              0.126354,
+              0.121875,
+              0.114843,
+              0.103958,
+              0.109062,
+              0.087552,
+              0.09052,
+              0.08177
+            ]
+          },
+          "momentsBorder": {
+            "batches": 9,
+            "totalMilliseconds": 0.093485,
+            "maximumMilliseconds": 0.015885,
+            "samples": [
+              0.015885,
+              0.01302,
+              0.012552,
+              0.010364,
+              0.007812,
+              0.009635,
+              0.00776,
+              0.008489,
+              0.007968
+            ]
+          },
+          "visibility": {
+            "batches": 10,
+            "totalMilliseconds": 0.29676600000000003,
+            "maximumMilliseconds": 0.044218,
+            "samples": [
+              0.04151,
+              0.030781,
+              0.022968,
+              0.034427,
+              0.044218,
+              0.022864,
+              0.038177,
+              0.022395,
+              0.022916,
+              0.01651
+            ]
+          },
+          "direct": {
+            "batches": 10,
+            "totalMilliseconds": 0.269839,
+            "maximumMilliseconds": 0.050364,
+            "samples": [
+              0.023958,
+              0.021197,
+              0.036927,
+              0.050364,
+              0.029218,
+              0.030468,
+              0.018593,
+              0.024479,
+              0.014583,
+              0.020052
+            ]
+          },
+          "bounce": {
+            "batches": 37,
+            "totalMilliseconds": 2.0278980000000004,
+            "maximumMilliseconds": 0.189635,
+            "samples": [
+              0.064531,
+              0.060312,
+              0.04625,
+              0.076145,
+              0.049531,
+              0.037708,
+              0.060416,
+              0.046197,
+              0.037395,
+              0.030781,
+              0.110312,
+              0.04901,
+              0.08125,
+              0.045937,
+              0.050989,
+              0.049479,
+              0.045468,
+              0.045156,
+              0.045104,
+              0.044947,
+              0.074166,
+              0.049114,
+              0.039062,
+              0.041145,
+              0.03401,
+              0.038541,
+              0.071145,
+              0.052187,
+              0.063906,
+              0.054218,
+              0.04901,
+              0.037812,
+              0.03927,
+              0.036666,
+              0.041875,
+              0.039218,
+              0.189635
+            ]
+          },
+          "integrate": {
+            "batches": 23,
+            "totalMilliseconds": 1.969575,
+            "maximumMilliseconds": 0.205625,
+            "samples": [
+              0.084739,
+              0.080937,
+              0.065989,
+              0.063333,
+              0.059479,
+              0.060208,
+              0.057708,
+              0.067083,
+              0.068385,
+              0.070833,
+              0.067031,
+              0.095468,
+              0.07901,
+              0.074427,
+              0.090833,
+              0.069531,
+              0.076197,
+              0.205625,
+              0.178229,
+              0.14901,
+              0.079739,
+              0.074427,
+              0.051354
+            ]
+          },
+          "border": {
+            "batches": 27,
+            "totalMilliseconds": 0.278529,
+            "maximumMilliseconds": 0.021302,
+            "samples": [
+              0.021302,
+              0.011666,
+              0.017708,
+              0.019635,
+              0.016302,
+              0.010885,
+              0.00552,
+              0.010729,
+              0.008906,
+              0.008281,
+              0.012135,
+              0.013802,
+              0.011562,
+              0.009947,
+              0.005364,
+              0.007968,
+              0.006145,
+              0.007187,
+              0.007656,
+              0.006979,
+              0.01427,
+              0.005468,
+              0.00276,
+              0.007239,
+              0.009531,
+              0.007395,
+              0.012187
+            ]
+          }
+        },
+        "disjoint": 0,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 10,
+                "probes": 96,
+                "gpuMilliseconds": 0.29676600000000003,
+                "timerSamples": 10,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 48.30000002682209,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 10,
+                "probes": 96,
+                "gpuMilliseconds": 0.269839,
+                "timerSamples": 10,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 91.99999998509884,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 37,
+                "probes": 288,
+                "gpuMilliseconds": 2.0278980000000004,
+                "timerSamples": 37,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 54.3999999910593,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 23,
+                "probes": 288,
+                "gpuMilliseconds": 1.969575,
+                "timerSamples": 23,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 45.79999999701977,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 37,
+                "probes": 288,
+                "gpuMilliseconds": 0.278529,
+                "timerSamples": 27,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 2.700000047683716,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 32,
+            "submittedBatches": 117,
+            "cpuSchedulingMilliseconds": 243.20000004768372,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 1
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 12288,
+              "momentProbeUpdates": 0
+            },
+            "milliseconds": 669.5,
+            "bounces": 3,
+            "submissionMilliseconds": 669.5,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ],
+        "productionReadbacks": 0,
+        "diagnosticReadbacks": 5,
+        "cpuSchedulingMilliseconds": 4208.9000000059605,
+        "submittedFrames": 46,
+        "submittedBatches": 161,
+        "timerMissing": 0,
+        "queryQueuePeak": 25,
+        "memory": {
+          "currentBytes": 2403712,
+          "peakBytes": 2403712,
+          "textures": 17,
+          "framebuffers": 12
+        },
+        "initialStages": {
+          "relocate": {
+            "submittedBatches": 8,
+            "probes": 96,
+            "gpuMilliseconds": 0.908642,
+            "timerSamples": 8,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 3807.7000000029802,
+            "itemType": "probes"
+          },
+          "intersect": {
+            "submittedBatches": 9,
+            "probes": 96,
+            "gpuMilliseconds": 0.269475,
+            "timerSamples": 9,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 20.19999998807907,
+            "itemType": "probes"
+          },
+          "classify": {
+            "submittedBatches": 9,
+            "probes": 96,
+            "gpuMilliseconds": 0.6597339999999999,
+            "timerSamples": 9,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 17.299999997019768,
+            "itemType": "probes"
+          },
+          "moments": {
+            "submittedBatches": 9,
+            "probes": 96,
+            "gpuMilliseconds": 0.948329,
+            "timerSamples": 9,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 41.5,
+            "itemType": "probes"
+          },
+          "momentsBorder": {
+            "submittedBatches": 9,
+            "probes": 96,
+            "gpuMilliseconds": 0.093485,
+            "timerSamples": 9,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 11.800000011920929,
+            "itemType": "probes"
+          }
+        },
+        "work": {
+          "probeHitInvocations": 12288,
+          "sunVisibilitySubmittedSlots": 12288,
+          "momentProbeUpdates": 96
+        }
+      },
+      "environment": {
+        "browser": "153.0.8010.12",
+        "headless": true,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)",
+        "visibility": "visible",
+        "resolution": [
+          512,
+          384
+        ],
+        "shadowSize": 2048,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+      }
+    }
+  },
+  "errors": [],
+  "tolerances": {
+    "irradiance": {
+      "absolute": 0.0002,
+      "relative": 0.001
+    },
+    "moments": {
+      "absolute": 0.0002,
+      "relative": 0.0001
+    }
+  }
+}

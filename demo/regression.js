@@ -107,6 +107,9 @@ try {
       rays: 128,
       targetGpuMilliseconds: 3,
       maxBatch: 128,
+      diagnosticIntegrationLut: new URLSearchParams(location.search).has(
+        "integrationComparison",
+      ),
       ...lighting,
       ...extra,
     });

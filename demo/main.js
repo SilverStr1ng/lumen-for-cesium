@@ -304,6 +304,7 @@ try {
         targetGpuMilliseconds: Number(params.get("gpuBudget") ?? 3),
         maxBatch: Number(params.get("batch") ?? 128),
         ...worldLighting(),
+        diagnosticIntegrationLut: params.has("integrationComparison"),
       });
       world.completed.catch(reportError);
       world.gain = Number($("energy").value) * 2;

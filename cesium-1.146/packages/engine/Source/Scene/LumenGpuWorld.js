@@ -76,6 +76,8 @@ class LumenGpuWorld {
       traversalBudget: 4096,
       targetGpuMilliseconds: 3,
       maxBatch: 128,
+      integrationMode: "arithmetic",
+      diagnosticIntegrationLut: false,
       ...options,
     };
     this._validate(this.options);
@@ -162,6 +164,14 @@ class LumenGpuWorld {
     });
   }
   _validate(o) {
+    if (!["lut", "arithmetic"].includes(o.integrationMode)) {
+      throw new DeveloperError("integrationMode must be lut or arithmetic");
+    }
+    if (o.integrationMode === "lut" && !o.diagnosticIntegrationLut) {
+      throw new DeveloperError(
+        "LUT is available only in diagnosticIntegrationLut runs",
+      );
+    }
     if (
       !Number.isFinite(o.spacing) ||
       o.spacing <= 0 ||
@@ -395,6 +405,24 @@ class LumenGpuWorld {
       this.linearAtlas ? linear : nearest,
     );
     this._distanceFB = this._framebuffer([M]);
+    const iw = g.counts[0] * g.counts[1] * 8,
+      ih = g.counts[2] * 8;
+    this._internalE = this._texture(iw, ih);
+    this._internalM = this._texture(iw, ih);
+    if (this.options.diagnosticIntegrationLut) {
+      this._weights = this._texture(g.rays, 64);
+      this._weightsFB = this._framebuffer([this._weights]);
+    }
+    this._integrateFB = this._framebuffer([this._internalE]);
+    this._momentsFB = this._framebuffer([this._internalM]);
+    this._geometryIntegrationMode = this.options.integrationMode;
+    this.packet.integration = {
+      mode: this.options.integrationMode,
+      angularResolution: 8,
+      borderResolution: 10,
+      internalBytes: iw * ih * 16 * 2,
+      weightBytes: this._weights ? g.rays * 64 * 16 : 0,
+    };
     this._atlases = Array.from({ length: 3 }, () => {
       const E = this._texture(
         g.width,
@@ -440,6 +468,9 @@ class LumenGpuWorld {
       u_direct: () => this._direct,
       u_cache: () => this._cache,
       u_visibility: () => this._visibility,
+      u_weights: () => this._weights,
+      u_borderSource: () =>
+        this._phase === "momentsBorder" ? this._internalM : this._internalE,
       u_nodesCount: () => this.packet.bvh.nodes,
       u_budget: () =>
         this._diagnosticBudget ??
@@ -473,10 +504,16 @@ class LumenGpuWorld {
   }
   _draw(name, framebuffer, x, y, width, height) {
     const c = this.scene.context;
-    let command = this._commands[name];
+    const mode =
+      name === "moments"
+        ? this._geometryIntegrationMode
+        : this._jobOptions?.integrationMode;
+    const variant = ["moments", "integrate"].includes(name);
+    const key = variant ? `${name}_${mode}` : name;
+    let command = this._commands[key];
     if (!command) {
-      command = this._commands[name] = c.createViewportQuadCommand(
-        shaders[name],
+      command = this._commands[key] = c.createViewportQuadCommand(
+        `${variant && mode === "lut" ? "#define LUMEN_USE_LUT\n" : ""}${shaders[name]}`,
         {
           uniformMap: this._uniforms(),
           renderState: RenderState.fromCache({
@@ -535,17 +572,22 @@ class LumenGpuWorld {
       if (stats.samples.length < 200) {
         stats.samples.push(ms);
       }
-      if (ms > 0.02) {
-        this._costs[q.phase] = Math.max(
-          (this._costs[q.phase] ?? 0) * 0.8,
-          ms / q.count,
+      if (ms >= 0) {
+        // Sub-20us batches are still valid observations; otherwise cheap phases never grow.
+        const measured = Math.max(ms, 0.005);
+        const key = q.scheduleKey ?? q.phase;
+        this._costs[key] = Math.max(
+          (this._costs[key] ?? 0) * 0.8,
+          measured / q.count,
         );
-        this._batches[q.phase] = Math.max(
+        this._batches[key] = Math.max(
           1,
           Math.min(
             this.options.maxBatch,
             Math.ceil(q.count * 1.5),
-            Math.round((q.count * this.options.targetGpuMilliseconds) / ms),
+            Math.round(
+              (q.count * this.options.targetGpuMilliseconds) / measured,
+            ),
           ),
         );
       }
@@ -665,27 +707,39 @@ class LumenGpuWorld {
         }
         const g = this.packet.grid,
           phase = this._phase,
-          gl = this.scene.context._gl;
+          gl = this.scene.context._gl,
+          workTotal = phase === "weights" ? 64 : g.total,
+          scheduleKey =
+            phase === "integrate"
+              ? `${phase}_${this._jobOptions.integrationMode}`
+              : phase;
         const count = Math.min(
-          this._batches[phase] ?? 8,
-          g.total - this._cursor,
+          this._batches[scheduleKey] ?? 8,
+          workTotal - this._cursor,
         );
-        const job = ["relocate", "intersect", "classify", "moments"].includes(
-          phase,
-        )
+        const job = [
+          "relocate",
+          "intersect",
+          "classify",
+          "weights",
+          "moments",
+          "momentsBorder",
+        ].includes(phase)
           ? undefined
           : this._jobMetrics;
         const stages = job?.stages ?? this.metrics.initialStages;
         const stage = (stages[phase] ??= {
           submittedBatches: 0,
           probes: 0,
+          items: 0,
           gpuMilliseconds: 0,
           timerSamples: 0,
           timerMissing: 0,
           cpuSchedulingMilliseconds: 0,
+          itemType: phase === "weights" ? "direction rows" : "probes",
         });
         const batchStarted = performance.now();
-        const estimate = this._costs[phase];
+        const estimate = this._costs[scheduleKey];
         if (
           batch > 0 &&
           (!estimate ||
@@ -698,7 +752,10 @@ class LumenGpuWorld {
           ? count * estimate
           : this.options.targetGpuMilliseconds;
         stage.submittedBatches++;
-        stage.probes += count;
+        stage.items += count;
+        if (phase !== "weights") {
+          stage.probes += count;
+        }
         const workKey =
           phase === "intersect"
             ? "probeHitInvocations"
@@ -732,27 +789,41 @@ class LumenGpuWorld {
           gl.beginQuery(this._timer.TIME_ELAPSED_EXT, query);
         }
         try {
-          if (["intersect", "visibility", "direct", "bounce"].includes(phase)) {
+          if (
+            ["weights", "intersect", "visibility", "direct", "bounce"].includes(
+              phase,
+            )
+          ) {
             const fb =
-              phase === "intersect"
-                ? this._hitFB
-                : phase === "visibility"
-                  ? this._visibilityFB
-                  : phase === "direct"
-                    ? this._directFB
-                    : this._cacheFB;
+              phase === "weights"
+                ? this._weightsFB
+                : phase === "intersect"
+                  ? this._hitFB
+                  : phase === "visibility"
+                    ? this._visibilityFB
+                    : phase === "direct"
+                      ? this._directFB
+                      : this._cacheFB;
             this._draw(phase, fb, 0, this._cursor, g.rays, count);
           } else {
             const stride = g.counts[0] * g.counts[1],
-              scale = ["integrate", "moments"].includes(phase) ? 10 : 1;
+              scale = ["integrate", "moments"].includes(phase)
+                ? 8
+                : ["border", "momentsBorder"].includes(phase)
+                  ? 10
+                  : 1;
             const fb =
               phase === "relocate"
                 ? this._positionFB
                 : phase === "classify"
                   ? this._classifiedFB
                   : phase === "moments"
-                    ? this._distanceFB
-                    : this._atlases[this._target].fb;
+                    ? this._momentsFB
+                    : phase === "momentsBorder"
+                      ? this._distanceFB
+                      : phase === "integrate"
+                        ? this._integrateFB
+                        : this._atlases[this._target].fb;
             let cursor = this._cursor,
               remaining = count;
             while (remaining) {
@@ -772,7 +843,7 @@ class LumenGpuWorld {
         } finally {
           if (query) {
             gl.endQuery(this._timer.TIME_ELAPSED_EXT);
-            this._queries.push({ query, phase, count, stage });
+            this._queries.push({ query, phase, count, stage, scheduleKey });
             this.metrics.queryQueuePeak = Math.max(
               this.metrics.queryQueuePeak,
               this._queries.length,
@@ -788,17 +859,21 @@ class LumenGpuWorld {
           }
         }
         this._cursor += count;
-        this.progress = { completed: this._cursor, total: g.total };
+        this.progress = { completed: this._cursor, total: workTotal };
         this.status = `GPU ${phase} · bounce ${this._bounce ?? 0}`;
-        if (this._cursor >= g.total) {
+        if (this._cursor >= workTotal) {
           this._cursor = 0;
           if (phase === "relocate") {
             this._phase = "intersect";
           } else if (phase === "intersect") {
             this._phase = "classify";
           } else if (phase === "classify") {
+            this._phase = this._weights ? "weights" : "moments";
+          } else if (phase === "weights") {
             this._phase = "moments";
           } else if (phase === "moments") {
+            this._phase = "momentsBorder";
+          } else if (phase === "momentsBorder") {
             this._beginLighting();
           } else if (phase === "visibility") {
             this._visibilityKey = this._pendingVisibilityKey;
@@ -808,6 +883,8 @@ class LumenGpuWorld {
           } else if (phase === "bounce") {
             this._phase = "integrate";
           } else if (phase === "integrate") {
+            this._phase = "border";
+          } else if (phase === "border") {
             this._previous = this._target;
             this._history.push({
               bounce: this._bounce,
@@ -828,6 +905,7 @@ class LumenGpuWorld {
               this.packet.bounce = this._bounce;
               this.packet.history = this._history;
               this.packet.versions = this._jobVersions;
+              this.packet.integration.mode = this._jobOptions.integrationMode;
               this.status = this._phase = "ready";
               const result = {
                 ...this._jobMetrics,
@@ -874,6 +952,7 @@ class LumenGpuWorld {
       "axisMatrix",
       "modelMatrix",
       "traversalBudget",
+      "diagnosticIntegrationLut",
     ]) {
       if (k in options) {
         throw new Error("Reload world to change GPU geometry or probe layout");
@@ -889,7 +968,14 @@ class LumenGpuWorld {
       this._beginLighting();
     } else if (
       this.packet &&
-      !["relocate", "intersect", "classify", "moments"].includes(this._phase)
+      ![
+        "relocate",
+        "intersect",
+        "classify",
+        "weights",
+        "moments",
+        "momentsBorder",
+      ].includes(this._phase)
     ) {
       this._pendingLighting = true;
     }
