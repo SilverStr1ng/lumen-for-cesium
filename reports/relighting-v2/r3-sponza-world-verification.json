@@ -1,0 +1,303 @@
+{
+  "version": {
+    "head": "da866fc033277a32c079517526d2225548ea7846",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "2ae28572f3ee3d214589e352c74072287e9163dd02b6a79e60dab7d85b4e2ceb",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "0f2f744c8de2863ef4fbd10e3398709ed1c7cd1f6fa23e34f58161f8d8be7397",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "36fb56890fd1554da520161962a5d75720c276a42cce588a876cbfe742cf2225",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "scripts/verify-world.mjs": "e18ac7cd704b8c8ecdba8d34af25b0fd68f1e171781afbe86a18042094557e1b"
+    },
+    "compiledBundle": "c4323ae6c5f1b1632dea784e3bab8b7388c0a992e37b55c468589c496101f658",
+    "modifiedSources": [
+      "scripts/verify-world.mjs"
+    ]
+  },
+  "tests": [
+    {
+      "name": "Sponza full static geometry and converged probes",
+      "passed": true,
+      "detail": {
+        "grid": {
+          "origin": [
+            -16.367568112732783,
+            -9.84340862316435,
+            -2.0115400260729146
+          ],
+          "counts": [
+            17,
+            12,
+            9
+          ],
+          "spacing": 2,
+          "total": 1836,
+          "width": 2040,
+          "height": 90,
+          "normalBias": 0.15,
+          "rays": 128
+        },
+        "active": 1776,
+        "bvh": {
+          "triangles": 262266,
+          "nodes": 65779,
+          "queries": 256460,
+          "unknown": 0,
+          "alphaRejected": 725
+        },
+        "cache": 20945,
+        "history": [
+          {
+            "bounce": 1,
+            "energy": 89163.47776451318
+          },
+          {
+            "bounce": 2,
+            "energy": 93678.3584251478
+          },
+          {
+            "bounce": 3,
+            "energy": 93742.89668864694
+          }
+        ]
+      }
+    },
+    {
+      "name": "Snapshot bounces converge without uncontrolled energy growth",
+      "passed": true,
+      "detail": [
+        {
+          "bounce": 1,
+          "energy": 89163.47776451318
+        },
+        {
+          "bounce": 2,
+          "energy": 93678.3584251478
+        },
+        {
+          "bounce": 3,
+          "energy": 93742.89668864694
+        }
+      ]
+    },
+    {
+      "name": "BVH aligns with actual rendered GBuffer in ENU metres",
+      "passed": true,
+      "detail": {
+        "rays": 400,
+        "matched": 396,
+        "unknown": 0
+      }
+    },
+    {
+      "name": "Traversal exhaustion stays Unknown",
+      "passed": true,
+      "detail": [
+        {
+          "status": "Unknown",
+          "visits": 2
+        }
+      ]
+    },
+    {
+      "name": "WebGL2 material output equals visibility-aware DDGI E times albedo / pi",
+      "passed": true,
+      "detail": {
+        "max": 0.000005623437855489452,
+        "average": 3.173333351642789e-7,
+        "lit": 2519,
+        "points": 1600
+      }
+    },
+    {
+      "name": "DDGI HDR is independent of display exposure and direct-shadow toggles",
+      "passed": true,
+      "detail": {
+        "atlasUnchanged": true,
+        "withShadows": 3760651722,
+        "withoutShadows": 3760651722,
+        "exposure": 3760651722
+      }
+    },
+    {
+      "name": "Existing red Sponza curtains cause red bounce on a neutral floor",
+      "passed": true,
+      "detail": {
+        "receiver": {
+          "index": 161,
+          "position": [
+            2.3741316952322356,
+            1.8822909694429621,
+            -0.02004945581645079
+          ],
+          "normal": [
+            0.0027472592981051813,
+            0.003137934822256097,
+            0.9999912493428192
+          ],
+          "albedo": [
+            0.27657070755958557,
+            0.2262435406446457,
+            0.15771618485450745
+          ],
+          "offset": 277824,
+          "x": 336,
+          "y": 72,
+          "delta": [
+            0.00046187347996229366,
+            -0.0002029749064750841,
+            -0.0001810476316646964
+          ],
+          "signal": 0.007754491283473569,
+          "chroma": 0.0006648483864373778,
+          "coloured": {
+            "irradiance": [
+              0.08573720211077002,
+              0.08390985908967749,
+              0.08095017037724055
+            ],
+            "coverage": 1
+          },
+          "neutral": {
+            "irradiance": [
+              0.08527532863080772,
+              0.08411283399615258,
+              0.08113121800890524
+            ],
+            "coverage": 1
+          },
+          "gpuDelta": [
+            0.000041961669921875,
+            -0.000011444091796875,
+            -0.00000762939453125
+          ]
+        },
+        "affected": 153
+      }
+    },
+    {
+      "name": "Fresh BVH/DDGI solves preserve off-screen curtain colour transport",
+      "passed": true,
+      "detail": {
+        "visibleRedSurfels": 0,
+        "totalRedSurfels": 860,
+        "heldDifference": 0,
+        "cameraInvariantDifference": 0,
+        "delta": [
+          0.00046187347996229366,
+          -0.0002029749064750841,
+          -0.0001810476316646964
+        ],
+        "gpuDelta": [
+          0.0000457763671875,
+          -0.0000152587890625,
+          -0.000011444091796875
+        ],
+        "coloured": {
+          "irradiance": [
+            0.08573720211077002,
+            0.08390985908967749,
+            0.08095017037724055
+          ],
+          "coverage": 1
+        },
+        "neutral": {
+          "irradiance": [
+            0.08527532863080772,
+            0.08411283399615258,
+            0.08113121800890524
+          ],
+          "coverage": 1
+        }
+      }
+    },
+    {
+      "name": "Outside loaded probe coverage returns zero coverage",
+      "passed": true,
+      "detail": [
+        {
+          "irradiance": [
+            0,
+            0,
+            0
+          ],
+          "coverage": 0
+        }
+      ]
+    },
+    {
+      "name": "Latest lighting revision wins; removing all light eliminates GI and replaces textures",
+      "passed": true,
+      "detail": {
+        "rejected": true,
+        "revision": 8,
+        "published": 8,
+        "bounce": 1,
+        "energy": 0,
+        "oldDestroyed": true,
+        "memory": 5904576
+      }
+    },
+    {
+      "name": "Scene destruction releases worker and DDGI textures",
+      "passed": true,
+      "detail": {
+        "textureDestroyed": true,
+        "memory": 0,
+        "status": "destroyed"
+      }
+    },
+    {
+      "name": "Real Sponza browser run remains error free",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "initialMilliseconds": 28178,
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "initial": {
+    "grid": {
+      "origin": [
+        -16.367568112732783,
+        -9.84340862316435,
+        -2.0115400260729146
+      ],
+      "counts": [
+        17,
+        12,
+        9
+      ],
+      "spacing": 2,
+      "total": 1836,
+      "width": 2040,
+      "height": 90,
+      "normalBias": 0.15,
+      "rays": 128
+    },
+    "active": 1776,
+    "bvh": {
+      "triangles": 262266,
+      "nodes": 65779,
+      "queries": 256460,
+      "unknown": 0,
+      "alphaRejected": 725
+    },
+    "cache": 20945,
+    "history": [
+      {
+        "bounce": 1,
+        "energy": 89163.47776451318
+      },
+      {
+        "bounce": 2,
+        "energy": 93678.3584251478
+      },
+      {
+        "bounce": 3,
+        "energy": 93742.89668864694
+      }
+    ]
+  },
+  "passed": true
+}

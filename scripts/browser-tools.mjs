@@ -8,7 +8,7 @@ import path from "node:path";
 const require = createRequire(
   new URL("../cesium-1.146/package.json", import.meta.url),
 );
-export function sourceVersion() {
+export function sourceVersion(extraFiles = []) {
   const files = [
     "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
@@ -16,6 +16,7 @@ export function sourceVersion() {
     "lumen/gpu-worker.js",
     "lumen/math.js",
     "lumen/gltf.js",
+    ...extraFiles,
   ];
   const sha256 = (file) =>
     createHash("sha256")

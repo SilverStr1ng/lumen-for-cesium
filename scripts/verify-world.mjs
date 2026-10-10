@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { demoUrl } from "./browser-tools.mjs";
+import { demoUrl, sourceVersion } from "./browser-tools.mjs";
 import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -16,7 +16,7 @@ const executablePath = [
 const browser = await chromium.launch({ executablePath, headless: true });
 const page = await browser.newPage({ viewport: { width: 960, height: 640 } }),
   errors = [],
-  report = { tests: [] };
+  report = { version: sourceVersion(["scripts/verify-world.mjs"]), tests: [] };
 page.on("pageerror", (e) => errors.push(String(e)));
 page.on("console", (m) => {
   if (m.type() === "error") console.log("CONSOLE", m.text().slice(0, 1200));

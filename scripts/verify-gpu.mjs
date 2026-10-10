@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { demoUrl } from "./browser-tools.mjs";
+import { demoUrl, sourceVersion } from "./browser-tools.mjs";
 import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -19,6 +19,8 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({ viewport: { width: 960, height: 640 } });
 const report = {
+    version: sourceVersion(["scripts/verify-gpu.mjs"]),
+    mode: "numerical GPU diagnostics; legacy display measurements are not default-quality performance acceptance",
     tests: [],
     configuration: {
       spacing: 2,
@@ -286,23 +288,23 @@ try {
         );
     }
     const budget = w.options.traversalBudget;
-    w.options.traversalBudget = 1;
     const exhausted = await w.trace([
-      { origin: [0, 0, 2], direction: [0, 0, -1] },
+      { origin: [0, 0, 2], direction: [0, 0, -1], budget: 1 },
     ]);
-    w.options.traversalBudget = budget;
     return {
       rays: rays.length,
       matches,
       unknown,
       maxDistanceError,
       exhausted: exhausted[0],
+      productionBudgetUnchanged: w.options.traversalBudget === budget,
     };
   });
   check(
     "GPU closest hits match CPU BVH and exhaustion remains Unknown",
     align.matches / align.rays > 0.99 &&
       align.unknown === 0 &&
+      align.productionBudgetUnchanged &&
       align.exhausted.status === "Unknown",
     align,
   );
