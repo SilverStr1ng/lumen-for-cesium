@@ -12,6 +12,9 @@
     "test:world": "node scripts/verify-world.mjs",
     "test:transport": "node scripts/verify-transport.mjs",
     "test:gpu": "node scripts/verify-gpu.mjs",
-    "benchmark:gpu": "node scripts/benchmark-gpu.mjs"
+    "benchmark:gpu": "node scripts/benchmark-gpu.mjs",
+    "fixtures": "node scripts/generate-fixtures.mjs",
+    "test:fixtures": "node scripts/verify-fixtures.mjs",
+    "benchmark:relighting": "node scripts/benchmark-relighting.mjs"
   }
 }

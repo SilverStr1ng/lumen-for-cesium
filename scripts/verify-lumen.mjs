@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { demoUrl } from "./browser-tools.mjs";
 import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -18,7 +19,9 @@ const page = await browser.newPage({ viewport: { width: 960, height: 640 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e)));
 const report = {
-  model: "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf",
+  model:
+    process.env.LUMEN_ASSET_URL ??
+    "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf",
   tests: [],
 };
 function check(name, predicate, detail) {
@@ -27,7 +30,7 @@ function check(name, predicate, detail) {
   console.log("PASS", name, JSON.stringify(detail ?? ""));
 }
 try {
-  await page.goto("http://localhost:8090/demo/index.html?backend=constant", {
+  await page.goto(demoUrl("constant"), {
     waitUntil: "domcontentloaded",
   });
   await page.waitForFunction(

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { demoUrl } from "./browser-tools.mjs";
 import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -39,7 +40,7 @@ async function ready() {
 }
 try {
   const started = Date.now();
-  await page.goto("http://localhost:8090/demo/index.html?backend=cpu");
+  await page.goto(demoUrl("cpu"));
   await ready();
   report.initialMilliseconds = Date.now() - started;
   report.renderer = await page.evaluate(() => {

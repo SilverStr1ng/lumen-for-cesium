@@ -76,6 +76,13 @@ class LumenGpuWorld {
       updates: [],
       productionReadbacks: 0,
       diagnosticReadbacks: 0,
+      cpuSchedulingMilliseconds: 0,
+      submittedFrames: 0,
+      submittedBatches: 0,
+      timerMissing: 0,
+      queryQueuePeak: 0,
+      memory: { currentBytes: 0, peakBytes: 0, textures: 0, framebuffers: 0 },
+      initialStages: {},
     };
     this._timer = scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
@@ -188,6 +195,10 @@ class LumenGpuWorld {
     filter = nearest,
   ) {
     if (
+      !Number.isInteger(width) ||
+      !Number.isInteger(height) ||
+      width < 1 ||
+      height < 1 ||
       width > ContextLimits.maximumTextureSize ||
       height > ContextLimits.maximumTextureSize
     ) {
@@ -209,6 +220,12 @@ class LumenGpuWorld {
     });
     this._textures.push(t);
     this.memoryBytes += bytes;
+    this.metrics.memory.currentBytes = this.memoryBytes;
+    this.metrics.memory.peakBytes = Math.max(
+      this.metrics.memory.peakBytes,
+      this.memoryBytes,
+    );
+    this.metrics.memory.textures = this._textures.length;
     return t;
   }
   _framebuffer(textures) {
@@ -220,6 +237,7 @@ class LumenGpuWorld {
       destroyAttachments: false,
     });
     this._framebuffers.push(f);
+    this.metrics.memory.framebuffers = this._framebuffers.length;
     const binding = c._currentFramebuffer;
     const status = f.status;
     if (binding) {
@@ -381,6 +399,10 @@ class LumenGpuWorld {
     if (disjoint) {
       this.metrics.disjoint++;
       for (const q of this._queries) {
+        if (q.stage) {
+          q.stage.timerMissing++;
+        }
+        this.metrics.timerMissing++;
         gl.deleteQuery(q.query);
       }
       this._queries.length = 0;
@@ -402,6 +424,10 @@ class LumenGpuWorld {
       stats.batches++;
       stats.totalMilliseconds += ms;
       stats.maximumMilliseconds = Math.max(stats.maximumMilliseconds, ms);
+      if (q.stage) {
+        q.stage.gpuMilliseconds += ms;
+        q.stage.timerSamples++;
+      }
       if (stats.samples.length < 200) {
         stats.samples.push(ms);
       }
@@ -431,6 +457,13 @@ class LumenGpuWorld {
     this._bounce = 1;
     this._history = [];
     this._started = performance.now();
+    this._jobMetrics = {
+      revision: this._jobRevision,
+      stages: {},
+      submittedFrames: 0,
+      submittedBatches: 0,
+      cpuSchedulingMilliseconds: 0,
+    };
     this._target = this._published === 0 ? 1 : 0;
   }
   update() {
@@ -442,6 +475,9 @@ class LumenGpuWorld {
       this.scene.camera.inverseViewMatrix,
       this.eyeToLocal,
     );
+    const cpuStarted = performance.now();
+    const initialBatchCount = this.metrics.submittedBatches;
+    const jobsThisFrame = new Set();
     try {
       this._inUpdate = true;
       this._pollTimers();
@@ -467,6 +503,19 @@ class LumenGpuWorld {
           this._batches[phase] ?? 8,
           g.total - this._cursor,
         );
+        const job = ["relocate", "intersect", "classify"].includes(phase)
+          ? undefined
+          : this._jobMetrics;
+        const stages = job?.stages ?? this.metrics.initialStages;
+        const stage = (stages[phase] ??= {
+          submittedBatches: 0,
+          probes: 0,
+          gpuMilliseconds: 0,
+          timerSamples: 0,
+          timerMissing: 0,
+          cpuSchedulingMilliseconds: 0,
+        });
+        const batchStarted = performance.now();
         const estimate = this._costs[phase];
         if (
           batch > 0 &&
@@ -479,6 +528,16 @@ class LumenGpuWorld {
         estimatedTime += estimate
           ? count * estimate
           : this.options.targetGpuMilliseconds;
+        stage.submittedBatches++;
+        stage.probes += count;
+        this.metrics.submittedBatches++;
+        if (job) {
+          job.submittedBatches++;
+          if (!jobsThisFrame.has(job)) {
+            job.submittedFrames++;
+            jobsThisFrame.add(job);
+          }
+        }
         let query;
         if (
           this._timer &&
@@ -525,7 +584,19 @@ class LumenGpuWorld {
         } finally {
           if (query) {
             gl.endQuery(this._timer.TIME_ELAPSED_EXT);
-            this._queries.push({ query, phase, count });
+            this._queries.push({ query, phase, count, stage });
+            this.metrics.queryQueuePeak = Math.max(
+              this.metrics.queryQueuePeak,
+              this._queries.length,
+            );
+          } else {
+            stage.timerMissing++;
+            this.metrics.timerMissing++;
+          }
+          const cpuMilliseconds = performance.now() - batchStarted;
+          stage.cpuSchedulingMilliseconds += cpuMilliseconds;
+          if (job) {
+            job.cpuSchedulingMilliseconds += cpuMilliseconds;
           }
         }
         this._cursor += count;
@@ -565,9 +636,13 @@ class LumenGpuWorld {
               this.packet.history = this._history;
               this.status = this._phase = "ready";
               const result = {
+                ...this._jobMetrics,
                 revision: this._jobRevision,
                 milliseconds: performance.now() - this._started,
                 bounces: this._bounce,
+                submissionMilliseconds: performance.now() - this._started,
+                timingScope:
+                  "CPU submission and atlas selection; not GPU completion or presentation",
               };
               this.metrics.updates.push(result);
               if (this.metrics.updates.length > 100) {
@@ -587,6 +662,10 @@ class LumenGpuWorld {
     } catch (e) {
       this._fail(e);
     } finally {
+      this.metrics.cpuSchedulingMilliseconds += performance.now() - cpuStarted;
+      if (this.metrics.submittedBatches !== initialBatchCount) {
+        this.metrics.submittedFrames++;
+      }
       this._inUpdate = false;
     }
   }
@@ -820,6 +899,8 @@ class LumenGpuWorld {
     }
     this._textures = [];
     this.memoryBytes = 0;
+    this.metrics.memory.currentBytes = 0;
+    this.metrics.memory.textures = this.metrics.memory.framebuffers = 0;
     this.irradianceTexture =
       this.distanceTexture =
       this.positionTexture =

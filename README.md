@@ -155,6 +155,19 @@ GBuffer 表示不透明表面层。透明对象不能当作完整 GI 材质输�
 
 ## 验证
 
+仓库自带三组静态 glTF fixtures，可独立于 Sponza 资产服务运行：
+
+```powershell
+npm run fixtures
+npm --prefix cesium-1.146 exec -- playwright install chromium
+npm run test:fixtures
+npm run benchmark:relighting
+```
+
+`test:fixtures` 是带明确 GPU 读回的数值诊断；`benchmark:relighting` 单独运行，并监测实际 GL 的读回、阻塞等待、纹理 feedback 和资源调用。性能结果中的 `submissionMilliseconds` 测量 CPU 提交与纹理发布，不代表 GPU 完成或像素呈现。全帧 GPU 查询仍仅在更新器空闲时运行，阶段计时由更新器的异步查询提供。
+
+Sponza 基准可用 `LUMEN_BENCH_SCENE=sponza` 和 `LUMEN_ASSET_URL` 配置。服务缺失时报告 `not-run` 并返回非零退出码。默认质量固定为 960×640、2048 阴影、2 m / 128 rays / 3 bounces / 3 ms，每类更新重复三次。小场景单列为 512×384、2048 阴影、1 m / 128 rays / 3 bounces / 3 ms。`CHROMIUM_PATH` 可指定浏览器。
+
 保持两个本地服务运行，在另一个终端执行：
 
 ```powershell

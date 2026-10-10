@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { demoUrl } from "./browser-tools.mjs";
 import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
@@ -15,9 +16,10 @@ const executablePath = [
 const browser = await chromium.launch({ executablePath, headless: true }),
   page = await browser.newPage({ viewport: { width: 960, height: 640 } });
 const fast = process.env.LUMEN_FAST === "1";
-const url =
-  "http://localhost:8090/demo/index.html?backend=gpu" +
-  (fast ? "&spacing=3&rays=64&gpuBudget=6&shadowSize=1024&scale=0.5" : "");
+const url = demoUrl(
+  "gpu",
+  fast ? "spacing=3&rays=64&gpuBudget=6&shadowSize=1024&scale=0.5" : "",
+);
 const report = {
     url,
     configuration: {

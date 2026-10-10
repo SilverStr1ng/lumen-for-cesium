@@ -1,0 +1,2479 @@
+{
+  "head": "cbf38d3a36cf6e6c4850d1f9bdd16297a1be2726",
+  "mode": "numerical diagnostics; includes explicit GPU readback",
+  "checks": [
+    {
+      "name": "untextured: actual WebGL2 GPU world, valid probes and nonempty geometry",
+      "passed": true,
+      "details": {
+        "backend": "LumenGpuWorld",
+        "grid": {
+          "origin": [
+            -2.5,
+            -2.5,
+            -0.5
+          ],
+          "counts": [
+            6,
+            6,
+            5
+          ],
+          "total": 180,
+          "spacing": 1,
+          "normalBias": 0.075,
+          "rays": 128,
+          "width": 360,
+          "height": 50
+        },
+        "active": 180,
+        "unknown": 0,
+        "hits": 4455,
+        "samples": [
+          {
+            "irradiance": [
+              0.9099591970443726,
+              0.49198809266090393,
+              0.6712356209754944
+            ],
+            "coverage": 1
+          }
+        ],
+        "atlas": [
+          1,
+          1
+        ],
+        "memoryBytes": 2569732,
+        "allocatedBytes": 2569732,
+        "metrics": {
+          "passes": {
+            "relocate": {
+              "batches": 16,
+              "totalMilliseconds": 0.9310870000000001,
+              "maximumMilliseconds": 0.102604,
+              "samples": [
+                0.102604,
+                0.032916,
+                0.037916,
+                0.028437,
+                0.076822,
+                0.073125,
+                0.068958,
+                0.069739,
+                0.078854,
+                0.057968,
+                0.088802,
+                0.075937,
+                0.070677,
+                0.014843,
+                0.025677,
+                0.027812
+              ]
+            },
+            "intersect": {
+              "batches": 16,
+              "totalMilliseconds": 0.767702,
+              "maximumMilliseconds": 0.066354,
+              "samples": [
+                0.046927,
+                0.041302,
+                0.037395,
+                0.040989,
+                0.066354,
+                0.054479,
+                0.045468,
+                0.051406,
+                0.04875,
+                0.043802,
+                0.057968,
+                0.054166,
+                0.059895,
+                0.037187,
+                0.043906,
+                0.037708
+              ]
+            },
+            "classify": {
+              "batches": 16,
+              "totalMilliseconds": 1.674054,
+              "maximumMilliseconds": 0.174687,
+              "samples": [
+                0.174687,
+                0.101927,
+                0.107291,
+                0.104947,
+                0.099791,
+                0.110781,
+                0.11776,
+                0.094166,
+                0.094322,
+                0.092083,
+                0.087239,
+                0.110625,
+                0.097239,
+                0.091614,
+                0.089947,
+                0.099635
+              ]
+            },
+            "direct": {
+              "batches": 16,
+              "totalMilliseconds": 0.7028570000000001,
+              "maximumMilliseconds": 0.102031,
+              "samples": [
+                0.030208,
+                0.069218,
+                0.069479,
+                0.102031,
+                0.041979,
+                0.044687,
+                0.049531,
+                0.047291,
+                0.040885,
+                0.042291,
+                0.030104,
+                0.028593,
+                0.02651,
+                0.02427,
+                0.029062,
+                0.026718
+              ]
+            },
+            "bounce": {
+              "batches": 33,
+              "totalMilliseconds": 1.980144,
+              "maximumMilliseconds": 0.116979,
+              "samples": [
+                0.047812,
+                0.05125,
+                0.058437,
+                0.051093,
+                0.037864,
+                0.040104,
+                0.03776,
+                0.043802,
+                0.033177,
+                0.039166,
+                0.032395,
+                0.044427,
+                0.037656,
+                0.034739,
+                0.031562,
+                0.036302,
+                0.087083,
+                0.068802,
+                0.075208,
+                0.079375,
+                0.068229,
+                0.086927,
+                0.063437,
+                0.057083,
+                0.063854,
+                0.065572,
+                0.116979,
+                0.094166,
+                0.079427,
+                0.079843,
+                0.071562,
+                0.078541,
+                0.08651
+              ]
+            },
+            "integrate": {
+              "batches": 34,
+              "totalMilliseconds": 4.7396210000000005,
+              "maximumMilliseconds": 0.201093,
+              "samples": [
+                0.113333,
+                0.11125,
+                0.101302,
+                0.109791,
+                0.10125,
+                0.101093,
+                0.110572,
+                0.10526,
+                0.099218,
+                0.105312,
+                0.096875,
+                0.157031,
+                0.120416,
+                0.116875,
+                0.126093,
+                0.129427,
+                0.151979,
+                0.158854,
+                0.147343,
+                0.158593,
+                0.147291,
+                0.161875,
+                0.180677,
+                0.156822,
+                0.201093,
+                0.170937,
+                0.095989,
+                0.170677,
+                0.185677,
+                0.172343,
+                0.16901,
+                0.173697,
+                0.186041,
+                0.145625
+              ]
+            }
+          },
+          "disjoint": 0,
+          "updates": [
+            {
+              "revision": 1,
+              "stages": {
+                "direct": {
+                  "submittedBatches": 16,
+                  "probes": 180,
+                  "gpuMilliseconds": 0.7028570000000001,
+                  "timerSamples": 16,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 1260.5000000149012
+                },
+                "bounce": {
+                  "submittedBatches": 33,
+                  "probes": 540,
+                  "gpuMilliseconds": 1.980144,
+                  "timerSamples": 33,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 496.69999998807907
+                },
+                "integrate": {
+                  "submittedBatches": 36,
+                  "probes": 540,
+                  "gpuMilliseconds": 4.7396210000000005,
+                  "timerSamples": 34,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 94.20000000298023
+                }
+              },
+              "submittedFrames": 18,
+              "submittedBatches": 85,
+              "cpuSchedulingMilliseconds": 1851.4000000059605,
+              "milliseconds": 2064.4000000059605,
+              "bounces": 3,
+              "submissionMilliseconds": 2064.4000000059605,
+              "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+            }
+          ],
+          "productionReadbacks": 0,
+          "diagnosticReadbacks": 5,
+          "cpuSchedulingMilliseconds": 6074.5999999940395,
+          "submittedFrames": 31,
+          "submittedBatches": 133,
+          "timerMissing": 0,
+          "queryQueuePeak": 25,
+          "memory": {
+            "currentBytes": 2569732,
+            "peakBytes": 2569732,
+            "textures": 16,
+            "framebuffers": 8
+          },
+          "initialStages": {
+            "relocate": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 0.9310870000000001,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 3479.199999988079
+            },
+            "intersect": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 0.767702,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 658.6999999880791
+            },
+            "classify": {
+              "submittedBatches": 16,
+              "probes": 180,
+              "gpuMilliseconds": 1.674054,
+              "timerSamples": 16,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 46.599999979138374
+            }
+          }
+        },
+        "environment": {
+          "browser": "153.0.8010.12",
+          "headless": true,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (Intel)",
+          "visibility": "visible",
+          "resolution": [
+            512,
+            384
+          ],
+          "shadowSize": 2048,
+          "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "untextured: finite HDR irradiance and accounted texture memory",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.9099591970443726,
+            0.49198809266090393,
+            0.6712356209754944
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "untextured: valid 1x1 material atlas",
+      "passed": true,
+      "details": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "sky lighting produces actual receiver irradiance changes",
+      "passed": true,
+      "details": {
+        "low": [
+          {
+            "irradiance": [
+              0.5455338358879089,
+              0.2669347822666168,
+              0.2660745680332184
+            ],
+            "coverage": 1
+          }
+        ],
+        "high": [
+          {
+            "irradiance": [
+              2.6278481483459473,
+              2.1354782581329346,
+              2.128596544265747
+            ],
+            "coverage": 1
+          }
+        ],
+        "revision": 3,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "direct": {
+                "submittedBatches": 16,
+                "probes": 180,
+                "gpuMilliseconds": 0.7028570000000001,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1260.5000000149012
+              },
+              "bounce": {
+                "submittedBatches": 33,
+                "probes": 540,
+                "gpuMilliseconds": 1.980144,
+                "timerSamples": 33,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 496.69999998807907
+              },
+              "integrate": {
+                "submittedBatches": 36,
+                "probes": 540,
+                "gpuMilliseconds": 5.1069640000000005,
+                "timerSamples": 36,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 94.20000000298023
+              }
+            },
+            "submittedFrames": 18,
+            "submittedBatches": 85,
+            "cpuSchedulingMilliseconds": 1851.4000000059605,
+            "milliseconds": 2064.4000000059605,
+            "bounces": 3,
+            "submissionMilliseconds": 2064.4000000059605,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          {
+            "revision": 2,
+            "stages": {
+              "direct": {
+                "submittedBatches": 28,
+                "probes": 180,
+                "gpuMilliseconds": 0.4809239999999999,
+                "timerSamples": 28,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.0000000149011612
+              },
+              "bounce": {
+                "submittedBatches": 19,
+                "probes": 540,
+                "gpuMilliseconds": 1.6180620000000001,
+                "timerSamples": 19,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.8999999910593033
+              },
+              "integrate": {
+                "submittedBatches": 18,
+                "probes": 540,
+                "gpuMilliseconds": 4.689158000000001,
+                "timerSamples": 18,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.7999999970197678
+              }
+            },
+            "submittedFrames": 9,
+            "submittedBatches": 65,
+            "cpuSchedulingMilliseconds": 2.7000000029802322,
+            "milliseconds": 283.20000000298023,
+            "bounces": 3,
+            "submissionMilliseconds": 283.20000000298023,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          {
+            "revision": 3,
+            "stages": {
+              "direct": {
+                "submittedBatches": 19,
+                "probes": 180,
+                "gpuMilliseconds": 0.317596,
+                "timerSamples": 19,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.5
+              },
+              "bounce": {
+                "submittedBatches": 24,
+                "probes": 540,
+                "gpuMilliseconds": 1.0764,
+                "timerSamples": 14,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.9999999850988388
+              },
+              "integrate": {
+                "submittedBatches": 26,
+                "probes": 540,
+                "gpuMilliseconds": 2.4440049999999998,
+                "timerSamples": 13,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.7999999970197678
+              }
+            },
+            "submittedFrames": 9,
+            "submittedBatches": 69,
+            "cpuSchedulingMilliseconds": 2.2999999821186066,
+            "milliseconds": 97,
+            "bounces": 3,
+            "submissionMilliseconds": 97,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "exhausted GPU traversal is Unknown",
+      "passed": true,
+      "details": [
+        {
+          "status": "Unknown",
+          "gpuTriangle": -1,
+          "u": 0,
+          "v": 0,
+          "distance": 100,
+          "backface": false
+        }
+      ]
+    },
+    {
+      "name": "untextured: GL has no framebuffer feedback or errors",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 790
+            },
+            "numerical": {
+              "readPixels": 8,
+              "draws": 1240
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 33,
+            "framebuffers": 17,
+            "queries": 0,
+            "programs": 19,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 36,
+            "framebuffers": 18,
+            "queries": 27,
+            "programs": 19,
+            "syncs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "two-rooms: actual WebGL2 GPU world, valid probes and nonempty geometry",
+      "passed": true,
+      "details": {
+        "backend": "LumenGpuWorld",
+        "grid": {
+          "origin": [
+            -3.5,
+            -2.5,
+            -0.5
+          ],
+          "counts": [
+            8,
+            6,
+            5
+          ],
+          "total": 240,
+          "spacing": 1,
+          "normalBias": 0.075,
+          "rays": 128,
+          "width": 480,
+          "height": 50
+        },
+        "active": 240,
+        "unknown": 0,
+        "hits": 12614,
+        "samples": [
+          {
+            "irradiance": [
+              0.5393961071968079,
+              0.029452715069055557,
+              0.04031171277165413
+            ],
+            "coverage": 1
+          },
+          {
+            "irradiance": [
+              0.0378536656498909,
+              0.044024594128131866,
+              0.06003278121352196
+            ],
+            "coverage": 1
+          }
+        ],
+        "atlas": [
+          1,
+          1
+        ],
+        "memoryBytes": 3393412,
+        "allocatedBytes": 3393412,
+        "metrics": {
+          "passes": {
+            "relocate": {
+              "batches": 22,
+              "totalMilliseconds": 1.700875,
+              "maximumMilliseconds": 0.15875,
+              "samples": [
+                0.086562,
+                0.035416,
+                0.0275,
+                0.033177,
+                0.031458,
+                0.022812,
+                0.131666,
+                0.144062,
+                0.137291,
+                0.02427,
+                0.140729,
+                0.140729,
+                0.15875,
+                0.03177,
+                0.142343,
+                0.138645,
+                0.135052,
+                0.022916,
+                0.025416,
+                0.022031,
+                0.037916,
+                0.030364
+              ]
+            },
+            "intersect": {
+              "batches": 22,
+              "totalMilliseconds": 1.4379080000000002,
+              "maximumMilliseconds": 0.088072,
+              "samples": [
+                0.051145,
+                0.046979,
+                0.068072,
+                0.055677,
+                0.05901,
+                0.068802,
+                0.082864,
+                0.074062,
+                0.074218,
+                0.065625,
+                0.076354,
+                0.07625,
+                0.088072,
+                0.068229,
+                0.079427,
+                0.082812,
+                0.078281,
+                0.04651,
+                0.049114,
+                0.045937,
+                0.054583,
+                0.045885
+              ]
+            },
+            "classify": {
+              "batches": 22,
+              "totalMilliseconds": 1.9362940000000002,
+              "maximumMilliseconds": 0.115104,
+              "samples": [
+                0.087239,
+                0.087552,
+                0.082239,
+                0.082968,
+                0.103385,
+                0.069218,
+                0.081354,
+                0.087656,
+                0.098385,
+                0.072291,
+                0.088125,
+                0.092031,
+                0.115104,
+                0.082343,
+                0.095625,
+                0.096927,
+                0.085104,
+                0.069166,
+                0.086093,
+                0.0875,
+                0.107708,
+                0.078281
+              ]
+            },
+            "direct": {
+              "batches": 22,
+              "totalMilliseconds": 0.7209290000000003,
+              "maximumMilliseconds": 0.061614,
+              "samples": [
+                0.02802,
+                0.025312,
+                0.028593,
+                0.030625,
+                0.022708,
+                0.019947,
+                0.061614,
+                0.05776,
+                0.047708,
+                0.013802,
+                0.057864,
+                0.053906,
+                0.060729,
+                0.016197,
+                0.034375,
+                0.028333,
+                0.038906,
+                0.013125,
+                0.016302,
+                0.012916,
+                0.025312,
+                0.026875
+              ]
+            },
+            "bounce": {
+              "batches": 74,
+              "totalMilliseconds": 3.6619999999999995,
+              "maximumMilliseconds": 0.097708,
+              "samples": [
+                0.041718,
+                0.094791,
+                0.042552,
+                0.04875,
+                0.044114,
+                0.033437,
+                0.039114,
+                0.036927,
+                0.025989,
+                0.035104,
+                0.044635,
+                0.047552,
+                0.070677,
+                0.038333,
+                0.046666,
+                0.03776,
+                0.046197,
+                0.039218,
+                0.041822,
+                0.033072,
+                0.051093,
+                0.025312,
+                0.06151,
+                0.056041,
+                0.055937,
+                0.034062,
+                0.04375,
+                0.038802,
+                0.078333,
+                0.042656,
+                0.049114,
+                0.047239,
+                0.063125,
+                0.0425,
+                0.050781,
+                0.038177,
+                0.064479,
+                0.042812,
+                0.048437,
+                0.036302,
+                0.048385,
+                0.040885,
+                0.032552,
+                0.045416,
+                0.083541,
+                0.044739,
+                0.052864,
+                0.038541,
+                0.037864,
+                0.033281,
+                0.051406,
+                0.038437,
+                0.059166,
+                0.049322,
+                0.04026,
+                0.042083,
+                0.057187,
+                0.050781,
+                0.096979,
+                0.070416,
+                0.057395,
+                0.058541,
+                0.0525,
+                0.043958,
+                0.051458,
+                0.042552,
+                0.077031,
+                0.048802,
+                0.05526,
+                0.049166,
+                0.045208,
+                0.097708,
+                0.081197,
+                0.028229
+              ]
+            },
+            "integrate": {
+              "batches": 71,
+              "totalMilliseconds": 8.728506000000001,
+              "maximumMilliseconds": 0.194635,
+              "samples": [
+                0.168072,
+                0.111354,
+                0.135416,
+                0.123697,
+                0.113541,
+                0.111145,
+                0.110364,
+                0.103906,
+                0.098906,
+                0.159739,
+                0.130885,
+                0.123802,
+                0.133437,
+                0.136666,
+                0.138802,
+                0.116197,
+                0.117812,
+                0.128958,
+                0.128177,
+                0.113697,
+                0.136927,
+                0.115364,
+                0.098645,
+                0.095208,
+                0.089947,
+                0.08776,
+                0.123802,
+                0.181406,
+                0.142187,
+                0.116874,
+                0.118125,
+                0.132083,
+                0.154895,
+                0.13526,
+                0.137187,
+                0.100104,
+                0.099062,
+                0.098593,
+                0.104166,
+                0.109479,
+                0.100468,
+                0.095052,
+                0.194635,
+                0.158906,
+                0.161354,
+                0.152864,
+                0.149947,
+                0.133541,
+                0.124687,
+                0.130364,
+                0.176614,
+                0.119739,
+                0.11526,
+                0.136718,
+                0.127395,
+                0.077239,
+                0.130104,
+                0.09526,
+                0.10526,
+                0.100156,
+                0.102968,
+                0.089739,
+                0.108281,
+                0.104999,
+                0.133437,
+                0.104895,
+                0.123541,
+                0.12026,
+                0.125156,
+                0.127916,
+                0.120104
+              ]
+            }
+          },
+          "disjoint": 0,
+          "updates": [
+            {
+              "revision": 1,
+              "stages": {
+                "direct": {
+                  "submittedBatches": 22,
+                  "probes": 240,
+                  "gpuMilliseconds": 0.7209290000000003,
+                  "timerSamples": 22,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 23.19999998807907
+                },
+                "bounce": {
+                  "submittedBatches": 74,
+                  "probes": 720,
+                  "gpuMilliseconds": 3.6619999999999995,
+                  "timerSamples": 74,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 27.10000005364418
+                },
+                "integrate": {
+                  "submittedBatches": 95,
+                  "probes": 720,
+                  "gpuMilliseconds": 8.728506000000001,
+                  "timerSamples": 71,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 23.799999967217445
+                }
+              },
+              "submittedFrames": 36,
+              "submittedBatches": 191,
+              "cpuSchedulingMilliseconds": 74.1000000089407,
+              "milliseconds": 714.0999999940395,
+              "bounces": 3,
+              "submissionMilliseconds": 714.0999999940395,
+              "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+            }
+          ],
+          "productionReadbacks": 0,
+          "diagnosticReadbacks": 5,
+          "cpuSchedulingMilliseconds": 165.89999997615814,
+          "submittedFrames": 57,
+          "submittedBatches": 257,
+          "timerMissing": 0,
+          "queryQueuePeak": 27,
+          "memory": {
+            "currentBytes": 3393412,
+            "peakBytes": 3393412,
+            "textures": 16,
+            "framebuffers": 8
+          },
+          "initialStages": {
+            "relocate": {
+              "submittedBatches": 22,
+              "probes": 240,
+              "gpuMilliseconds": 1.700875,
+              "timerSamples": 22,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 8.100000038743019
+            },
+            "intersect": {
+              "submittedBatches": 22,
+              "probes": 240,
+              "gpuMilliseconds": 1.4379080000000002,
+              "timerSamples": 22,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 37.70000001788139
+            },
+            "classify": {
+              "submittedBatches": 22,
+              "probes": 240,
+              "gpuMilliseconds": 1.9362940000000002,
+              "timerSamples": 22,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 18.69999998807907
+            }
+          }
+        },
+        "environment": {
+          "browser": "153.0.8010.12",
+          "headless": true,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (Intel)",
+          "visibility": "visible",
+          "resolution": [
+            512,
+            384
+          ],
+          "shadowSize": 2048,
+          "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "two-rooms: finite HDR irradiance and accounted texture memory",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.5393961071968079,
+            0.029452715069055557,
+            0.04031171277165413
+          ],
+          "coverage": 1
+        },
+        {
+          "irradiance": [
+            0.0378536656498909,
+            0.044024594128131866,
+            0.06003278121352196
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "two-rooms: real wall agrees with independent CPU intersection",
+      "passed": true,
+      "details": {
+        "trace": [
+          {
+            "status": "Hit",
+            "triangle": 14,
+            "gpuTriangle": 6,
+            "u": 0.10000000149011612,
+            "v": 0.4000000059604645,
+            "distance": 1.4199999570846558,
+            "backface": true
+          }
+        ],
+        "reference": [
+          {
+            "status": "Hit",
+            "triangle": 14,
+            "u": 0.1,
+            "v": 0.4,
+            "distance": 1.4200000017881393,
+            "backface": true,
+            "material": 0
+          }
+        ],
+        "samples": [
+          {
+            "irradiance": [
+              0.5019983649253845,
+              0,
+              0
+            ],
+            "coverage": 1
+          },
+          {
+            "irradiance": [
+              0.0006874666432850063,
+              0,
+              0
+            ],
+            "coverage": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "two-rooms: wall blocks red emissive transport",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.5019983649253845,
+            0,
+            0
+          ],
+          "coverage": 1
+        },
+        {
+          "irradiance": [
+            0.0006874666432850063,
+            0,
+            0
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "two-rooms: GL has no framebuffer feedback or errors",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 1285
+            },
+            "numerical": {
+              "readPixels": 7,
+              "draws": 1256
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 33,
+            "framebuffers": 17,
+            "queries": 0,
+            "programs": 18,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 36,
+            "framebuffers": 18,
+            "queries": 27,
+            "programs": 19,
+            "syncs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "alpha-mask: actual WebGL2 GPU world, valid probes and nonempty geometry",
+      "passed": true,
+      "details": {
+        "backend": "LumenGpuWorld",
+        "grid": {
+          "origin": [
+            -2.5,
+            -1.5,
+            -0.5
+          ],
+          "counts": [
+            6,
+            4,
+            4
+          ],
+          "total": 96,
+          "spacing": 1,
+          "normalBias": 0.075,
+          "rays": 128,
+          "width": 240,
+          "height": 40
+        },
+        "active": 96,
+        "unknown": 0,
+        "hits": 1857,
+        "samples": [
+          {
+            "irradiance": [
+              0.44388607144355774,
+              0.5324196219444275,
+              0.7389882802963257
+            ],
+            "coverage": 1
+          }
+        ],
+        "atlas": [
+          512,
+          512
+        ],
+        "memoryBytes": 2465152,
+        "allocatedBytes": 2465152,
+        "metrics": {
+          "passes": {
+            "relocate": {
+              "batches": 10,
+              "totalMilliseconds": 0.46556800000000004,
+              "maximumMilliseconds": 0.163958,
+              "samples": [
+                0.163958,
+                0.027291,
+                0.033489,
+                0.047968,
+                0.043229,
+                0.037656,
+                0.04276,
+                0.022812,
+                0.023958,
+                0.022447
+              ]
+            },
+            "intersect": {
+              "batches": 10,
+              "totalMilliseconds": 0.292601,
+              "maximumMilliseconds": 0.047135,
+              "samples": [
+                0.025364,
+                0.02776,
+                0.025625,
+                0.034218,
+                0.035052,
+                0.028489,
+                0.047135,
+                0.02625,
+                0.026406,
+                0.016302
+              ]
+            },
+            "classify": {
+              "batches": 10,
+              "totalMilliseconds": 0.9276519999999999,
+              "maximumMilliseconds": 0.125156,
+              "samples": [
+                0.100989,
+                0.089687,
+                0.086302,
+                0.085989,
+                0.125156,
+                0.080364,
+                0.114322,
+                0.075052,
+                0.095729,
+                0.074062
+              ]
+            },
+            "direct": {
+              "batches": 9,
+              "totalMilliseconds": 0.268588,
+              "maximumMilliseconds": 0.041718,
+              "samples": [
+                0.041718,
+                0.027343,
+                0.031197,
+                0.028697,
+                0.033958,
+                0.026979,
+                0.032291,
+                0.022187,
+                0.024218
+              ]
+            },
+            "bounce": {
+              "batches": 15,
+              "totalMilliseconds": 0.690463,
+              "maximumMilliseconds": 0.095,
+              "samples": [
+                0.038229,
+                0.044114,
+                0.042656,
+                0.040833,
+                0.035937,
+                0.031562,
+                0.035416,
+                0.030833,
+                0.036666,
+                0.058958,
+                0.059062,
+                0.095,
+                0.065781,
+                0.039479,
+                0.035937
+              ]
+            },
+            "integrate": {
+              "batches": 14,
+              "totalMilliseconds": 1.5799919999999998,
+              "maximumMilliseconds": 0.15,
+              "samples": [
+                0.094479,
+                0.131718,
+                0.121614,
+                0.103333,
+                0.119583,
+                0.110937,
+                0.11052,
+                0.109895,
+                0.099166,
+                0.086197,
+                0.119218,
+                0.100364,
+                0.15,
+                0.122968
+              ]
+            }
+          },
+          "disjoint": 0,
+          "updates": [
+            {
+              "revision": 1,
+              "stages": {
+                "direct": {
+                  "submittedBatches": 9,
+                  "probes": 96,
+                  "gpuMilliseconds": 0.268588,
+                  "timerSamples": 9,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 53.79999999701977
+                },
+                "bounce": {
+                  "submittedBatches": 20,
+                  "probes": 288,
+                  "gpuMilliseconds": 0.690463,
+                  "timerSamples": 15,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 56.099999994039536
+                },
+                "integrate": {
+                  "submittedBatches": 28,
+                  "probes": 288,
+                  "gpuMilliseconds": 1.5799919999999998,
+                  "timerSamples": 14,
+                  "timerMissing": 0,
+                  "cpuSchedulingMilliseconds": 64.70000000298023
+                }
+              },
+              "submittedFrames": 16,
+              "submittedBatches": 57,
+              "cpuSchedulingMilliseconds": 174.59999999403954,
+              "milliseconds": 324.8999999910593,
+              "bounces": 3,
+              "submissionMilliseconds": 324.8999999910593,
+              "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+            }
+          ],
+          "productionReadbacks": 0,
+          "diagnosticReadbacks": 5,
+          "cpuSchedulingMilliseconds": 304.30000001192093,
+          "submittedFrames": 31,
+          "submittedBatches": 87,
+          "timerMissing": 0,
+          "queryQueuePeak": 25,
+          "memory": {
+            "currentBytes": 2465152,
+            "peakBytes": 2465152,
+            "textures": 16,
+            "framebuffers": 8
+          },
+          "initialStages": {
+            "relocate": {
+              "submittedBatches": 10,
+              "probes": 96,
+              "gpuMilliseconds": 0.46556800000000004,
+              "timerSamples": 10,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 7.200000002980232
+            },
+            "intersect": {
+              "submittedBatches": 10,
+              "probes": 96,
+              "gpuMilliseconds": 0.292601,
+              "timerSamples": 10,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 35.8999999910593
+            },
+            "classify": {
+              "submittedBatches": 10,
+              "probes": 96,
+              "gpuMilliseconds": 0.9276519999999999,
+              "timerSamples": 10,
+              "timerMissing": 0,
+              "cpuSchedulingMilliseconds": 34.1000000089407
+            }
+          }
+        },
+        "environment": {
+          "browser": "153.0.8010.12",
+          "headless": true,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (Intel)",
+          "visibility": "visible",
+          "resolution": [
+            512,
+            384
+          ],
+          "shadowSize": 2048,
+          "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "alpha-mask: finite HDR irradiance and accounted texture memory",
+      "passed": true,
+      "details": [
+        {
+          "irradiance": [
+            0.44388607144355774,
+            0.5324196219444275,
+            0.7389882802963257
+          ],
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "name": "alpha mask: transparent texel passes through; opaque texel occludes",
+      "passed": true,
+      "details": {
+        "trace": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "gpuTriangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "gpuTriangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true
+          }
+        ],
+        "reference": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true,
+            "material": 0
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true,
+            "material": 1
+          }
+        ],
+        "blackMaximum": 0,
+        "coverage": 1
+      }
+    },
+    {
+      "name": "black light preserves valid coverage and zero irradiance",
+      "passed": true,
+      "details": {
+        "trace": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "gpuTriangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "gpuTriangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true
+          }
+        ],
+        "reference": [
+          {
+            "status": "Hit",
+            "triangle": 3,
+            "u": 0.25,
+            "v": 0.25,
+            "distance": 2,
+            "backface": true,
+            "material": 0
+          },
+          {
+            "status": "Hit",
+            "triangle": 4,
+            "u": 0.25,
+            "v": 0.5,
+            "distance": 1,
+            "backface": true,
+            "material": 1
+          }
+        ],
+        "blackMaximum": 0,
+        "coverage": 1
+      }
+    },
+    {
+      "name": "destroy releases owned resources and reload restores GPU lighting",
+      "passed": true,
+      "details": {
+        "released": {
+          "memory": 0,
+          "textures": 0,
+          "framebuffers": 0,
+          "queries": 0,
+          "closed": true
+        },
+        "ready": true,
+        "resources": {
+          "currentBytes": 2465152,
+          "peakBytes": 2465152,
+          "textures": 16,
+          "framebuffers": 8
+        }
+      }
+    },
+    {
+      "name": "alpha-mask: GL has no framebuffer feedback or errors",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 733
+            },
+            "numerical": {
+              "readPixels": 10,
+              "draws": 1265
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 34,
+            "framebuffers": 17,
+            "queries": 0,
+            "programs": 19,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 37,
+            "framebuffers": 18,
+            "queries": 26,
+            "programs": 19,
+            "syncs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "no render, worker, browser or GL exceptions",
+      "passed": true,
+      "details": []
+    }
+  ],
+  "fixtures": {
+    "untextured": {
+      "backend": "LumenGpuWorld",
+      "grid": {
+        "origin": [
+          -2.5,
+          -2.5,
+          -0.5
+        ],
+        "counts": [
+          6,
+          6,
+          5
+        ],
+        "total": 180,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 360,
+        "height": 50
+      },
+      "active": 180,
+      "unknown": 0,
+      "hits": 4455,
+      "samples": [
+        {
+          "irradiance": [
+            0.9099591970443726,
+            0.49198809266090393,
+            0.6712356209754944
+          ],
+          "coverage": 1
+        }
+      ],
+      "atlas": [
+        1,
+        1
+      ],
+      "memoryBytes": 2569732,
+      "allocatedBytes": 2569732,
+      "metrics": {
+        "passes": {
+          "relocate": {
+            "batches": 16,
+            "totalMilliseconds": 0.9310870000000001,
+            "maximumMilliseconds": 0.102604,
+            "samples": [
+              0.102604,
+              0.032916,
+              0.037916,
+              0.028437,
+              0.076822,
+              0.073125,
+              0.068958,
+              0.069739,
+              0.078854,
+              0.057968,
+              0.088802,
+              0.075937,
+              0.070677,
+              0.014843,
+              0.025677,
+              0.027812
+            ]
+          },
+          "intersect": {
+            "batches": 16,
+            "totalMilliseconds": 0.767702,
+            "maximumMilliseconds": 0.066354,
+            "samples": [
+              0.046927,
+              0.041302,
+              0.037395,
+              0.040989,
+              0.066354,
+              0.054479,
+              0.045468,
+              0.051406,
+              0.04875,
+              0.043802,
+              0.057968,
+              0.054166,
+              0.059895,
+              0.037187,
+              0.043906,
+              0.037708
+            ]
+          },
+          "classify": {
+            "batches": 16,
+            "totalMilliseconds": 1.674054,
+            "maximumMilliseconds": 0.174687,
+            "samples": [
+              0.174687,
+              0.101927,
+              0.107291,
+              0.104947,
+              0.099791,
+              0.110781,
+              0.11776,
+              0.094166,
+              0.094322,
+              0.092083,
+              0.087239,
+              0.110625,
+              0.097239,
+              0.091614,
+              0.089947,
+              0.099635
+            ]
+          },
+          "direct": {
+            "batches": 16,
+            "totalMilliseconds": 0.7028570000000001,
+            "maximumMilliseconds": 0.102031,
+            "samples": [
+              0.030208,
+              0.069218,
+              0.069479,
+              0.102031,
+              0.041979,
+              0.044687,
+              0.049531,
+              0.047291,
+              0.040885,
+              0.042291,
+              0.030104,
+              0.028593,
+              0.02651,
+              0.02427,
+              0.029062,
+              0.026718
+            ]
+          },
+          "bounce": {
+            "batches": 33,
+            "totalMilliseconds": 1.980144,
+            "maximumMilliseconds": 0.116979,
+            "samples": [
+              0.047812,
+              0.05125,
+              0.058437,
+              0.051093,
+              0.037864,
+              0.040104,
+              0.03776,
+              0.043802,
+              0.033177,
+              0.039166,
+              0.032395,
+              0.044427,
+              0.037656,
+              0.034739,
+              0.031562,
+              0.036302,
+              0.087083,
+              0.068802,
+              0.075208,
+              0.079375,
+              0.068229,
+              0.086927,
+              0.063437,
+              0.057083,
+              0.063854,
+              0.065572,
+              0.116979,
+              0.094166,
+              0.079427,
+              0.079843,
+              0.071562,
+              0.078541,
+              0.08651
+            ]
+          },
+          "integrate": {
+            "batches": 34,
+            "totalMilliseconds": 4.7396210000000005,
+            "maximumMilliseconds": 0.201093,
+            "samples": [
+              0.113333,
+              0.11125,
+              0.101302,
+              0.109791,
+              0.10125,
+              0.101093,
+              0.110572,
+              0.10526,
+              0.099218,
+              0.105312,
+              0.096875,
+              0.157031,
+              0.120416,
+              0.116875,
+              0.126093,
+              0.129427,
+              0.151979,
+              0.158854,
+              0.147343,
+              0.158593,
+              0.147291,
+              0.161875,
+              0.180677,
+              0.156822,
+              0.201093,
+              0.170937,
+              0.095989,
+              0.170677,
+              0.185677,
+              0.172343,
+              0.16901,
+              0.173697,
+              0.186041,
+              0.145625
+            ]
+          }
+        },
+        "disjoint": 0,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "direct": {
+                "submittedBatches": 16,
+                "probes": 180,
+                "gpuMilliseconds": 0.7028570000000001,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1260.5000000149012
+              },
+              "bounce": {
+                "submittedBatches": 33,
+                "probes": 540,
+                "gpuMilliseconds": 1.980144,
+                "timerSamples": 33,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 496.69999998807907
+              },
+              "integrate": {
+                "submittedBatches": 36,
+                "probes": 540,
+                "gpuMilliseconds": 4.7396210000000005,
+                "timerSamples": 34,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 94.20000000298023
+              }
+            },
+            "submittedFrames": 18,
+            "submittedBatches": 85,
+            "cpuSchedulingMilliseconds": 1851.4000000059605,
+            "milliseconds": 2064.4000000059605,
+            "bounces": 3,
+            "submissionMilliseconds": 2064.4000000059605,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ],
+        "productionReadbacks": 0,
+        "diagnosticReadbacks": 5,
+        "cpuSchedulingMilliseconds": 6074.5999999940395,
+        "submittedFrames": 31,
+        "submittedBatches": 133,
+        "timerMissing": 0,
+        "queryQueuePeak": 25,
+        "memory": {
+          "currentBytes": 2569732,
+          "peakBytes": 2569732,
+          "textures": 16,
+          "framebuffers": 8
+        },
+        "initialStages": {
+          "relocate": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 0.9310870000000001,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 3479.199999988079
+          },
+          "intersect": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 0.767702,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 658.6999999880791
+          },
+          "classify": {
+            "submittedBatches": 16,
+            "probes": 180,
+            "gpuMilliseconds": 1.674054,
+            "timerSamples": 16,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 46.599999979138374
+          }
+        }
+      },
+      "environment": {
+        "browser": "153.0.8010.12",
+        "headless": true,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)",
+        "visibility": "visible",
+        "resolution": [
+          512,
+          384
+        ],
+        "shadowSize": 2048,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+      }
+    },
+    "two-rooms": {
+      "backend": "LumenGpuWorld",
+      "grid": {
+        "origin": [
+          -3.5,
+          -2.5,
+          -0.5
+        ],
+        "counts": [
+          8,
+          6,
+          5
+        ],
+        "total": 240,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 480,
+        "height": 50
+      },
+      "active": 240,
+      "unknown": 0,
+      "hits": 12614,
+      "samples": [
+        {
+          "irradiance": [
+            0.5393961071968079,
+            0.029452715069055557,
+            0.04031171277165413
+          ],
+          "coverage": 1
+        },
+        {
+          "irradiance": [
+            0.0378536656498909,
+            0.044024594128131866,
+            0.06003278121352196
+          ],
+          "coverage": 1
+        }
+      ],
+      "atlas": [
+        1,
+        1
+      ],
+      "memoryBytes": 3393412,
+      "allocatedBytes": 3393412,
+      "metrics": {
+        "passes": {
+          "relocate": {
+            "batches": 22,
+            "totalMilliseconds": 1.700875,
+            "maximumMilliseconds": 0.15875,
+            "samples": [
+              0.086562,
+              0.035416,
+              0.0275,
+              0.033177,
+              0.031458,
+              0.022812,
+              0.131666,
+              0.144062,
+              0.137291,
+              0.02427,
+              0.140729,
+              0.140729,
+              0.15875,
+              0.03177,
+              0.142343,
+              0.138645,
+              0.135052,
+              0.022916,
+              0.025416,
+              0.022031,
+              0.037916,
+              0.030364
+            ]
+          },
+          "intersect": {
+            "batches": 22,
+            "totalMilliseconds": 1.4379080000000002,
+            "maximumMilliseconds": 0.088072,
+            "samples": [
+              0.051145,
+              0.046979,
+              0.068072,
+              0.055677,
+              0.05901,
+              0.068802,
+              0.082864,
+              0.074062,
+              0.074218,
+              0.065625,
+              0.076354,
+              0.07625,
+              0.088072,
+              0.068229,
+              0.079427,
+              0.082812,
+              0.078281,
+              0.04651,
+              0.049114,
+              0.045937,
+              0.054583,
+              0.045885
+            ]
+          },
+          "classify": {
+            "batches": 22,
+            "totalMilliseconds": 1.9362940000000002,
+            "maximumMilliseconds": 0.115104,
+            "samples": [
+              0.087239,
+              0.087552,
+              0.082239,
+              0.082968,
+              0.103385,
+              0.069218,
+              0.081354,
+              0.087656,
+              0.098385,
+              0.072291,
+              0.088125,
+              0.092031,
+              0.115104,
+              0.082343,
+              0.095625,
+              0.096927,
+              0.085104,
+              0.069166,
+              0.086093,
+              0.0875,
+              0.107708,
+              0.078281
+            ]
+          },
+          "direct": {
+            "batches": 22,
+            "totalMilliseconds": 0.7209290000000003,
+            "maximumMilliseconds": 0.061614,
+            "samples": [
+              0.02802,
+              0.025312,
+              0.028593,
+              0.030625,
+              0.022708,
+              0.019947,
+              0.061614,
+              0.05776,
+              0.047708,
+              0.013802,
+              0.057864,
+              0.053906,
+              0.060729,
+              0.016197,
+              0.034375,
+              0.028333,
+              0.038906,
+              0.013125,
+              0.016302,
+              0.012916,
+              0.025312,
+              0.026875
+            ]
+          },
+          "bounce": {
+            "batches": 74,
+            "totalMilliseconds": 3.6619999999999995,
+            "maximumMilliseconds": 0.097708,
+            "samples": [
+              0.041718,
+              0.094791,
+              0.042552,
+              0.04875,
+              0.044114,
+              0.033437,
+              0.039114,
+              0.036927,
+              0.025989,
+              0.035104,
+              0.044635,
+              0.047552,
+              0.070677,
+              0.038333,
+              0.046666,
+              0.03776,
+              0.046197,
+              0.039218,
+              0.041822,
+              0.033072,
+              0.051093,
+              0.025312,
+              0.06151,
+              0.056041,
+              0.055937,
+              0.034062,
+              0.04375,
+              0.038802,
+              0.078333,
+              0.042656,
+              0.049114,
+              0.047239,
+              0.063125,
+              0.0425,
+              0.050781,
+              0.038177,
+              0.064479,
+              0.042812,
+              0.048437,
+              0.036302,
+              0.048385,
+              0.040885,
+              0.032552,
+              0.045416,
+              0.083541,
+              0.044739,
+              0.052864,
+              0.038541,
+              0.037864,
+              0.033281,
+              0.051406,
+              0.038437,
+              0.059166,
+              0.049322,
+              0.04026,
+              0.042083,
+              0.057187,
+              0.050781,
+              0.096979,
+              0.070416,
+              0.057395,
+              0.058541,
+              0.0525,
+              0.043958,
+              0.051458,
+              0.042552,
+              0.077031,
+              0.048802,
+              0.05526,
+              0.049166,
+              0.045208,
+              0.097708,
+              0.081197,
+              0.028229
+            ]
+          },
+          "integrate": {
+            "batches": 71,
+            "totalMilliseconds": 8.728506000000001,
+            "maximumMilliseconds": 0.194635,
+            "samples": [
+              0.168072,
+              0.111354,
+              0.135416,
+              0.123697,
+              0.113541,
+              0.111145,
+              0.110364,
+              0.103906,
+              0.098906,
+              0.159739,
+              0.130885,
+              0.123802,
+              0.133437,
+              0.136666,
+              0.138802,
+              0.116197,
+              0.117812,
+              0.128958,
+              0.128177,
+              0.113697,
+              0.136927,
+              0.115364,
+              0.098645,
+              0.095208,
+              0.089947,
+              0.08776,
+              0.123802,
+              0.181406,
+              0.142187,
+              0.116874,
+              0.118125,
+              0.132083,
+              0.154895,
+              0.13526,
+              0.137187,
+              0.100104,
+              0.099062,
+              0.098593,
+              0.104166,
+              0.109479,
+              0.100468,
+              0.095052,
+              0.194635,
+              0.158906,
+              0.161354,
+              0.152864,
+              0.149947,
+              0.133541,
+              0.124687,
+              0.130364,
+              0.176614,
+              0.119739,
+              0.11526,
+              0.136718,
+              0.127395,
+              0.077239,
+              0.130104,
+              0.09526,
+              0.10526,
+              0.100156,
+              0.102968,
+              0.089739,
+              0.108281,
+              0.104999,
+              0.133437,
+              0.104895,
+              0.123541,
+              0.12026,
+              0.125156,
+              0.127916,
+              0.120104
+            ]
+          }
+        },
+        "disjoint": 0,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "direct": {
+                "submittedBatches": 22,
+                "probes": 240,
+                "gpuMilliseconds": 0.7209290000000003,
+                "timerSamples": 22,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 23.19999998807907
+              },
+              "bounce": {
+                "submittedBatches": 74,
+                "probes": 720,
+                "gpuMilliseconds": 3.6619999999999995,
+                "timerSamples": 74,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 27.10000005364418
+              },
+              "integrate": {
+                "submittedBatches": 95,
+                "probes": 720,
+                "gpuMilliseconds": 8.728506000000001,
+                "timerSamples": 71,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 23.799999967217445
+              }
+            },
+            "submittedFrames": 36,
+            "submittedBatches": 191,
+            "cpuSchedulingMilliseconds": 74.1000000089407,
+            "milliseconds": 714.0999999940395,
+            "bounces": 3,
+            "submissionMilliseconds": 714.0999999940395,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ],
+        "productionReadbacks": 0,
+        "diagnosticReadbacks": 5,
+        "cpuSchedulingMilliseconds": 165.89999997615814,
+        "submittedFrames": 57,
+        "submittedBatches": 257,
+        "timerMissing": 0,
+        "queryQueuePeak": 27,
+        "memory": {
+          "currentBytes": 3393412,
+          "peakBytes": 3393412,
+          "textures": 16,
+          "framebuffers": 8
+        },
+        "initialStages": {
+          "relocate": {
+            "submittedBatches": 22,
+            "probes": 240,
+            "gpuMilliseconds": 1.700875,
+            "timerSamples": 22,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 8.100000038743019
+          },
+          "intersect": {
+            "submittedBatches": 22,
+            "probes": 240,
+            "gpuMilliseconds": 1.4379080000000002,
+            "timerSamples": 22,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 37.70000001788139
+          },
+          "classify": {
+            "submittedBatches": 22,
+            "probes": 240,
+            "gpuMilliseconds": 1.9362940000000002,
+            "timerSamples": 22,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 18.69999998807907
+          }
+        }
+      },
+      "environment": {
+        "browser": "153.0.8010.12",
+        "headless": true,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)",
+        "visibility": "visible",
+        "resolution": [
+          512,
+          384
+        ],
+        "shadowSize": 2048,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+      }
+    },
+    "alpha-mask": {
+      "backend": "LumenGpuWorld",
+      "grid": {
+        "origin": [
+          -2.5,
+          -1.5,
+          -0.5
+        ],
+        "counts": [
+          6,
+          4,
+          4
+        ],
+        "total": 96,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 240,
+        "height": 40
+      },
+      "active": 96,
+      "unknown": 0,
+      "hits": 1857,
+      "samples": [
+        {
+          "irradiance": [
+            0.44388607144355774,
+            0.5324196219444275,
+            0.7389882802963257
+          ],
+          "coverage": 1
+        }
+      ],
+      "atlas": [
+        512,
+        512
+      ],
+      "memoryBytes": 2465152,
+      "allocatedBytes": 2465152,
+      "metrics": {
+        "passes": {
+          "relocate": {
+            "batches": 10,
+            "totalMilliseconds": 0.46556800000000004,
+            "maximumMilliseconds": 0.163958,
+            "samples": [
+              0.163958,
+              0.027291,
+              0.033489,
+              0.047968,
+              0.043229,
+              0.037656,
+              0.04276,
+              0.022812,
+              0.023958,
+              0.022447
+            ]
+          },
+          "intersect": {
+            "batches": 10,
+            "totalMilliseconds": 0.292601,
+            "maximumMilliseconds": 0.047135,
+            "samples": [
+              0.025364,
+              0.02776,
+              0.025625,
+              0.034218,
+              0.035052,
+              0.028489,
+              0.047135,
+              0.02625,
+              0.026406,
+              0.016302
+            ]
+          },
+          "classify": {
+            "batches": 10,
+            "totalMilliseconds": 0.9276519999999999,
+            "maximumMilliseconds": 0.125156,
+            "samples": [
+              0.100989,
+              0.089687,
+              0.086302,
+              0.085989,
+              0.125156,
+              0.080364,
+              0.114322,
+              0.075052,
+              0.095729,
+              0.074062
+            ]
+          },
+          "direct": {
+            "batches": 9,
+            "totalMilliseconds": 0.268588,
+            "maximumMilliseconds": 0.041718,
+            "samples": [
+              0.041718,
+              0.027343,
+              0.031197,
+              0.028697,
+              0.033958,
+              0.026979,
+              0.032291,
+              0.022187,
+              0.024218
+            ]
+          },
+          "bounce": {
+            "batches": 15,
+            "totalMilliseconds": 0.690463,
+            "maximumMilliseconds": 0.095,
+            "samples": [
+              0.038229,
+              0.044114,
+              0.042656,
+              0.040833,
+              0.035937,
+              0.031562,
+              0.035416,
+              0.030833,
+              0.036666,
+              0.058958,
+              0.059062,
+              0.095,
+              0.065781,
+              0.039479,
+              0.035937
+            ]
+          },
+          "integrate": {
+            "batches": 14,
+            "totalMilliseconds": 1.5799919999999998,
+            "maximumMilliseconds": 0.15,
+            "samples": [
+              0.094479,
+              0.131718,
+              0.121614,
+              0.103333,
+              0.119583,
+              0.110937,
+              0.11052,
+              0.109895,
+              0.099166,
+              0.086197,
+              0.119218,
+              0.100364,
+              0.15,
+              0.122968
+            ]
+          }
+        },
+        "disjoint": 0,
+        "updates": [
+          {
+            "revision": 1,
+            "stages": {
+              "direct": {
+                "submittedBatches": 9,
+                "probes": 96,
+                "gpuMilliseconds": 0.268588,
+                "timerSamples": 9,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 53.79999999701977
+              },
+              "bounce": {
+                "submittedBatches": 20,
+                "probes": 288,
+                "gpuMilliseconds": 0.690463,
+                "timerSamples": 15,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 56.099999994039536
+              },
+              "integrate": {
+                "submittedBatches": 28,
+                "probes": 288,
+                "gpuMilliseconds": 1.5799919999999998,
+                "timerSamples": 14,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 64.70000000298023
+              }
+            },
+            "submittedFrames": 16,
+            "submittedBatches": 57,
+            "cpuSchedulingMilliseconds": 174.59999999403954,
+            "milliseconds": 324.8999999910593,
+            "bounces": 3,
+            "submissionMilliseconds": 324.8999999910593,
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          }
+        ],
+        "productionReadbacks": 0,
+        "diagnosticReadbacks": 5,
+        "cpuSchedulingMilliseconds": 304.30000001192093,
+        "submittedFrames": 31,
+        "submittedBatches": 87,
+        "timerMissing": 0,
+        "queryQueuePeak": 25,
+        "memory": {
+          "currentBytes": 2465152,
+          "peakBytes": 2465152,
+          "textures": 16,
+          "framebuffers": 8
+        },
+        "initialStages": {
+          "relocate": {
+            "submittedBatches": 10,
+            "probes": 96,
+            "gpuMilliseconds": 0.46556800000000004,
+            "timerSamples": 10,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 7.200000002980232
+          },
+          "intersect": {
+            "submittedBatches": 10,
+            "probes": 96,
+            "gpuMilliseconds": 0.292601,
+            "timerSamples": 10,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 35.8999999910593
+          },
+          "classify": {
+            "submittedBatches": 10,
+            "probes": 96,
+            "gpuMilliseconds": 0.9276519999999999,
+            "timerSamples": 10,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 34.1000000089407
+          }
+        }
+      },
+      "environment": {
+        "browser": "153.0.8010.12",
+        "headless": true,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)",
+        "visibility": "visible",
+        "resolution": [
+          512,
+          384
+        ],
+        "shadowSize": 2048,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+      }
+    }
+  },
+  "errors": [],
+  "tolerances": {
+    "irradiance": {
+      "absolute": 0.0002,
+      "relative": 0.001
+    },
+    "moments": {
+      "absolute": 0.0002,
+      "relative": 0.0001
+    }
+  }
+}

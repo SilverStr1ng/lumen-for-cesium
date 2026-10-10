@@ -44,11 +44,19 @@ function pack(b, options) {
     uv.set(g.uvs.subarray(original * 6 + 2, original * 6 + 6), t * 4);
   }
   const used = g.images.map((im, i) => (im ? i : -1)).filter((i) => i >= 0);
-  const cols = Math.min(8, Math.floor(options.maxTextureSize / 512));
-  const width = cols * 512,
-    height = Math.ceil(used.length / cols) * 512;
+  const cols = Math.min(
+    8,
+    used.length,
+    Math.floor(options.maxTextureSize / 512),
+  );
+  if (used.length && cols < 1)
+    throw new Error("Material atlas needs a 512px texture limit");
+  // Untextured glTF still needs a complete sampler; account for its four bytes.
+  const width = used.length ? cols * 512 : 1,
+    height = used.length ? Math.ceil(used.length / cols) * 512 : 1;
   const atlas = new Uint8Array(width * height * 4),
     rects = [];
+  if (!used.length) atlas.fill(255);
   used.forEach((id, slot) => {
     const im = g.images[id],
       x = (slot % cols) * 512,

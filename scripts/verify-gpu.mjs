@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { demoUrl } from "./browser-tools.mjs";
 import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -40,7 +41,7 @@ function check(name, ok, detail) {
 await mkdir("artifacts", { recursive: true });
 try {
   const start = Date.now();
-  await page.goto("http://localhost:8090/demo/index.html?backend=gpu");
+  await page.goto(demoUrl("gpu"));
   await page.waitForFunction(
     () =>
       window.lumenDemo?.scene.lumen.world?.ready ||
