@@ -1,0 +1,17 @@
+{
+  "name": "lumen-for-cesium",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "build": "npm --prefix cesium-1.146 run build",
+    "start": "node scripts/serve.mjs",
+    "test": "node scripts/verify-lumen.mjs",
+    "patch": "node scripts/export-patch.mjs",
+    "test:pipeline": "node scripts/verify-pipeline.mjs",
+    "test:world": "node scripts/verify-world.mjs",
+    "test:transport": "node scripts/verify-transport.mjs",
+    "test:gpu": "node scripts/verify-gpu.mjs",
+    "benchmark:gpu": "node scripts/benchmark-gpu.mjs"
+  }
+}
