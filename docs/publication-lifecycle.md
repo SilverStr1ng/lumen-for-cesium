@@ -1,0 +1,11 @@
+# Publication callback contract
+
+`LumenGpuWorld.publicationEvent` runs in a queued microtask after the complete Scene render stack returns. Atlas publication and next-round ownership (or final job settlement) are committed before listeners run. Event payloads describe the completed publication, not GPU completion or presentation.
+
+Listeners may synchronously destroy the world, replace it with `scene.lumen.loadWorld`, or request another lighting solve. They may also destroy the Scene: when a widget owns the animation loop, stop that loop (`widget.useDefaultRenderLoop = false`) before `scene.destroy()`, or destroy the owning widget. This is deferred notification, not destruction in the middle of a render stack.
+
+Destroy rejects unfinished lighting and Worker promises, releases resources, and preserves `status === "destroyed"`. A final publication's completed promise is already resolved and remains resolved. The first-publication promise is also already resolved when its listener runs. A new solve follows the normal latest-request policy: unfinished superseded completion rejects; revisions and publication rounds remain monotonic per world. Replacement worlds have independent revision sequences.
+
+A throwing listener records `world.publicationError`, transitions the live world to `error`, closes its Worker and resources, and rejects unfinished promises. Already settled promises cannot change state. A listener that has already destroyed its world retains the destroyed state even if it subsequently throws. Exceptions do not escape into the render loop. Cesium Event stops dispatch at a throwing listener; applications should not depend on later listeners running after a failure.
+
+Run `npm run test:publication-lifecycle` against the local server on port 8090 after building Cesium. This browser test covers non-final and final progressive callbacks for world destruction, Scene destruction, replacement, reentrant solve and exceptions. It checks pending Worker settlement, no old-world draw or Worker requests after close, stable post-settlement submissions, GL feedback/errors, and replacement publication. Every run writes a new timestamped `reports/globe-visibility-v3/lifecycle-*.json`, preserving failures. Existing `test:progressive` remains the snapshot/progressive equivalence and on-demand regression reference.

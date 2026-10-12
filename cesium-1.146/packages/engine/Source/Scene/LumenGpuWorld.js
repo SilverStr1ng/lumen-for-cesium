@@ -749,7 +749,25 @@ class LumenGpuWorld {
     if (this._jobRevision === this.revision) {
       this._resolveFirst(publication);
     }
-    this.publicationEvent.raiseEvent(publication);
+    // Publication notifications run after the entire Scene render stack unwinds.
+    // The round transaction (including next-round ownership / final settlement)
+    // is committed first. Listeners may destroy the Scene, replace this world,
+    // or solve again without resuming a render against released resources.
+    queueMicrotask(() => {
+      if (this._closed || this.scene.isDestroyed()) {
+        return;
+      }
+      try {
+        this.publicationEvent.raiseEvent(publication);
+      } catch (error) {
+        // Listener failure terminates this world, rather than escaping into the
+        // render loop. Already settled promises stay settled; pending work rejects.
+        this.publicationError = String(error);
+        if (!this._closed) {
+          this._fail(error);
+        }
+      }
+    });
   }
   _finishJob(settled) {
     const submissionMilliseconds = performance.now() - this._started;
