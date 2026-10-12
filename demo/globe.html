@@ -8,7 +8,6 @@
       rel="stylesheet"
       href="../cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css"
     />
-    <link rel="stylesheet" href="globe.css" />
     <style>
       html,
       body,
@@ -93,6 +92,7 @@
         color: #b9c9d5;
       }
     </style>
+    <link rel="stylesheet" href="globe.css" />
   </head>
   <body>
     <div id="view"></div>
@@ -163,7 +163,7 @@
         <p id="network">本地 NaturalEarthII + 椭球地形</p>
         <small
           >token 仅保存在内存，需 assets:read，限制资产及 Allowed
-          URLs。切换地形不会自动移动建筑；采样并重建才改变 GI。</small
+          URLs。启用地形会先采样并重建共享锚点；起伏超过地基净空时回退。</small
         ><button id="place">采样地形并重建</button>
       </details>
       <details open>

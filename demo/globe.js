@@ -28,8 +28,20 @@ scene.globe.dynamicAtmosphereLightingFromSun = false;
 scene.sun.show = false;
 scene.fog.enabled = false;
 const errors = [];
+function safeError(error) {
+  let message = String(error).replace(
+    /([?&]access_token=)[^&#\s"']+/gi,
+    "$1[REDACTED]",
+  );
+  const token = $("token").value;
+  if (token) {
+    message = message.split(token).join("[REDACTED]");
+    message = message.split(encodeURIComponent(token)).join("[REDACTED]");
+  }
+  return message;
+}
 const fail = (e) => {
-  const message = String(e);
+  const message = safeError(e);
   if (/destroyed|superseded/.test(message)) return;
   errors.push(message);
   $("error").textContent = message;
@@ -141,27 +153,46 @@ async function localLayers() {
   const provider = await C.TileMapServiceImageryProvider.fromUrl(
     C.buildModuleUrl("Assets/Textures/NaturalEarthII"),
   );
-  if (own !== networkGeneration) return;
+  if (own !== networkGeneration) return false;
   scene.imageryLayers.removeAll();
   scene.imageryLayers.addImageryProvider(provider);
   if (metadata && anchor.height !== metadata.anchor.height) {
     anchor.height = metadata.anchor.height;
     await reload();
   }
+  if (own !== networkGeneration) return false;
   $("network").textContent = "本地 NaturalEarthII + 椭球地形";
+  return true;
+}
+function watchProvider(provider, own, isCurrent, label) {
+  let fallingBack = false;
+  provider.errorEvent.addEventListener(() => {
+    if (fallingBack || own !== networkGeneration || !isCurrent()) return;
+    fallingBack = true;
+    localLayers()
+      .then((applied) => {
+        if (applied)
+          $("network").textContent = `${label}瓦片请求失败；已回退本地`;
+      })
+      .catch(fail);
+  });
 }
 async function enhance() {
   const token = $("token").value;
   const id = Number($("asset").value);
   const terrain = $("terrain").checked;
   if (!token) {
-    $("network").textContent = "未提供 token，保留本地模式";
+    $("network").textContent = "未提供 token，保留当前配置";
     return;
   }
   const own = ++networkGeneration;
   try {
     const results = await Promise.all([
-      id ? C.IonImageryProvider.fromAssetId(id, { accessToken: token }) : null,
+      id
+        ? C.IonImageryProvider.fromAssetId(id, { accessToken: token })
+        : C.TileMapServiceImageryProvider.fromUrl(
+            C.buildModuleUrl("Assets/Textures/NaturalEarthII"),
+          ),
       terrain
         ? C.CesiumTerrainProvider.fromIonAssetId(1, { accessToken: token })
         : null,
@@ -174,26 +205,39 @@ async function enhance() {
     if (own !== networkGeneration || previousGeneration !== generation) return;
     if (results[0]) {
       scene.imageryLayers.removeAll();
-      scene.imageryLayers.addImageryProvider(results[0]);
-      results[0].errorEvent.addEventListener(() => {
-        localLayers()
-          .then(() => {
-            $("network").textContent = "影像瓦片请求失败；已回退本地";
-          })
-          .catch(fail);
-      });
+      const layer = scene.imageryLayers.addImageryProvider(results[0]);
+      watchProvider(
+        results[0],
+        own,
+        () => scene.imageryLayers.contains(layer),
+        "影像",
+      );
     }
     if (results[1]) {
       scene.terrainProvider = results[1];
+      watchProvider(
+        results[1],
+        own,
+        () => scene.terrainProvider === results[1],
+        "地形",
+      );
       anchor.height = height;
       await reload();
+    } else {
+      scene.terrainProvider = new C.EllipsoidTerrainProvider();
+      if (metadata && anchor.height !== metadata.anchor.height) {
+        anchor.height = metadata.anchor.height;
+        await reload();
+      }
     }
+    if (own !== networkGeneration) return;
     $("network").textContent = results[1]
       ? "ion 增强已启用；中心/四角采样完成，同一稳定锚点已重建"
-      : "ion 影像增强已启用；本地椭球地形与 GI 保持不变";
+      : "影像已应用；已使用本地椭球地形与共享高度";
   } catch (error) {
     if (own !== networkGeneration) return;
-    await localLayers();
+    const applied = await localLayers();
+    if (!applied) return;
     $("network").textContent =
       `ion 增强失败（${Number.isInteger(error?.statusCode) ? `HTTP ${error.statusCode}` : (error?.placementCode ?? "NETWORK_OR_CONFIGURATION")}），已回退本地影像和椭球地形（凭据不记录）`;
   }
@@ -272,12 +316,14 @@ async function terrainHeight(provider) {
   const relief =
     Math.max(...sampled.map((p) => p.height)) -
     Math.min(...sampled.map((p) => p.height));
-  if (relief > 1.5) {
-    const error = new Error("terrain relief exceeds the 1.5 metre foundation");
+  if (relief > 1.4 + 1e-9) {
+    const error = new Error("terrain relief exceeds foundation clearance");
     error.placementCode = "TERRAIN_RELIEF_EXCEEDS_FOUNDATION";
     throw error;
   }
-  return Math.max(...sampled.map((p) => p.height)) + 1.5;
+  // Foundation local z is [-1.5,0]. Bottom meets the lowest sampled point,
+  // while the top clears the highest by at least 0.1m after the relief check.
+  return Math.min(...sampled.map((p) => p.height)) + 1.5;
 }
 async function place() {
   const own = networkGeneration,
