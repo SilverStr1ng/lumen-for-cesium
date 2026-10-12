@@ -137,6 +137,15 @@
       <details>
         <summary>设置 / 可选 ion 增强</summary>
         <label
+          >太阳高度（°）<input
+            id="sunHeight"
+            type="number"
+            min="1"
+            max="89"
+            step="any"
+            title="默认精确 atan(0.65)，约 33.02°；限制为地平线上方 1–89°"
+        /></label>
+        <label
           >曝光<input
             id="exposure"
             type="number"
@@ -185,4 +194,3 @@
     <script type="module" src="globe.js"></script>
   </body>
 </html>
-

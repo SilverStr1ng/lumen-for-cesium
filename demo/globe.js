@@ -70,19 +70,34 @@ const lighting = {
   bounces: 3,
   environmentMode: "upper-hemisphere",
 };
-function updateLight() {
-  const a = C.Math.toRadians(Number($("sun").value));
-  lighting.sunDirection = [Math.cos(a), Math.sin(a), 0.65];
-  const d = C.Cartesian3.normalize(
-    C.Cartesian3.fromArray(lighting.sunDirection),
-    new C.Cartesian3(),
-  );
-  C.Cartesian3.negate(d, d);
-  scene.light = new C.DirectionalLight({
-    direction: C.Matrix3.multiplyByVector(rotation, d, new C.Cartesian3()),
-    intensity: 2,
-  });
-}
+const defaultSunElevation = C.Math.toDegrees(Math.atan(0.65));
+$("sunHeight").value = String(defaultSunElevation);
+const lightingController = {
+  update() {
+    const a = C.Math.toRadians(Number($("sun").value));
+    const requestedElevation = Number($("sunHeight").value);
+    const elevation = Number.isFinite(requestedElevation)
+      ? C.Math.clamp(requestedElevation, 1, 89)
+      : defaultSunElevation;
+    $("sunHeight").value = String(elevation);
+    // Preserve the previous default transport vector exactly, without rounding
+    // the displayed degrees or introducing a tan(atan(.65)) round-trip.
+    const vertical =
+      elevation === defaultSunElevation
+        ? 0.65
+        : Math.tan(C.Math.toRadians(elevation));
+    lighting.sunDirection = [Math.cos(a), Math.sin(a), vertical];
+    const d = C.Cartesian3.normalize(
+      C.Cartesian3.fromArray(lighting.sunDirection),
+      new C.Cartesian3(),
+    );
+    C.Cartesian3.negate(d, d);
+    scene.light = new C.DirectionalLight({
+      direction: C.Matrix3.multiplyByVector(rotation, d, new C.Cartesian3()),
+      intensity: 2,
+    });
+  },
+};
 function options() {
   return {
     ...lighting,
@@ -91,7 +106,7 @@ function options() {
   };
 }
 function relight() {
-  updateLight();
+  lightingController.update();
   const w = scene.lumen.world;
   if (w?.packet && !w.isDestroyed()) {
     pendingLighting = false;
@@ -252,7 +267,7 @@ async function reload() {
     model = undefined;
   }
   setFrame();
-  updateLight();
+  lightingController.update();
   $("error").textContent = "";
   try {
     const asset = new URL("../fixtures/earth-pavilion.gltf", import.meta.url)
@@ -362,7 +377,8 @@ $("exposure").onchange = () => {
   scene.postProcessStages.exposure = Number($("exposure").value);
   scene.requestRender();
 };
-for (const id of ["sun", "publication", "neutral"]) $(id).onchange = relight;
+for (const id of ["sun", "sunHeight", "publication", "neutral"])
+  $(id).onchange = relight;
 $("cameras").onclick = (e) => {
   if (e.target.dataset.camera) camera(e.target.dataset.camera, true);
 };
@@ -385,6 +401,7 @@ window.earthLab = {
   errors,
   anchor,
   lighting,
+  lightingController,
   camera,
   reload,
   enhance,
@@ -403,7 +420,7 @@ window.earthLab = {
     return metadata;
   },
 };
-updateLight();
+lightingController.update();
 camera("earth");
 localLayers().catch(fail);
 fetch("../fixtures/earth-pavilion.json")

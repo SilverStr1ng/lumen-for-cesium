@@ -15,5 +15,6 @@ GI 仅覆盖局部展馆及地基；外围地球、影像和真实地形不参�
 
 地理配置以 `scripts/generate-globe.mjs` 输出的 `fixtures/earth-pavilion.json` 的 anchor 为初始来源：longitude、latitude、height（椭球米）、heading（度）。调试时也可修改 `earthLab.anchor` 后调用 `await earthLab.reload()`，这会销毁并重建局部 world，不是动态几何变换。相机导航不触发这一流程。
 
-页面太阳方位按局部 ENU 中从 +East 向 +North 的角度标注；其高度固定为 atan(0.65)，约33度。
+页面太阳方位按局部 ENU 中从 +East 向 +North 的角度标注；设置面板可调整太阳高度（1–89度，始终在地平线上方）。默认精确为 atan(0.65)，约33.02度，保留旧 sunDirection 的 z=0.65，不改变默认截图/质量条件。统一 lightingController 同时更新 GI 局部方向和显示用 ECEF 光传播方向；高度变化按当前 snapshot/progressive 模式请求重照明。
+
 
