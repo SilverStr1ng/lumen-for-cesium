@@ -300,7 +300,7 @@ export async function environment(page, browser) {
     browser: browser.version(),
     headless: process.env.LUMEN_HEADFUL !== "1",
     ...(await page.evaluate(() => {
-      const scene = (window.lumenTest ?? window.lumenDemo).scene,
+      const scene = (window.lumenTest ?? window.lumenDemo ?? window.earthLab).scene,
         gl = scene.context._gl,
         extension = gl.getExtension("WEBGL_debug_renderer_info");
       return {

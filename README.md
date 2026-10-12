@@ -18,6 +18,10 @@ npm start
 
 开发服务启动在 [http://localhost:8090](http://localhost:8090)。继续开发时修改源码后运行 `npm run build`，然后刷新页面。
 
+无需 token 或 Sponza 服务可直接打开 [Earth GI Lab](http://localhost:8090/demo/globe.html)：真实 Cesium Globe、本地 NaturalEarthII 与椭球地形，以及同一 glTF 驱动显示/GI 的原创展馆。设置面板可选填仅保存在内存中的 ion token。外围地形只作为背景，不参与完整 GI。见[页面与配置说明](demo/globe-README.md)、[本轮截图和验证记录](reports/globe-visibility-v3/README.md)。
+
+发布回调采用[渲染事务后的通知合同](docs/publication-lifecycle.md)；太阳查询的 SAH、精确 any-hit 与 median 参考开关见[查询说明](docs/visibility-query.md)。验收命令为 `npm run test:publication-lifecycle`、`npm run test:globe`、`npm run test:visibility`；同质量计时使用 `npm run benchmark:visibility`。
+
 默认模型是你提供的 [Sponza](http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf)，直接从现有资产服务加载，未修改模型文件。资产服务必须继续运行并允许跨端口访问；当前已验证它返回 CORS `*`。
 
 页面可切换最终光照、直接光、间接漫射光、自发光和材质调试视图。可调整太阳、曝光、GI 增益、天空能量和 1–4 次反弹；太阳、天空和反弹变化会触发世界光照重算。首次计算需要等待加载、BVH 构建和探针追踪，状态栏会显示进度。

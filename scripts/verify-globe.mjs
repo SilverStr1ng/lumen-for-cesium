@@ -1,11 +1,18 @@
 import assert from "node:assert/strict";
-import { mkdir, writeFile, readFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile, copyFile } from "node:fs/promises";
+import path from "node:path";
 import { createHash } from "node:crypto";
 import { launchBrowser, sourceVersion } from "./browser-tools.mjs";
 const out = "reports/globe-visibility-v3";
+const runStamp = new Date().toISOString().replaceAll(/[:.]/g, "-");
 await mkdir(out, { recursive: true });
 const report = {
-  version: sourceVersion(["demo/globe.js", "scripts/generate-globe.mjs"]),
+  startedAt: new Date().toISOString(),
+  version: sourceVersion([
+    "demo/globe.js",
+    "scripts/generate-globe.mjs",
+    "scripts/verify-globe.mjs",
+  ]),
   mode: "local-only browser WebGL2",
   checks: [],
   errors: [],
@@ -26,11 +33,20 @@ report.assetSha256 = Object.fromEntries(
 );
 const browser = await launchBrowser();
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+const runDirectory = `${out}/runs/${runStamp}`;
+await mkdir(runDirectory, { recursive: true });
+async function captureScreenshot(options) {
+  await page.screenshot(options);
+  await copyFile(
+    options.path,
+    `${runDirectory}/${path.basename(options.path)}`,
+  );
+}
 const external = [];
 await page.route("**/*", (route) => {
   const url = new URL(route.request().url());
   if (
-    !["localhost", "127.0.0.1"].includes(url.hostname) &&
+    url.origin !== "http://localhost:8090" &&
     !["data:", "blob:"].includes(url.protocol)
   ) {
     external.push(url.origin);
@@ -95,6 +111,282 @@ try {
     state.sunDot,
   );
   check("GBuffer disabled by default", state.gBuffer === false);
+  // Narrow-FOV diagnostic, not the default Earth overview. Keep the real
+  // model/transform, exposure and lighting unchanged; magnify only projection.
+  await page.evaluate(() => {
+    const d = earthLab,
+      C = Cesium,
+      camera = d.scene.camera;
+    window.globeOcclusionRestore = {
+      destination: C.Cartesian3.clone(camera.positionWC),
+      orientation: {
+        direction: C.Cartesian3.clone(camera.directionWC),
+        up: C.Cartesian3.clone(camera.upWC),
+      },
+      show: d.model.show,
+      globeShow: d.scene.globe.show,
+      frustum: camera.frustum.clone(),
+      backgroundColor: C.Color.clone(d.scene.backgroundColor),
+      skyBoxShow: d.scene.skyBox?.show,
+      skyAtmosphereShow: d.scene.skyAtmosphere?.show,
+      modelMatrix: C.Matrix4.toArray(d.model.modelMatrix),
+      revision: d.world.requestedRevision,
+    };
+    const longitude = ((d.anchor.longitude + 540) % 360) - 180;
+    const oppositeLongitude = longitude > 0 ? longitude - 180 : longitude + 180;
+    const destination = C.Cartesian3.fromDegrees(
+      oppositeLongitude,
+      -d.anchor.latitude,
+      22000000,
+    );
+    const frame = C.Transforms.eastNorthUpToFixedFrame(destination);
+    camera.cancelFlight();
+    camera.setView({
+      destination,
+      orientation: {
+        direction: C.Cartesian3.normalize(
+          C.Cartesian3.subtract(
+            d.model.boundingSphere.center,
+            destination,
+            new C.Cartesian3(),
+          ),
+          new C.Cartesian3(),
+        ),
+        up: C.Matrix4.multiplyByPointAsVector(
+          frame,
+          C.Cartesian3.UNIT_Y,
+          new C.Cartesian3(),
+        ),
+      },
+    });
+    // setView converts direction/up to HPR and deliberately chooses heading
+    // from up near nadir (Camera.getHeading EPSILON3). At this diagnostic FOV
+    // that approximation moves the model hundreds of thousands of pixels.
+    // Set an exact orthonormal world basis through public Camera vectors.
+    camera.lookAtTransform(C.Matrix4.IDENTITY);
+    C.Cartesian3.clone(destination, camera.position);
+    C.Cartesian3.normalize(
+      C.Cartesian3.subtract(
+        d.model.boundingSphere.center,
+        destination,
+        new C.Cartesian3(),
+      ),
+      camera.direction,
+    );
+    C.Cartesian3.normalize(
+      C.Cartesian3.cross(
+        camera.direction,
+        C.Matrix4.multiplyByPointAsVector(
+          frame,
+          C.Cartesian3.UNIT_Y,
+          new C.Cartesian3(),
+        ),
+        new C.Cartesian3(),
+      ),
+      camera.right,
+    );
+    C.Cartesian3.cross(camera.right, camera.direction, camera.up);
+    const distance = C.Cartesian3.distance(
+      destination,
+      d.model.boundingSphere.center,
+    );
+    const aspect = d.scene.drawingBufferWidth / d.scene.drawingBufferHeight;
+    const desiredRadiusPixels = 64;
+    const fovy =
+      2 *
+      Math.atan(
+        (d.model.boundingSphere.radius * d.scene.drawingBufferHeight) /
+          (2 * distance * desiredRadiusPixels),
+      );
+    camera.frustum = new C.PerspectiveFrustum({
+      fov: aspect > 1 ? 2 * Math.atan(Math.tan(fovy / 2) * aspect) : fovy,
+      aspectRatio: aspect,
+      near: 100000,
+      far: distance + 1000000,
+    });
+    d.scene.globe.show = true;
+    // A fixed display-only backdrop makes the unlit foundation silhouette
+    // observable without changing materials, the GI environment, or sunlight.
+    d.scene.backgroundColor = new C.Color(0.5, 0.5, 0.5, 1);
+    if (d.scene.skyBox) d.scene.skyBox.show = false;
+    if (d.scene.skyAtmosphere) d.scene.skyAtmosphere.show = false;
+    d.model.show = true;
+    window.globeStableTileFrames = 0;
+    d.scene.requestRender();
+  });
+  try {
+    await page.waitForFunction(
+      () => {
+        window.globeStableTileFrames = earthLab.scene.globe.tilesLoaded
+          ? window.globeStableTileFrames + 1
+          : 0;
+        return window.globeStableTileFrames >= 10;
+      },
+      null,
+      { timeout: 60000, polling: "raf" },
+    );
+    report.occlusion = await page.evaluate(() => {
+      const d = earthLab,
+        w = d.world,
+        C = Cesium,
+        width = d.scene.drawingBufferWidth,
+        height = d.scene.drawingBufferHeight;
+      const capture = () => {
+        d.widget.render();
+        d.widget.render();
+        return w._read(
+          d.scene._view.sceneFramebuffer._colorFramebuffer.framebuffer,
+          width,
+          height,
+        );
+      };
+      d.model.show = true;
+      const visible = capture();
+      d.model.show = false;
+      const hidden = capture();
+      let maximum = 0,
+        failures = 0;
+      for (let i = 0; i < visible.length; i++) {
+        const delta = Math.abs(visible[i] - hidden[i]);
+        maximum = Math.max(maximum, delta);
+        if (!Number.isFinite(delta) || delta > 1e-6) failures++;
+      }
+      // Positive control: with Globe absent the same projection must resolve
+      // the actual model. An insensitive black/subpixel result cannot pass.
+      d.scene.globe.show = false;
+      d.model.show = true;
+      const unobstructedModel = capture();
+      d.model.show = false;
+      const unobstructedBackground = capture();
+      let sensitivityMaximum = 0,
+        sensitivityPixels = 0,
+        sensitivityNonFinite = 0;
+      for (let i = 0; i < unobstructedModel.length; i += 4) {
+        let changed = false;
+        for (let channel = 0; channel < 3; channel++) {
+          const delta = Math.abs(
+            unobstructedModel[i + channel] -
+              unobstructedBackground[i + channel],
+          );
+          if (!Number.isFinite(delta)) sensitivityNonFinite++;
+          sensitivityMaximum = Math.max(sensitivityMaximum, delta);
+          if (delta > 1e-4) changed = true;
+        }
+        if (changed) sensitivityPixels++;
+      }
+      const origin = d.scene.camera.positionWC,
+        target = d.model.boundingSphere.center;
+      const direction = C.Cartesian3.normalize(
+        C.Cartesian3.subtract(target, origin, new C.Cartesian3()),
+        new C.Cartesian3(),
+      );
+      const interval = C.IntersectionTests.rayEllipsoid(
+        new C.Ray(origin, direction),
+        C.Ellipsoid.WGS84,
+      );
+      const distance = C.Cartesian3.distance(origin, target);
+      d.scene.globe.show = true;
+      d.model.show = true;
+      d.widget.render();
+      d.widget.render();
+      return {
+        maximum,
+        failures,
+        values: visible.length,
+        absoluteTolerance: 1e-6,
+        sensitivity: {
+          maximum: sensitivityMaximum,
+          changedPixels: sensitivityPixels,
+          nonFinite: sensitivityNonFinite,
+          absoluteTolerance: 1e-4,
+          minimumChangedPixels: 20,
+        },
+        fovRadians: d.scene.camera.frustum.fov,
+        diagnosticBackground: {
+          color: [0.5, 0.5, 0.5, 1],
+          skyBox: false,
+          skyAtmosphere: false,
+          affectsGiEnvironment: false,
+        },
+        tilesLoaded: d.scene.globe.tilesLoaded,
+        stableTileFrames: window.globeStableTileFrames,
+        depthTestAgainstTerrain: d.scene.globe.depthTestAgainstTerrain,
+        globeEntryDistance: interval?.start,
+        modelDistance: distance,
+        projectedCenter: C.SceneTransforms.worldToWindowCoordinates(
+          d.scene,
+          target,
+        ),
+        projectedRadiusPixels:
+          ((d.model.boundingSphere.radius / distance) * height) /
+          (2 * Math.tan(d.scene.camera.frustum.fovy / 2)),
+        revisionUnchanged:
+          w.requestedRevision === window.globeOcclusionRestore.revision,
+        modelMatrixUnchanged: C.Matrix4.toArray(d.model.modelMatrix).every(
+          (v, i) => v === window.globeOcclusionRestore.modelMatrix[i],
+        ),
+        note: "Narrow-FOV antipode diagnostic, not the default Earth display. Real model geometry/transform unchanged. Globe-on model show/hide must match; Globe-off positive control must resolve at least 20 changed pixels.",
+      };
+    });
+    await captureScreenshot({
+      path: `${out}/globe-antipode-narrow-globe-on-model-on.png`,
+    });
+    await page.evaluate(() => {
+      earthLab.model.show = false;
+      earthLab.widget.render();
+      earthLab.widget.render();
+    });
+    await captureScreenshot({
+      path: `${out}/globe-antipode-narrow-globe-on-model-off.png`,
+    });
+    await page.evaluate(() => {
+      earthLab.scene.globe.show = false;
+      earthLab.model.show = true;
+      earthLab.widget.render();
+      earthLab.widget.render();
+    });
+    await captureScreenshot({
+      path: `${out}/globe-antipode-narrow-globe-off-model-on.png`,
+    });
+    await page.evaluate(() => {
+      earthLab.model.show = false;
+      earthLab.widget.render();
+      earthLab.widget.render();
+    });
+    await captureScreenshot({
+      path: `${out}/globe-antipode-narrow-globe-off-model-off.png`,
+    });
+    check(
+      "narrow-FOV antipode Globe occlusion with visible positive control",
+      report.occlusion.failures === 0 &&
+        report.occlusion.projectedRadiusPixels >= 20 &&
+        report.occlusion.sensitivity.changedPixels >= 20 &&
+        report.occlusion.sensitivity.nonFinite === 0 &&
+        report.occlusion.modelMatrixUnchanged &&
+        report.occlusion.depthTestAgainstTerrain &&
+        report.occlusion.globeEntryDistance > 0 &&
+        report.occlusion.globeEntryDistance < report.occlusion.modelDistance &&
+        report.occlusion.revisionUnchanged,
+      report.occlusion,
+    );
+  } finally {
+    await page.evaluate(() => {
+      const restore = window.globeOcclusionRestore;
+      earthLab.model.show = restore.show;
+      earthLab.scene.globe.show = restore.globeShow;
+      earthLab.scene.camera.frustum = restore.frustum;
+      earthLab.scene.backgroundColor = restore.backgroundColor;
+      if (earthLab.scene.skyBox)
+        earthLab.scene.skyBox.show = restore.skyBoxShow;
+      if (earthLab.scene.skyAtmosphere)
+        earthLab.scene.skyAtmosphere.show = restore.skyAtmosphereShow;
+      earthLab.scene.camera.setView({
+        destination: restore.destination,
+        orientation: restore.orientation,
+      });
+      earthLab.scene.requestRender();
+    });
+  }
   for (const name of [
     "earth",
     "overview",
@@ -105,8 +397,70 @@ try {
     "bounce",
   ]) {
     await page.evaluate((name) => earthLab.camera(name), name);
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: `${out}/globe-${name}.png` });
+    // Local EllipsoidTerrainProvider meshes continue refining after camera
+    // jumps. A fixed one-second delay can capture a coarse chordal surface.
+    await page.evaluate(() => {
+      window.bookmarkStableTileFrames = 0;
+    });
+    await page.waitForFunction(
+      () => {
+        window.bookmarkStableTileFrames = earthLab.scene.globe.tilesLoaded
+          ? window.bookmarkStableTileFrames + 1
+          : 0;
+        return window.bookmarkStableTileFrames >= 10;
+      },
+      null,
+      { timeout: 60000, polling: "raf" },
+    );
+    if (name === "context") {
+      report.placement = await page.evaluate(() => {
+        const d = earthLab,
+          C = Cesium,
+          g = d.scene.globe,
+          b = d.metadata.bounds;
+        return {
+          tilesLoaded: g.tilesLoaded,
+          stableTileFrames: window.bookmarkStableTileFrames,
+          anchor: { ...d.anchor },
+          samples: [
+            [0, 0],
+            [b[0], b[1]],
+            [b[0], b[4]],
+            [b[3], b[1]],
+            [b[3], b[4]],
+          ].map(([x, y]) => {
+            const world = C.Matrix4.multiplyByPoint(
+                d.frame,
+                new C.Cartesian3(x, y, b[2]),
+                new C.Cartesian3(),
+              ),
+              cartographic = C.Cartographic.fromCartesian(world),
+              renderedHeight = g.getHeight(cartographic);
+            return {
+              local: [x, y, b[2]],
+              baseHeight: cartographic.height,
+              renderedHeight,
+              gap: cartographic.height - renderedHeight,
+              tileLevels: g._surface._tilesToRender
+                .filter((t) => C.Rectangle.contains(t.rectangle, cartographic))
+                .map((t) => t.level),
+            };
+          }),
+          absoluteToleranceMeters: 0.01,
+          note: "Rendered mesh contact only. Small chordal/quantization gaps do not validate the appearance of shadow contact.",
+        };
+      });
+      check(
+        "stable local Globe mesh lies within 1cm of foundation base",
+        report.placement.samples.every(
+          (p) =>
+            Number.isFinite(p.gap) &&
+            Math.abs(p.gap) < report.placement.absoluteToleranceMeters,
+        ),
+        report.placement,
+      );
+    }
+    await captureScreenshot({ path: `${out}/globe-${name}.png` });
   }
   for (const [label, enabled, mode] of [
     ["ab-on", true, 0],
@@ -125,7 +479,7 @@ try {
       { enabled, mode },
     );
     await page.waitForTimeout(500);
-    await page.screenshot({ path: `${out}/globe-${label}.png` });
+    await captureScreenshot({ path: `${out}/globe-${label}.png` });
   }
   check(
     "camera and product AB do not relight",
@@ -324,6 +678,12 @@ try {
   report.errors.push(String(e));
   throw e;
 } finally {
+  // Every run gets immutable raw results, including failures; the conventional
+  // latest filename is only a convenience pointer for report consumers.
+  await writeFile(
+    `${out}/globe-results-${runStamp}-${report.status ?? "incomplete"}.json`,
+    JSON.stringify(report, null, 2),
+  );
   await writeFile(`${out}/globe-results.json`, JSON.stringify(report, null, 2));
   await browser.close();
 }

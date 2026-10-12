@@ -1,0 +1,28 @@
+{
+  "version": {
+    "head": "021448587ec257fde9043e3c6181cfe8d25beb76",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "f55b9f1e767dcce2c845c758637849976ab9759abf8461060d2a5f5594d4296c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "83b55dba0981ee1b4a4b76f71fc455758cf85c42f68de4e882568a6071e19ae3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "demo/globe.js": "dc84dc2d96ed8d715c76afe79d92566ad48de8696d6f3c4e412bb06e0bf9285b",
+      "fixtures/earth-pavilion.gltf": "6626295af6f11314c3433e751b6b6bfa63b09538cd8fcc4ce3bea22ae2e2fc55",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee"
+    },
+    "compiledBundle": "9eb208b38fe84144328903d8add38f2edfe6a97d136d8d271ec72a4f8cf2d6c1",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "lumen/gpu-worker.js"
+    ]
+  },
+  "started": "2026-10-12T03:03:41.577Z",
+  "mode": "local Earth performance; no diagnostic readbacks or blocking waits",
+  "errors": [
+    "Error: page.evaluate: TypeError: Cannot read properties of undefined (reading 'scene')\n    at eval (eval at evaluate (:370:30), <anonymous>:2:60)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+  ],
+  "status": "failed"
+}

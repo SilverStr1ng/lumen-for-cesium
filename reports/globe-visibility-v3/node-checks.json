@@ -1,0 +1,64 @@
+{
+  "started": "2026-10-12T03:07:05.613Z",
+  "version": {
+    "head": "6d97e1d631cd7fae30a59d320e4a4e4be672f2d7",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "f55b9f1e767dcce2c845c758637849976ab9759abf8461060d2a5f5594d4296c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "83b55dba0981ee1b4a4b76f71fc455758cf85c42f68de4e882568a6071e19ae3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+    },
+    "compiledBundle": "9eb208b38fe84144328903d8add38f2edfe6a97d136d8d271ec72a4f8cf2d6c1",
+    "modifiedSources": []
+  },
+  "checks": [
+    {
+      "script": "verify-pipeline.mjs",
+      "passed": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMilliseconds": 2888.1855,
+      "stdout": "PASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for default image-based lighting\nPASS Scene/Model/ImageBasedLightingPipelineStage updates Lumen uniforms without rebuilding and disables them during picking\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for specular environment maps\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for spherical harmonics\nPASS Scene/Model/LightingPipelineStage supports unlit lighting\nPASS Scene/Model/LightingPipelineStage supports light color\nPASS Scene/Model/LightingPipelineStage supports PBR lighting\nPASS Scene/Model/LightingPipelineStage keeps unsupported material paths on the original lighting\nPASS Scene/Model/LightingPipelineStage exports supported opaque and alpha-mask PBR triangles with normals\n9 pipeline specs; 0 failed; passed\n",
+      "stderr": ""
+    },
+    {
+      "script": "verify-transport.mjs",
+      "passed": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMilliseconds": 331.27919999999995,
+      "stdout": "PASS 500 BVH rays agree with independent brute-force plane/barycentric reference\nPASS alpha rejection continues traversal; exhausted traversal is Unknown\nPASS directional DDGI integration yields pi * sky radiance without bounce energy growth\nPASS directional distance moments suppress cross-wall probe leakage by >1000x\n",
+      "stderr": ""
+    },
+    {
+      "script": "verify-environment.mjs",
+      "passed": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMilliseconds": 217.55719999999974,
+      "stdout": "{\n  \"tolerance\": 0.025,\n  \"checks\": [\n    {\n      \"name\": \"sphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.005319031076975733,\n      \"passed\": true\n    },\n    {\n      \"name\": \"upper-hemisphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.017878325282171925,\n      \"passed\": true\n    },\n    {\n      \"name\": \"root domain includes 200m blocker and retains historical 100m floor\",\n      \"maximum\": 201.01999900009997,\n      \"full\": {\n        \"status\": \"Hit\",\n        \"triangle\": 0,\n        \"u\": 0.25,\n        \"v\": 0.5,\n        \"distance\": 200,\n        \"backface\": true\n      },\n      \"passed\": true\n    }\n  ],\n  \"status\": \"passed\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "script": "verify-globe-controls.mjs",
+      "passed": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMilliseconds": 60.3779999999997,
+      "stdout": "PASS provider identity/generation guards, single fallback, terrain disable, stale status, foundation range, redaction and CSS order\n",
+      "stderr": ""
+    },
+    {
+      "script": "verify-visibility.mjs",
+      "passed": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMilliseconds": 3189.4923999999996,
+      "stdout": "[{\"strategy\":\"median\",\"bins\":12,\"stats\":{\"persistentBytes\":7808,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":7,\"triangles\":514,\"nodes\":131,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":60762,\"triangles\":60507,\"accept\":358},\"milliseconds\":42.45959999999968},{\"strategy\":\"sah\",\"bins\":8,\"stats\":{\"persistentBytes\":10208,\"strategy\":\"sah\",\"bins\":8,\"maxDepth\":8,\"triangles\":514,\"nodes\":191,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":65950,\"triangles\":34267,\"accept\":360},\"milliseconds\":35.24530000000004},{\"strategy\":\"sah\",\"bins\":12,\"stats\":{\"persistentBytes\":9968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":8,\"triangles\":514,\"nodes\":185,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63446,\"triangles\":36899,\"accept\":358},\"milliseconds\":24.467200000000048},{\"strategy\":\"sah\",\"bins\":16,\"stats\":{\"persistentBytes\":9888,\"strategy\":\"sah\",\"bins\":16,\"maxDepth\":8,\"triangles\":514,\"nodes\":183,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63544,\"triangles\":36041,\"accept\":357},\"milliseconds\":17.959399999999732},{\"strategy\":\"sah\",\"bins\":32,\"stats\":{\"persistentBytes\":9488,\"strategy\":\"sah\",\"bins\":32,\"maxDepth\":8,\"triangles\":514,\"nodes\":173,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":61648,\"triangles\":38845,\"accept\":358},\"milliseconds\":16.262699999999768}]\n",
+      "stderr": ""
+    }
+  ],
+  "status": "passed"
+}

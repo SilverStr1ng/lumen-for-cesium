@@ -1,0 +1,83 @@
+{
+  "startedAt": "2026-10-12T03:09:40.989Z",
+  "version": {
+    "head": "6d97e1d631cd7fae30a59d320e4a4e4be672f2d7",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "f55b9f1e767dcce2c845c758637849976ab9759abf8461060d2a5f5594d4296c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "83b55dba0981ee1b4a4b76f71fc455758cf85c42f68de4e882568a6071e19ae3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "lumen/bvh.js": "ea0b3758b386bd506decaafd1fffdd402a74238d68b3497c20fed611cddf0183"
+    },
+    "compiledBundle": "9eb208b38fe84144328903d8add38f2edfe6a97d136d8d271ec72a4f8cf2d6c1",
+    "modifiedSources": []
+  },
+  "scope": "Diagnostic reconstruction of retained typed arrays and decoded CPU RGBA images; excludes JS object/allocator overhead, browser caches and driver allocations",
+  "assets": [
+    {
+      "asset": "http://localhost:8090/fixtures/earth-pavilion.gltf",
+      "axisMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "triangles": 276,
+      "geometryArrays": {
+        "positions": 9936,
+        "uvs": 6624,
+        "normals": 3312,
+        "materialIds": 552
+      },
+      "geometryBytes": 20424,
+      "images": [],
+      "decodedCpuTextureBytes": 0,
+      "strategies": {
+        "median": {
+          "nodes": 103,
+          "arrays": {
+            "bounds": 2472,
+            "children": 1648,
+            "order": 1104,
+            "stack": 512
+          },
+          "persistentBytes": 5736
+        },
+        "sah": {
+          "nodes": 99,
+          "arrays": {
+            "bounds": 2376,
+            "children": 1584,
+            "order": 1104,
+            "stack": 512
+          },
+          "persistentBytes": 5576
+        }
+      }
+    }
+  ],
+  "status": "failed",
+  "browserDiagnostics": [
+    "Access to fetch at 'http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf' from origin 'http://localhost:8090' has been blocked by CORS policy: Permission was denied for this request to access the `loopback` address space.",
+    {
+      "url": "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf",
+      "error": "net::ERR_FAILED"
+    },
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "error": "Error: page.evaluate: TypeError: Failed to fetch\n    at fetched (http://localhost:8090/lumen/gltf.js:40:19)\n    at loadGeometry (http://localhost:8090/lumen/gltf.js:46:22)\n    at eval (eval at evaluate (:370:30), <anonymous>:6:30)\n    at async <anonymous>:396:30"
+}

@@ -1,0 +1,284 @@
+{
+  "version": {
+    "head": "6d97e1d631cd7fae30a59d320e4a4e4be672f2d7",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "f55b9f1e767dcce2c845c758637849976ab9759abf8461060d2a5f5594d4296c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "83b55dba0981ee1b4a4b76f71fc455758cf85c42f68de4e882568a6071e19ae3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+    },
+    "compiledBundle": "9eb208b38fe84144328903d8add38f2edfe6a97d136d8d271ec72a4f8cf2d6c1",
+    "modifiedSources": []
+  },
+  "snapshots": [
+    {
+      "label": "after-1-second",
+      "tilesLoaded": false,
+      "anchor": {
+        "longitude": 114.1,
+        "latitude": 22.3,
+        "height": 1.5,
+        "heading": 0
+      },
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "baseEllipsoidHeight": 0,
+          "renderedTerrainHeight": -0.003935061788499923,
+          "gap": 0.003935061788499923,
+          "tiles": [
+            {
+              "level": 14,
+              "x": 26769,
+              "y": 6162,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": -12,
+          "y": -9,
+          "baseEllipsoidHeight": 0.00001767207759652337,
+          "renderedTerrainHeight": -0.0038027662999203116,
+          "gap": 0.003820438377516835,
+          "tiles": [
+            {
+              "level": 14,
+              "x": 26769,
+              "y": 6162,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": -12,
+          "y": 9,
+          "baseEllipsoidHeight": 0.000017662177583370838,
+          "renderedTerrainHeight": -0.004076967163781093,
+          "gap": 0.004094629341364463,
+          "tiles": [
+            {
+              "level": 14,
+              "x": 26769,
+              "y": 6162,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": 12,
+          "y": -9,
+          "baseEllipsoidHeight": 0.00001767129103281588,
+          "renderedTerrainHeight": -0.0037578240845849895,
+          "gap": 0.0037754953756178053,
+          "tiles": [
+            {
+              "level": 14,
+              "x": 26769,
+              "y": 6162,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": 12,
+          "y": 9,
+          "baseEllipsoidHeight": 0.000017661391020754122,
+          "renderedTerrainHeight": -0.004032024161110457,
+          "gap": 0.004049685552131211,
+          "tiles": [
+            {
+              "level": 14,
+              "x": 26769,
+              "y": 6162,
+              "mesh": true
+            }
+          ]
+        }
+      ],
+      "renderTiles": 6,
+      "errors": []
+    },
+    {
+      "label": "stable-10-frames",
+      "tilesLoaded": true,
+      "anchor": {
+        "longitude": 114.1,
+        "latitude": 22.3,
+        "height": 1.5,
+        "heading": 0
+      },
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "baseEllipsoidHeight": 0,
+          "renderedTerrainHeight": -0.000144925889241102,
+          "gap": 0.000144925889241102,
+          "tiles": [
+            {
+              "level": 21,
+              "x": 3426513,
+              "y": 788762,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": -12,
+          "y": -9,
+          "baseEllipsoidHeight": 0.00001767207759652337,
+          "renderedTerrainHeight": -0.00028556079561573326,
+          "gap": 0.00030323287321225664,
+          "tiles": [
+            {
+              "level": 20,
+              "x": 1713255,
+              "y": 394381,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": -12,
+          "y": 9,
+          "baseEllipsoidHeight": 0.000017662177583370838,
+          "renderedTerrainHeight": -0.00028530970183940276,
+          "gap": 0.0003029718794227736,
+          "tiles": [
+            {
+              "level": 20,
+              "x": 1713255,
+              "y": 394380,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": 12,
+          "y": -9,
+          "baseEllipsoidHeight": 0.00001767129103281588,
+          "renderedTerrainHeight": -0.00014452690514123257,
+          "gap": 0.00016219819617404845,
+          "tiles": [
+            {
+              "level": 21,
+              "x": 3426514,
+              "y": 788763,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": 12,
+          "y": 9,
+          "baseEllipsoidHeight": 0.000017661391020754122,
+          "renderedTerrainHeight": -0.0002908444263135498,
+          "gap": 0.0003085058173343039,
+          "tiles": [
+            {
+              "level": 20,
+              "x": 1713257,
+              "y": 394380,
+              "mesh": true
+            }
+          ]
+        }
+      ],
+      "renderTiles": 159,
+      "errors": []
+    },
+    {
+      "label": "stable-plus-5-seconds",
+      "tilesLoaded": true,
+      "anchor": {
+        "longitude": 114.1,
+        "latitude": 22.3,
+        "height": 1.5,
+        "heading": 0
+      },
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "baseEllipsoidHeight": 0,
+          "renderedTerrainHeight": -0.000144925889241102,
+          "gap": 0.000144925889241102,
+          "tiles": [
+            {
+              "level": 21,
+              "x": 3426513,
+              "y": 788762,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": -12,
+          "y": -9,
+          "baseEllipsoidHeight": 0.00001767207759652337,
+          "renderedTerrainHeight": -0.00028556079561573326,
+          "gap": 0.00030323287321225664,
+          "tiles": [
+            {
+              "level": 20,
+              "x": 1713255,
+              "y": 394381,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": -12,
+          "y": 9,
+          "baseEllipsoidHeight": 0.000017662177583370838,
+          "renderedTerrainHeight": -0.00028530970183940276,
+          "gap": 0.0003029718794227736,
+          "tiles": [
+            {
+              "level": 20,
+              "x": 1713255,
+              "y": 394380,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": 12,
+          "y": -9,
+          "baseEllipsoidHeight": 0.00001767129103281588,
+          "renderedTerrainHeight": -0.00014452690514123257,
+          "gap": 0.00016219819617404845,
+          "tiles": [
+            {
+              "level": 21,
+              "x": 3426514,
+              "y": 788763,
+              "mesh": true
+            }
+          ]
+        },
+        {
+          "x": 12,
+          "y": 9,
+          "baseEllipsoidHeight": 0.000017661391020754122,
+          "renderedTerrainHeight": -0.0002908444263135498,
+          "gap": 0.0003085058173343039,
+          "tiles": [
+            {
+              "level": 20,
+              "x": 1713257,
+              "y": 394380,
+              "mesh": true
+            }
+          ]
+        }
+      ],
+      "renderTiles": 159,
+      "errors": []
+    }
+  ]
+}

@@ -6,6 +6,7 @@ const browser = await launchBrowser(),
     startedAt: new Date().toISOString(),
     version: sourceVersion(["lumen/bvh.js"]),
     mode: "diagnostic readbacks; not performance",
+    hdrTolerance: { absolute: 2e-4, relative: 1e-3 },
     errors: [],
   };
 try {
@@ -36,6 +37,130 @@ try {
             visibilityMode: "reference",
           });
     await first.completed;
+    const C = Cesium,
+      scene = d.scene,
+      fixedGain = initial.gain;
+    first.gain = fixedGain;
+    scene.camera.cancelFlight();
+    scene.screenSpaceCameraController.enableInputs = false;
+    d.widget.clock.shouldAnimate = false;
+    const fixedTime = C.JulianDate.clone(d.widget.clock.currentTime);
+    const renderState = () => ({
+      cameraView: Array.from(scene.camera.viewMatrix),
+      cameraProjection: Array.from(scene.camera.frustum.projectionMatrix),
+      modelMatrix: Array.from(d.model.modelMatrix),
+      exposure: scene.postProcessStages.exposure,
+      highDynamicRange: scene.highDynamicRange,
+      resolution: [scene.drawingBufferWidth, scene.drawingBufferHeight],
+      worldGain: scene.lumen.world.gain,
+      publishedBounce: scene.lumen.world.publishedBounce,
+      requestedBounces: scene.lumen.world.options.bounces,
+      lumenEnabled: scene.lumen.enabled,
+      lumenDebugMode: scene.lumen.debugMode,
+      lumenCoverage: scene.lumen.coverage,
+      shadows: scene.shadowMap.enabled,
+      shadowSize: scene.shadowMap.size,
+      sunDirection: [
+        scene.light.direction.x,
+        scene.light.direction.y,
+        scene.light.direction.z,
+      ],
+      sunColor: [
+        scene.light.color.red,
+        scene.light.color.green,
+        scene.light.color.blue,
+      ],
+      sunIntensity: scene.light.intensity,
+      time: C.JulianDate.toIso8601(fixedTime),
+      modelReady: d.model.ready,
+    });
+    const displaySun = (sunDirection) => {
+      const direction = C.Cartesian3.normalize(
+        C.Cartesian3.fromArray(sunDirection),
+        new C.Cartesian3(),
+      );
+      C.Cartesian3.negate(direction, direction);
+      C.Matrix3.multiplyByVector(
+        C.Matrix4.getMatrix3(d.frame, new C.Matrix3()),
+        direction,
+        direction,
+      );
+      scene.light = new C.DirectionalLight({
+        direction,
+        color: new C.Color(...base.sunRadiance),
+        intensity: 1,
+      });
+      scene.requestRender();
+    };
+    const readHdr = (world) => {
+      d.widget.clock.currentTime = C.JulianDate.clone(fixedTime);
+      d.widget.resize();
+      d.widget.render();
+      d.widget.render();
+      d.widget.render();
+      return {
+        values: world._read(
+          scene._view.sceneFramebuffer._colorFramebuffer.framebuffer,
+          scene.drawingBufferWidth,
+          scene.drawingBufferHeight,
+        ),
+        renderState: renderState(),
+      };
+    };
+    const compareHdr = (reference, candidate) => {
+      let maxDifference = 0,
+        failedPixels = 0,
+        failedComponents = 0,
+        nonFiniteComponents = 0,
+        referenceNonFiniteComponents = 0,
+        candidateNonFiniteComponents = 0,
+        nonzeroPixels = 0,
+        maximumReferenceValue = 0;
+      for (let i = 0; i < reference.values.length; i += 4) {
+        let failed = false,
+          nonzero = false;
+        for (let channel = 0; channel < 3; channel++) {
+          const a = reference.values[i + channel],
+            b = candidate.values[i + channel];
+          if (!Number.isFinite(a)) referenceNonFiniteComponents++;
+          if (!Number.isFinite(b)) candidateNonFiniteComponents++;
+          if (!Number.isFinite(a) || !Number.isFinite(b)) {
+            nonFiniteComponents++;
+            failed = true;
+            continue;
+          }
+          maximumReferenceValue = Math.max(maximumReferenceValue, a);
+          nonzero ||= a > 0;
+          const delta = Math.abs(a - b);
+          maxDifference = Math.max(maxDifference, delta);
+          if (delta > 2e-4 + 1e-3 * Math.abs(a)) {
+            failedComponents++;
+            failed = true;
+          }
+        }
+        if (failed) failedPixels++;
+        if (nonzero) nonzeroPixels++;
+      }
+      return {
+        source:
+          "actual forward scene HDR color framebuffer before postprocessing",
+        channels: "RGB",
+        pixels: reference.values.length / 4,
+        maxDifference,
+        failedPixels,
+        failedComponents,
+        nonFiniteComponents,
+        referenceNonFiniteComponents,
+        candidateNonFiniteComponents,
+        nonzeroPixels,
+        maximumReferenceValue,
+        renderStateEqual:
+          JSON.stringify(reference.renderState) ===
+          JSON.stringify(candidate.renderState),
+        referenceRenderState: reference.renderState,
+        candidateRenderState: candidate.renderState,
+      };
+    };
     const { loadGeometry } = await import("/lumen/gltf.js");
     const geometry = await loadGeometry(base.url, base.axisMatrix);
     const read = (w) => {
@@ -62,8 +187,9 @@ try {
       ],
       references = [];
     for (const direction of directions) {
+      displaySun(direction);
       await first.solve({ sunDirection: direction });
-      references.push(read(first));
+      references.push({ ...read(first), hdr: readHdr(first) });
     }
     const a = references.at(-1);
     await first.solve({
@@ -97,11 +223,13 @@ try {
       visibilityMode: "optimized",
     });
     await second.completed;
+    second.gain = fixedGain;
     const directionalComparisons = [];
     let b;
     for (let index = 0; index < directions.length; index++) {
+      displaySun(directions[index]);
       await second.solve({ sunDirection: directions[index] });
-      b = read(second);
+      b = { ...read(second), hdr: readHdr(second) };
       const reference = references[index];
       let maxE = 0,
         failures = 0,
@@ -119,6 +247,7 @@ try {
         maxE,
         failures,
         visibilityDifferences,
+        hdr: compareHdr(reference.hdr, b.hdr),
       });
     }
     const hitInfo = (state, i) => {
@@ -193,6 +322,13 @@ try {
     assert.equal(direction.maxE, 0);
     assert.equal(direction.failures, 0);
     assert.equal(direction.visibilityDifferences, 0);
+    assert.equal(direction.hdr.failedPixels, 0);
+    assert.equal(direction.hdr.nonFiniteComponents, 0);
+    assert.equal(direction.hdr.renderStateEqual, true);
+    assert.equal(direction.hdr.referenceRenderState.highDynamicRange, true);
+    assert.equal(direction.hdr.referenceRenderState.modelReady, true);
+    assert.ok(direction.hdr.nonzeroPixels > 0);
+    assert.equal(direction.hdr.referenceRenderState.publishedBounce, direction.hdr.referenceRenderState.requestedBounces);
   }
   assert.equal(
     report.result.differentHits,
@@ -209,7 +345,7 @@ try {
   report.status = "passed";
   console.log(
     JSON.stringify({
-      medianOptimized: report.result.medianOptimized,
+      directions: report.result.directionalComparisons.map(({ sunDirection, maxE, visibilityDifferences, hdr }) => ({ sunDirection, maxE, visibilityDifferences, hdr: { maxDifference: hdr.maxDifference, failedPixels: hdr.failedPixels, nonFiniteComponents: hdr.nonFiniteComponents, renderStateEqual: hdr.renderStateEqual } })),
       differentHits: report.result.differentHits,
       deltaDistance: report.result.deltaDistance,
       maxE: report.result.maxE,
@@ -225,7 +361,7 @@ try {
 } finally {
   await writeFile(
     process.env.LUMEN_REPORT ??
-      "reports/globe-visibility-v3/visibility-sponza-diagnosis.json",
+      `reports/globe-visibility-v3/visibility-sponza-hdr-${report.startedAt.replaceAll(":", "-").replaceAll(".", "-")}.json`,
     JSON.stringify(report, null, 2),
   );
   await browser.close();

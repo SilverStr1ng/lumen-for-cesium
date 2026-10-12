@@ -1,0 +1,383 @@
+{
+  "version": {
+    "head": "021448587ec257fde9043e3c6181cfe8d25beb76",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "f55b9f1e767dcce2c845c758637849976ab9759abf8461060d2a5f5594d4296c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "83b55dba0981ee1b4a4b76f71fc455758cf85c42f68de4e882568a6071e19ae3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "demo/globe.js": "dc84dc2d96ed8d715c76afe79d92566ad48de8696d6f3c4e412bb06e0bf9285b",
+      "fixtures/earth-pavilion.gltf": "6626295af6f11314c3433e751b6b6bfa63b09538cd8fcc4ce3bea22ae2e2fc55",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee"
+    },
+    "compiledBundle": "9eb208b38fe84144328903d8add38f2edfe6a97d136d8d271ec72a4f8cf2d6c1",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "lumen/gpu-worker.js"
+    ]
+  },
+  "started": "2026-10-12T03:05:12.718Z",
+  "mode": "local Earth performance; no diagnostic readbacks or blocking waits",
+  "errors": [],
+  "environment": {
+    "browser": "153.0.8010.12",
+    "headless": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)",
+    "visibility": "visible",
+    "resolution": [
+      1280,
+      800
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+  },
+  "result": {
+    "options": {
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3,
+      "targetGpuMilliseconds": 3
+    },
+    "probes": 924,
+    "disabled": {
+      "fps": 20.11661807580175,
+      "frameMilliseconds": {
+        "mean": 49.710144927536234,
+        "p50": 48.5,
+        "p95": 72.79999999999927,
+        "samples": 69
+      },
+      "gpuMilliseconds": {
+        "mean": 44.249047376470585,
+        "p50": 45.04901,
+        "p95": 53.906196,
+        "samples": 85
+      },
+      "gpuScope": "idle frames only",
+      "disjoint": 0,
+      "visibility": "visible",
+      "buffer": [
+        1280,
+        800
+      ],
+      "gbuffer": false
+    },
+    "idle": {
+      "fps": 21.85550030090905,
+      "frameMilliseconds": {
+        "mean": 45.755072463768144,
+        "p50": 48.400000000001455,
+        "p95": 60.79999999999927,
+        "samples": 69
+      },
+      "gpuMilliseconds": {
+        "mean": 41.051867870588254,
+        "p50": 42.296979,
+        "p95": 51.858072,
+        "samples": 85
+      },
+      "gpuScope": "idle frames only",
+      "disjoint": 0,
+      "visibility": "visible",
+      "buffer": [
+        1280,
+        800
+      ],
+      "gbuffer": false
+    },
+    "updating": {
+      "frameIntervals": [
+        121,
+        54.599999999998545,
+        66.60000000000218,
+        60.70000000000073,
+        48.39999999999782,
+        66.70000000000073,
+        48.400000000001455,
+        60.599999999998545,
+        103.09999999999854,
+        6.100000000002183,
+        42.29999999999927,
+        60.599999999998545,
+        54.60000000000218,
+        36.39999999999782,
+        54.5,
+        54.5,
+        72.80000000000291,
+        48.29999999999927,
+        54.599999999998545,
+        48.5,
+        60.70000000000073,
+        60.599999999998545,
+        60.5,
+        60.60000000000218,
+        42.39999999999782,
+        54.80000000000291,
+        60.39999999999782,
+        54.5,
+        60.5,
+        36.5,
+        48.5,
+        78.70000000000073,
+        48.5,
+        60.599999999998545,
+        54.5,
+        54.60000000000218,
+        66.59999999999854,
+        54.5,
+        66.70000000000073,
+        48.5,
+        6,
+        42.400000000001455,
+        48.599999999998545,
+        60.599999999998545,
+        60.5,
+        48.60000000000218,
+        54.5,
+        54.39999999999782,
+        48.5,
+        66.70000000000073,
+        54.5,
+        42.5,
+        48.400000000001455,
+        48.5,
+        60.70000000000073,
+        48.5,
+        48.5,
+        54.5,
+        42.39999999999782,
+        42.400000000001455,
+        54.5,
+        54.599999999998545,
+        42.400000000001455,
+        48.39999999999782,
+        48.60000000000218,
+        48.5,
+        42.29999999999927,
+        54.5,
+        36.400000000001455
+      ],
+      "fps": 18.606407075827843,
+      "gpuScope": "CPU rAF intervals only; world timer queries own GPU elapsed scope"
+    },
+    "firstPublishedSubmissionMilliseconds": 1209.2000000001863,
+    "finalSubmissionMilliseconds": 3154.7999999998137,
+    "timingScope": "Promise times are CPU submission; timer queries are GPU accumulated work; updating frame window may include settled frames",
+    "update": {
+      "revision": 2,
+      "stages": {
+        "visibility": {
+          "submittedBatches": 31,
+          "probes": 924,
+          "items": 924,
+          "gpuMilliseconds": 4.229256000000001,
+          "timerSamples": 31,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.7000000001862645,
+          "itemType": "probes"
+        },
+        "direct": {
+          "submittedBatches": 22,
+          "probes": 924,
+          "items": 924,
+          "gpuMilliseconds": 1.586605,
+          "timerSamples": 22,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.7000000011175871,
+          "itemType": "probes"
+        },
+        "bounce": {
+          "submittedBatches": 187,
+          "probes": 2772,
+          "items": 2772,
+          "gpuMilliseconds": 31.359918,
+          "timerSamples": 187,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 11.200000000186265,
+          "itemType": "probes"
+        },
+        "integrate": {
+          "submittedBatches": 54,
+          "probes": 2772,
+          "items": 2772,
+          "gpuMilliseconds": 15.595915000000007,
+          "timerSamples": 54,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 4.100000002421439,
+          "itemType": "probes"
+        },
+        "border": {
+          "submittedBatches": 65,
+          "probes": 2772,
+          "items": 2772,
+          "gpuMilliseconds": 3.047472999999999,
+          "timerSamples": 65,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 3.700000001117587,
+          "itemType": "probes"
+        }
+      },
+      "submittedFrames": 58,
+      "submittedBatches": 359,
+      "cpuSchedulingMilliseconds": 21.400000005029142,
+      "versions": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 1,
+        "sunVisibility": 2,
+        "lighting": 2
+      },
+      "work": {
+        "probeHitInvocations": 0,
+        "sunVisibilitySubmittedSlots": 118272,
+        "momentProbeUpdates": 0
+      },
+      "firstPublishSubmissionMilliseconds": 1202.2000000001863,
+      "requestToFirstSubmissionMilliseconds": 1202.3999999994412,
+      "milliseconds": 3150.2000000001863,
+      "bounces": 3,
+      "requestedBounces": 3,
+      "settled": true,
+      "supersededAtRoundBoundary": false,
+      "submissionMilliseconds": 3150.2000000001863,
+      "finalSubmissionMilliseconds": 3150.2000000001863,
+      "requestToFinalSubmissionMilliseconds": 3150.399999999441,
+      "publicationMode": "progressive",
+      "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+    },
+    "initialStages": {
+      "relocate": {
+        "submittedBatches": 49,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 12.555863000000002,
+        "timerSamples": 49,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 3771.100000000559,
+        "itemType": "probes"
+      },
+      "intersect": {
+        "submittedBatches": 50,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 14.961696000000002,
+        "timerSamples": 50,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 922.9000000013039,
+        "itemType": "probes"
+      },
+      "classify": {
+        "submittedBatches": 50,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 13.722529000000002,
+        "timerSamples": 50,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 92.09999999962747,
+        "itemType": "probes"
+      },
+      "moments": {
+        "submittedBatches": 51,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 10.772008000000003,
+        "timerSamples": 51,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 132.40000000037253,
+        "itemType": "probes"
+      },
+      "momentsBorder": {
+        "submittedBatches": 54,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 10.862271,
+        "timerSamples": 54,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 93.39999999757856,
+        "itemType": "probes"
+      }
+    },
+    "resources": [
+      [
+        {
+          "textures": 45,
+          "framebuffers": 21,
+          "queries": 0,
+          "programs": 26,
+          "syncs": 0
+        }
+      ],
+      [
+        {
+          "textures": 45,
+          "framebuffers": 21,
+          "queries": 0,
+          "programs": 26,
+          "syncs": 0
+        }
+      ],
+      [
+        {
+          "textures": 45,
+          "framebuffers": 21,
+          "queries": 0,
+          "programs": 26,
+          "syncs": 0
+        }
+      ]
+    ],
+    "initialMemory": {
+      "currentBytes": 12192580,
+      "peakBytes": 12192580,
+      "textures": 17,
+      "framebuffers": 12
+    },
+    "finalMemory": {
+      "currentBytes": 12192580,
+      "peakBytes": 12192580,
+      "textures": 17,
+      "framebuffers": 12
+    },
+    "cameraPreservesRevision": true,
+    "cameraPreservesWorldAndWorker": true,
+    "pendingWorkerRequests": 0,
+    "pendingGpuQueries": 0,
+    "preserveDrawingBuffer": false,
+    "gBuffer": false,
+    "gl": [
+      {
+        "phase": "performance",
+        "phases": {
+          "initialization": {
+            "draws": 4215
+          },
+          "performance": {
+            "draws": 33328
+          }
+        },
+        "feedback": [],
+        "errors": [],
+        "live": {
+          "textures": 45,
+          "framebuffers": 21,
+          "queries": 0,
+          "programs": 26,
+          "syncs": 0
+        },
+        "peak": {
+          "textures": 46,
+          "framebuffers": 21,
+          "queries": 27,
+          "programs": 26,
+          "syncs": 0
+        }
+      }
+    ]
+  },
+  "status": "passed"
+}
