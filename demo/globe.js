@@ -217,7 +217,14 @@ async function enhance() {
     // the display model. A newer UI configuration invalidates this transaction.
     const previousGeneration = generation;
     const height = results[1] ? await terrainHeight(results[1]) : undefined;
-    if (own !== networkGeneration || previousGeneration !== generation) return;
+    if (own !== networkGeneration) return;
+    if (previousGeneration !== generation) {
+      // Reload canceled placement after this transaction invalidated the old
+      // providers' listeners. Restore a configuration with valid ownership.
+      if (await localLayers())
+        $("network").textContent = "局部场景已重载；取消待应用地形并恢复本地配置";
+      return;
+    }
     if (results[0]) {
       scene.imageryLayers.removeAll();
       const layer = scene.imageryLayers.addImageryProvider(results[0]);

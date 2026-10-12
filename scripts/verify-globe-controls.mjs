@@ -140,6 +140,21 @@ assert.ok(
   context.scene.terrainProvider instanceof context.C.EllipsoidTerrainProvider,
   "terrain=false explicitly restores ellipsoid",
 );
+elements.terrain.checked = true;
+await context.enhance();
+const originalSample = context.C.sampleTerrainMostDetailed;
+let resolveSample;
+context.C.sampleTerrainMostDetailed = () => new Promise(resolve => { resolveSample = resolve; });
+const interruptedPlacement = context.enhance();
+await tick();
+context.generation++;
+resolveSample(heights.map(height => ({ height })));
+await interruptedPlacement;
+assert.ok(context.scene.terrainProvider instanceof context.C.EllipsoidTerrainProvider,
+  "reload during placement cannot leave active providers with invalidated listeners");
+assert.equal(context.anchor.height, 1.5);
+assert.ok(elements.network.textContent.includes("取消"));
+context.C.sampleTerrainMostDetailed = originalSample;
 const before = reloads;
 let resolveLocal;
 context.C.TileMapServiceImageryProvider.fromUrl = () =>
