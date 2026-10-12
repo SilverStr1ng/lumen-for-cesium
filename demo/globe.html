@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Earth GI Lab</title>
+    <link rel="icon" href="data:," />
+    <link
+      rel="stylesheet"
+      href="../cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css"
+    />
+    <link rel="stylesheet" href="globe.css" />
+    <style>
+      html,
+      body,
+      #view {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #101925;
+      }
+      body {
+        font: 14px system-ui;
+        color: #eaf1f8;
+      }
+      aside {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 290px;
+        padding: 20px;
+        background: #122132ed;
+        border: 1px solid #546878;
+        border-radius: 12px;
+        max-height: 82vh;
+        overflow: auto;
+      }
+      h1 {
+        font-size: 23px;
+        margin: 0 0 6px;
+      }
+      p {
+        line-height: 1.5;
+        color: #bdcad6;
+      }
+      label {
+        display: flex;
+        justify-content: space-between;
+        margin: 12px 0;
+        gap: 8px;
+      }
+      select,
+      button,
+      input {
+        background: #273c4d;
+        color: white;
+        border: 1px solid #657988;
+        border-radius: 4px;
+        padding: 6px;
+        max-width: 160px;
+      }
+      button {
+        cursor: pointer;
+        margin: 3px;
+      }
+      #status {
+        white-space: pre-wrap;
+        font: 12px/1.6 monospace;
+      }
+      #error {
+        color: #ffce9b;
+      }
+      footer {
+        position: absolute;
+        bottom: 35px;
+        left: 340px;
+        right: 15px;
+        background: #122132cf;
+        padding: 9px;
+        font-size: 12px;
+      }
+      a {
+        color: #b7e0ff;
+      }
+      summary {
+        cursor: pointer;
+        margin: 12px 0;
+      }
+      #token {
+        width: 145px;
+      }
+      small {
+        color: #b9c9d5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="view"></div>
+    <aside>
+      <h1>Earth GI Lab</h1>
+      <small>本地展馆 · Cesium 1.146 · WebGL2</small>
+      <p>同一份建筑几何，同时用于显示和间接光传输。</p>
+      <label
+        >产品 A/B · Lumen<input id="enabled" type="checkbox" checked /></label
+      ><small>关闭时使用原有 IBL 回退；相机、曝光、直射不变。</small>
+      <label
+        >视图<select id="mode">
+          <option value="0">最终光照</option>
+          <option value="1">仅直接光</option>
+          <option value="2">纯间接光</option>
+        </select></label
+      >
+      <label
+        >太阳<select id="sun">
+          <option value="40">东偏北 / 40°</option>
+          <option value="140">西偏北 / 140°</option>
+          <option value="260">南侧光 / 260°</option>
+        </select></label
+      >
+      <label
+        >发布<select id="publication">
+          <option value="progressive">逐轮预览</option>
+          <option value="snapshot">完整快照</option>
+        </select></label
+      >
+      <div id="cameras">
+        <button data-camera="earth">地球</button
+        ><button data-camera="overview">展馆</button
+        ><button data-camera="context">地平线</button
+        ><button data-camera="top">俯视</button
+        ><button data-camera="corridor">回廊</button
+        ><button data-camera="inside">室内</button
+        ><button data-camera="bounce">颜色反弹</button>
+      </div>
+      <button id="cancel">停止飞行</button
+      ><button id="reload">重载局部场景</button>
+      <details>
+        <summary>设置 / 可选 ion 增强</summary>
+        <label
+          >曝光<input
+            id="exposure"
+            type="number"
+            value="1"
+            min=".2"
+            max="3"
+            step=".1" /></label
+        ><label>GI 彩墙中性化<input id="neutral" type="checkbox" /></label
+        ><small
+          >仅 GI 传输去色，显示材质不变，用于因果对照。gain 固定为 1。</small
+        ><label
+          >专用 public token<input
+            id="token"
+            type="password"
+            autocomplete="off" /></label
+        ><label
+          >影像 asset ID<input
+            id="asset"
+            type="number"
+            placeholder="可选" /></label
+        ><label>World Terrain<input id="terrain" type="checkbox" /></label
+        ><button id="online">应用增强</button
+        ><button id="local">恢复本地</button>
+        <p id="network">本地 NaturalEarthII + 椭球地形</p>
+        <small
+          >token 仅保存在内存，需 assets:read，限制资产及 Allowed
+          URLs。切换地形不会自动移动建筑；采样并重建才改变 GI。</small
+        ><button id="place">采样地形并重建</button>
+      </details>
+      <details open>
+        <summary>诊断</summary>
+        <div id="status">地球加载中…</div>
+      </details>
+      <p id="error"></p>
+      <a href="index.html">Sponza 高负载实验（需要资产服务）</a>
+    </aside>
+    <footer>
+      当前 GI
+      覆盖局部展馆、地基与其代理几何；外围地形/影像仅为背景，不参与完整间接光传输。左键导航
+      · 滚轮缩放
+    </footer>
+    <script>
+      window.CESIUM_BASE_URL = "/cesium-1.146/Build/CesiumUnminified/";
+    </script>
+    <script src="../cesium-1.146/Build/CesiumUnminified/Cesium.js"></script>
+    <script type="module" src="globe.js"></script>
+  </body>
+</html>
+

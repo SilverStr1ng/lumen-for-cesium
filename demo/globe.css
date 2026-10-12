@@ -1,0 +1,27 @@
+@media (max-width: 700px) {
+  aside {
+    left: 8px;
+    top: 8px;
+    width: 230px;
+    padding: 12px;
+    max-height: 60vh;
+  }
+  footer {
+    left: 8px;
+    bottom: 32px;
+    font-size: 10px;
+  }
+  h1 {
+    font-size: 20px;
+  }
+}
+button:hover,
+select:hover {
+  background: #3b5567;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #c8edff;
+  outline-offset: 2px;
+}

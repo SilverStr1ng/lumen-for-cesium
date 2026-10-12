@@ -1,0 +1,110 @@
+{
+  "name": "earth-pavilion",
+  "upAxis": "Z",
+  "anchor": {
+    "longitude": 114.1,
+    "latitude": 22.3,
+    "height": 1.5,
+    "heading": 0
+  },
+  "bounds": [
+    -12,
+    -9,
+    -1.5,
+    12,
+    9,
+    5.5
+  ],
+  "spacing": 2,
+  "rays": 128,
+  "bounces": 3,
+  "cameras": {
+    "overview": {
+      "eye": [
+        30,
+        -37,
+        27
+      ],
+      "target": [
+        0,
+        0,
+        1
+      ]
+    },
+    "context": {
+      "eye": [
+        32,
+        -42,
+        8
+      ],
+      "target": [
+        0,
+        0,
+        2
+      ]
+    },
+    "top": {
+      "eye": [
+        0,
+        -1,
+        47
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corridor": {
+      "eye": [
+        -6,
+        -7,
+        2
+      ],
+      "target": [
+        -9,
+        3,
+        1.5
+      ]
+    },
+    "inside": {
+      "eye": [
+        -1,
+        6.8,
+        1.7
+      ],
+      "target": [
+        -1,
+        1,
+        2.5
+      ]
+    },
+    "bounce": {
+      "eye": [
+        -4,
+        -5,
+        2.5
+      ],
+      "target": [
+        -9,
+        -3.8,
+        0.8
+      ]
+    }
+  },
+  "receivers": [
+    {
+      "position": [
+        -9,
+        -4,
+        0.17
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "coverage": "Local pavilion and foundation only; Globe and terrain do not participate in GI."
+}

@@ -16,6 +16,7 @@ uniform sampler2D u_hits, u_direct, u_cache, u_visibility, u_weights;
 uniform int u_nodesCount, u_budget, u_rays, u_first;
 uniform vec3 u_sunDirection, u_sunRadiance, u_skyRadiance;
 uniform ivec2 u_neutral;
+uniform int u_upperHemisphere;
 vec4 fetch1(sampler2D t, int i) { int w=textureSize(t,0).x; return texelFetch(t,ivec2(i%w,i/w),0); }
 vec4 mat(int m,int i) {return texelFetch(u_materials,ivec2(i,m),0);}
 float wrapUV(float v, float mode) {
@@ -77,6 +78,12 @@ vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
     }
     return node>=u_nodesCount?best:vec4(-1.0,0.0,0.0,maximum);
 }
+// Farthest root-box corner is a conservative complete local trace domain.
+// This includes blockers beyond 100 metres and does not infer sky at a cutoff.
+float completeDistance(vec3 origin) {
+    vec3 lo=fetch1(u_nodes,0).xyz, hi=fetch1(u_nodes,1).xyz;
+    return max(100.0,length(max(abs(lo-origin),abs(hi-origin)))+1.0);
+}
 vec3 rayDirection(int i) {
     float z=1.0-2.0*(float(i)+0.5)/float(u_rays),a=float(i)*2.399963229728653;
     float r=sqrt(max(0.0,1.0-z*z));return vec3(cos(a)*r,sin(a)*r,z);
@@ -116,7 +123,7 @@ void main() {
 export const intersect = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);int width=textureSize(u_lumenProbePositions,0).x;
 vec3 p=texelFetch(u_lumenProbePositions,ivec2(c.y%width,c.y/width),0).xyz;
-out_FragColor=trace(p,rayDirection(c.x),100.0,-1,false);}`;
+out_FragColor=trace(p,rayDirection(c.x),completeDistance(p),-1,false);}`;
 export const classify = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);int probe=c.x+c.y*textureSize(u_lumenProbePositions,0).x;
 int back=0,unknown=0;
@@ -131,14 +138,14 @@ vec4 h=texelFetch(u_hits,c,0);
 if(abs(h.x)<=1.0) {out_FragColor=vec4(0.0,h.x==0.0?1.0:0.0,0.0,0.0);return;}
 vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
 if(black||dot(n,u_sunDirection)<=0.0) {out_FragColor=vec4(0.0,1.0,0.0,0.0);return;}
-vec4 shadow=trace(p+n*0.015,u_sunDirection,100.0,t,true);
+vec4 shadow=trace(p+n*0.015,u_sunDirection,completeDistance(p+n*0.015),t,true);
 out_FragColor=vec4(shadow.x==0.0?1.0:0.0,shadow.x==-1.0?0.0:1.0,1.0,0.0);
 }`;
 export const direct = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 h=texelFetch(u_hits,c,0);
 int width=textureSize(u_lumenProbePositions,0).x;
 if(texelFetch(u_lumenProbePositions,ivec2(c.y%width,c.y/width),0).a<0.5) {out_FragColor=vec4(0.0);return;}
-if(h.x==0.0) {out_FragColor=vec4(u_skyRadiance,1.0);return;}
+if(h.x==0.0) {out_FragColor=vec4(u_upperHemisphere==1 && rayDirection(c.x).z<0.0 ? vec3(0.0) : u_skyRadiance,1.0);return;}
 if(h.x==-1.0) {out_FragColor=vec4(0.0);return;}
 vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
 if(black) {out_FragColor=vec4(0.0,0.0,0.0,1.0);return;}

@@ -1,5 +1,6 @@
 import { add, mul, dot, normalize } from "./math.js";
 import { materialAt, accepts } from "./gltf.js";
+import { completeTraceDistance } from "./trace-domain.js";
 
 const barycentrics = [
   [1 / 3, 1 / 3],
@@ -79,13 +80,14 @@ export class SurfaceCache {
       entry.albedo = material.albedo;
       entry.emissive = material.emissive;
       const cosine = Math.max(0, dot(entry.normal, sun));
+      const shadowOrigin = add(entry.position, mul(entry.normal, 0.015));
       const shadow =
         cosine > 0
-          ? this.bvh.trace(add(entry.position, mul(entry.normal, 0.015)), sun, {
+          ? this.bvh.trace(shadowOrigin, sun, {
               ignore: entry.triangle,
               accept,
               budget: options.traversalBudget,
-              maxDistance: 100,
+              maxDistance: completeTraceDistance(this.geometry.bounds, shadowOrigin),
             })
           : { status: "Hit" };
       entry.valid = shadow.status !== "Unknown";

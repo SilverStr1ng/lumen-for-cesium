@@ -21,6 +21,8 @@
     "test:publication-lifecycle": "node scripts/verify-publication-lifecycle.mjs",
     "benchmark:integration": "node scripts/benchmark-integration.mjs",
     "report:relighting": "node scripts/summarize-relighting.mjs",
-    "benchmark:relighting": "node scripts/benchmark-relighting.mjs"
+    "benchmark:relighting": "node scripts/benchmark-relighting.mjs",
+    "fixtures:globe": "node scripts/generate-globe.mjs",
+    "test:globe": "node scripts/verify-environment.mjs && node scripts/verify-globe.mjs"
   }
 }

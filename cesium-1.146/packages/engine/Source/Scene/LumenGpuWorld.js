@@ -80,6 +80,7 @@ class LumenGpuWorld {
       integrationMode: "arithmetic",
       diagnosticIntegrationLut: false,
       publicationMode: "snapshot",
+      environmentMode: "sphere",
       ...options,
     };
     this._validate(this.options);
@@ -169,6 +170,9 @@ class LumenGpuWorld {
     });
   }
   _validate(o) {
+    if (!["sphere", "upper-hemisphere"].includes(o.environmentMode)) {
+      throw new DeveloperError("environmentMode must be sphere or upper-hemisphere");
+    }
     if (!["snapshot", "progressive"].includes(o.publicationMode)) {
       throw new DeveloperError(
         "publicationMode must be snapshot or progressive",
@@ -498,6 +502,7 @@ class LumenGpuWorld {
       ),
       sunRadiance: Cartesian3.fromArray(o.sunRadiance ?? [2, 2, 2]),
       skyRadiance: Cartesian3.fromArray(o.skyRadiance ?? [0.15, 0.18, 0.25]),
+      upperHemisphere: o.environmentMode === "upper-hemisphere" ? 1 : 0,
       neutral: new Cartesian2(
         o.neutralMaterials?.[0] ?? -1,
         o.neutralMaterials?.[1] ?? -1,
@@ -529,6 +534,7 @@ class LumenGpuWorld {
       u_sunDirection: () => this._lighting.sunDirection,
       u_sunRadiance: () => this._lighting.sunRadiance,
       u_skyRadiance: () => this._lighting.skyRadiance,
+      u_upperHemisphere: () => this._lighting.upperHemisphere,
       u_neutral: () => this._lighting.neutral,
       u_lumenProbeIrradiance: () => this._atlases[this._previous].E,
       u_lumenProbeDistances: () => this._atlases[this._previous].M,

@@ -11,6 +11,7 @@ import {
 } from "./math.js";
 import { accepts } from "./gltf.js";
 import { SurfaceCache } from "./surface-cache.js";
+import { completeTraceDistance } from "./trace-domain.js";
 
 export const TILE = 8;
 export const BORDERED = TILE + 2;
@@ -221,7 +222,7 @@ export class DDGI {
       for (let r = 0; r < g.rays; r++) {
         const hit = this.bvh.trace(position, this.directions[r], {
           accept,
-          maxDistance: 100,
+          maxDistance: completeTraceDistance(this.bvh.geometry.bounds, position),
           budget: this.options.traversalBudget,
         });
         if (hit.status !== "Unknown") known++;
@@ -250,6 +251,8 @@ export class DDGI {
     return true;
   }
   async solve(options, progress, cancelled, onGeneration) {
+    if (!["sphere", "upper-hemisphere"].includes(options.environmentMode ?? "sphere"))
+      throw new Error("environmentMode must be sphere or upper-hemisphere");
     for (const key of ["sunDirection", "sunRadiance", "skyRadiance"])
       if (
         !Array.isArray(options[key]) ||
@@ -278,7 +281,8 @@ export class DDGI {
         if (this.positions[p * 4 + 3] < 0.5) continue;
         const radiance = this.directions.map((d, r) => {
           const h = this.hits[p * g.rays + r];
-          if (h.status === "Miss") return options.skyRadiance;
+          if (h.status === "Miss") return options.environmentMode === "upper-hemisphere" && d[2] < 0
+            ? [0, 0, 0] : options.skyRadiance;
           if (h.status === "Unknown") return undefined;
           if (h.black) return [0, 0, 0];
           const e = this.cache.entries.get(h.key);
