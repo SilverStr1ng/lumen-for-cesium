@@ -1,6 +1,6 @@
 # Globe / visibility v3 evidence
 
-Source HEAD at report generation: `6d97e1d631cd7fae30a59d320e4a4e4be672f2d7`; branch `feat/globe-demo-visibility-v3`. See [summary.json](summary.json) for dirty paths, source/build hashes, exact per-check statuses and evidence hashes. This index hashes raw bytes; individual `sourceVersion` browser reports normalize CRLF to LF before hashing source/bundle text. Each raw browser report retains its own source/build version at execution; commits were staged during development, so do not infer the executed source solely from its HEAD field.
+Source HEAD at report generation: `7d9e75c0894affc078c8d33c92b1c6b7ed190ddc`; branch `feat/globe-demo-visibility-v3`. See [summary.json](summary.json) for dirty paths, source/build hashes, exact per-check statuses and evidence hashes. This index hashes raw bytes; individual `sourceVersion` browser reports normalize CRLF to LF before hashing source/bundle text. Each raw browser report retains its own source/build version at execution; commits were staged during development, so do not infer the executed source solely from its HEAD field.
 
 ## Run
 
@@ -68,7 +68,7 @@ All PNGs are actual browser renders: [Earth](globe-earth.png), [pavilion on Glob
 
 Product A/B includes the original IBL fallback when Lumen is off. The colored/neutral transfer comparison holds the visible receiver, exposure, camera and gain fixed and changes backend colored reflectance; it is a separate causal diagnostic. No display amplification is used. Globe imagery and surrounding terrain remain background and do not participate in complete indirect transport. Interpolation dark blotches around small objects/corners remain visible in the screenshots.
 
-The final bookmark captures wait for ten consecutive tiles-loaded frames. The placement diagnostic samples `Globe.getHeight` at the center and four corners, measuring the actual rendered triangle surface rather than only the analytical ellipsoid. Stable measured foundation gaps were 0.145–0.309 mm (checked against a 1 cm limit). Some ground-shadow separation remains visually noticeable; an isolated normal-offset toggle did not establish a safe clear improvement, so the default shadow configuration and original geometry are retained. This distinguishes verified geometric contact from unresolved shadow appearance.
+The final bookmark captures wait for ten consecutive tiles-loaded frames. The placement diagnostic samples `Globe.getHeight` at the center and four corners, measuring the actual rendered triangle surface rather than only the analytical ellipsoid. Stable measured foundation gaps were 0.145–0.309 mm (checked against a 1 cm limit). Reproduce the independent visual/height diagnosis with `node scripts/diagnose-globe-placement.mjs`; its timestamped directories contain unchanged-default and normal-offset comparison captures. Some ground-shadow separation remains visually noticeable; an isolated normal-offset toggle did not establish a safe clear improvement, so the default shadow configuration and original geometry are retained. This distinguishes verified geometric contact from unresolved shadow appearance.
 
 ## Verification inventory
 
