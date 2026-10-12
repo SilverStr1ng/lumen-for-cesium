@@ -1,0 +1,65 @@
+{
+  "version": {
+    "head": "1f9ff7b67bf5ddf738ac4fbc2450e81f3ba1d4db",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4e1a1522b434045c63a223223501a5a9a3bf1b09d8ea32e6347bad0255c6a3f2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "be0144ff95ab4e8682bdaa0afbcf52039081a47f1c0ca9775ca31d7b73bb9ff1",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "2eb52b2fe41d1e58c956ea14447736acf476c62196eb79db54227c88ec320827",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9"
+    },
+    "compiledBundle": "d3dd7e2ee694187fc5893d644e283249408d1d3b73388773ba61715008ed5dc3",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "lumen/gpu-worker.js"
+    ]
+  },
+  "scene": "fixtures/far-blocker.gltf",
+  "errors": [],
+  "result": {
+    "grid": {
+      "origin": [
+        -1.5,
+        -1.5,
+        -0.5
+      ],
+      "counts": [
+        4,
+        4,
+        152
+      ],
+      "total": 2432,
+      "spacing": 1,
+      "normalBias": 0.075,
+      "rays": 128,
+      "width": 160,
+      "height": 1520
+    },
+    "checked": 523,
+    "leaks": 0,
+    "short": [
+      {
+        "status": "Miss",
+        "gpuTriangle": -2,
+        "u": 0,
+        "v": 0,
+        "distance": 100,
+        "backface": false
+      }
+    ],
+    "complete": [
+      {
+        "status": "Hit",
+        "triangle": 3,
+        "gpuTriangle": 3,
+        "u": 0.550000011920929,
+        "v": 0.050000011920928955,
+        "distance": 149.97999572753906,
+        "backface": true
+      }
+    ]
+  },
+  "status": "passed"
+}

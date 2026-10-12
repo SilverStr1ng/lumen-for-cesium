@@ -29,8 +29,18 @@ function pack(b, options) {
     }
   };
   thread(0, nodes);
+  // Preserve the original median traversal's exact-distance tie policy. The UV
+  // prefix retains all four UV channels; four ranks share each appended texel.
+  const hasTieRanks = b.stats.strategy === "sah";
+  const rankStarted = performance.now();
+  let medianRank;
+  if (hasTieRanks) {
+    const median = new BVH(g, { strategy: "median" });
+    medianRank = new Uint32Array(n);
+    for (let i = 0; i < n; i++) medianRank[median.order[i]] = i;
+  }
   const vertices = new Float32Array(n * 12),
-    uv = new Float32Array(n * 4);
+    uv = new Float32Array(n * 4 + (hasTieRanks ? Math.ceil(n / 4) * 4 : 0));
   for (let t = 0; t < n; t++) {
     const original = b.order[t];
     for (let j = 0; j < 3; j++)
@@ -42,7 +52,11 @@ function pack(b, options) {
     vertices[t * 12 + 7] = g.uvs[original * 6];
     vertices[t * 12 + 11] = g.uvs[original * 6 + 1];
     uv.set(g.uvs.subarray(original * 6 + 2, original * 6 + 6), t * 4);
+    if (hasTieRanks) uv[n * 4 + t] = medianRank[original];
   }
+  b.stats.tieRankOffset = hasTieRanks ? n : -1;
+  b.stats.tieRankBytes = hasTieRanks ? Math.ceil(n / 4) * 16 : 0;
+  b.stats.rankAndVertexPackMilliseconds = performance.now() - rankStarted;
   const used = g.images.map((im, i) => (im ? i : -1)).filter((i) => i >= 0);
   const cols = Math.min(
     8,
@@ -126,7 +140,7 @@ function pack(b, options) {
       width: counts[0] * counts[1] * 10,
       height: counts[2] * 10,
     },
-    bvh: { triangles: n, nodes, queries: 0 },
+    bvh: { ...b.stats, triangles: n, nodes, queries: 0 },
     order: b.order.slice(),
   };
 }
@@ -135,12 +149,19 @@ self.onmessage = async ({ data: m }) => {
     self.postMessage({ type, id: m.id, ...payload });
   try {
     if (m.type === "load") {
+      const preparationStart = performance.now();
       const g = await loadGeometry(m.url, m.axisMatrix, (phase) =>
         send("progress", { phase }),
       );
       send("progress", { phase: "packing GPU BVH" });
-      bvh = new BVH(g);
+      const start = performance.now();
+      bvh = new BVH(g, {
+        strategy: m.options.bvhStrategy ?? "median",
+        bins: m.options.bvhBins ?? 12,
+      });
+      bvh.stats.buildMilliseconds = performance.now() - start;
       const packet = pack(bvh, m.options);
+      packet.bvh.prepareMilliseconds = performance.now() - preparationStart;
       self.postMessage({ type: "prepared", packet }, [
         packet.nodes.data.buffer,
         packet.vertices.data.buffer,

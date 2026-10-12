@@ -14,8 +14,23 @@ precision highp sampler2D;
 uniform sampler2D u_nodes, u_vertices, u_uv, u_materials, u_atlas;
 uniform sampler2D u_hits, u_direct, u_cache, u_visibility, u_weights;
 uniform int u_nodesCount, u_budget, u_rays, u_first;
+uniform int u_tieRankOffset;
 uniform vec3 u_sunDirection, u_sunRadiance, u_skyRadiance;
 uniform ivec2 u_neutral;
+uniform bool u_visibilityOptimized;
+uniform bool u_queryAnyHit;
+uniform bool u_queryStats;
+// Production shaders preprocess all traversal counter writes away.
+#ifdef LUMEN_QUERY_COUNTS
+vec3 traversalCounts=vec3(0.0);
+#define countNode() traversalCounts.x+=1.0
+#define countTriangle() traversalCounts.y+=1.0
+#define countAlpha() traversalCounts.z+=1.0
+#else
+#define countNode()
+#define countTriangle()
+#define countAlpha()
+#endif
 uniform int u_upperHemisphere;
 vec4 fetch1(sampler2D t, int i) { int w=textureSize(t,0).x; return texelFetch(t,ivec2(i%w,i/w),0); }
 vec4 mat(int m,int i) {return texelFetch(u_materials,ivec2(i,m),0);}
@@ -43,12 +58,19 @@ void triangle(int t,out vec3 a,out vec3 b,out vec3 c,out int m,out vec2 uv0,out 
     a=p.xyz;b=q.xyz;c=r.xyz;m=int(p.w);uv0=vec2(q.w,r.w);uv12=fetch1(u_uv,t);
 }
 vec2 hitUV(vec2 uv0,vec4 uv12,vec2 bary) {return uv0*(1.0-bary.x-bary.y)+uv12.xy*bary.x+uv12.zw*bary.y;}
+// SAH may visit coincident, oppositely wound surfaces in a different order.
+// Only bit-exact distance ties use original median rank, never a distance epsilon.
+float traversalRank(int t) {
+    if(u_tieRankOffset<0) return float(t);
+    return fetch1(u_uv,u_tieRankOffset+t/4)[t%4];
+}
 // Stackless pre-order traversal. An exhausted budget is Unknown (-1), never sky.
 vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
     int node=0;vec4 best=vec4(0.0,0.0,0.0,maximum);
     for(int visit=0;visit<4096;visit++) {
         if(node>=u_nodesCount) return best;
         if(visit>=u_budget) return vec4(-1.0,0.0,0.0,maximum);
+        countNode();
         vec4 lo=fetch1(u_nodes,node*2),hi=fetch1(u_nodes,node*2+1);
         float near=0.0,far=best.w;
         for(int axis=0;axis<3;axis++) {
@@ -59,7 +81,7 @@ vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
         if(hi.w<0.0) {node++;continue;}
         int packed=int(hi.w),start=packed/16,count=packed%16;
         for(int j=0;j<8;j++) {
-            if(j>=count) break;int t=start+j;if(t==ignore) continue;
+            if(j>=count) break;int t=start+j;if(t==ignore) continue;countTriangle();
             vec3 a,b,c;int material;vec2 uv0;vec4 uv12;
             triangle(t,a,b,c,material,uv0,uv12);
             vec3 e1=b-a,e2=c-a,p=cross(direction,e2);float det=dot(e1,p);
@@ -68,8 +90,10 @@ vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
             if(u<0.0||u>1.0) continue;
             vec3 q=cross(s,e1);float v=dot(direction,q)/det;
             if(v<0.0||u+v>1.0) continue;
-            float d=dot(e2,q)/det;if(d<0.00001||d>=best.w) continue;
+            float d=dot(e2,q)/det;if(d<0.00001||d>best.w) continue;
+            if(d==best.w && (best.x==0.0 || traversalRank(t)>=traversalRank(int(abs(best.x))-2))) continue;
             vec4 params=mat(material,1);
+            if(params.w>0.5) {countAlpha();}
             if(params.w>0.5 && image(material,0,hitUV(uv0,uv12,vec2(u,v))).a*mat(material,0).a<params.y) continue;
             best=vec4((det<0.0?-1.0:1.0)*float(t+2),u,v,d);
             if(anyHit) return best;
@@ -83,6 +107,43 @@ vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
 float completeDistance(vec3 origin) {
     vec3 lo=fetch1(u_nodes,0).xyz, hi=fetch1(u_nodes,1).xyz;
     return max(100.0,length(max(abs(lo-origin),abs(hi-origin)))+1.0);
+}
+// Exact any-hit: defer UV and alpha fetches until an accepted geometric hit.
+vec4 occluded(vec3 origin,vec3 direction,float maximum,int ignore) {
+    vec3 inverseDirection=vec3(0.0);
+    for(int axis=0;axis<3;axis++) if(abs(direction[axis])>=1e-10) inverseDirection[axis]=1.0/direction[axis];
+    int node=0;
+    for(int visit=0;visit<4096;visit++) {
+        if(node>=u_nodesCount) return vec4(0.0,0.0,0.0,maximum);
+        if(visit>=u_budget) return vec4(-1.0,0.0,0.0,maximum);
+        countNode();
+        vec4 lo=fetch1(u_nodes,node*2),hi=fetch1(u_nodes,node*2+1);
+        float near=0.0,far=maximum;
+        for(int axis=0;axis<3;axis++) {
+            if(abs(direction[axis])<1e-10) {if(origin[axis]<lo[axis]||origin[axis]>hi[axis]) far=-1.0;}
+            else {float a=(lo[axis]-origin[axis])*inverseDirection[axis],b=(hi[axis]-origin[axis])*inverseDirection[axis];near=max(near,min(a,b));far=min(far,max(a,b));}
+        }
+        if(far<near) {node=int(lo.w);continue;}
+        if(hi.w<0.0) {node++;continue;}
+        int packed=int(hi.w),start=packed/16,count=packed%16;
+        for(int j=0;j<8;j++) {
+            if(j>=count) break;int t=start+j;if(t==ignore) continue;countTriangle();
+            vec4 a=fetch1(u_vertices,t*3),b=fetch1(u_vertices,t*3+1),c=fetch1(u_vertices,t*3+2);
+            vec3 e1=b.xyz-a.xyz,e2=c.xyz-a.xyz,p=cross(direction,e2);float det=dot(e1,p);
+            if(abs(det)<1e-10) continue;
+            vec3 delta=origin-a.xyz;float u=dot(delta,p)/det;
+            if(u<0.0||u>1.0) continue;
+            vec3 q=cross(delta,e1);float v=dot(direction,q)/det;
+            if(v<0.0||u+v>1.0) continue;
+            float d=dot(e2,q)/det;if(d<0.00001||d>=maximum) continue;
+            int material=int(a.w);vec4 params=mat(material,1);
+            if(params.w>0.5) {countAlpha();}
+            if(params.w>0.5 && image(material,0,hitUV(vec2(b.w,c.w),fetch1(u_uv,t),vec2(u,v))).a*mat(material,0).a<params.y) continue;
+            return vec4((det<0.0?-1.0:1.0)*float(t+2),u,v,d);
+        }
+        node=int(lo.w);
+    }
+    return vec4(node>=u_nodesCount?0.0:-1.0,0.0,0.0,maximum);
 }
 vec3 rayDirection(int i) {
     float z=1.0-2.0*(float(i)+0.5)/float(u_rays),a=float(i)*2.399963229728653;
@@ -136,9 +197,13 @@ void main() {ivec2 c=ivec2(gl_FragCoord.xy);int width=textureSize(u_lumenProbePo
 if(texelFetch(u_lumenProbePositions,ivec2(c.y%width,c.y/width),0).a<0.5) {out_FragColor=vec4(0.0);return;}
 vec4 h=texelFetch(u_hits,c,0);
 if(abs(h.x)<=1.0) {out_FragColor=vec4(0.0,h.x==0.0?1.0:0.0,0.0,0.0);return;}
-vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
+int t=int(abs(h.x))-2;vec3 a,b,cc;int m;vec2 uv0;vec4 uv12;
+triangle(t,a,b,cc,m,uv0,uv12);
+vec3 p=a*(1.0-h.y-h.z)+b*h.y+cc*h.z,n=normalize(cross(b-a,cc-a));
+bool black=h.x<0.0&&mat(m,1).z<0.5;if(h.x<0.0) n=-n;
 if(black||dot(n,u_sunDirection)<=0.0) {out_FragColor=vec4(0.0,1.0,0.0,0.0);return;}
-vec4 shadow=trace(p+n*0.015,u_sunDirection,completeDistance(p+n*0.015),t,true);
+vec3 origin=p+n*0.015;float maximum=completeDistance(origin);
+vec4 shadow=u_visibilityOptimized?occluded(origin,u_sunDirection,maximum,t):trace(origin,u_sunDirection,maximum,t,true);
 out_FragColor=vec4(shadow.x==0.0?1.0:0.0,shadow.x==-1.0?0.0:1.0,1.0,0.0);
 }`;
 export const direct = `${common + worldUniforms}
@@ -228,9 +293,10 @@ else if(c.y==9) c=ivec2(9-c.x,8);
 out_FragColor=texelFetch(u_borderSource,tile*8+c-1,0);
 }`;
 export const momentsBorder = border;
-export const queryTrace = `${common}
+export const queryTrace = `#define LUMEN_QUERY_COUNTS
+${common}
 uniform sampler2D u_queryOrigin,u_queryDirection;
-void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 a=texelFetch(u_queryOrigin,c,0),b=texelFetch(u_queryDirection,c,0);out_FragColor=trace(a.xyz,b.xyz,a.w,int(b.w),false);}`;
+void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 a=texelFetch(u_queryOrigin,c,0),b=texelFetch(u_queryDirection,c,0);vec4 hit=u_queryAnyHit?(u_visibilityOptimized?occluded(a.xyz,b.xyz,a.w,int(b.w)):trace(a.xyz,b.xyz,a.w,int(b.w),true)):trace(a.xyz,b.xyz,a.w,int(b.w),false);out_FragColor=u_queryStats?vec4(traversalCounts,hit.x==-1.0?-1.0:(hit.x==0.0?0.0:1.0)):hit;}`;
 export const querySample = `${gather}
 uniform sampler2D u_queryOrigin,u_queryDirection;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradiance(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;

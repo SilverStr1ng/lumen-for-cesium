@@ -23,6 +23,8 @@
     "report:relighting": "node scripts/summarize-relighting.mjs",
     "benchmark:relighting": "node scripts/benchmark-relighting.mjs",
     "fixtures:globe": "node scripts/generate-globe.mjs",
-    "test:globe": "node scripts/verify-environment.mjs && node scripts/verify-globe-controls.mjs && node scripts/verify-globe.mjs"
+    "test:globe": "node scripts/verify-environment.mjs && node scripts/verify-globe-controls.mjs && node scripts/verify-globe.mjs",
+    "test:visibility": "node scripts/verify-visibility.mjs && node scripts/verify-visibility-gpu.mjs && node scripts/verify-visibility-domain.mjs && node scripts/verify-visibility-edges.mjs",
+    "benchmark:visibility": "node scripts/benchmark-visibility.mjs"
   }
 }

@@ -1,6 +1,11 @@
 /** Static local-metre triangle BVH. A bounded traversal returns Unknown, never Miss. */
 export class BVH {
-  constructor(geometry) {
+  constructor(geometry, { strategy = "median", bins = 12 } = {}) {
+    if (!["median", "sah"].includes(strategy))
+      throw new Error("Unknown BVH strategy");
+    if (!Number.isInteger(bins) || bins < 4 || bins > 64)
+      throw new Error("BVH bins must be 4..64");
+    let maxDepth = 0;
     this.geometry = geometry;
     const p = geometry.positions,
       n = p.length / 9;
@@ -15,7 +20,28 @@ export class BVH {
       }
     const order = Array.from({ length: n }, (_, i) => i),
       nodes = [];
-    const build = (start, end) => {
+    const area = (b) => {
+      const x = Math.max(0, b[3] - b[0]),
+        y = Math.max(0, b[4] - b[1]),
+        z = Math.max(0, b[5] - b[2]);
+      return 2 * (x * y + y * z + z * x);
+    };
+    const empty = () => [
+      Infinity,
+      Infinity,
+      Infinity,
+      -Infinity,
+      -Infinity,
+      -Infinity,
+    ];
+    const extend = (a, b) => {
+      for (let k = 0; k < 3; k++) {
+        a[k] = Math.min(a[k], b[k]);
+        a[k + 3] = Math.max(a[k + 3], b[k + 3]);
+      }
+    };
+    const build = (start, end, depth = 0) => {
+      maxDepth = Math.max(maxDepth, depth);
       const b = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
       for (let i = start; i < end; i++)
         for (let a = 0; a < 3; a++) {
@@ -28,13 +54,76 @@ export class BVH {
         let axis = 0;
         for (let a = 1; a < 3; a++)
           if (b[a + 3] - b[a] > b[axis + 3] - b[axis]) axis = a;
-        const sorted = order
-          .slice(start, end)
-          .sort((a, b) => centroids[a * 3 + axis] - centroids[b * 3 + axis]);
-        for (let i = 0; i < sorted.length; i++) order[start + i] = sorted[i];
-        const mid = (start + end) >> 1;
-        nodes[id].left = build(start, mid);
-        nodes[id].right = build(mid, end);
+        let split;
+        if (strategy === "sah" && depth < 48) {
+          let best = Infinity;
+          for (let candidate = 0; candidate < 3; candidate++) {
+            let low = Infinity,
+              high = -Infinity;
+            for (let i = start; i < end; i++) {
+              const v = centroids[order[i] * 3 + candidate];
+              low = Math.min(low, v);
+              high = Math.max(high, v);
+            }
+            if (!(high > low)) continue;
+            const bucket = (t) =>
+              Math.min(
+                bins - 1,
+                Math.floor(
+                  ((centroids[t * 3 + candidate] - low) / (high - low)) * bins,
+                ),
+              );
+            const counts = new Uint32Array(bins),
+              boxes = Array.from({ length: bins }, empty);
+            for (let i = start; i < end; i++) {
+              const t = order[i],
+                k = bucket(t);
+              counts[k]++;
+              extend(boxes[k], tb.subarray(t * 6, t * 6 + 6));
+            }
+            const rightCost = new Float64Array(bins);
+            let right = empty(),
+              count = 0;
+            for (let k = bins - 1; k > 0; k--) {
+              if (counts[k]) extend(right, boxes[k]);
+              count += counts[k];
+              rightCost[k] = count ? count * area(right) : 0;
+            }
+            let left = empty();
+            count = 0;
+            for (let k = 0; k < bins - 1; k++) {
+              if (counts[k]) extend(left, boxes[k]);
+              count += counts[k];
+              if (!count || count === end - start) continue;
+              const cost = count * area(left) + rightCost[k + 1];
+              if (cost < best) {
+                best = cost;
+                split = { bucket, k };
+              }
+            }
+          }
+        }
+        let mid;
+        if (split) {
+          const left = [],
+            right = [];
+          for (let i = start; i < end; i++)
+            (split.bucket(order[i]) <= split.k ? left : right).push(order[i]);
+          const sorted = left.concat(right);
+          for (let i = 0; i < sorted.length; i++) order[start + i] = sorted[i];
+          mid = start + left.length;
+        } else {
+          const sorted = order
+            .slice(start, end)
+            .sort(
+              (a, b) =>
+                centroids[a * 3 + axis] - centroids[b * 3 + axis],
+            );
+          for (let i = 0; i < sorted.length; i++) order[start + i] = sorted[i];
+          mid = (start + end) >> 1;
+        }
+        nodes[id].left = build(start, mid, depth + 1);
+        nodes[id].right = build(mid, end, depth + 1);
         nodes[id].count = 0;
       }
       return id;
@@ -52,6 +141,14 @@ export class BVH {
       this.children.set([node.left, node.right, node.start, node.count], i * 4);
     });
     this.stats = {
+      persistentBytes:
+        this.order.byteLength +
+        this.bounds.byteLength +
+        this.children.byteLength +
+        128 * 4,
+      strategy,
+      bins,
+      maxDepth,
       triangles: n,
       nodes: nodes.length,
       queries: 0,
@@ -63,7 +160,14 @@ export class BVH {
   trace(
     origin,
     direction,
-    { maxDistance = 100, budget = 100000, ignore = -1, accept } = {},
+    {
+      maxDistance = 100,
+      budget = 100000,
+      ignore = -1,
+      accept,
+      anyHit = false,
+      counters,
+    } = {},
   ) {
     this.stats.queries++;
     const p = this.geometry.positions,
@@ -80,6 +184,7 @@ export class BVH {
         this.stats.unknown++;
         return { status: "Unknown", visits };
       }
+      if (counters) counters.nodes = (counters.nodes ?? 0) + 1;
       const node = this.stack[--top],
         bi = node * 6;
       let near = 0,
@@ -100,6 +205,10 @@ export class BVH {
       if (far < near) continue;
       const ci = node * 4;
       if (!c[ci + 3]) {
+        if (top + 2 > this.stack.length) {
+          this.stats.unknown++;
+          return { status: "Unknown", visits };
+        }
         this.stack[top++] = c[ci];
         this.stack[top++] = c[ci + 1];
         continue;
@@ -107,6 +216,7 @@ export class BVH {
       for (let i = c[ci + 2]; i < c[ci + 2] + c[ci + 3]; i++) {
         const t = this.order[i];
         if (t === ignore) continue;
+        if (counters) counters.triangles = (counters.triangles ?? 0) + 1;
         const o = t * 9;
         const ax = p[o + 3] - p[o],
           ay = p[o + 4] - p[o + 1],
@@ -133,6 +243,7 @@ export class BVH {
         if (v < 0 || u + v > 1) continue;
         const distance = (bx * qx + by * qy + bz * qz) * invDet;
         if (distance < 0.0001 || distance >= best) continue;
+        if (counters && accept) counters.accept = (counters.accept ?? 0) + 1;
         if (accept && !accept(t, u, v)) {
           this.stats.alphaRejected++;
           continue;
@@ -146,6 +257,7 @@ export class BVH {
           distance,
           backface: det < 0,
         };
+        if (anyHit) return result;
       }
     }
     return result ?? { status: "Miss", distance: maxDistance };

@@ -1,0 +1,364 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import {
+  launchBrowser,
+  installGlObserver,
+  environment,
+  sourceVersion,
+} from "./browser-tools.mjs";
+const asset =
+    process.env.LUMEN_ASSET_URL ??
+    "http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf",
+  fixture = process.env.LUMEN_BENCH_SCENE === "fixture";
+const baselineRevision = "39529256309070aae6e67518b3f17fed4855a9fb";
+const baselineSource = execFileSync(
+  "git",
+  [
+    "show",
+    baselineRevision +
+      ":cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+  ],
+  { encoding: "utf8" },
+);
+const extract = (name) => {
+  const start = baselineSource.indexOf(name + " = `") + (name + " = `").length;
+  return baselineSource.slice(start, baselineSource.indexOf("`;", start));
+};
+const baselineShader = extract("export const visibility").replace(
+  "${common + worldUniforms}",
+  extract("const common") + extract("const worldUniforms"),
+);
+const baseUrl = process.env.LUMEN_BASE_URL ?? "http://localhost:8090";
+const report = {
+  version: sourceVersion(["lumen/bvh.js"]),
+  harnessSha256: createHash("sha256")
+    .update(readFileSync(new URL(import.meta.url)))
+    .digest("hex"),
+  date: new Date().toISOString(),
+  mode: "performance phases have no texture readback/fences/blocking waits; separate post-timing numerical phase",
+  tolerance: { absolute: 2e-4, relative: 1e-3 },
+  scene: fixture ? "untextured" : asset,
+  order: process.env.LUMEN_VARIANTS?.split(",") ?? [
+    "A",
+    "B",
+    "B",
+    "A",
+    "A",
+    "B",
+  ],
+  baselineShader: {
+    revision: baselineRevision,
+    sha256: createHash("sha256").update(baselineShader).digest("hex"),
+  },
+  baselineLimitation:
+    "A uses original revision visibility GLSL and median BVH within the new lifecycle/runtime. Initialization retains full-domain probe tracing; not a byte-identical full baseline build.",
+  candidateVariant: process.env.LUMEN_CANDIDATE_VARIANT ?? (process.env.LUMEN_VARIANTS?.split(",").includes("C")?"C":"B"),
+  definitions: {
+    A: "median + original revision visibility GLSL",
+    B: "12-bin SAH + optimized exact any-hit",
+    C: "median + optimized exact any-hit",
+  },
+  runs: [],
+  errors: [],
+};
+if (process.env.LUMEN_CLEAN_BASELINE === "1") {
+  assert.equal(report.version.head, baselineRevision, "Clean baseline HEAD");
+  assert.deepEqual(
+    report.version.modifiedSources,
+    [],
+    "Clean baseline tracked GI sources",
+  );
+  assert.ok(
+    report.order.every((v) => v === "A"),
+    "Clean baseline only accepts A variants",
+  );
+  report.baselineLimitation =
+    "Independent original complete build at reviewed clean HEAD; unchanged original runtime and visibility GLSL.";
+  report.definitions.A =
+    "Original clean runtime and median BVH / visibility GLSL";
+  report.cleanBaseline = true;
+}
+const output =
+  process.env.LUMEN_REPORT ??
+  "reports/globe-visibility-v3/visibility-performance.json";
+await mkdir("reports/globe-visibility-v3", { recursive: true });
+let browser;
+const save = () => writeFile(output, JSON.stringify(report, null, 2));
+try {
+  if (!fixture) {
+    try {
+      const r = await fetch(asset, {
+        method: "HEAD",
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!r.ok) throw Error(`HTTP ${r.status}`);
+    } catch (e) {
+      report.status = "not-run";
+      throw e;
+    }
+  }
+  browser = await launchBrowser();
+  const page = await browser.newPage({ viewport: { width: 960, height: 640 } });
+  await page.addInitScript(installGlObserver);
+  page.on("pageerror", (e) => report.errors.push(String(e)));
+  const monitor = setInterval(async () => {
+    try {
+      console.log(
+        "progress",
+        await page.evaluate(() => {
+          const w = (window.lumenDemo ?? window.lumenTest)?.scene.lumen.world;
+          return {
+            status: w?.status,
+            progress: w?.progress,
+            phase: w?._phase,
+            revision: w?.revision,
+          };
+        }),
+      );
+    } catch {}
+  }, 30000);
+  page.on("close", () => clearInterval(monitor));
+  await page.goto(
+    fixture
+      ? `${baseUrl}/demo/regression.html?fixture=untextured`
+      : `${baseUrl}/demo/index.html?backend=gpu&publication=progressive&model=${encodeURIComponent(asset)}`,
+  );
+  await page.waitForFunction(
+    () => {
+      const d = window.lumenDemo ?? window.lumenTest;
+      return d?.scene.lumen.world?.status === "ready" || d?.errors.length;
+    },
+    null,
+    { timeout: 900000 },
+  );
+  assert.deepEqual(
+    await page.evaluate(() => (window.lumenDemo ?? window.lumenTest).errors),
+    [],
+  );
+  report.environment = await environment(page, browser);
+  await page.evaluate((baselineShader) => {
+    window.originalVisibilityShader = baselineShader;
+    const d = window.lumenDemo ?? window.lumenTest;
+    window.visibilityBase = { ...d.scene.lumen.world.options };
+    window.applyVisibilityLighting = (options) => {
+      const o = { ...d.scene.lumen.world.options, ...options },
+        C = Cesium;
+      const direction = C.Cartesian3.normalize(
+        C.Cartesian3.fromArray(o.sunDirection),
+        new C.Cartesian3(),
+      );
+      C.Cartesian3.negate(direction, direction);
+      C.Matrix3.multiplyByVector(
+        C.Matrix4.getMatrix3(d.frame, new C.Matrix3()),
+        direction,
+        direction,
+      );
+      d.scene.light = new C.DirectionalLight({
+        direction,
+        color: new C.Color(...o.sunRadiance),
+        intensity: 1,
+      });
+      d.scene.requestRender();
+    };
+    glObserver.phase("performance");
+  }, baselineShader);
+  for (const variant of report.order) {
+    console.log("Starting", variant, new Date().toISOString());
+    const result = await page.evaluate(async (variant) => {
+      applyVisibilityLighting(visibilityBase);
+      const d = window.lumenDemo ?? window.lumenTest,
+        start = performance.now(),
+        w = d.scene.lumen.loadWorld({
+          ...visibilityBase,
+          bvhStrategy: variant === "B" ? "sah" : "median",
+          bvhBins: 12,
+          visibilityMode: variant === "A" ? "reference" : "optimized",
+          publicationMode: "progressive",
+        });
+      await w.completed;
+      const initial = performance.now() - start;
+      if (variant === "A") {
+        const previous = w._commands.visibility;
+        w._commands.visibility = d.scene.context.createViewportQuadCommand(
+          originalVisibilityShader,
+          {
+            uniformMap: w._uniforms(),
+            renderState: previous.renderState,
+            owner: w,
+          },
+        );
+        previous.shaderProgram.destroy();
+      }
+      for (let i = 0; i < 120 && w._queries.length; i++)
+        await new Promise(requestAnimationFrame);
+      const { measureFrames } = await import("/demo/benchmark.js");
+      d.scene.lumen.enabled = false;
+      const disabled = await measureFrames(d.scene, 30);
+      d.scene.lumen.enabled = true;
+      const idle = await measureFrames(d.scene, 30);
+      // Warm one direction update, then the identical three-direction sequence.
+      applyVisibilityLighting({ sunDirection: [0.2, 0.5, 0.7] });
+      await w.solve({ sunDirection: [0.2, 0.5, 0.7] });
+      const updates = [];
+      for (const sunDirection of [
+        [1, 0, 0.65],
+        [-1, 0.1, 0.65],
+        [0.1, -1, 0.65],
+      ]) {
+        applyVisibilityLighting({ sunDirection });
+        const started = performance.now(),
+          p = w.solve({ sunDirection });
+        let first, completed;
+        p.then(() => {
+          completed = performance.now() - started;
+        });
+        w.firstPublished.then(() => {
+          first = performance.now() - started;
+        });
+        // CPU-only frame sampling: preRender sees stale ready status on the first
+        // solve frame, so full-frame TIME_ELAPSED sampling would steal its queries.
+        const intervals = [];
+        let prior;
+        for (let frame = 0; frame < 30; frame++) {
+          const now = await new Promise(requestAnimationFrame);
+          if (prior !== undefined) intervals.push(now - prior);
+          prior = now;
+        }
+        const sorted = [...intervals].sort((a, b) => a - b),
+          mean = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+        const changing = {
+          fps: 1000 / mean,
+          frameMilliseconds: {
+            mean,
+            p50: sorted[Math.floor(sorted.length * 0.5)],
+            p95: sorted[Math.floor(sorted.length * 0.95)],
+            samples: intervals.length,
+          },
+          gpuScope: "stage queries only; no concurrent frame query",
+          visibility: document.visibilityState,
+          buffer: [d.scene.drawingBufferWidth, d.scene.drawingBufferHeight],
+        };
+        await p;
+
+        for (let i = 0; i < 120 && w._queries.length; i++)
+          await new Promise(requestAnimationFrame);
+        updates.push({
+          sunDirection,
+          firstPublishedPromiseMilliseconds: first,
+          completedPromiseMilliseconds: completed,
+          metrics: structuredClone(w.metrics.updates.at(-1)),
+          queryQueue: w._queries.length,
+          changing,
+        });
+      }
+      return {
+        variant,
+        initializationMilliseconds: initial,
+        initialStages: w.metrics.initialStages,
+        bvh: w.packet.bvh,
+        grid: w.packet.grid,
+        options: {
+          rays: w.options.rays,
+          bounces: w.options.bounces,
+          spacing: w.options.spacing,
+          targetGpuMilliseconds: w.options.targetGpuMilliseconds,
+          publicationMode: w.options.publicationMode,
+          traversalBudget: w.options.traversalBudget,
+        },
+        memory: w.metrics.memory,
+        display: { disabled, idle },
+        updates,
+        disjoint: w.metrics.disjoint,
+      };
+    }, variant);
+    result.numerical = await page.evaluate(() => {
+      glObserver.phase("numerical");
+      const w = (window.lumenDemo ?? window.lumenTest).scene.lumen.world,
+        g = w.packet.grid;
+      const current = {
+        E: w.snapshot().irradiance,
+        V: w._read(
+          w._visibilityFB,
+          g.rays,
+          g.total,
+          0,
+          Cesium.PixelDatatype.UNSIGNED_BYTE,
+        ),
+      };
+      window.visibilityReference ??= current;
+      let maxE = 0,
+        visibilityDifferences = 0,
+        failures = 0;
+      for (let i = 0; i < current.E.length; i++) {
+        const a = current.E[i],
+          b = visibilityReference.E[i],
+          delta = Math.abs(a - b);
+        maxE = Math.max(maxE, delta);
+        if (!Number.isFinite(delta) || delta > 2e-4 + 1e-3 * Math.abs(b))
+          failures++;
+      }
+      for (let i = 0; i < current.V.length; i++)
+        if (current.V[i] !== visibilityReference.V[i]) visibilityDifferences++;
+      const cache = w.cacheDiagnostics();
+      glObserver.phase("performance");
+      return { maxE, failures, visibilityDifferences, cache };
+    });
+    report.runs.push(result);
+    await save();
+    console.log(
+      "Done",
+      variant,
+      JSON.stringify(result.updates.map((x) => x.metrics.stages)),
+    );
+  }
+  report.gl = await page.evaluate(() => glObserver.snapshot());
+  for (const s of report.gl) {
+    const p = s.phases.performance ?? {};
+    for (const key of [
+      "readPixels",
+      "getBufferSubData",
+      "finish",
+      "waitSync",
+      "blockingClientWaitSync",
+      "queryCollisions",
+    ])
+      assert.equal(p[key] ?? 0, 0, key);
+    assert.deepEqual(s.feedback, []);
+    assert.deepEqual(s.errors, []);
+  }
+  assert.deepEqual(report.errors, []);
+  report.timingComplete = report.runs.every(
+    (r) =>
+      r.disjoint === 0 &&
+      r.updates.every(
+        (u) =>
+          u.queryQueue === 0 &&
+          Object.values(u.metrics.stages).every(
+            (s) =>
+              s.timerMissing === 0 && s.timerSamples === s.submittedBatches,
+          ),
+      ),
+  );
+  report.numericalStatus = report.runs.every(
+    (r) =>
+      r.numerical.failures === 0 && r.numerical.visibilityDifferences === 0,
+  )
+    ? "passed"
+    : "failed";
+  report.status =
+    report.numericalStatus === "passed" && report.timingComplete
+      ? "passed"
+      : "failed";
+  if (report.status !== "passed") process.exitCode = 1;
+} catch (e) {
+  if (report.status !== "not-run") report.status = "failed";
+  report.errors.push(String(e));
+  process.exitCode = 1;
+  console.error(e);
+} finally {
+  await save();
+  await browser?.close();
+}

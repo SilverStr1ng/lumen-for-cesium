@@ -1,0 +1,152 @@
+{
+  "startedAt": "2026-10-12T02:50:54.830Z",
+  "version": {
+    "head": "021448587ec257fde9043e3c6181cfe8d25beb76",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "f55b9f1e767dcce2c845c758637849976ab9759abf8461060d2a5f5594d4296c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "83b55dba0981ee1b4a4b76f71fc455758cf85c42f68de4e882568a6071e19ae3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "lumen/bvh.js": "ea0b3758b386bd506decaafd1fffdd402a74238d68b3497c20fed611cddf0183"
+    },
+    "compiledBundle": "9eb208b38fe84144328903d8add38f2edfe6a97d136d8d271ec72a4f8cf2d6c1",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "lumen/bvh.js",
+      "lumen/gpu-worker.js"
+    ]
+  },
+  "mode": "diagnostic readbacks; not performance",
+  "errors": [],
+  "result": {
+    "medianOptimized": {
+      "maxE": 0,
+      "failures": 0,
+      "visibilityDifferences": 0,
+      "metrics": {
+        "revision": 6,
+        "stages": {
+          "visibility": {
+            "submittedBatches": 36,
+            "probes": 1836,
+            "items": 1836,
+            "gpuMilliseconds": 105.12805399999999,
+            "timerSamples": 36,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 4.800000003539026,
+            "itemType": "probes"
+          },
+          "direct": {
+            "submittedBatches": 31,
+            "probes": 1836,
+            "items": 1836,
+            "gpuMilliseconds": 2.6328489999999998,
+            "timerSamples": 31,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 1.599999999627471,
+            "itemType": "probes"
+          },
+          "bounce": {
+            "submittedBatches": 63,
+            "probes": 5508,
+            "items": 5508,
+            "gpuMilliseconds": 17.822311999999997,
+            "timerSamples": 63,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 3.7000000001862645,
+            "itemType": "probes"
+          },
+          "integrate": {
+            "submittedBatches": 116,
+            "probes": 5508,
+            "items": 5508,
+            "gpuMilliseconds": 15.513748999999994,
+            "timerSamples": 116,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 5.499999997206032,
+            "itemType": "probes"
+          },
+          "border": {
+            "submittedBatches": 69,
+            "probes": 5508,
+            "items": 5508,
+            "gpuMilliseconds": 1.1381429999999995,
+            "timerSamples": 69,
+            "timerMissing": 0,
+            "cpuSchedulingMilliseconds": 2.4999999990686774,
+            "itemType": "probes"
+          }
+        },
+        "submittedFrames": 71,
+        "submittedBatches": 315,
+        "cpuSchedulingMilliseconds": 18.09999999962747,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 6,
+          "lighting": 6
+        },
+        "work": {
+          "probeHitInvocations": 0,
+          "sunVisibilitySubmittedSlots": 235008,
+          "momentProbeUpdates": 0
+        },
+        "firstPublishSubmissionMilliseconds": 6516.299999999814,
+        "requestToFirstSubmissionMilliseconds": 6516.399999999441,
+        "milliseconds": 9244.099999999627,
+        "bounces": 3,
+        "requestedBounces": 3,
+        "settled": true,
+        "supersededAtRoundBoundary": false,
+        "submissionMilliseconds": 9244.099999999627,
+        "finalSubmissionMilliseconds": 9244.099999999627,
+        "requestToFinalSubmissionMilliseconds": 9244.199999999255,
+        "publicationMode": "progressive",
+        "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+      }
+    },
+    "directionalComparisons": [
+      {
+        "sunDirection": [
+          1,
+          0,
+          0.65
+        ],
+        "maxE": 0,
+        "failures": 0,
+        "visibilityDifferences": 0
+      },
+      {
+        "sunDirection": [
+          -1,
+          0.1,
+          0.65
+        ],
+        "maxE": 0,
+        "failures": 0,
+        "visibilityDifferences": 0
+      },
+      {
+        "sunDirection": [
+          0.1,
+          -1,
+          0.65
+        ],
+        "maxE": 0,
+        "failures": 0,
+        "visibilityDifferences": 0
+      }
+    ],
+    "differentHits": 0,
+    "deltaDistance": 0,
+    "maxE": 0,
+    "failures": 0,
+    "differences": [],
+    "visibilityDifferences": []
+  },
+  "status": "passed"
+}

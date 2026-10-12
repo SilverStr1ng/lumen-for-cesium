@@ -1,0 +1,1125 @@
+{
+  "version": {
+    "head": "b50ba25c8f9f2f4108f1ad97ff9af79be1251576",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4e1a1522b434045c63a223223501a5a9a3bf1b09d8ea32e6347bad0255c6a3f2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "be0144ff95ab4e8682bdaa0afbcf52039081a47f1c0ca9775ca31d7b73bb9ff1",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "bb3c21963b47efb69d87e1ac126e908b271af50dfc77aaea7c878d7eacdbcb46",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "lumen/bvh.js": "ea0b3758b386bd506decaafd1fffdd402a74238d68b3497c20fed611cddf0183"
+    },
+    "compiledBundle": "79a9b97b2f08a8e56ce45f47c8201f3e1b6bed16423c529a97974d53813947b0",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "lumen/bvh.js",
+      "lumen/gpu-worker.js"
+    ]
+  },
+  "harnessSha256": "badd19688e7b1791221c5e6219b178cecaf1dedaa71455fac01b573356bfc7c5",
+  "date": "2026-10-12T02:06:33.182Z",
+  "mode": "performance phases have no texture readback/fences/blocking waits; separate post-timing numerical phase",
+  "tolerance": {
+    "absolute": 0.0002,
+    "relative": 0.001
+  },
+  "scene": "untextured",
+  "order": [
+    "A",
+    "B"
+  ],
+  "baselineShader": {
+    "revision": "39529256309070aae6e67518b3f17fed4855a9fb",
+    "sha256": "ff11c02f58e09f32b678fcbbbab7af2709694cdb364ec7a71e3ecd4123ba90ee"
+  },
+  "baselineLimitation": "A uses original revision visibility GLSL and median BVH within the new lifecycle/runtime. Initialization retains full-domain probe tracing; not a byte-identical full baseline build.",
+  "definitions": {
+    "A": "median + original revision visibility GLSL",
+    "B": "12-bin SAH + optimized exact any-hit"
+  },
+  "runs": [
+    {
+      "variant": "A",
+      "initializationMilliseconds": 1773.300000000745,
+      "initialStages": {
+        "relocate": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 0.915771,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.2000000001862645,
+          "itemType": "probes"
+        },
+        "intersect": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 0.6490549999999999,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.5,
+          "itemType": "probes"
+        },
+        "classify": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 1.5758800000000002,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.1000000014901161,
+          "itemType": "probes"
+        },
+        "moments": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 1.5392649999999999,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.199999999254942,
+          "itemType": "probes"
+        },
+        "momentsBorder": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 0.18936599999999998,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.5999999986961484,
+          "itemType": "probes"
+        }
+      },
+      "bvh": {
+        "persistentBytes": 696,
+        "strategy": "median",
+        "bins": 12,
+        "maxDepth": 1,
+        "triangles": 16,
+        "nodes": 3,
+        "queries": 0,
+        "unknown": 0,
+        "alphaRejected": 0,
+        "buildMilliseconds": 1.2999999998137355,
+        "prepareMilliseconds": 23.700000000186265
+      },
+      "grid": {
+        "origin": [
+          -2.5,
+          -2.5,
+          -0.5
+        ],
+        "counts": [
+          6,
+          6,
+          5
+        ],
+        "total": 180,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 360,
+        "height": 50
+      },
+      "options": {
+        "rays": 128,
+        "bounces": 3,
+        "spacing": 1,
+        "targetGpuMilliseconds": 3,
+        "publicationMode": "progressive",
+        "traversalBudget": 4096
+      },
+      "memory": {
+        "currentBytes": 2454532,
+        "peakBytes": 2454532,
+        "textures": 17,
+        "framebuffers": 12
+      },
+      "display": {
+        "disabled": {
+          "fps": 35.391270153362015,
+          "frameMilliseconds": {
+            "mean": 28.255555555555677,
+            "p50": 24.5,
+            "p95": 36.399999999999636,
+            "samples": 9
+          },
+          "gpuMilliseconds": {
+            "mean": 25.34762212,
+            "p50": 25.660937,
+            "p95": 30.565052,
+            "samples": 25
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "idle": {
+          "fps": 38.071065989847774,
+          "frameMilliseconds": {
+            "mean": 26.266666666666627,
+            "p50": 24.399999999997817,
+            "p95": 60.5,
+            "samples": 9
+          },
+          "gpuMilliseconds": {
+            "mean": 26.3046596,
+            "p50": 25.738697,
+            "p95": 31.516145,
+            "samples": 25
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        }
+      },
+      "updates": [
+        {
+          "sunDirection": [
+            1,
+            0,
+            0.65
+          ],
+          "firstPublishedPromiseMilliseconds": 448.8999999994412,
+          "completedPromiseMilliseconds": 677.8999999994412,
+          "metrics": {
+            "revision": 3,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 35,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.6749339999999999,
+                "timerSamples": 27,
+                "timerMissing": 8,
+                "cpuSchedulingMilliseconds": 1.5,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 31,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.49816299999999997,
+                "timerSamples": 31,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.299999998882413,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.3866549999999997,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.6000000005587935,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 59,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 4.779871,
+                "timerSamples": 59,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 2.5999999986961484,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 16,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 0.190409,
+                "timerSamples": 16,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.7000000001862645,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 21,
+            "submittedBatches": 162,
+            "cpuSchedulingMilliseconds": 7.699999998323619,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 3,
+              "lighting": 3
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "firstPublishSubmissionMilliseconds": 447.5,
+            "requestToFirstSubmissionMilliseconds": 447.8999999994412,
+            "milliseconds": 676.3000000007451,
+            "bounces": 3,
+            "requestedBounces": 3,
+            "settled": true,
+            "supersededAtRoundBoundary": false,
+            "submissionMilliseconds": 676.3000000007451,
+            "finalSubmissionMilliseconds": 676.3000000007451,
+            "requestToFinalSubmissionMilliseconds": 676.7000000001863,
+            "publicationMode": "progressive",
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          "queryQueue": 0,
+          "changing": {
+            "fps": 34.5489443378119,
+            "frameMilliseconds": {
+              "mean": 28.944444444444443,
+              "p50": 24.299999999999272,
+              "p95": 54.5,
+              "samples": 9
+            },
+            "gpuMilliseconds": {
+              "mean": 26.004756333333333,
+              "p50": 25.973854,
+              "p95": 29.988541,
+              "samples": 6
+            },
+            "gpuScope": "idle frames only",
+            "disjoint": 0,
+            "visibility": "visible",
+            "buffer": [
+              960,
+              640
+            ],
+            "gbuffer": false
+          }
+        },
+        {
+          "sunDirection": [
+            -1,
+            0.1,
+            0.65
+          ],
+          "firstPublishedPromiseMilliseconds": 363.1000000005588,
+          "completedPromiseMilliseconds": 593.5,
+          "metrics": {
+            "revision": 4,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 30,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.519471,
+                "timerSamples": 22,
+                "timerMissing": 8,
+                "cpuSchedulingMilliseconds": 1.1000000005587935,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 30,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.5633199999999998,
+                "timerSamples": 30,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.800000000745058,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.4507700000000001,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.300000000745058,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 25,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 2.2538430000000003,
+                "timerSamples": 25,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.9000000022351742,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 0.21848099999999998,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.8999999985098839,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 17,
+            "submittedBatches": 127,
+            "cpuSchedulingMilliseconds": 6.000000002793968,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 4,
+              "lighting": 4
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "firstPublishSubmissionMilliseconds": 361.69999999925494,
+            "requestToFirstSubmissionMilliseconds": 361.8999999994412,
+            "milliseconds": 592.0999999996275,
+            "bounces": 3,
+            "requestedBounces": 3,
+            "settled": true,
+            "supersededAtRoundBoundary": false,
+            "submissionMilliseconds": 592.0999999996275,
+            "finalSubmissionMilliseconds": 592.0999999996275,
+            "requestToFinalSubmissionMilliseconds": 592.2999999998137,
+            "publicationMode": "progressive",
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          "queryQueue": 0,
+          "changing": {
+            "fps": 34.535686876438696,
+            "frameMilliseconds": {
+              "mean": 28.955555555555797,
+              "p50": 30.100000000002183,
+              "p95": 48.5,
+              "samples": 9
+            },
+            "gpuMilliseconds": {
+              "mean": 23.79214611111111,
+              "p50": 24.93552,
+              "p95": 29.788385,
+              "samples": 9
+            },
+            "gpuScope": "idle frames only",
+            "disjoint": 0,
+            "visibility": "visible",
+            "buffer": [
+              960,
+              640
+            ],
+            "gbuffer": false
+          }
+        },
+        {
+          "sunDirection": [
+            0.1,
+            -1,
+            0.65
+          ],
+          "firstPublishedPromiseMilliseconds": 357.90000000037253,
+          "completedPromiseMilliseconds": 511.1000000005588,
+          "metrics": {
+            "revision": 5,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 20,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.340933,
+                "timerSamples": 12,
+                "timerMissing": 8,
+                "cpuSchedulingMilliseconds": 0.6999999992549419,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 44,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.6969590000000002,
+                "timerSamples": 44,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 2,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.388218,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.1000000005587935,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 12,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.698171,
+                "timerSamples": 12,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.5,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 19,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 0.202596,
+                "timerSamples": 19,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.6000000014901161,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 16,
+            "submittedBatches": 116,
+            "cpuSchedulingMilliseconds": 4.900000001303852,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "firstPublishSubmissionMilliseconds": 356.20000000018626,
+            "requestToFirstSubmissionMilliseconds": 356.29999999981374,
+            "milliseconds": 509.90000000037253,
+            "bounces": 3,
+            "requestedBounces": 3,
+            "settled": true,
+            "supersededAtRoundBoundary": false,
+            "submissionMilliseconds": 509.90000000037253,
+            "finalSubmissionMilliseconds": 509.90000000037253,
+            "requestToFinalSubmissionMilliseconds": 510.09999999962747,
+            "publicationMode": "progressive",
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          "queryQueue": 0,
+          "changing": {
+            "fps": 36.202735317779776,
+            "frameMilliseconds": {
+              "mean": 27.62222222222206,
+              "p50": 24.399999999997817,
+              "p95": 54.60000000000218,
+              "samples": 9
+            },
+            "gpuMilliseconds": {
+              "mean": 25.871769899999997,
+              "p50": 26.15276,
+              "p95": 30.138436,
+              "samples": 10
+            },
+            "gpuScope": "idle frames only",
+            "disjoint": 0,
+            "visibility": "visible",
+            "buffer": [
+              960,
+              640
+            ],
+            "gbuffer": false
+          }
+        }
+      ],
+      "disjoint": 0,
+      "numerical": {
+        "maxE": 0,
+        "failures": 0,
+        "visibilityDifferences": 0,
+        "cache": {
+          "allocatedSlots": 23040,
+          "hitSlots": 4455,
+          "probeUnknown": 0,
+          "effectiveSunQueries": 3042,
+          "sunUnknown": 0,
+          "versions": {
+            "geometry": 1,
+            "rayLayout": 1,
+            "material": 1,
+            "sunVisibility": 5,
+            "lighting": 5
+          }
+        }
+      }
+    },
+    {
+      "variant": "B",
+      "initializationMilliseconds": 1738.6000000005588,
+      "initialStages": {
+        "relocate": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 0.843533,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.1000000005587935,
+          "itemType": "probes"
+        },
+        "intersect": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 0.6617119999999999,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.9999999981373549,
+          "itemType": "probes"
+        },
+        "classify": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 1.4382240000000004,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.900000000372529,
+          "itemType": "probes"
+        },
+        "moments": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 1.7286899999999998,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.1000000014901161,
+          "itemType": "probes"
+        },
+        "momentsBorder": {
+          "submittedBatches": 17,
+          "probes": 180,
+          "items": 180,
+          "gpuMilliseconds": 0.16405499999999998,
+          "timerSamples": 17,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 1.0000000009313226,
+          "itemType": "probes"
+        }
+      },
+      "bvh": {
+        "persistentBytes": 856,
+        "strategy": "sah",
+        "bins": 12,
+        "maxDepth": 3,
+        "triangles": 16,
+        "nodes": 7,
+        "queries": 0,
+        "unknown": 0,
+        "alphaRejected": 0,
+        "buildMilliseconds": 0.7999999998137355,
+        "prepareMilliseconds": 7.5
+      },
+      "grid": {
+        "origin": [
+          -2.5,
+          -2.5,
+          -0.5
+        ],
+        "counts": [
+          6,
+          6,
+          5
+        ],
+        "total": 180,
+        "spacing": 1,
+        "normalBias": 0.075,
+        "rays": 128,
+        "width": 360,
+        "height": 50
+      },
+      "options": {
+        "rays": 128,
+        "bounces": 3,
+        "spacing": 1,
+        "targetGpuMilliseconds": 3,
+        "publicationMode": "progressive",
+        "traversalBudget": 4096
+      },
+      "memory": {
+        "currentBytes": 2454532,
+        "peakBytes": 2454532,
+        "textures": 17,
+        "framebuffers": 12
+      },
+      "display": {
+        "disabled": {
+          "fps": 35.34956794972526,
+          "frameMilliseconds": {
+            "mean": 28.288888888888728,
+            "p50": 24.200000000000728,
+            "p95": 78.70000000000073,
+            "samples": 9
+          },
+          "gpuMilliseconds": {
+            "mean": 23.653355319999996,
+            "p50": 22.087239,
+            "p95": 30.530676,
+            "samples": 25
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        },
+        "idle": {
+          "fps": 35.34956794972526,
+          "frameMilliseconds": {
+            "mean": 28.288888888888728,
+            "p50": 24.299999999999272,
+            "p95": 54.5,
+            "samples": 9
+          },
+          "gpuMilliseconds": {
+            "mean": 25.036470040000005,
+            "p50": 25.146457,
+            "p95": 30.263384,
+            "samples": 25
+          },
+          "gpuScope": "idle frames only",
+          "disjoint": 0,
+          "visibility": "visible",
+          "buffer": [
+            960,
+            640
+          ],
+          "gbuffer": false
+        }
+      },
+      "updates": [
+        {
+          "sunDirection": [
+            1,
+            0,
+            0.65
+          ],
+          "firstPublishedPromiseMilliseconds": 215.20000000018626,
+          "completedPromiseMilliseconds": 384.5,
+          "metrics": {
+            "revision": 3,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 13,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.16921599999999998,
+                "timerSamples": 5,
+                "timerMissing": 8,
+                "cpuSchedulingMilliseconds": 0.7000000001862645,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 20,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.29743800000000004,
+                "timerSamples": 20,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.8999999985098839,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.3363960000000001,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.40000000037252903,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 17,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 2.024679,
+                "timerSamples": 17,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.900000000372529,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 19,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 0.21441500000000002,
+                "timerSamples": 19,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.4000000013038516,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 13,
+            "submittedBatches": 90,
+            "cpuSchedulingMilliseconds": 3.300000000745058,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 3,
+              "lighting": 3
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "firstPublishSubmissionMilliseconds": 214.5,
+            "requestToFirstSubmissionMilliseconds": 214.6000000005588,
+            "milliseconds": 383.29999999981374,
+            "bounces": 3,
+            "requestedBounces": 3,
+            "settled": true,
+            "supersededAtRoundBoundary": false,
+            "submissionMilliseconds": 383.29999999981374,
+            "finalSubmissionMilliseconds": 383.29999999981374,
+            "requestToFinalSubmissionMilliseconds": 383.40000000037253,
+            "publicationMode": "progressive",
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          "queryQueue": 0,
+          "changing": {
+            "fps": 36.21730382293762,
+            "frameMilliseconds": {
+              "mean": 27.61111111111111,
+              "p50": 24.200000000000728,
+              "p95": 60.70000000000073,
+              "samples": 9
+            },
+            "gpuMilliseconds": {
+              "mean": 24.56005507692308,
+              "p50": 23.578592,
+              "p95": 30.859999,
+              "samples": 13
+            },
+            "gpuScope": "idle frames only",
+            "disjoint": 0,
+            "visibility": "visible",
+            "buffer": [
+              960,
+              640
+            ],
+            "gbuffer": false
+          }
+        },
+        {
+          "sunDirection": [
+            -1,
+            0.1,
+            0.65
+          ],
+          "firstPublishedPromiseMilliseconds": 274.8999999994412,
+          "completedPromiseMilliseconds": 578.2000000001863,
+          "metrics": {
+            "revision": 4,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 10,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.06265599999999999,
+                "timerSamples": 2,
+                "timerMissing": 8,
+                "cpuSchedulingMilliseconds": 0.2999999998137355,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 13,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.20661,
+                "timerSamples": 13,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.40000000037252903,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.400406,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.5000000009313226,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 60,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 4.849505999999999,
+                "timerSamples": 60,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 2.300000000745058,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 25,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 0.26780199999999993,
+                "timerSamples": 25,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.6999999983236194,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 17,
+            "submittedBatches": 129,
+            "cpuSchedulingMilliseconds": 5.2000000001862645,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 4,
+              "lighting": 4
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "firstPublishSubmissionMilliseconds": 273.70000000018626,
+            "requestToFirstSubmissionMilliseconds": 273.70000000018626,
+            "milliseconds": 577.7000000001863,
+            "bounces": 3,
+            "requestedBounces": 3,
+            "settled": true,
+            "supersededAtRoundBoundary": false,
+            "submissionMilliseconds": 577.7000000001863,
+            "finalSubmissionMilliseconds": 577.7000000001863,
+            "requestToFinalSubmissionMilliseconds": 577.7999999998137,
+            "publicationMode": "progressive",
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          "queryQueue": 0,
+          "changing": {
+            "fps": 34.5489443378119,
+            "frameMilliseconds": {
+              "mean": 28.944444444444443,
+              "p50": 30.200000000000728,
+              "p95": 54.69999999999709,
+              "samples": 9
+            },
+            "gpuMilliseconds": {
+              "mean": 26.27417722222222,
+              "p50": 25.593905,
+              "p95": 29.682239,
+              "samples": 9
+            },
+            "gpuScope": "idle frames only",
+            "disjoint": 0,
+            "visibility": "visible",
+            "buffer": [
+              960,
+              640
+            ],
+            "gbuffer": false
+          }
+        },
+        {
+          "sunDirection": [
+            0.1,
+            -1,
+            0.65
+          ],
+          "firstPublishedPromiseMilliseconds": 174.09999999962747,
+          "completedPromiseMilliseconds": 517.5999999996275,
+          "metrics": {
+            "revision": 5,
+            "stages": {
+              "visibility": {
+                "submittedBatches": 7,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0,
+                "timerSamples": 0,
+                "timerMissing": 7,
+                "cpuSchedulingMilliseconds": 0.39999999944120646,
+                "itemType": "probes"
+              },
+              "direct": {
+                "submittedBatches": 10,
+                "probes": 180,
+                "items": 180,
+                "gpuMilliseconds": 0.16140100000000002,
+                "timerSamples": 9,
+                "timerMissing": 1,
+                "cpuSchedulingMilliseconds": 0.7000000001862645,
+                "itemType": "probes"
+              },
+              "bounce": {
+                "submittedBatches": 21,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 1.4065530000000004,
+                "timerSamples": 21,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.7999999998137355,
+                "itemType": "probes"
+              },
+              "integrate": {
+                "submittedBatches": 25,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 2.260875,
+                "timerSamples": 25,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 0.6999999983236194,
+                "itemType": "probes"
+              },
+              "border": {
+                "submittedBatches": 45,
+                "probes": 540,
+                "items": 540,
+                "gpuMilliseconds": 0.4416960000000001,
+                "timerSamples": 45,
+                "timerMissing": 0,
+                "cpuSchedulingMilliseconds": 1.3000000016763806,
+                "itemType": "probes"
+              }
+            },
+            "submittedFrames": 15,
+            "submittedBatches": 108,
+            "cpuSchedulingMilliseconds": 3.8999999994412065,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            },
+            "work": {
+              "probeHitInvocations": 0,
+              "sunVisibilitySubmittedSlots": 23040,
+              "momentProbeUpdates": 0
+            },
+            "firstPublishSubmissionMilliseconds": 172.70000000018626,
+            "requestToFirstSubmissionMilliseconds": 172.70000000018626,
+            "milliseconds": 516.7999999998137,
+            "bounces": 3,
+            "requestedBounces": 3,
+            "settled": true,
+            "supersededAtRoundBoundary": false,
+            "submissionMilliseconds": 516.7999999998137,
+            "finalSubmissionMilliseconds": 516.7999999998137,
+            "requestToFinalSubmissionMilliseconds": 516.7999999998137,
+            "publicationMode": "progressive",
+            "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+          },
+          "queryQueue": 0,
+          "changing": {
+            "fps": 36.261079774375396,
+            "frameMilliseconds": {
+              "mean": 27.577777777777857,
+              "p50": 30.200000000000728,
+              "p95": 48.400000000001455,
+              "samples": 9
+            },
+            "gpuMilliseconds": {
+              "mean": 23.800174363636362,
+              "p50": 23.094738,
+              "p95": 30.289843,
+              "samples": 11
+            },
+            "gpuScope": "idle frames only",
+            "disjoint": 0,
+            "visibility": "visible",
+            "buffer": [
+              960,
+              640
+            ],
+            "gbuffer": false
+          }
+        }
+      ],
+      "disjoint": 0,
+      "numerical": {
+        "maxE": 0,
+        "failures": 0,
+        "visibilityDifferences": 0,
+        "cache": {
+          "allocatedSlots": 23040,
+          "hitSlots": 4455,
+          "probeUnknown": 0,
+          "effectiveSunQueries": 3042,
+          "sunUnknown": 0,
+          "versions": {
+            "geometry": 1,
+            "rayLayout": 1,
+            "material": 1,
+            "sunVisibility": 5,
+            "lighting": 5
+          }
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "environment": {
+    "browser": "153.0.8010.12",
+    "headless": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)",
+    "visibility": "visible",
+    "resolution": [
+      960,
+      640
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+  },
+  "gl": [
+    {
+      "phase": "performance",
+      "phases": {
+        "initialization": {
+          "draws": 1445
+        },
+        "performance": {
+          "draws": 9850
+        },
+        "numerical": {
+          "readPixels": 12
+        }
+      },
+      "feedback": [],
+      "errors": [],
+      "live": {
+        "textures": 34,
+        "framebuffers": 21,
+        "queries": 0,
+        "programs": 19,
+        "syncs": 0
+      },
+      "peak": {
+        "textures": 34,
+        "framebuffers": 21,
+        "queries": 27,
+        "programs": 20,
+        "syncs": 0
+      }
+    }
+  ],
+  "numericalStatus": "passed",
+  "status": "passed"
+}

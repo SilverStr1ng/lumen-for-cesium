@@ -1,0 +1,45 @@
+{
+  "version": {
+    "head": "39529256309070aae6e67518b3f17fed4855a9fb",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "9c2560fbfbb4a4fdf612e71f6d8b4efa7e0b6cbddcadd940201006d47b5edd79",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "ce17e96e7d2b0f7c1b4a1eb24edd651903d2c7e77aa363eb9c855425f5b51c79",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+      "lumen/gpu-worker.js": "2eb52b2fe41d1e58c956ea14447736acf476c62196eb79db54227c88ec320827",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "lumen/bvh.js": "54191aa2699b1d0bdf3b86dd6367243c97e52b80a928369a83ed078c0ac98a3d"
+    },
+    "compiledBundle": "be580c9719c4f8ec4f15900a72a44afcd13647c6943a48b3435356005199993c",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "lumen/bvh.js",
+      "lumen/gpu-worker.js"
+    ]
+  },
+  "mode": "numerical readback only; not a performance run",
+  "tolerance": {
+    "absolute": 0.0002,
+    "relative": 0.001
+  },
+  "runs": [],
+  "errors": [
+    "Error: page.evaluate: Error: GPU diagnostic readPixels: 1282\n    at LumenGpuWorld._read (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:245599:17)\n    at eval (eval at evaluate (:370:30), <anonymous>:41:40)\n    at async <anonymous>:396:30"
+  ],
+  "environment": {
+    "browser": "153.0.8010.12",
+    "headless": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)",
+    "visibility": "visible",
+    "resolution": [
+      512,
+      384
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+  },
+  "status": "failed"
+}

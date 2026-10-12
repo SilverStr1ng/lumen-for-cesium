@@ -81,6 +81,9 @@ class LumenGpuWorld {
       diagnosticIntegrationLut: false,
       publicationMode: "snapshot",
       environmentMode: "sphere",
+      bvhStrategy: "sah",
+      bvhBins: 12,
+      visibilityMode: "optimized",
       ...options,
     };
     this._validate(this.options);
@@ -172,6 +175,13 @@ class LumenGpuWorld {
   _validate(o) {
     if (!["sphere", "upper-hemisphere"].includes(o.environmentMode)) {
       throw new DeveloperError("environmentMode must be sphere or upper-hemisphere");
+    }
+    if (!["median", "sah"].includes(o.bvhStrategy) ||
+        !Number.isInteger(o.bvhBins) || o.bvhBins < 4 || o.bvhBins > 64) {
+      throw new DeveloperError("bvhStrategy median/sah and bvhBins in [4,64] required");
+    }
+    if (!["reference", "optimized"].includes(o.visibilityMode)) {
+      throw new DeveloperError("visibilityMode must be reference or optimized");
     }
     if (!["snapshot", "progressive"].includes(o.publicationMode)) {
       throw new DeveloperError(
@@ -515,6 +525,7 @@ class LumenGpuWorld {
       u_nodes: () => this._nodes,
       u_vertices: () => this._vertices,
       u_uv: () => this._uv,
+      u_tieRankOffset: () => this.packet.bvh.tieRankOffset ?? -1,
       u_materials: () => this._materials,
       u_atlas: () => this._atlas,
       u_hits: () => this._hits,
@@ -535,6 +546,10 @@ class LumenGpuWorld {
       u_sunRadiance: () => this._lighting.sunRadiance,
       u_skyRadiance: () => this._lighting.skyRadiance,
       u_upperHemisphere: () => this._lighting.upperHemisphere,
+      u_visibilityOptimized: () =>
+        (this._jobOptions ?? this.options).visibilityMode === "optimized",
+      u_queryAnyHit: () => this._diagnosticAnyHit ?? false,
+      u_queryStats: () => this._diagnosticStats ?? false,
       u_neutral: () => this._lighting.neutral,
       u_lumenProbeIrradiance: () => this._atlases[this._previous].E,
       u_lumenProbeDistances: () => this._atlases[this._previous].M,
@@ -1105,6 +1120,8 @@ class LumenGpuWorld {
       "modelMatrix",
       "traversalBudget",
       "diagnosticIntegrationLut",
+      "bvhStrategy",
+      "bvhBins",
     ]) {
       if (k in options) {
         throw new Error("Reload world to change GPU geometry or probe layout");
@@ -1306,7 +1323,7 @@ class LumenGpuWorld {
       })),
     );
   }
-  trace(rays) {
+  trace(rays, { anyHit = false, statistics = false } = {}) {
     const groups = new Map(),
       result = new Array(rays.length);
     rays.forEach((r, i) => {
@@ -1322,14 +1339,23 @@ class LumenGpuWorld {
       groups.set(budget, group);
     });
     const previousBudget = this._diagnosticBudget;
+    const previousAnyHit = this._diagnosticAnyHit;
+    const previousStats = this._diagnosticStats;
     try {
+      this._diagnosticAnyHit = anyHit;
+      this._diagnosticStats = statistics;
       for (const [budget, group] of groups) {
         this._diagnosticBudget = budget;
         this._query(
           "queryTrace",
           group.map((e) => e.r),
         ).forEach((v, j) => {
-          result[group[j].i] = {
+          result[group[j].i] = statistics ? {
+            nodeVisits: v[0],
+            triangleTests: v[1],
+            alphaTests: v[2],
+            status: v[3] === -1 ? "Unknown" : v[3] === 0 ? "Miss" : "Hit",
+          } : {
             status: v[0] === -1 ? "Unknown" : v[0] === 0 ? "Miss" : "Hit",
             triangle: this._order[Math.abs(v[0]) - 2],
             gpuTriangle: Math.abs(v[0]) - 2,
@@ -1342,6 +1368,8 @@ class LumenGpuWorld {
       }
     } finally {
       this._diagnosticBudget = previousBudget;
+      this._diagnosticAnyHit = previousAnyHit;
+      this._diagnosticStats = previousStats;
     }
     return Promise.resolve(result);
   }

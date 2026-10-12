@@ -1,0 +1,431 @@
+{
+  "source": "reports/globe-visibility-v3/visibility-performance.json",
+  "environment": {
+    "browser": "153.0.8010.12",
+    "headless": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)",
+    "visibility": "visible",
+    "resolution": [
+      960,
+      640
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+  },
+  "baselineLimitation": "A uses original revision visibility GLSL and median BVH within the new lifecycle/runtime. Initialization retains full-domain probe tracing; not a byte-identical full baseline build.",
+  "status": "passed",
+  "variants": {
+    "A": {
+      "trials": 3,
+      "configuration": {
+        "rays": 128,
+        "bounces": 3,
+        "spacing": 2,
+        "targetGpuMilliseconds": 3,
+        "publicationMode": "progressive",
+        "traversalBudget": 4096
+      },
+      "grid": {
+        "origin": [
+          -16.367568112732783,
+          -9.84340862316435,
+          -2.0115400260729146
+        ],
+        "counts": [
+          17,
+          12,
+          9
+        ],
+        "total": 1836,
+        "spacing": 2,
+        "normalBias": 0.15,
+        "rays": 128,
+        "width": 2040,
+        "height": 90
+      },
+      "initializationMilliseconds": {
+        "count": 3,
+        "median": 28078,
+        "min": 26449.400000000373,
+        "max": 57372
+      },
+      "workerPreparationMilliseconds": {
+        "count": 3,
+        "median": 2420.4000000003725,
+        "min": 1600.7999999998137,
+        "max": 2488.9000000003725
+      },
+      "bvhBuildMilliseconds": {
+        "count": 3,
+        "median": 785.2999999998137,
+        "min": 492.79999999981374,
+        "max": 941.5
+      },
+      "bvh": {
+        "persistentBytes": 3680736,
+        "strategy": "median",
+        "bins": 12,
+        "maxDepth": 16,
+        "triangles": 262266,
+        "nodes": 65779,
+        "queries": 0,
+        "unknown": 0,
+        "alphaRejected": 0,
+        "buildMilliseconds": 941.5,
+        "tieRankOffset": -1,
+        "tieRankBytes": 0,
+        "rankAndVertexPackMilliseconds": 140.40000000037253,
+        "prepareMilliseconds": 2488.9000000003725
+      },
+      "memory": {
+        "currentBytes": 93338688,
+        "peakBytes": 93338688,
+        "textures": 17,
+        "framebuffers": 12
+      },
+      "firstCpuSubmissionMilliseconds": {
+        "count": 9,
+        "median": 9923.699999999255,
+        "min": 5921.199999999255,
+        "max": 18189.200000000186
+      },
+      "finalCpuSubmissionMilliseconds": {
+        "count": 9,
+        "median": 13121.599999999627,
+        "min": 7720.399999999441,
+        "max": 22837.799999999814
+      },
+      "completedPromiseMilliseconds": {
+        "count": 9,
+        "median": 13124.700000000186,
+        "min": 7728.299999999814,
+        "max": 22842.599999999627
+      },
+      "submittedFrames": {
+        "count": 9,
+        "median": 111,
+        "min": 92,
+        "max": 159
+      },
+      "gpuStages": {
+        "visibility": {
+          "count": 9,
+          "median": 257.40485700000005,
+          "min": 166.89887900000002,
+          "max": 336.80816999999996
+        },
+        "direct": {
+          "count": 9,
+          "median": 2.5593690000000002,
+          "min": 1.959525,
+          "max": 5.728009000000001
+        },
+        "bounce": {
+          "count": 9,
+          "median": 20.10646299999999,
+          "min": 15.938153000000002,
+          "max": 22.126966000000007
+        },
+        "integrate": {
+          "count": 9,
+          "median": 13.847008999999998,
+          "min": 13.419974,
+          "max": 16.038553000000004
+        },
+        "border": {
+          "count": 9,
+          "median": 1.3816909999999996,
+          "min": 1.0175269999999998,
+          "max": 2.5172009999999982
+        }
+      },
+      "trialVisibilityMedians": [
+        257.40485700000005,
+        248.11626500000003,
+        260.72459299999997
+      ],
+      "numerical": [
+        {
+          "maxE": 0,
+          "failures": 0,
+          "visibilityDifferences": 0,
+          "cache": {
+            "allocatedSlots": 235008,
+            "hitSlots": 142694,
+            "probeUnknown": 0,
+            "effectiveSunQueries": 67573,
+            "sunUnknown": 0,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            }
+          }
+        },
+        {
+          "maxE": 0,
+          "failures": 0,
+          "visibilityDifferences": 0,
+          "cache": {
+            "allocatedSlots": 235008,
+            "hitSlots": 142694,
+            "probeUnknown": 0,
+            "effectiveSunQueries": 67573,
+            "sunUnknown": 0,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            }
+          }
+        },
+        {
+          "maxE": 0,
+          "failures": 0,
+          "visibilityDifferences": 0,
+          "cache": {
+            "allocatedSlots": 235008,
+            "hitSlots": 142694,
+            "probeUnknown": 0,
+            "effectiveSunQueries": 67573,
+            "sunUnknown": 0,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            }
+          }
+        }
+      ]
+    },
+    "B": {
+      "trials": 3,
+      "configuration": {
+        "rays": 128,
+        "bounces": 3,
+        "spacing": 2,
+        "targetGpuMilliseconds": 3,
+        "publicationMode": "progressive",
+        "traversalBudget": 4096
+      },
+      "grid": {
+        "origin": [
+          -16.367568112732783,
+          -9.84340862316435,
+          -2.0115400260729146
+        ],
+        "counts": [
+          17,
+          12,
+          9
+        ],
+        "total": 1836,
+        "spacing": 2,
+        "normalBias": 0.15,
+        "rays": 128,
+        "width": 2040,
+        "height": 90
+      },
+      "initializationMilliseconds": {
+        "count": 3,
+        "median": 13498.700000000186,
+        "min": 11299,
+        "max": 17529
+      },
+      "workerPreparationMilliseconds": {
+        "count": 3,
+        "median": 4680.5,
+        "min": 3193.899999999441,
+        "max": 4892.200000000186
+      },
+      "bvhBuildMilliseconds": {
+        "count": 3,
+        "median": 2274.2999999998137,
+        "min": 1520.6000000005588,
+        "max": 2833.9000000003725
+      },
+      "bvh": {
+        "persistentBytes": 4647456,
+        "strategy": "sah",
+        "bins": 12,
+        "maxDepth": 27,
+        "triangles": 262266,
+        "nodes": 89947,
+        "queries": 0,
+        "unknown": 0,
+        "alphaRejected": 0,
+        "buildMilliseconds": 2274.2999999998137,
+        "tieRankOffset": 262266,
+        "tieRankBytes": 1049072,
+        "rankAndVertexPackMilliseconds": 1068,
+        "prepareMilliseconds": 4680.5
+      },
+      "memory": {
+        "currentBytes": 95140928,
+        "peakBytes": 95140928,
+        "textures": 17,
+        "framebuffers": 12
+      },
+      "firstCpuSubmissionMilliseconds": {
+        "count": 9,
+        "median": 2123.5,
+        "min": 1585.8999999994412,
+        "max": 4415.700000000186
+      },
+      "finalCpuSubmissionMilliseconds": {
+        "count": 9,
+        "median": 5758.5,
+        "min": 3799.2000000001863,
+        "max": 7022.800000000745
+      },
+      "completedPromiseMilliseconds": {
+        "count": 9,
+        "median": 5766.299999999814,
+        "min": 3808.7000000001863,
+        "max": 7025.300000000745
+      },
+      "submittedFrames": {
+        "count": 9,
+        "median": 50,
+        "min": 38,
+        "max": 79
+      },
+      "gpuStages": {
+        "visibility": {
+          "count": 9,
+          "median": 15.093640000000002,
+          "min": 14.286606,
+          "max": 21.682939
+        },
+        "direct": {
+          "count": 9,
+          "median": 2.6346229999999995,
+          "min": 1.89145,
+          "max": 3.304028
+        },
+        "bounce": {
+          "count": 9,
+          "median": 18.021013999999997,
+          "min": 15.813611000000009,
+          "max": 26.41031200000002
+        },
+        "integrate": {
+          "count": 9,
+          "median": 15.163904999999998,
+          "min": 14.043927000000004,
+          "max": 18.275960000000005
+        },
+        "border": {
+          "count": 9,
+          "median": 1.5137970000000005,
+          "min": 1.024971,
+          "max": 1.740359
+        }
+      },
+      "trialVisibilityMedians": [
+        14.656187999999998,
+        14.435826000000002,
+        18.728882999999996
+      ],
+      "numerical": [
+        {
+          "maxE": 0,
+          "failures": 0,
+          "visibilityDifferences": 0,
+          "cache": {
+            "allocatedSlots": 235008,
+            "hitSlots": 142694,
+            "probeUnknown": 0,
+            "effectiveSunQueries": 67573,
+            "sunUnknown": 0,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            }
+          }
+        },
+        {
+          "maxE": 0,
+          "failures": 0,
+          "visibilityDifferences": 0,
+          "cache": {
+            "allocatedSlots": 235008,
+            "hitSlots": 142694,
+            "probeUnknown": 0,
+            "effectiveSunQueries": 67573,
+            "sunUnknown": 0,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            }
+          }
+        },
+        {
+          "maxE": 0,
+          "failures": 0,
+          "visibilityDifferences": 0,
+          "cache": {
+            "allocatedSlots": 235008,
+            "hitSlots": 142694,
+            "probeUnknown": 0,
+            "effectiveSunQueries": 67573,
+            "sunUnknown": 0,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 5,
+              "lighting": 5
+            }
+          }
+        }
+      ]
+    }
+  },
+  "candidateVariant": "B",
+  "visibilityReductionFraction": 0.9430617270753364,
+  "target30Percent": "met against same-build reference only",
+  "originalCleanBaseline": {
+    "path": "reports/globe-visibility-v3/baseline-clean-visibility.json",
+    "status": "passed",
+    "version": {
+      "head": "39529256309070aae6e67518b3f17fed4855a9fb",
+      "sources": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "2ae28572f3ee3d214589e352c74072287e9163dd02b6a79e60dab7d85b4e2ceb",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "0f2f744c8de2863ef4fbd10e3398709ed1c7cd1f6fa23e34f58161f8d8be7397",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "74aac739ff353633039850eda7bcc1b73d2877a832050081553e82362335fc17",
+        "lumen/gpu-worker.js": "36fb56890fd1554da520161962a5d75720c276a42cce588a876cbfe742cf2225",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+        "lumen/bvh.js": "14039af78b6f61828b699a0a448756394ad270d62f875a6f5371becaf58c5b66"
+      },
+      "compiledBundle": "48d52590246960d95d991088efac8afe13e8fde768181641a90293d029a837d1",
+      "modifiedSources": []
+    },
+    "numericalStatus": "passed",
+    "timingComplete": true,
+    "trials": 3,
+    "trialVisibilityMedians": [
+      255.65183900000002,
+      270.539861,
+      307.73426700000005
+    ],
+    "medianVisibilityGpuMilliseconds": 270.539861,
+    "candidateReductionFraction": 0.9458261420486204,
+    "limitation": "Separate original-build trials; interleaved same-build A/B remains the primary timing comparison."
+  }
+}
