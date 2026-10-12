@@ -19,7 +19,7 @@ try {
         if (startup.errors.length) throw new Error(`Fixture initialization: ${JSON.stringify(startup)}`);
         report.environment ??= await environment(page, browser);
         const details = await page.evaluate(async ({ final, action }) => {
-          const d = lumenTest, w = d.world;
+          const d = lumenTest, w = d.world, capturedWorkerError = w.worker.onerror;
           const events = [], newEvents = [];
           let callsAfterClose = 0, workerAfterClose = 0, acted = false, pendingAtAction = 0;
           let workerResult, replacementResult, nextResult, nextFirst, eventState;
@@ -47,6 +47,10 @@ try {
               replacement.publicationEvent.addEventListener(e => newEvents.push({ revision: e.revision, bounce: e.bounce }));
               replacementResult = settle(replacement.completed);
             }
+            // Deterministic injected late error delivery, not a claimed natural Worker race.
+            if (["destroy-world", "destroy-scene", "replace-world"].includes(action)) {
+              capturedWorkerError({ message: "injected-late-worker-error-after-destroy" });
+            }
             if (action === "solve") {
               nextResult = settle(w.solve({ skyRadiance: [0.41, 0.23, 0.12], publicationMode: "progressive", bounces: 3 }));
               nextFirst = settle(w.firstPublished);
@@ -66,6 +70,7 @@ try {
           for (let i = 0; i < 12; i++) await new Promise(requestAnimationFrame);
           return {
             acted, eventState, pendingAtAction, oldCompleted, oldFirst, worker, replacement, next, requestedFirst,
+            lateWorkerErrorInjected: ["destroy-world", "destroy-scene", "replace-world"].includes(action),
             status: w.status, closed: w.isDestroyed(), memory: w.metrics.memory.currentBytes,
             requests: w._requests.size, queries: w._queries.length, publicationError: w.publicationError,
             callsAfterClose, workerAfterClose, batchesAfterSettlement: w.metrics.submittedBatches - batchesBefore,
@@ -96,6 +101,40 @@ try {
         console.error(error);
       } finally { await page.close(); }
     }
+  }
+  for (const publicationMode of ["progressive", "snapshot"]) {
+    const page = await browser.newPage({ viewport: { width: 512, height: 384 } });
+    const browserErrors = [];
+    page.on("pageerror", error => browserErrors.push(String(error)));
+    try {
+      await page.goto("http://localhost:8090/demo/regression.html?fixture=untextured&onDemand=1");
+      await page.waitForFunction(() => window.lumenTest?.world?.status === "ready" || window.lumenTest?.errors?.length, null, { timeout: 120000 });
+      const details = await page.evaluate(async publicationMode => {
+        const d = lumenTest, w = d.world, events = [];
+        const settle = p => p.then(() => "resolved", e => String(e));
+        w.publicationEvent.addEventListener(e => events.push({ revision: e.revision, bounce: e.bounce }));
+        const completed = settle(w.solve({ publicationMode, bounces: 3, skyRadiance: [0.25, 0.36, 0.41] }));
+        const first = w.firstPublished.then(e => { w.destroy(); return { revision: e.revision, bounce: e.bounce }; });
+        const published = await first;
+        const completion = await completed;
+        const batches = w.metrics.submittedBatches;
+        for (let i = 0; i < 12; i++) await new Promise(requestAnimationFrame);
+        return {
+          published, completion, events, status: w.status, memory: w.metrics.memory.currentBytes,
+          requests: w._requests.size, queries: w._queries.length, batchesAfterClose: w.metrics.submittedBatches - batches,
+          errors: d.errors,
+        };
+      }, publicationMode);
+      const passed = details.status === "destroyed" && details.events.length === 0 &&
+        details.memory === 0 && details.requests === 0 && details.queries === 0 &&
+        details.batchesAfterClose === 0 && details.errors.length === 0 && browserErrors.length === 0 &&
+        (publicationMode === "snapshot" ? details.completion === "resolved" && details.published.bounce === 3 :
+          details.completion.includes("destroyed") && details.published.bounce === 1);
+      report.checks.push({ name: `${publicationMode}: firstPublished.then destruction cancels queued event`, passed, details, browserErrors });
+      console.log(passed ? "PASS" : "FAIL", report.checks.at(-1).name);
+    } catch (error) {
+      report.checks.push({ name: `${publicationMode}: firstPublished.then destruction cancels queued event`, passed: false, error: String(error), browserErrors });
+    } finally { await page.close(); }
   }
   report.status = report.checks.every(c => c.passed) ? "passed" : "failed";
 } catch (error) { report.status = "failed"; report.errors.push(String(error)); }

@@ -1340,6 +1340,11 @@ class LumenGpuWorld {
     return Promise.resolve(result);
   }
   _fail(error) {
+    // A queued Worker error must not resurrect a destroyed world or touch a
+    // context that its owning Scene has already released.
+    if (this._closed) {
+      return;
+    }
     this.error = String(error);
     this.status = "error";
     this._reject?.(error);
