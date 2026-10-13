@@ -6,6 +6,7 @@ const files = [
   "LumenFinalGatherSnapshot",
   "LumenGpuShaders",
   "LumenGpuWorld",
+  "destroyLumenResource",
 ].map((n) => "packages/engine/Source/Scene/" + n + ".js");
 files.push("packages/engine/Source/Scene/Model/LightingPipelineStage.js");
 const result = spawnSync(

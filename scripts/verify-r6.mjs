@@ -50,6 +50,7 @@ const tests = [
   "final-gather",
   "receiver",
   "reconstruction",
+  "resource-lifecycle",
 ];
 const report = {
   started: new Date().toISOString(),

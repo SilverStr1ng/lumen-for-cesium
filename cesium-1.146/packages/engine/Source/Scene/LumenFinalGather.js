@@ -1,5 +1,5 @@
+import destroyLumenResource from "./destroyLumenResource.js";
 import {
-  destroyObject,
   Cartesian2,
   Cartesian3,
   Matrix4,
@@ -518,7 +518,7 @@ class LumenFinalGather {
     this._destroyed = true;
     this.model = undefined;
     this.lumen = this.scene = undefined;
-    return destroyObject(this);
+    return destroyLumenResource(this);
   }
 }
 LumenFinalGather.presets = presets;

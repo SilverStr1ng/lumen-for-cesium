@@ -1,9 +1,5 @@
-import {
-  Color,
-  PixelDatatype,
-  BoundingRectangle,
-  destroyObject,
-} from "@cesium/core";
+import destroyLumenResource from "./destroyLumenResource.js";
+import { Color, PixelDatatype, BoundingRectangle } from "@cesium/core";
 import FramebufferManager from "../Renderer/FramebufferManager.js";
 import ClearCommand from "../Renderer/ClearCommand.js";
 import DrawCommand from "../Renderer/DrawCommand.js";
@@ -148,7 +144,7 @@ class LumenReceiverPass {
     }
     this.release();
     this._destroyed = true;
-    return destroyObject(this);
+    return destroyLumenResource(this);
   }
 }
 export default LumenReceiverPass;

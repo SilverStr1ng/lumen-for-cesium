@@ -1,4 +1,5 @@
-import { Cartesian3, PixelDatatype, destroyObject } from "@cesium/core";
+import destroyLumenResource from "./destroyLumenResource.js";
+import { Cartesian3, PixelDatatype } from "@cesium/core";
 /** Owned immutable E_(k-1), E_k and material copies. Geometry/moments are
  * immutable world-owned resources; leases cannot outlive that world's geometry.
  * @private */
@@ -107,7 +108,7 @@ class LumenFinalGatherSnapshot {
     }
     this.resources.length = 0;
     this.world._fgSnapshots.delete(this);
-    destroyObject(this);
+    destroyLumenResource(this);
     // Releasing an outstanding lease after its world closes is harmless. All
     // access/query methods remain guarded by destroyObject.
     this.release = this.destroy = () => undefined;
