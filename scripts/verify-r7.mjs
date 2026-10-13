@@ -101,6 +101,17 @@ const run = (script, args = []) => {
   console.log(row.status.toUpperCase(), script);
   return row;
 };
+const resilientWrite = async (file, data) => {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await writeFile(file, data);
+      return;
+    } catch (error) {
+      if (attempt >= 4) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
+    }
+  }
+};
 const json = async (p) => JSON.parse(await readFile(out + "/" + p, "utf8"));
 try {
   run("lint-r6");
@@ -254,21 +265,26 @@ try {
   report.error = e.stack;
   report.regression = "failed";
 } finally {
+  report.restorationErrors = [];
   for (const [p, old] of saved) {
-    let current;
     try {
-      current = await readFile(p);
-    } catch {
-      current = undefined;
+      let current;
+      try {
+        current = await readFile(p);
+      } catch {
+        current = undefined;
+      }
+      if (current && !current.equals(old)) {
+        const target = out + "/compatibility-raw/" + p.slice(8);
+        await mkdir(target.slice(0, target.lastIndexOf("/")), {
+          recursive: true,
+        });
+        await resilientWrite(target, current);
+      }
+      if (!current || !current.equals(old)) await resilientWrite(p, old);
+    } catch (error) {
+      report.restorationErrors.push({ file: p, message: error.message });
     }
-    if (current && !current.equals(old)) {
-      const target = out + "/compatibility-raw/" + p.slice(8);
-      await mkdir(target.slice(0, target.lastIndexOf("/")), {
-        recursive: true,
-      });
-      await writeFile(target, current);
-    }
-    if (!current || !current.equals(old)) await writeFile(p, old);
   }
   // Keep new timestamped compatibility evidence inside this revision's report.
   // Existing untracked user files are preserved; only files created by this run move.
@@ -278,9 +294,10 @@ try {
       throw Error("report path escaped workspace");
     const target = out + "/compatibility-raw/" + p.slice(8);
     await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, await readFile(p));
+    await resilientWrite(target, await readFile(p));
     await unlink(p);
   }
+  if (report.restorationErrors.length) report.regression = "failed";
   const states = [
     report.regression,
     report.quality,
@@ -295,7 +312,10 @@ try {
       : "not-run";
   report.recommended = report.status === "passed";
   report.finished = new Date().toISOString();
-  await writeFile(out + "/test-suite.json", JSON.stringify(report, null, 2));
+  await resilientWrite(
+    out + "/test-suite.json",
+    JSON.stringify(report, null, 2),
+  );
   console.log(
     JSON.stringify({
       regression: report.regression,
