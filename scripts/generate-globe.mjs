@@ -413,7 +413,7 @@ for (const preset of ["regression", "presentation"]) {
         corridor: { eye: [-6, -7, 2], target: [-9, 3, 1.5] },
         inside: { eye: [-1, 6.8, 1.7], target: [-1, 1, 2.5] },
         ...(preset === "presentation"
-          ? { materials: { eye: [5, -8, 3.4], target: [0, 0.5, 0.9] } }
+          ? { materials: { eye: [4, -16, 4], target: [-1, 0.5, 0.85] } }
           : {}),
         bounce: { eye: [-4, -5, 2.5], target: [-9, -3.8, 0.8] },
       },

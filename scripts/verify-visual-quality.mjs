@@ -233,9 +233,28 @@ try {
     const scans = {};
     for (const [name, points] of Object.entries(lines)) {
       const gpu = await w.sample(points);
+      const sun = Cesium.Cartesian3.normalize(
+        Cesium.Cartesian3.fromArray(d.lighting.sunDirection),
+        new Cesium.Cartesian3(),
+      );
+      const backendSun = await w.trace(
+        points.map((p) => ({
+          origin: p.position.map((v, k) => v + p.normal[k] * 0.015),
+          direction: [sun.x, sun.y, sun.z],
+          maxDistance: 100,
+        })),
+        { anyHit: true },
+      );
       scans[name] = points.map((p, i) => ({
         ...p,
         gpu: gpu[i],
+        backendSunVisibility: {
+          status: backendSun[i].status,
+          visible: backendSun[i].status === "Miss",
+          originBias: 0.015,
+          scope:
+            "diagnostic local receiver any-hit, independently from displayed Cesium ShadowMap",
+        },
         cpu: f.sample(p.position, p.normal, { diagnostics: true }),
       }));
     }

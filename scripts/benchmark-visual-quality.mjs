@@ -138,7 +138,7 @@ page.on("pageerror", (e) => report.errors.push(String(e)));
 try {
   await page.goto(
     "http://localhost:8090/demo/globe.html" +
-      (label === "presentation"
+      (label.startsWith("presentation")
         ? "?preset=presentation"
         : label === "fine"
           ? "?quality=fine"
@@ -153,7 +153,7 @@ try {
   );
   assert.deepEqual(await page.evaluate(() => earthLab.errors), []);
   report.environment = await environment(page, browser);
-  report.result = await page.evaluate(async () => {
+  report.result = await page.evaluate(async (label) => {
     const d = earthLab,
       w = d.world,
       { measureFrames } = await import("/demo/benchmark.js");
@@ -162,6 +162,7 @@ try {
         await new Promise(requestAnimationFrame);
     };
     d.camera("boxFoot");
+    if (label === "presentation-msaa1") d.scene.msaaSamples = 1;
     await drain();
     for (let i = 0; i < 30; i++) await new Promise(requestAnimationFrame);
     glObserver.phase("performance");
@@ -229,7 +230,7 @@ try {
         d.scene._view.sceneFramebuffer._colorFramebuffer.numSamples,
       settings: await d.saveView(),
     };
-  });
+  }, label);
   for (const s of report.result.gl) {
     for (const key of [
       "readPixels",
