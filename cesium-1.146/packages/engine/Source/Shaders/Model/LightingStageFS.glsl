@@ -74,14 +74,16 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position)
     vec3 normal = material.normalEC;
     vec3 lightDirection = normalize(czm_lightDirectionEC);
 
-    vec3 directLighting = czm_pbrLighting(viewDirection, normal, lightDirection, material);
-    vec3 directColor = lightColorHdr * directLighting;
+    vec3 directDiffuse, directSpecular;
+    czm_pbrLighting(viewDirection, normal, lightDirection, material, directDiffuse, directSpecular);
+    vec3 directColor = lightColorHdr * (directDiffuse + directSpecular);
 
     #ifdef LUMEN_MODEL_LIGHTING
-    vec3 indirectDiffuse = vec3(0.0);
+    vec3 indirectDiffuse = vec3(0.0), queriedE = vec3(0.0);
     if (u_lumenEnabled) {
         directColor *= lumen_shadowVisibility;
         vec3 irradiance = lumen_irradiance(position, normal);
+        queriedE = irradiance;
         indirectDiffuse = material.diffuse * irradiance * (lumen_materialCoverage / czm_pi);
     }
     #endif
@@ -102,6 +104,15 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position)
         if (u_lumenDebugMode == 1) color = directColor;
         if (u_lumenDebugMode == 2) color = indirectDiffuse;
         if (u_lumenDebugMode == 3) color = material.emissive;
+        if (u_lumenDebugMode == 4) color = queriedE;
+        if (u_lumenDebugMode == 5) color = vec3(lumen_materialCoverage);
+        if (u_lumenDebugMode == 6) color = vec3(lumen_shadowVisibility);
+        if (u_lumenDebugMode == 7) color = lightColorHdr * directDiffuse * lumen_shadowVisibility;
+        if (u_lumenDebugMode == 8) color = lightColorHdr * directSpecular * lumen_shadowVisibility;
+        if (u_lumenDebugMode == 9) color = lumen_environmentSpecular;
+        if (u_lumenDebugMode == 10) color = lumen_environmentDiffuse;
+        if (u_lumenDebugMode == 11) color -= indirectDiffuse;
+        if (u_lumenDebugMode == 12) color = lumen_environmentMultiple;
     }
     #endif
     return color;

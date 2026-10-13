@@ -1,6 +1,7 @@
 import {
   Cartesian2,
   Cartesian3,
+  Cartesian4,
   Matrix4,
   BoundingRectangle,
   PixelDatatype,
@@ -20,6 +21,7 @@ import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.j
 import ContextLimits from "../Renderer/ContextLimits.js";
 import * as shaders from "./LumenGpuShaders.js";
 
+const defaultGatherControl = new Cartesian4(0, 0, -1, -1);
 const nearest = new Sampler({
   minificationFilter: TextureMinificationFilter.NEAREST,
   magnificationFilter: TextureMagnificationFilter.NEAREST,
@@ -174,11 +176,19 @@ class LumenGpuWorld {
   }
   _validate(o) {
     if (!["sphere", "upper-hemisphere"].includes(o.environmentMode)) {
-      throw new DeveloperError("environmentMode must be sphere or upper-hemisphere");
+      throw new DeveloperError(
+        "environmentMode must be sphere or upper-hemisphere",
+      );
     }
-    if (!["median", "sah"].includes(o.bvhStrategy) ||
-        !Number.isInteger(o.bvhBins) || o.bvhBins < 4 || o.bvhBins > 64) {
-      throw new DeveloperError("bvhStrategy median/sah and bvhBins in [4,64] required");
+    if (
+      !["median", "sah"].includes(o.bvhStrategy) ||
+      !Number.isInteger(o.bvhBins) ||
+      o.bvhBins < 4 ||
+      o.bvhBins > 64
+    ) {
+      throw new DeveloperError(
+        "bvhStrategy median/sah and bvhBins in [4,64] required",
+      );
     }
     if (!["reference", "optimized"].includes(o.visibilityMode)) {
       throw new DeveloperError("visibilityMode must be reference or optimized");
@@ -566,6 +576,11 @@ class LumenGpuWorld {
       u_lumenCoverage: () => 1,
       u_lumenWorldEnabled: () => true,
       u_lumenLinearAtlas: () => this.linearAtlas,
+      // Display/query ablations never enter the raw bounce solver.
+      u_lumenGatherControl: () =>
+        this._phase === "query"
+          ? (this._sampleGatherControl ?? defaultGatherControl)
+          : defaultGatherControl,
       u_lumenIrradiance: () => Cartesian3.ZERO,
       u_queryOrigin: () => this._queryOrigin ?? c.defaultTexture,
       u_queryDirection: () => this._queryDirection ?? c.defaultTexture,
@@ -1315,13 +1330,24 @@ class LumenGpuWorld {
       output.destroy();
     }
   }
-  sample(points) {
-    return Promise.resolve(
-      this._query("querySample", points).map((v) => ({
-        irradiance: v.slice(0, 3),
-        coverage: v[3],
-      })),
-    );
+  sample(points, diagnostic = {}) {
+    const old = this._sampleGatherControl;
+    try {
+      this._sampleGatherControl = new Cartesian4(
+        diagnostic.visibility === false ? 1 : 0,
+        diagnostic.crush === false ? 1 : 0,
+        diagnostic.fixedIrradiance ?? -1,
+        diagnostic.fixedFacing ?? -1,
+      );
+      return Promise.resolve(
+        this._query("querySample", points).map((v) => ({
+          irradiance: v.slice(0, 3),
+          coverage: v[3],
+        })),
+      );
+    } finally {
+      this._sampleGatherControl = old;
+    }
   }
   trace(rays, { anyHit = false, statistics = false } = {}) {
     const groups = new Map(),
@@ -1350,20 +1376,22 @@ class LumenGpuWorld {
           "queryTrace",
           group.map((e) => e.r),
         ).forEach((v, j) => {
-          result[group[j].i] = statistics ? {
-            nodeVisits: v[0],
-            triangleTests: v[1],
-            alphaTests: v[2],
-            status: v[3] === -1 ? "Unknown" : v[3] === 0 ? "Miss" : "Hit",
-          } : {
-            status: v[0] === -1 ? "Unknown" : v[0] === 0 ? "Miss" : "Hit",
-            triangle: this._order[Math.abs(v[0]) - 2],
-            gpuTriangle: Math.abs(v[0]) - 2,
-            u: v[1],
-            v: v[2],
-            distance: v[3],
-            backface: v[0] < -1,
-          };
+          result[group[j].i] = statistics
+            ? {
+                nodeVisits: v[0],
+                triangleTests: v[1],
+                alphaTests: v[2],
+                status: v[3] === -1 ? "Unknown" : v[3] === 0 ? "Miss" : "Hit",
+              }
+            : {
+                status: v[0] === -1 ? "Unknown" : v[0] === 0 ? "Miss" : "Hit",
+                triangle: this._order[Math.abs(v[0]) - 2],
+                gpuTriangle: Math.abs(v[0]) - 2,
+                u: v[1],
+                v: v[2],
+                distance: v[3],
+                backface: v[0] < -1,
+              };
         });
       }
     } finally {

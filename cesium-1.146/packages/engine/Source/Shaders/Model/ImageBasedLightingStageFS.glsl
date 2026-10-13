@@ -1,3 +1,8 @@
+#ifdef LUMEN_MODEL_LIGHTING
+vec3 lumen_environmentDiffuse = vec3(0.0);
+vec3 lumen_environmentSpecular = vec3(0.0);
+vec3 lumen_environmentMultiple = vec3(0.0);
+#endif
 #ifdef DIFFUSE_IBL
 vec3 sampleDiffuseEnvironment(vec3 cubeDir)
 {
@@ -102,6 +107,10 @@ vec3 textureIBL(vec3 viewDirectionEC, vec3 normalEC, czm_modelMaterial material)
         vec3 specularContribution = vec3(0.0);
     #endif
 
+    #ifdef LUMEN_MODEL_LIGHTING
+    lumen_environmentDiffuse = diffuseContribution;
+    lumen_environmentSpecular = specularContribution;
+    #endif
     return diffuseContribution + specularContribution;
 }
 #endif

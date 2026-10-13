@@ -35,9 +35,11 @@ vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) {
         vec3 a=mix(1.0-f,f,vec3(x,y,z));float trilinear=a.x*a.y*a.z;
         available+=trilinear;
         vec3 toward=probe.xyz-p;float wrap=(dot(toward/max(length(toward),0.00001),n)+1.0)*0.5;
-        float w=trilinear*max(0.05,wrap*wrap);
-        if(distance>m.x) {float variance=max(0.0001,m.y-m.x*m.x);float visibility=variance/(variance+(distance-m.x)*(distance-m.x));w*=max(0.000001,visibility*visibility*visibility);}
-        if(w<0.2) w*=w*w/0.04;
+        float facing=u_lumenGatherControl.w>=0.0 ? u_lumenGatherControl.w : max(0.05,wrap*wrap);
+        float w=trilinear*facing;
+        if(u_lumenGatherControl.x<0.5 && distance>m.x) {float variance=max(0.0001,m.y-m.x*m.x);float visibility=variance/(variance+(distance-m.x)*(distance-m.x));w*=max(0.000001,visibility*visibility*visibility);}
+        if(u_lumenGatherControl.y<0.5 && w<0.2) w*=w*w/0.04;
+        if(u_lumenGatherControl.z>=0.0) e.rgb=vec3(u_lumenGatherControl.z);
         weight+=w;irradiance+=e.rgb*w;
     }
     return weight>1e-10 ? vec4(irradiance/weight,clamp(available,0.0,1.0)) : vec4(0.0);

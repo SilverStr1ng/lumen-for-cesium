@@ -60,14 +60,14 @@ Object.defineProperties(Lumen.prototype, {
       this._scene.requestRender();
     },
   },
-  /** 0: final, 1: direct, 2: indirect diffuse, 3: emissive (linear, before display transforms). */
+  /** 0: final, 1: direct, 2: indirect diffuse, 3: emissive, 4: E, 5: coverage, 6: shadow, 7/8: direct diffuse/specular, 9/10: specular/diffuse IBL, 11: local GI removed, 12: multiple scattering. All precede display transforms. */
   debugMode: {
     get() {
       return this._debugMode;
     },
     set(value) {
-      if (!Number.isInteger(value) || value < 0 || value > 3) {
-        throw new DeveloperError("debugMode must be an integer in [0, 3].");
+      if (!Number.isInteger(value) || value < 0 || value > 12) {
+        throw new DeveloperError("debugMode must be an integer in [0, 12].");
       }
       this._debugMode = value;
       this._scene.requestRender();

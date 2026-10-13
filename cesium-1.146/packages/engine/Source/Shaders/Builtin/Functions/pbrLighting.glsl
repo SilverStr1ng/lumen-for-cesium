@@ -121,7 +121,7 @@ float computeDirectSpecularStrength(vec3 normal, vec3 lightDirection, vec3 viewD
  * @param {czm_modelMaterial} The material properties.
  * @return {vec3} The computed HDR color
  */
-vec3 czm_pbrLighting(vec3 viewDirectionEC, vec3 normalEC, vec3 lightDirectionEC, czm_modelMaterial material)
+void czm_pbrLighting(vec3 viewDirectionEC, vec3 normalEC, vec3 lightDirectionEC, czm_modelMaterial material, out vec3 directDiffuse, out vec3 directSpecular)
 {
     vec3 halfwayDirectionEC = normalize(viewDirectionEC + lightDirectionEC);
     float VdotH = clamp(dot(viewDirectionEC, halfwayDirectionEC), 0.0, 1.0);
@@ -160,5 +160,12 @@ vec3 czm_pbrLighting(vec3 viewDirectionEC, vec3 normalEC, vec3 lightDirectionEC,
     vec3 diffuseContribution = (1.0 - F) * lambertianDiffuse(diffuseColor);
 
     // Lo = (diffuse + specular) * Li * NdotL
-    return (diffuseContribution + specularContribution) * NdotL;
+    directDiffuse = diffuseContribution * NdotL;
+    directSpecular = specularContribution * NdotL;
+}
+
+vec3 czm_pbrLighting(vec3 viewDirectionEC, vec3 normalEC, vec3 lightDirectionEC, czm_modelMaterial material) {
+    vec3 directDiffuse, directSpecular;
+    czm_pbrLighting(viewDirectionEC, normalEC, lightDirectionEC, material, directDiffuse, directSpecular);
+    return directDiffuse + directSpecular;
 }

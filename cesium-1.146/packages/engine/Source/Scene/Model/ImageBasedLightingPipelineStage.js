@@ -1,6 +1,7 @@
 import {
   Cartesian2,
   Cartesian3,
+  Cartesian4,
   Matrix4,
   combine,
   defined,
@@ -15,6 +16,7 @@ const ImageBasedLightingPipelineStage = {
 };
 
 const scratchCartesian = new Cartesian2();
+const defaultGatherControl = new Cartesian4(0, 0, -1, -1);
 
 /**
  * Add shader code, uniforms, and defines related to image based lighting
@@ -95,6 +97,10 @@ ImageBasedLightingPipelineStage.process = function (
     u_lumenProbeSpacing: ["float", () => lumen?.world?.spacing ?? 1],
     u_lumenNormalBias: ["float", () => lumen?.world?.normalBias ?? 0],
     u_lumenWorldGain: ["float", () => lumen?.world?.gain ?? 1],
+    u_lumenGatherControl: [
+      "vec4",
+      () => lumen?.world?.displayGatherControl ?? defaultGatherControl,
+    ],
   };
   for (const [name, [type, value]] of Object.entries(worldUniforms)) {
     shaderBuilder.addUniform(type, name, ShaderDestination.FRAGMENT);

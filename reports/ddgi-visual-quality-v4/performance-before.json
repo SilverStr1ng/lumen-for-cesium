@@ -1,0 +1,279 @@
+{
+  "label": "before",
+  "version": {
+    "head": "9406cafdd631721db2481d7dd9b53ab5b2418784",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "e0be81f926066f44ad46af4db9f36796a996ea028ecb96ecf1d1d38bbfe07d3d",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "80a59f62d63788c9b2d703502f6cb5c4bd7a29f75b3057e3b92d2974161e8171",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "b597328741d9234f601a631b152f8495aee283c56586a7b2968366b95b5ee7cd",
+      "lumen/gpu-worker.js": "a7e75dd503047f45620da0396d028c95214ab790da9316375aa8da3567aa443d",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "179e9a320876362374077edc7e63fbc7293cc0f2bbe3ce8650aa817aae5a0ec9",
+      "demo/globe.js": "f35083963fb5e6d6a292c093b43fac87c6a0d8169504e322b61a63621e2b653b",
+      "fixtures/earth-pavilion.gltf": "6626295af6f11314c3433e751b6b6bfa63b09538cd8fcc4ce3bea22ae2e2fc55"
+    },
+    "compiledBundle": "ab26fc1f43b119a185ad016158d42b66be546dc165af3d643552ad2e1656c78b",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
+      "demo/globe.js"
+    ]
+  },
+  "mode": "production, no synchronous readback",
+  "errors": [],
+  "environment": {
+    "browser": "154.0.8037.98",
+    "headless": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "visibility": "visible",
+    "resolution": [
+      1280,
+      800
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
+  },
+  "result": {
+    "quality": {
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3,
+      "budget": 3,
+      "probes": 924
+    },
+    "disabled": {
+      "fps": 239.90282417248693,
+      "frameMilliseconds": {
+        "mean": 4.1683544303797495,
+        "p50": 4.199999999999818,
+        "p95": 4.300000000000182,
+        "samples": 79
+      },
+      "gpuMilliseconds": {
+        "mean": 3.0342875151515165,
+        "p50": 3.451232,
+        "p95": 4.24,
+        "samples": 99
+      },
+      "gpuScope": "idle frames only",
+      "disjoint": 0,
+      "visibility": "visible",
+      "buffer": [
+        1280,
+        800
+      ],
+      "gbuffer": false
+    },
+    "idle": {
+      "fps": 239.97569866342664,
+      "frameMilliseconds": {
+        "mean": 4.167088607594934,
+        "p50": 4.199999999999818,
+        "p95": 4.300000000000182,
+        "samples": 79
+      },
+      "gpuMilliseconds": {
+        "mean": 3.171246222222222,
+        "p50": 3.512256,
+        "p95": 4.340192,
+        "samples": 99
+      },
+      "gpuScope": "idle frames only",
+      "disjoint": 0,
+      "visibility": "visible",
+      "buffer": [
+        1280,
+        800
+      ],
+      "gbuffer": false
+    },
+    "updating": {
+      "fps": 239.97569866342664,
+      "p50": 4.199999999999818,
+      "p95": 4.300000000000182,
+      "scope": "CPU rAF, includes settled frames; stage GPU times listed separately"
+    },
+    "firstPublishedSubmissionMilliseconds": 66.1000000005588,
+    "finalSubmissionMilliseconds": 416.40000000037253,
+    "update": {
+      "revision": 2,
+      "stages": {
+        "visibility": {
+          "submittedBatches": 35,
+          "probes": 924,
+          "items": 924,
+          "gpuMilliseconds": 0.43788800000000005,
+          "timerSamples": 35,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.40000000037252903,
+          "itemType": "probes"
+        },
+        "direct": {
+          "submittedBatches": 9,
+          "probes": 924,
+          "items": 924,
+          "gpuMilliseconds": 0.013824,
+          "timerSamples": 9,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.20000000018626451,
+          "itemType": "probes"
+        },
+        "bounce": {
+          "submittedBatches": 44,
+          "probes": 2772,
+          "items": 2772,
+          "gpuMilliseconds": 0.16220800000000002,
+          "timerSamples": 44,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.7000000001862645,
+          "itemType": "probes"
+        },
+        "integrate": {
+          "submittedBatches": 56,
+          "probes": 2772,
+          "items": 2772,
+          "gpuMilliseconds": 0.38566400000000006,
+          "timerSamples": 56,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.2999999988824129,
+          "itemType": "probes"
+        },
+        "border": {
+          "submittedBatches": 32,
+          "probes": 2772,
+          "items": 2772,
+          "gpuMilliseconds": 0.029568000000000004,
+          "timerSamples": 32,
+          "timerMissing": 0,
+          "cpuSchedulingMilliseconds": 0.10000000055879354,
+          "itemType": "probes"
+        }
+      },
+      "submittedFrames": 24,
+      "submittedBatches": 176,
+      "cpuSchedulingMilliseconds": 1.7000000001862645,
+      "versions": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 1,
+        "sunVisibility": 2,
+        "lighting": 2
+      },
+      "work": {
+        "probeHitInvocations": 0,
+        "sunVisibilitySubmittedSlots": 118272,
+        "momentProbeUpdates": 0
+      },
+      "firstPublishSubmissionMilliseconds": 64.79999999981374,
+      "requestToFirstSubmissionMilliseconds": 64.79999999981374,
+      "milliseconds": 98.09999999962747,
+      "bounces": 3,
+      "requestedBounces": 3,
+      "settled": true,
+      "supersededAtRoundBoundary": false,
+      "submissionMilliseconds": 98.09999999962747,
+      "finalSubmissionMilliseconds": 98.09999999962747,
+      "requestToFinalSubmissionMilliseconds": 98.09999999962747,
+      "publicationMode": "progressive",
+      "timingScope": "CPU submission and atlas selection; not GPU completion or presentation"
+    },
+    "initialStages": {
+      "relocate": {
+        "submittedBatches": 36,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 0.7613120000000001,
+        "timerSamples": 36,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 744.2000000001863,
+        "itemType": "probes"
+      },
+      "intersect": {
+        "submittedBatches": 36,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 1.2439039999999992,
+        "timerSamples": 36,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 199.7999999988824,
+        "itemType": "probes"
+      },
+      "classify": {
+        "submittedBatches": 36,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 0.9936,
+        "timerSamples": 36,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 8.399999999441206,
+        "itemType": "probes"
+      },
+      "moments": {
+        "submittedBatches": 36,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 0.419488,
+        "timerSamples": 36,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 15.700000000186265,
+        "itemType": "probes"
+      },
+      "momentsBorder": {
+        "submittedBatches": 36,
+        "probes": 924,
+        "items": 924,
+        "gpuMilliseconds": 0.712576,
+        "timerSamples": 36,
+        "timerMissing": 0,
+        "cpuSchedulingMilliseconds": 5.300000000745058,
+        "itemType": "probes"
+      }
+    },
+    "giBytes": 12192580,
+    "allocation": {
+      "textureBytes": 185131197.3333334,
+      "renderbufferBytes": 0,
+      "textures": 43,
+      "renderbuffers": 0,
+      "scope": "tracked GL texture/renderbuffer allocation estimate including Globe, HDR, shadows, IBL, MSAA and GI; excludes driver padding, browser canvas swapchain and geometry buffers"
+    },
+    "ibl": {
+      "ready": false
+    },
+    "gl": [
+      {
+        "phase": "performance",
+        "phases": {
+          "initialization": {
+            "draws": 3181
+          },
+          "performance": {
+            "draws": 58006
+          }
+        },
+        "feedback": [],
+        "errors": [],
+        "live": {
+          "textures": 43,
+          "framebuffers": 21,
+          "queries": 0,
+          "programs": 24,
+          "syncs": 0
+        },
+        "peak": {
+          "textures": 46,
+          "framebuffers": 21,
+          "queries": 14,
+          "programs": 25,
+          "syncs": 0
+        }
+      }
+    ],
+    "preserveDrawingBuffer": false,
+    "gBuffer": false
+  },
+  "status": "passed"
+}

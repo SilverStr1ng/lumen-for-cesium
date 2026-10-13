@@ -8,6 +8,7 @@ uniform mat4 u_lumenEyeToLocal;
 uniform vec3 u_lumenProbeOrigin, u_lumenProbeCounts, u_lumenIrradiance;
 uniform float u_lumenProbeSpacing, u_lumenNormalBias, u_lumenWorldGain, u_lumenCoverage;
 uniform bool u_lumenWorldEnabled, u_lumenLinearAtlas;
+uniform vec4 u_lumenGatherControl;
 `;
 const common = `
 precision highp sampler2D;

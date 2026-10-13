@@ -65,56 +65,98 @@ export class ProbeField {
   constructor(grid, positions, irradiance, moments) {
     Object.assign(this, { grid, positions, irradiance, moments });
   }
-  sample(position, normal, visibility = true) {
+  sample(position, normal, settings = true) {
+    const o =
+      typeof settings === "boolean" ? { visibility: settings } : settings;
     const g = this.grid,
       n = normalize(normal),
+      ng = normalize(o.geometricNormal ?? normal),
       q = position.map((v, i) => (v - g.origin[i]) / g.spacing);
     if (q.some((v, i) => v < 0 || v > g.counts[i] - 1))
       return { irradiance: [0, 0, 0], coverage: 0 };
     const base = q.map((v, i) => clamp(Math.floor(v), 0, g.counts[i] - 2)),
-      fraction = q.map((v, i) => v - base[i]);
-    const biased = add(position, mul(n, g.normalBias)),
+      fraction = q.map((v, i) => v - base[i]),
+      biased = add(position, mul(ng, g.normalBias)),
       sum = [0, 0, 0];
     let weights = 0,
       available = 0;
+    const candidates = o.diagnostics ? [] : undefined;
     for (let z = 0; z < 2; z++)
       for (let y = 0; y < 2; y++)
         for (let x = 0; x < 2; x++) {
           const index =
-            base[0] +
-            x +
-            g.counts[0] * (base[1] + y + g.counts[1] * (base[2] + z));
-          const trilinear =
-            (x ? fraction[0] : 1 - fraction[0]) *
-            (y ? fraction[1] : 1 - fraction[1]) *
-            (z ? fraction[2] : 1 - fraction[2]);
-          if (this.positions[index * 4 + 3] < 0.5) continue;
-          const probe = Array.from(
+              base[0] +
+              x +
+              g.counts[0] * (base[1] + y + g.counts[1] * (base[2] + z)),
+            trilinear =
+              (x ? fraction[0] : 1 - fraction[0]) *
+              (y ? fraction[1] : 1 - fraction[1]) *
+              (z ? fraction[2] : 1 - fraction[2]),
+            logical = [base[0] + x, base[1] + y, base[2] + z].map(
+              (v, i) => g.origin[i] + v * g.spacing,
+            ),
+            probe = Array.from(
               this.positions.subarray(index * 4, index * 4 + 3),
             ),
             delta = sub(biased, probe),
             distance = Math.hypot(...delta),
-            d = normalize(delta);
-          const e = atlasSample(this.irradiance, g, index, n),
-            m = atlasSample(this.moments, g, index, d);
-          if (e[3] < 0.95 || m[3] < 0.95) continue;
-          available += trilinear;
-          const towardProbe = normalize(sub(probe, position)),
-            wrap = (dot(towardProbe, n) + 1) * 0.5;
-          let w = trilinear * Math.max(0.05, wrap * wrap);
-          if (visibility && distance > m[0]) {
-            const variance = Math.max(0.0001, m[1] - m[0] * m[0]),
-              v = variance / (variance + (distance - m[0]) ** 2);
-            w *= Math.max(0.000001, v ** 3);
+            d = normalize(delta),
+            e = atlasSample(this.irradiance, g, index, n),
+            m = atlasSample(this.moments, g, index, d),
+            valid =
+              this.positions[index * 4 + 3] >= 0.5 &&
+              e[3] >= 0.95 &&
+              m[3] >= 0.95,
+            towardProbe = normalize(sub(probe, position)),
+            wrap = (dot(towardProbe, n) + 1) * 0.5,
+            facing = o.fixedFacing ?? Math.max(0.05, wrap * wrap),
+            variance = Math.max(0.0001, m[1] - m[0] * m[0]);
+          let visibility = 1;
+          if (o.visibility !== false && distance > m[0]) {
+            const v = variance / (variance + (distance - m[0]) ** 2);
+            visibility = Math.max(0.000001, v ** 3);
           }
-          if (w < 0.2) w *= (w * w) / 0.04;
+          let w = trilinear * facing * visibility;
+          if (o.crush !== false && w < 0.2) w *= (w * w) / 0.04;
+          if (!valid) w = 0;
+          if (valid) available += trilinear;
+          const E = o.fixedIrradiance ?? e.slice(0, 3);
           weights += w;
-          for (let k = 0; k < 3; k++) sum[k] += e[k] * w;
+          for (let k = 0; k < 3; k++) sum[k] += E[k] * w;
+          candidates?.push({
+            id: index,
+            logical,
+            position: probe,
+            state: this.positions[index * 4 + 3],
+            valid,
+            E,
+            mean: m[0],
+            second: m[1],
+            dataValidity: [e[3], m[3]],
+            trilinear,
+            wrap,
+            facing,
+            visibility,
+            reliability: facing * visibility,
+            weight: w,
+          });
         }
-    return {
+    const result = {
       irradiance: weights > 1e-10 ? sum.map((v) => v / weights) : [0, 0, 0],
       coverage: weights > 1e-10 ? clamp(available, 0, 1) : 0,
     };
+    if (candidates)
+      Object.assign(result, {
+        candidates,
+        totalWeight: weights,
+        available,
+        surfacePosition: position,
+        biasedPosition: biased,
+        kernelPosition: position,
+        irradianceDirection: n,
+        geometricNormal: ng,
+      });
+    return result;
   }
 }
 /** Visibility-aware directional irradiance + distance moments, with snapshot bounces. */
@@ -222,7 +264,10 @@ export class DDGI {
       for (let r = 0; r < g.rays; r++) {
         const hit = this.bvh.trace(position, this.directions[r], {
           accept,
-          maxDistance: completeTraceDistance(this.bvh.geometry.bounds, position),
+          maxDistance: completeTraceDistance(
+            this.bvh.geometry.bounds,
+            position,
+          ),
           budget: this.options.traversalBudget,
         });
         if (hit.status !== "Unknown") known++;
@@ -251,7 +296,11 @@ export class DDGI {
     return true;
   }
   async solve(options, progress, cancelled, onGeneration) {
-    if (!["sphere", "upper-hemisphere"].includes(options.environmentMode ?? "sphere"))
+    if (
+      !["sphere", "upper-hemisphere"].includes(
+        options.environmentMode ?? "sphere",
+      )
+    )
       throw new Error("environmentMode must be sphere or upper-hemisphere");
     for (const key of ["sunDirection", "sunRadiance", "skyRadiance"])
       if (
@@ -281,8 +330,10 @@ export class DDGI {
         if (this.positions[p * 4 + 3] < 0.5) continue;
         const radiance = this.directions.map((d, r) => {
           const h = this.hits[p * g.rays + r];
-          if (h.status === "Miss") return options.environmentMode === "upper-hemisphere" && d[2] < 0
-            ? [0, 0, 0] : options.skyRadiance;
+          if (h.status === "Miss")
+            return options.environmentMode === "upper-hemisphere" && d[2] < 0
+              ? [0, 0, 0]
+              : options.skyRadiance;
           if (h.status === "Unknown") return undefined;
           if (h.black) return [0, 0, 0];
           const e = this.cache.entries.get(h.key);

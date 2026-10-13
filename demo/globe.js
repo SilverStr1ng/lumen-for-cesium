@@ -132,7 +132,13 @@ function camera(name, fly = false) {
     });
     return;
   }
-  const bookmark = metadata?.cameras[name];
+  const closeups = {
+    boxFoot: { eye: [-6.4, -5.3, 2.0], target: [-9.7, -1.8, 0.5] },
+    wallFoot: { eye: [-6.8, 5.3, 2], target: [-10.6, 7.4, 0.5] },
+    pillarFoot: { eye: [-3.7, -5, 1.6], target: [-7, -2, 0.45] },
+    ceiling: { eye: [-5, 5, 2], target: [-9.8, 7.3, 4.8] },
+  };
+  const bookmark = metadata?.cameras[name] ?? closeups[name];
   if (!bookmark) return;
   const eye = C.Cartesian3.fromArray(bookmark.eye),
     direction = C.Cartesian3.normalize(
@@ -222,7 +228,8 @@ async function enhance() {
       // Reload canceled placement after this transaction invalidated the old
       // providers' listeners. Restore a configuration with valid ownership.
       if (await localLayers())
-        $("network").textContent = "局部场景已重载；取消待应用地形并恢复本地配置";
+        $("network").textContent =
+          "局部场景已重载；取消待应用地形并恢复本地配置";
       return;
     }
     if (results[0]) {
@@ -402,6 +409,98 @@ scene.postRender.addEventListener(() => {
   $("status").textContent =
     `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing 2m\n128 rays · 3 bounces · 3ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n发布时间为 CPU 提交，不等于 GPU 完成`;
 });
+// Reproducible diagnostics deliberately omit ion credentials and URLs.
+async function saveView() {
+  const cam = scene.camera,
+    w = scene.lumen.world;
+  const hashes = {};
+  for (const ext of ["gltf", "bin", "json"]) {
+    const data = await (
+      await fetch("../fixtures/earth-pavilion." + ext)
+    ).arrayBuffer();
+    hashes[ext] = Array.from(
+      new Uint8Array(await crypto.subtle.digest("SHA-256", data)),
+      (b) => b.toString(16).padStart(2, "0"),
+    ).join("");
+  }
+  return {
+    camera: {
+      transform: C.Matrix4.toArray(cam.transform),
+      position: [cam.position.x, cam.position.y, cam.position.z],
+      direction: [cam.direction.x, cam.direction.y, cam.direction.z],
+      up: [cam.up.x, cam.up.y, cam.up.z],
+      right: [cam.right.x, cam.right.y, cam.right.z],
+      fov: cam.frustum.fov,
+      near: cam.frustum.near,
+      far: cam.frustum.far,
+    },
+    anchor: { ...anchor },
+    lighting: structuredClone(lighting),
+    exposure: scene.postProcessStages.exposure,
+    toneMapper: scene.postProcessStages.tonemapper,
+    automaticExposure: false,
+    resolution: [scene.drawingBufferWidth, scene.drawingBufferHeight],
+    msaaSamples: scene.msaaSamples,
+    shadows: {
+      enabled: scene.shadowMap.enabled,
+      size: scene.shadowMap.size,
+      maximumDistance: scene.shadowMap.maximumDistance,
+      normalOffset: scene.shadowMap.normalOffset,
+      softShadows: scene.shadowMap.softShadows,
+    },
+    quality: {
+      spacing: w.options.spacing,
+      rays: w.options.rays,
+      bounces: w.options.bounces,
+      budget: w.options.targetGpuMilliseconds,
+    },
+    assets: hashes,
+    worldRevision: {
+      requested: w.requestedRevision,
+      published: w.publishedRevision,
+      settled: w.settledRevision,
+    },
+  };
+}
+async function restoreView(saved) {
+  if (Object.keys(saved.anchor).some((k) => saved.anchor[k] !== anchor[k])) {
+    Object.assign(anchor, saved.anchor);
+    await reload();
+  }
+  scene.camera.cancelFlight();
+  scene.camera.lookAtTransform(C.Matrix4.fromArray(saved.camera.transform));
+  for (const key of ["position", "direction", "up", "right"])
+    C.Cartesian3.fromArray(saved.camera[key], 0, scene.camera[key]);
+  for (const key of ["fov", "near", "far"])
+    scene.camera.frustum[key] = saved.camera[key];
+  scene.postProcessStages.exposure = saved.exposure;
+  scene.postProcessStages.tonemapper = saved.toneMapper;
+  Object.assign(scene.shadowMap, saved.shadows);
+  Object.assign(lighting, saved.lighting);
+  const d = C.Cartesian3.negate(
+    C.Cartesian3.normalize(
+      C.Cartesian3.fromArray(lighting.sunDirection),
+      new C.Cartesian3(),
+    ),
+    new C.Cartesian3(),
+  );
+  scene.light = new C.DirectionalLight({
+    direction: C.Matrix3.multiplyByVector(rotation, d, new C.Cartesian3()),
+    color: new C.Color(...lighting.sunRadiance),
+    intensity: 1,
+  });
+  const w = scene.lumen.world;
+  if (
+    JSON.stringify(w.options.sunDirection) !==
+      JSON.stringify(lighting.sunDirection) ||
+    JSON.stringify(w.options.sunRadiance) !==
+      JSON.stringify(lighting.sunRadiance) ||
+    JSON.stringify(w.options.skyRadiance) !==
+      JSON.stringify(lighting.skyRadiance)
+  )
+    await w.solve({ ...options(), ...lighting });
+  scene.requestRender();
+}
 window.earthLab = {
   widget,
   scene,
@@ -409,6 +508,8 @@ window.earthLab = {
   anchor,
   lighting,
   lightingController,
+  saveView,
+  restoreView,
   camera,
   reload,
   enhance,
