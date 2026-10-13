@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R7 · FG 重建验收</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101719;
+        --panel: #1a2528;
+        --ink: #e8efed;
+        --muted: #a8b8b5;
+        --accent: #9dddcc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          15px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 1240px;
+        margin: auto;
+        padding: 36px 24px 70px;
+      }
+      h1 {
+        font-weight: 500;
+        font-size: 36px;
+        letter-spacing: -1px;
+        margin: 0 0 10px;
+      }
+      h2 {
+        font-weight: 500;
+        margin-top: 36px;
+      }
+      p {
+        color: var(--muted);
+      }
+      a {
+        color: var(--accent);
+      }
+      header {
+        border-bottom: 1px solid #354747;
+        padding-bottom: 24px;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 2px;
+      }
+      .nav {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-variant-numeric: tabular-nums;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 9px 12px;
+        border-bottom: 1px solid #344447;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .passed {
+        color: #9dddcc;
+      }
+      .failed {
+        color: #ffb3a3;
+      }
+      .not-run {
+        color: #dbc69d;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin: 18px 0;
+      }
+      label {
+        color: var(--muted);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      select,
+      button {
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid #506864;
+        border-radius: 5px;
+        padding: 8px;
+      }
+      button {
+        cursor: pointer;
+      }
+      button.active {
+        border-color: var(--accent);
+      }
+      .images {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      figure {
+        margin: 0;
+      }
+      img {
+        display: block;
+        width: 100%;
+        background: #080c0c;
+        aspect-ratio: 1.6;
+        object-fit: contain;
+        border: 1px solid #354747;
+      }
+      figcaption {
+        color: var(--muted);
+        margin: 8px 0;
+        font-size: 13px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid #354747;
+        border-radius: 7px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      #chart {
+        width: 100%;
+        height: 240px;
+      }
+      .legend {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-size: 13px;
+      }
+      .scroll {
+        overflow: auto;
+      }
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .warning {
+        border-left: 3px solid #ffb3a3;
+        padding-left: 14px;
+      }
+      .tiny {
+        font-size: 12px;
+      }
+      @media (max-width: 750px) {
+        main {
+          padding: 24px 14px;
+        }
+        .images {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">LUMEN FOR CESIUM / R7</div>
+        <h1>接收表面 FG 的静态时空重建</h1>
+        <p>
+          线性 E 积累、世界几何约束的过滤与上采样。原展馆保留 2m / 128 probe
+          rays / 3 bounces / 曝光 1；半分辨率 16 / 32r，逐有效帧记录。
+        </p>
+        <p class="warning">
+          重建 FG 仍是实验模式。性能目标失败时总验收退出码为 1，DDGI
+          保持默认；画质通过不等于推荐配置通过。
+        </p>
+        <nav class="nav">
+          <a href="../../demo/gallery.html">Earth GI Gallery</a
+          ><a href="../../demo/globe.html">原展馆 Earth GI Lab</a
+          ><a href="README.md">完整交付记录</a
+          ><a href="test-suite.json">验收执行记录</a
+          ><a href="quality.json">画质阈值</a
+          ><a href="performance.json">GPU 原始数据</a>
+        </nav>
+      </header>
+      <h2>分别判定</h2>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>类别</th>
+              <th>实测状态</th>
+              <th>证据</th>
+            </tr>
+          </thead>
+          <tbody id="status"></tbody>
+        </table>
+      </div>
+      <p id="recommendation"></p>
+      <h2>同条件截图与线性误差</h2>
+      <div class="controls">
+        <label>场景 / 档位<select id="case"></select></label
+        ><label
+          >有效帧<select id="frame">
+            <option>1</option>
+            <option>4</option>
+            <option>8</option>
+            <option>16</option>
+            <option selected>32</option>
+          </select></label
+        ><label
+          >显示分量<select id="component">
+            <option value="frame">最终图像</option>
+            <option value="raw">raw E · 第32帧</option>
+            <option value="filtered">filtered E · 第32帧</option>
+            <option value="weight">FG weight · 第32帧</option>
+            <option value="fallback">fallback reason · 第32帧</option>
+          </select></label
+        >
+      </div>
+      <div class="images">
+        <figure>
+          <img id="before" alt="同机位参考截图" />
+          <figcaption id="beforeCaption"></figcaption>
+        </figure>
+        <figure>
+          <img id="after" alt="逐有效帧截图" />
+          <figcaption id="afterCaption"></figcaption>
+        </figure>
+      </div>
+      <div class="panel">
+        <svg
+          id="chart"
+          viewBox="0 0 900 240"
+          role="img"
+          aria-label="线性 E 误差随有效帧变化"
+        ></svg>
+        <div class="legend">
+          <span style="color: #d59a7d">raw / C</span
+          ><span style="color: #e0d498">temporal / C</span
+          ><span style="color: #9dddcc">filtered / C</span
+          ><span style="color: #a8b9e9">实际 E_used / D</span>
+        </div>
+        <p class="tiny">
+          C：相同接收点的 1024r world-traced
+          FG（三个序列）；D：实际屏幕接收位置的独立 4096 路径参考。C 与 D
+          评估不同误差，不能相互替代。
+        </p>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>有效帧</th>
+              <th>raw / C</th>
+              <th>filtered / C</th>
+              <th>E_used / D</th>
+              <th>实际 FG 覆盖</th>
+              <th>ROI 点</th>
+              <th>D 点</th>
+              <th>历史均长</th>
+            </tr>
+          </thead>
+          <tbody id="frames"></tbody>
+        </table>
+      </div>
+      <p id="rawLink"></p>
+      <p class="tiny">
+        截图展示 seed 0。公开验收同时保留 seed 0 / 5 / 19；所有 ROI 为连续 64×48
+        网格。full ROI 档仅用于区域参考，视口其余部分按合同回退 DDGI。
+      </p>
+      <h2>实际 GPU 成本</h2>
+      <p>
+        RTX 5080 / ANGLE D3D11，1280×800。三轮交替 DDGI、R6 fixed raw FG、R7
+        reconstructed FG，每窗 100 个实际 Scene 绘制帧，暖机 20
+        帧。分项计时在独立窗口执行。
+      </p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>轮次</th>
+              <th>模式</th>
+              <th>GPU P50 ms</th>
+              <th>GPU P95 ms</th>
+              <th>有效 query</th>
+              <th>实际 FG 帧</th>
+              <th>FG MiB</th>
+            </tr>
+          </thead>
+          <tbody id="cost"></tbody>
+        </table>
+      </div>
+      <p id="budget"></p>
+      <p class="tiny">
+        独立窗口 P95 差不是逐帧配对耗时；分项均值不能当作相加的
+        P95。生产窗口的同步读回和图像反馈另有 GL observer 记录。
+      </p>
+      <h2>复现与范围</h2>
+      <pre>
+npm run setup
+npm run build
+npm start
+npm run test:r7
+npm run test:r7:quality
+npm run test:r7:temporal
+npm run test:r7:lifecycle
+npm run benchmark:r7</pre>
+      <p>
+        默认全验收重新执行数值和 GPU 测量。性能失败预期返回非零；--cached
+        复用带源码哈希的已捕获数值与成本，并明确记录复用。--fast
+        不执行画质和性能，不能把未运行项标为通过。
+      </p>
+      <p>
+        改灯、拖灯、切镜、显露、普通/对数深度、多视锥、重载、AA/尺寸、按需停止以及资源故障见各
+        JSON。真实 OS 后台恢复、原 Scene 原地 WebGL 上下文恢复、带 token 的 ion
+        地形和其他 GPU，按实际执行情况标 not-run。
+      </p>
+      <details>
+        <summary>版本与测试范围</summary>
+        <pre id="version"></pre>
+      </details>
+    </main>
+    <script type="module">
+      const $ = (id) => document.getElementById(id);
+      const load = async (p) => {
+        const r = await fetch(p);
+        if (!r.ok) throw Error(p + " " + r.status);
+        return r.json();
+      };
+      const cell = (tr, value, cls) => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        if (cls) td.className = cls;
+        tr.append(td);
+        return td;
+      };
+      const num = (x) => (Number.isFinite(x) ? x.toFixed(6) : "—");
+      let screen, perf, suite;
+      try {
+        [screen, perf, suite] = await Promise.all([
+          load("screen/data.json"),
+          load("performance.json"),
+          load("test-suite.json"),
+        ]);
+        for (const [label, key, file] of [
+          ["回归", "regression", "test-suite.json"],
+          ["静态画质", "quality", "quality.json"],
+          ["时间画质", "temporal", "temporal/data.json"],
+          ["性能", "performance", "performance.json"],
+          ["展示", "showcase", "gallery/data.json"],
+        ]) {
+          const tr = document.createElement("tr");
+          cell(tr, label);
+          cell(tr, suite[key] ?? "not-run", suite[key] ?? "not-run");
+          const a = document.createElement("a");
+          a.href = file;
+          a.textContent = file;
+          cell(tr, "").append(a);
+          $("status").append(tr);
+        }
+        $("recommendation").textContent =
+          "总状态：" +
+          suite.status +
+          "；推荐模式：" +
+          (suite.recommended ? "通过公开验收" : "未通过，保持实验模式") +
+          "。";
+        const candidates = screen.cases.filter((c) => c.seed === 0);
+        for (const c of candidates) {
+          const o = document.createElement("option");
+          o.value = c.name;
+          o.textContent = c.name;
+          $("case").append(o);
+        }
+        $("case").value = "original-boxFoot-high-s0";
+        const render = () => {
+          const c = candidates.find((c) => c.name === $("case").value),
+            f = Number($("frame").value),
+            component = $("component").value;
+          const original =
+            c.scenario === "original" &&
+            c.quality === "high" &&
+            ["boxFoot", "pillarFoot", "ceiling"].includes(c.view);
+          $("before").src = original
+            ? "before/images/" + c.view + "-final.png"
+            : "screen/" + c.name + "-frame-1.png";
+          $("beforeCaption").textContent = original
+            ? "R7.0 锁定的 R6 fixed raw FG，half32r / 同机位 / 2m / 128 / 3 / 曝光 1"
+            : "同一 R7 配置的第 1 个有效帧";
+          $("after").src =
+            "screen/" +
+            c.name +
+            "-" +
+            (component === "frame" ? "frame-" + f : component + "-32") +
+            ".png";
+          $("afterCaption").textContent =
+            c.name +
+            " · " +
+            (component === "frame"
+              ? "第 " + f + " 个有效帧"
+              : component + " 分量，第32帧") +
+            "；仅 E 的重建";
+          $("frames").replaceChildren();
+          for (const row of c.frameStats) {
+            const tr = document.createElement("tr");
+            [
+              row.frame,
+              num(row.rawRmseC),
+              num(row.filteredRmseC),
+              num(row.EusedRmseD),
+              (row.coverage.meanWeight * 100).toFixed(3) + "%",
+              row.roiPoints,
+              row.independentPoints,
+              row.lengthMean.toFixed(3),
+            ].forEach((v) => cell(tr, v));
+            $("frames").append(tr);
+          }
+          $("rawLink").replaceChildren();
+          const a = document.createElement("a");
+          a.href = "screen/" + c.data;
+          a.textContent =
+            "下载 raw / history / filtered / guide / mask / C / D 线性数据（deflate JSON）";
+          $("rawLink").append(a);
+          const fields = [
+              "rawRmseC",
+              "temporalRmseC",
+              "filteredRmseC",
+              "EusedRmseD",
+            ],
+            colors = ["#d59a7d", "#e0d498", "#9dddcc", "#a8b9e9"];
+          const max =
+              Math.max(
+                ...c.frameStats.flatMap((r) => fields.map((k) => r[k])),
+              ) * 1.1,
+            x = (n) => 60 + ((n - 1) / 31) * 800,
+            y = (v) => 200 - (v / max) * 170;
+          let svg = '<path d="M60 25V200H860" fill="none" stroke="#607976"/>';
+          for (let i = 0; i <= 4; i++) {
+            const v = (max * i) / 4;
+            svg +=
+              '<text x="2" y="' +
+              (y(v) + 4) +
+              '" fill="#a8b8b5" font-size="12">' +
+              v.toFixed(4) +
+              '</text><path d="M60 ' +
+              y(v) +
+              'H860" stroke="#344447"/>';
+          }
+          for (const r of c.frameStats)
+            svg +=
+              '<text x="' +
+              x(r.frame) +
+              '" y="225" text-anchor="middle" fill="#a8b8b5" font-size="12">' +
+              r.frame +
+              "</text>";
+          fields.forEach((k, i) => {
+            svg +=
+              '<polyline points="' +
+              c.frameStats.map((r) => x(r.frame) + "," + y(r[k])).join(" ") +
+              '" fill="none" stroke="' +
+              colors[i] +
+              '" stroke-width="2"/>';
+          });
+          $("chart").innerHTML = svg;
+        };
+        $("case").onchange =
+          $("frame").onchange =
+          $("component").onchange =
+            render;
+        render();
+        for (const row of perf.rounds) {
+          const tr = document.createElement("tr");
+          [
+            row.round + 1,
+            row.mode,
+            num(row.whole.gpuMilliseconds.p50),
+            num(row.whole.gpuMilliseconds.p95),
+            row.whole.gpuMilliseconds.samples,
+            row.whole.actualFGFrames,
+            ((row.metrics.totalAdditionalBytes ?? 0) / 1048576).toFixed(2),
+          ].forEach((v) => cell(tr, v));
+          $("cost").append(tr);
+        }
+        $("budget").textContent =
+          "重建相对 raw FG 的平均窗口 P95 差：" +
+          num(perf.targets.additionalReconstructionP95.value) +
+          " ms（目标 ≤1）；完整 FG 相对 DDGI：" +
+          num(perf.targets.completeFGP95.value) +
+          " ms（目标 ≤3）；FG 总拥有纹理 " +
+          (perf.targets.memory.value / 1048576).toFixed(2) +
+          " MiB（≤64）。";
+        $("version").textContent = JSON.stringify(
+          {
+            screen: screen.version,
+            performance: perf.version,
+            suite: suite.version,
+            scope: screen.scope,
+            notRun: suite.notRun,
+          },
+          null,
+          2,
+        );
+      } catch (e) {
+        $("recommendation").textContent = "验收数据尚不可用：" + e.message;
+      }
+    </script>
+  </body>
+</html>

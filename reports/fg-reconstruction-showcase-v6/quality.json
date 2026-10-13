@@ -1,0 +1,4899 @@
+{
+  "checks": [
+    {
+      "name": "all canonical configurations",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "16/32r; original/held-out; seeds 0/5/19",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFloor absolute",
+      "actual": 0.017339523723372743,
+      "threshold": 0.18765071165108677,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFloor relative",
+      "actual": 0.017339523723372743,
+      "threshold": 0.1261857123524482,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFloor no regression",
+      "actual": 0.017339523723372743,
+      "threshold": 0.19294645543466396,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFace absolute",
+      "actual": 0.050515110618517836,
+      "threshold": 0.3039858849336796,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFace no regression",
+      "actual": 0.050515110618517836,
+      "threshold": 0.10779439702052038,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 wallFoot absolute",
+      "actual": 0.0023309746561125553,
+      "threshold": 0.303540485115132,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 wallFoot no regression",
+      "actual": 0.0023309746561125553,
+      "threshold": 0.010216835349977502,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 pillarFoot absolute",
+      "actual": 0.0116193020615491,
+      "threshold": 0.033018738250725134,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 pillarFoot relative",
+      "actual": 0.0116193020615491,
+      "threshold": 0.09309472976916375,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 pillarFoot no regression",
+      "actual": 0.0116193020615491,
+      "threshold": 0.14183071876929557,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 ceiling absolute",
+      "actual": 0.002361729155132424,
+      "threshold": 0.14987554369618528,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 ceiling no regression",
+      "actual": 0.002361729155132424,
+      "threshold": 0.008434187050300444,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 doorway absolute",
+      "actual": 0.003961160317681038,
+      "threshold": 0.09037324175484689,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 doorway no regression",
+      "actual": 0.003961160317681038,
+      "threshold": 0.0953558290563863,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s0 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFloor absolute",
+      "actual": 0.017603633453445462,
+      "threshold": 0.18765071165108677,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFloor relative",
+      "actual": 0.017603633453445462,
+      "threshold": 0.1261857123524482,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFloor no regression",
+      "actual": 0.017603633453445462,
+      "threshold": 0.19294645543466396,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFace absolute",
+      "actual": 0.05085733339452849,
+      "threshold": 0.3039858849336796,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFace no regression",
+      "actual": 0.05085733339452849,
+      "threshold": 0.10779439702052038,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 wallFoot absolute",
+      "actual": 0.0019625751824054525,
+      "threshold": 0.303540485115132,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 wallFoot no regression",
+      "actual": 0.0019625751824054525,
+      "threshold": 0.010216835349977502,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 pillarFoot absolute",
+      "actual": 0.01142858259368072,
+      "threshold": 0.033018738250725134,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 pillarFoot relative",
+      "actual": 0.01142858259368072,
+      "threshold": 0.09309472976916375,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 pillarFoot no regression",
+      "actual": 0.01142858259368072,
+      "threshold": 0.14183071876929557,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 ceiling absolute",
+      "actual": 0.001999605380829151,
+      "threshold": 0.14987554369618528,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 ceiling no regression",
+      "actual": 0.001999605380829151,
+      "threshold": 0.008434187050300444,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 doorway absolute",
+      "actual": 0.004062415652736706,
+      "threshold": 0.09037324175484689,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 doorway no regression",
+      "actual": 0.004062415652736706,
+      "threshold": 0.0953558290563863,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s5 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFloor absolute",
+      "actual": 0.01718986755128746,
+      "threshold": 0.18765071165108677,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFloor relative",
+      "actual": 0.01718986755128746,
+      "threshold": 0.1261857123524482,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFloor no regression",
+      "actual": 0.01718986755128746,
+      "threshold": 0.19294645543466396,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFace absolute",
+      "actual": 0.05103371432407686,
+      "threshold": 0.3039858849336796,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFace no regression",
+      "actual": 0.05103371432407686,
+      "threshold": 0.10779439702052038,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 wallFoot absolute",
+      "actual": 0.0021608033637274876,
+      "threshold": 0.303540485115132,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 wallFoot no regression",
+      "actual": 0.0021608033637274876,
+      "threshold": 0.010216835349977502,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 pillarFoot absolute",
+      "actual": 0.011119883143759977,
+      "threshold": 0.033018738250725134,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 pillarFoot relative",
+      "actual": 0.011119883143759977,
+      "threshold": 0.09309472976916375,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 pillarFoot no regression",
+      "actual": 0.011119883143759977,
+      "threshold": 0.14183071876929557,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 ceiling absolute",
+      "actual": 0.0023597344282865976,
+      "threshold": 0.14987554369618528,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 ceiling no regression",
+      "actual": 0.0023597344282865976,
+      "threshold": 0.008434187050300444,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 doorway absolute",
+      "actual": 0.005083189263262533,
+      "threshold": 0.09037324175484689,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 doorway no regression",
+      "actual": 0.005083189263262533,
+      "threshold": 0.0953558290563863,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 16r s19 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFloor absolute",
+      "actual": 0.017626110952487478,
+      "threshold": 0.18765071165108677,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFloor relative",
+      "actual": 0.017626110952487478,
+      "threshold": 0.1261857123524482,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFloor no regression",
+      "actual": 0.017626110952487478,
+      "threshold": 0.19294645543466396,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFace absolute",
+      "actual": 0.05128534722654666,
+      "threshold": 0.3039858849336796,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFace no regression",
+      "actual": 0.05128534722654666,
+      "threshold": 0.10779439702052038,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 wallFoot absolute",
+      "actual": 0.0020019539530979893,
+      "threshold": 0.303540485115132,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 wallFoot no regression",
+      "actual": 0.0020019539530979893,
+      "threshold": 0.010216835349977502,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 pillarFoot absolute",
+      "actual": 0.011680539629322589,
+      "threshold": 0.033018738250725134,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 pillarFoot relative",
+      "actual": 0.011680539629322589,
+      "threshold": 0.09309472976916375,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 pillarFoot no regression",
+      "actual": 0.011680539629322589,
+      "threshold": 0.14183071876929557,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 ceiling absolute",
+      "actual": 0.0021018008220137284,
+      "threshold": 0.14987554369618528,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 ceiling no regression",
+      "actual": 0.0021018008220137284,
+      "threshold": 0.008434187050300444,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 doorway absolute",
+      "actual": 0.0038940792342861135,
+      "threshold": 0.09037324175484689,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 doorway no regression",
+      "actual": 0.0038940792342861135,
+      "threshold": 0.0953558290563863,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s0 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFloor absolute",
+      "actual": 0.01742764708459135,
+      "threshold": 0.18765071165108677,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFloor relative",
+      "actual": 0.01742764708459135,
+      "threshold": 0.1261857123524482,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFloor no regression",
+      "actual": 0.01742764708459135,
+      "threshold": 0.19294645543466396,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFace absolute",
+      "actual": 0.051359860213136425,
+      "threshold": 0.3039858849336796,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFace no regression",
+      "actual": 0.051359860213136425,
+      "threshold": 0.10779439702052038,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 wallFoot absolute",
+      "actual": 0.0018794467162915071,
+      "threshold": 0.303540485115132,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 wallFoot no regression",
+      "actual": 0.0018794467162915071,
+      "threshold": 0.010216835349977502,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 pillarFoot absolute",
+      "actual": 0.011692744535255954,
+      "threshold": 0.033018738250725134,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 pillarFoot relative",
+      "actual": 0.011692744535255954,
+      "threshold": 0.09309472976916375,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 pillarFoot no regression",
+      "actual": 0.011692744535255954,
+      "threshold": 0.14183071876929557,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 ceiling absolute",
+      "actual": 0.0019220250233302977,
+      "threshold": 0.14987554369618528,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 ceiling no regression",
+      "actual": 0.0019220250233302977,
+      "threshold": 0.008434187050300444,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 doorway absolute",
+      "actual": 0.004470009135520212,
+      "threshold": 0.09037324175484689,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 doorway no regression",
+      "actual": 0.004470009135520212,
+      "threshold": 0.0953558290563863,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s5 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFloor absolute",
+      "actual": 0.018173779101543577,
+      "threshold": 0.18765071165108677,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFloor relative",
+      "actual": 0.018173779101543577,
+      "threshold": 0.1261857123524482,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFloor no regression",
+      "actual": 0.018173779101543577,
+      "threshold": 0.19294645543466396,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFace absolute",
+      "actual": 0.0511406489987913,
+      "threshold": 0.3039858849336796,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFace no regression",
+      "actual": 0.0511406489987913,
+      "threshold": 0.10779439702052038,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 wallFoot absolute",
+      "actual": 0.0018158007810125918,
+      "threshold": 0.303540485115132,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 wallFoot no regression",
+      "actual": 0.0018158007810125918,
+      "threshold": 0.010216835349977502,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 pillarFoot absolute",
+      "actual": 0.011958328802010183,
+      "threshold": 0.033018738250725134,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 pillarFoot relative",
+      "actual": 0.011958328802010183,
+      "threshold": 0.09309472976916375,
+      "scope": "unchanged 30% improvement threshold",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 pillarFoot no regression",
+      "actual": 0.011958328802010183,
+      "threshold": 0.14183071876929557,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 ceiling absolute",
+      "actual": 0.0019853741099670804,
+      "threshold": 0.14987554369618528,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 ceiling no regression",
+      "actual": 0.0019853741099670804,
+      "threshold": 0.008434187050300444,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 doorway absolute",
+      "actual": 0.004043476324162845,
+      "threshold": 0.09037324175484689,
+      "scope": "unchanged exact original absolute RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 doorway no regression",
+      "actual": 0.004043476324162845,
+      "threshold": 0.0953558290563863,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "original 32r s19 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 boxFloor no regression",
+      "actual": 0.0226277982912132,
+      "threshold": 0.2992874560198794,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 boxFace no regression",
+      "actual": 0.07605741993792238,
+      "threshold": 0.1335981227150704,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 wallFoot no regression",
+      "actual": 0.03977298762747866,
+      "threshold": 0.2587557855860537,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 pillarFoot no regression",
+      "actual": 0.024978126002298207,
+      "threshold": 0.22821786534777294,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 ceiling no regression",
+      "actual": 0.021483799241013492,
+      "threshold": 0.09458917541393687,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 doorway no regression",
+      "actual": 0.012435539514541249,
+      "threshold": 0.12584354103182618,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s0 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 boxFloor no regression",
+      "actual": 0.024397081963348523,
+      "threshold": 0.2992874560198794,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 boxFace no regression",
+      "actual": 0.07629419160694365,
+      "threshold": 0.1335981227150704,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 wallFoot no regression",
+      "actual": 0.03945768706815445,
+      "threshold": 0.2587557855860537,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 pillarFoot no regression",
+      "actual": 0.023987506761292438,
+      "threshold": 0.22821786534777294,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 ceiling no regression",
+      "actual": 0.022631563107300717,
+      "threshold": 0.09458917541393687,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 doorway no regression",
+      "actual": 0.012667451478023431,
+      "threshold": 0.12584354103182618,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s5 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 boxFloor no regression",
+      "actual": 0.024122924629141205,
+      "threshold": 0.2992874560198794,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 boxFace no regression",
+      "actual": 0.0760480633074483,
+      "threshold": 0.1335981227150704,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 wallFoot no regression",
+      "actual": 0.03931176394476693,
+      "threshold": 0.2587557855860537,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 pillarFoot no regression",
+      "actual": 0.0228314248964718,
+      "threshold": 0.22821786534777294,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 ceiling no regression",
+      "actual": 0.021473033342767033,
+      "threshold": 0.09458917541393687,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 doorway no regression",
+      "actual": 0.012206658968864128,
+      "threshold": 0.12584354103182618,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 16r s19 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 boxFloor no regression",
+      "actual": 0.02287465108359595,
+      "threshold": 0.2992874560198794,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 boxFace no regression",
+      "actual": 0.07642196419306305,
+      "threshold": 0.1335981227150704,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 wallFoot no regression",
+      "actual": 0.03925676620161282,
+      "threshold": 0.2587557855860537,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 pillarFoot no regression",
+      "actual": 0.023569463789509193,
+      "threshold": 0.22821786534777294,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 ceiling no regression",
+      "actual": 0.021591452046577825,
+      "threshold": 0.09458917541393687,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 doorway no regression",
+      "actual": 0.012697092227044857,
+      "threshold": 0.12584354103182618,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s0 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 boxFloor no regression",
+      "actual": 0.023471192390668014,
+      "threshold": 0.2992874560198794,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 boxFace no regression",
+      "actual": 0.07615865217518113,
+      "threshold": 0.1335981227150704,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 wallFoot no regression",
+      "actual": 0.039244397259055167,
+      "threshold": 0.2587557855860537,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 pillarFoot no regression",
+      "actual": 0.02346005517308057,
+      "threshold": 0.22821786534777294,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 ceiling no regression",
+      "actual": 0.021966688545673727,
+      "threshold": 0.09458917541393687,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 doorway no regression",
+      "actual": 0.012797350578580781,
+      "threshold": 0.12584354103182618,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s5 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 boxFloor all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 boxFloor no regression",
+      "actual": 0.02298472732249954,
+      "threshold": 0.2992874560198794,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 boxFloor actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 boxFace all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 boxFace no regression",
+      "actual": 0.0756990970729764,
+      "threshold": 0.1335981227150704,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 boxFace actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 wallFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 wallFoot no regression",
+      "actual": 0.039231966648632086,
+      "threshold": 0.2587557855860537,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 wallFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 pillarFoot all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 pillarFoot no regression",
+      "actual": 0.022189704241801243,
+      "threshold": 0.22821786534777294,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 pillarFoot actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 ceiling all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 ceiling no regression",
+      "actual": 0.022013471889405705,
+      "threshold": 0.09458917541393687,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 ceiling actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 doorway all49",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "all points and matching revision/round",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 doorway no regression",
+      "actual": 0.012656955892916415,
+      "threshold": 0.12584354103182618,
+      "scope": "current A + 3 RMS independent D SE; candidate variance never widens gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out 32r s19 doorway actual coverage",
+      "actual": 0,
+      "threshold": 0.05,
+      "scope": "physical visible surface composite; not all DDGI",
+      "status": "passed"
+    },
+    {
+      "name": "57 required screen configurations",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "original/held-out 16/32r; Gallery; slanted thin wall; full ROI and quarter resolution",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s0 convergence",
+      "actual": 0.005494388526077233,
+      "threshold": 0.020744274401808344,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s0 coverage",
+      "actual": 0.00022167968749997602,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s5 convergence",
+      "actual": 0.005203593076868095,
+      "threshold": 0.021342862460098484,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s5 coverage",
+      "actual": 0.00022167968749997602,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s19 convergence",
+      "actual": 0.005631293309755154,
+      "threshold": 0.02084895925130779,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-balanced-s19 coverage",
+      "actual": 0.00022167968749997602,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s0 convergence",
+      "actual": 0.003691949921367455,
+      "threshold": 0.020308858006577345,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s0 coverage",
+      "actual": 0.006063476562499948,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s5 convergence",
+      "actual": 0.00389754714474596,
+      "threshold": 0.019680130987740983,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s5 coverage",
+      "actual": 0.006063476562499948,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s19 convergence",
+      "actual": 0.0037604822787305394,
+      "threshold": 0.01994957884093913,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-balanced-s19 coverage",
+      "actual": 0.006063476562499948,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s0 convergence",
+      "actual": 0.0017174028917131508,
+      "threshold": 0.015010523405826766,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s0 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s5 convergence",
+      "actual": 0.001855051987616849,
+      "threshold": 0.014971989440900193,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s5 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s19 convergence",
+      "actual": 0.0016494788797234844,
+      "threshold": 0.015150558116505477,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-balanced-s19 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s0 convergence",
+      "actual": 0.005198075524920186,
+      "threshold": 0.013077131563592415,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s0 coverage",
+      "actual": 0.00022167968749997602,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s0 total E no regression",
+      "actual": 0.021283230624179483,
+      "threshold": 0.07334134658539548,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s5 convergence",
+      "actual": 0.005144508905206416,
+      "threshold": 0.013088097206512299,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s5 coverage",
+      "actual": 0.00022167968749997602,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s5 total E no regression",
+      "actual": 0.021336636376082747,
+      "threshold": 0.07334134658539548,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s19 convergence",
+      "actual": 0.005203234610437629,
+      "threshold": 0.01296716141291981,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s19 coverage",
+      "actual": 0.00022167968749997602,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-boxFoot-high-s19 total E no regression",
+      "actual": 0.021275754581752265,
+      "threshold": 0.07334134658539548,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s0 convergence",
+      "actual": 0.0033886507553653896,
+      "threshold": 0.011263709416466325,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s0 coverage",
+      "actual": 0.006063476562499948,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s0 total E no regression",
+      "actual": 0.013266799576809356,
+      "threshold": 0.05415816945566161,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s5 convergence",
+      "actual": 0.0033859034727783,
+      "threshold": 0.01139837033317127,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s5 coverage",
+      "actual": 0.006063476562499948,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s5 total E no regression",
+      "actual": 0.013145868769696626,
+      "threshold": 0.054158188574598115,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s19 convergence",
+      "actual": 0.0034808428469971097,
+      "threshold": 0.010920690771679521,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s19 coverage",
+      "actual": 0.006063476562499948,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-pillarFoot-high-s19 total E no regression",
+      "actual": 0.01325789542134357,
+      "threshold": 0.054158188574598115,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s0 convergence",
+      "actual": 0.001339917359053592,
+      "threshold": 0.009634182226143116,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s0 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s0 total E no regression",
+      "actual": 0.003014597516188753,
+      "threshold": 0.00734594317237397,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s5 convergence",
+      "actual": 0.0014486516591110156,
+      "threshold": 0.009559915574288968,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s5 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s5 total E no regression",
+      "actual": 0.002959844919669475,
+      "threshold": 0.00734594317237397,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s19 convergence",
+      "actual": 0.0014606607945058712,
+      "threshold": 0.009738687176144177,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s19 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-ceiling-high-s19 total E no regression",
+      "actual": 0.0029628223685061682,
+      "threshold": 0.00734594317237397,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s0 convergence",
+      "actual": 0.003928042659149517,
+      "threshold": 0.020505520594011114,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s0 coverage",
+      "actual": 0.00011816406249998135,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s5 convergence",
+      "actual": 0.004086407023010679,
+      "threshold": 0.020512730582027315,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s5 coverage",
+      "actual": 0.00011816406249998135,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s19 convergence",
+      "actual": 0.004338853943879227,
+      "threshold": 0.019709367142037047,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s19 coverage",
+      "actual": 0.00011816406249998135,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s0 convergence",
+      "actual": 0.0030325187782859224,
+      "threshold": 0.020067671366497994,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s0 coverage",
+      "actual": 0.0003750000000000142,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s5 convergence",
+      "actual": 0.0029604868674141986,
+      "threshold": 0.02022262362600482,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s5 coverage",
+      "actual": 0.0003750000000000142,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s19 convergence",
+      "actual": 0.0030890821606943436,
+      "threshold": 0.0201659542351296,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s19 coverage",
+      "actual": 0.0003750000000000142,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s0 convergence",
+      "actual": 0.0017039532396204403,
+      "threshold": 0.016237689636604827,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s0 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s5 convergence",
+      "actual": 0.0015889983229855846,
+      "threshold": 0.016345490231411745,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s5 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s19 convergence",
+      "actual": 0.001670355141525215,
+      "threshold": 0.016140275340206133,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-balanced-s19 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s0 convergence",
+      "actual": 0.0038306606279592983,
+      "threshold": 0.013033725623523331,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s0 coverage",
+      "actual": 0.00011816406249998135,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s0 total E no regression",
+      "actual": 0.01601955590341766,
+      "threshold": 0.04944467276690258,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s5 convergence",
+      "actual": 0.0038502209258668815,
+      "threshold": 0.013065148308045671,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s5 coverage",
+      "actual": 0.00011816406249998135,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s5 total E no regression",
+      "actual": 0.016024834458827655,
+      "threshold": 0.04944467276690258,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s19 convergence",
+      "actual": 0.0037137255121295304,
+      "threshold": 0.013226811167954903,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s19 coverage",
+      "actual": 0.00011816406249998135,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-boxFoot-high-s19 total E no regression",
+      "actual": 0.016020131637011225,
+      "threshold": 0.04944467276690258,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s0 convergence",
+      "actual": 0.002572011701181172,
+      "threshold": 0.011834735240056848,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s0 coverage",
+      "actual": 0.0003750000000000142,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s0 total E no regression",
+      "actual": 0.017392938293171963,
+      "threshold": 0.07264151950251535,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s5 convergence",
+      "actual": 0.002578466484980008,
+      "threshold": 0.011630578360009672,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s5 coverage",
+      "actual": 0.0003750000000000142,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s5 total E no regression",
+      "actual": 0.01738838133303375,
+      "threshold": 0.07264167131157004,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s19 convergence",
+      "actual": 0.002630067587452691,
+      "threshold": 0.011658730595514475,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s19 coverage",
+      "actual": 0.0003750000000000142,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-pillarFoot-high-s19 total E no regression",
+      "actual": 0.01739078353645692,
+      "threshold": 0.07264167131157004,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s0 convergence",
+      "actual": 0.001145148478377029,
+      "threshold": 0.009354632727120536,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s0 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s0 total E no regression",
+      "actual": 0.014641988652993453,
+      "threshold": 0.060226989309266434,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s5 convergence",
+      "actual": 0.001140176150834681,
+      "threshold": 0.009535054699234626,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s5 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s5 total E no regression",
+      "actual": 0.014615259659577126,
+      "threshold": 0.060226989309266434,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s19 convergence",
+      "actual": 0.0011628331809569732,
+      "threshold": 0.009488651105907395,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s19 coverage",
+      "actual": 9.765624999769074e-7,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "held-out-ceiling-high-s19 total E no regression",
+      "actual": 0.01462289641167007,
+      "threshold": 0.060226989309266434,
+      "scope": "actual Scene E_used vs fresh 4096-path D",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s0 convergence",
+      "actual": 0.004453024042274341,
+      "threshold": 0.010703959835452444,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s0 coverage",
+      "actual": 0.009234619140624956,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s5 convergence",
+      "actual": 0.0043521046476470955,
+      "threshold": 0.011050610954753726,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s5 coverage",
+      "actual": 0.009234619140624956,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s19 convergence",
+      "actual": 0.004487846562384849,
+      "threshold": 0.010961798769348078,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-courtyard-high-s19 coverage",
+      "actual": 0.009234619140624956,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s0 convergence",
+      "actual": 0.0036065796993924896,
+      "threshold": 0.023366139098568845,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s0 coverage",
+      "actual": 0.0064936506251561665,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s5 convergence",
+      "actual": 0.003618144178124317,
+      "threshold": 0.023049251001446155,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s5 coverage",
+      "actual": 0.0064936506251561665,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s19 convergence",
+      "actual": 0.003715943375408419,
+      "threshold": 0.023741332748526855,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-skylight-high-s19 coverage",
+      "actual": 0.0064936506251561665,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s0 convergence",
+      "actual": 0.007679358926759252,
+      "threshold": 0.03480926095276522,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s0 coverage",
+      "actual": 0.010812255859374953,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s5 convergence",
+      "actual": 0.007648037234877942,
+      "threshold": 0.03483324892197414,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s5 coverage",
+      "actual": 0.010812255859374953,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s19 convergence",
+      "actual": 0.007665190869989655,
+      "threshold": 0.03540084607063104,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "gallery-emitter-high-s19 coverage",
+      "actual": 0.010812255859374953,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s0 convergence",
+      "actual": 0.001768369096191681,
+      "threshold": 0.013618688120269985,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s0 coverage",
+      "actual": 0.00018164062500003464,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s5 convergence",
+      "actual": 0.001895632113691183,
+      "threshold": 0.013721882004466725,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s5 coverage",
+      "actual": 0.00018164062500003464,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s19 convergence",
+      "actual": 0.0019132329692511157,
+      "threshold": 0.013989022279529431,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-left-high-s19 coverage",
+      "actual": 0.00018164062500003464,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s0 convergence",
+      "actual": 0.000008574891698529825,
+      "threshold": 0.000049542225506670494,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s0 coverage",
+      "actual": 0.0011171875000000053,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s0 dark-side error",
+      "actual": 0.0003776349737263457,
+      "threshold": 0.005,
+      "scope": "independent closed-room D retained",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s5 convergence",
+      "actual": 0.000008570665873962684,
+      "threshold": 0.00004724726845268726,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s5 coverage",
+      "actual": 0.0011171875000000053,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s5 dark-side error",
+      "actual": 0.00037781708993363787,
+      "threshold": 0.005,
+      "scope": "independent closed-room D retained",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s19 convergence",
+      "actual": 0.000009057144482913789,
+      "threshold": 0.000051917144399687646,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s19 coverage",
+      "actual": 0.0011171875000000053,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "slanted-thin-right-high-s19 dark-side error",
+      "actual": 0.00037749940960575263,
+      "threshold": 0.005,
+      "scope": "independent closed-room D retained",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s0 convergence",
+      "actual": 0.003120916659165731,
+      "threshold": 0.00801826095069631,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s5 convergence",
+      "actual": 0.0031466740004574595,
+      "threshold": 0.00804749416708732,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s19 convergence",
+      "actual": 0.0031267597252064225,
+      "threshold": 0.008260453154920362,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s0 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s0 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s0 convergence",
+      "actual": 0.005608268768120341,
+      "threshold": 0.02342719018644565,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s0 coverage",
+      "actual": 0.00032714843750003553,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s5 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s5 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s5 convergence",
+      "actual": 0.005590300341692143,
+      "threshold": 0.023512305737617763,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s5 coverage",
+      "actual": 0.00032714843750003553,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s19 frames",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "actual sampling epochs",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s19 nonempty ROI",
+      "actual": 0,
+      "threshold": 0,
+      "scope": "contiguous 64x48; no failed points deleted",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s19 convergence",
+      "actual": 0.0057579856964021705,
+      "threshold": 0.02401749522124765,
+      "scope": "at least 50% reduction against same-round high FG at identical receiver positions",
+      "status": "passed"
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s19 coverage",
+      "actual": 0.00032714843750003553,
+      "threshold": 0.05,
+      "scope": "actual main Scene weight over supported full-resolution receiver pixels",
+      "status": "passed"
+    }
+  ],
+  "status": "passed",
+  "injected": false,
+  "lines": [
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 0,
+      "name": "boxFloor",
+      "rmse": 0.017339523723372743,
+      "A": 0.1821831944042535,
+      "se": 0.003587753676803481,
+      "coverage": 1,
+      "all49rmse": 0.017843671752543443
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 0,
+      "name": "boxFace",
+      "rmse": 0.050515110618517836,
+      "A": 0.09682902452068724,
+      "se": 0.0036551241666110427,
+      "coverage": 1,
+      "all49rmse": 0.05115122789104606
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 0,
+      "name": "wallFoot",
+      "rmse": 0.0023309746561125553,
+      "A": 0.0051991151224631835,
+      "se": 0.0016725734091714393,
+      "coverage": 1,
+      "all49rmse": 0.0023909995180509823
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 0,
+      "name": "pillarFoot",
+      "rmse": 0.0116193020615491,
+      "A": 0.13219062893788217,
+      "se": 0.0032133632771378026,
+      "coverage": 1,
+      "all49rmse": 0.0113713353916534
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 0,
+      "name": "ceiling",
+      "rmse": 0.002361729155132424,
+      "A": 0.0042066669656055196,
+      "se": 0.0014091733615649743,
+      "coverage": 1,
+      "all49rmse": 0.002346477525544812
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 0,
+      "name": "doorway",
+      "rmse": 0.003961160317681038,
+      "A": 0.08764115557484115,
+      "se": 0.002571557827181717,
+      "coverage": 1,
+      "all49rmse": 0.0040472247626682474
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 5,
+      "name": "boxFloor",
+      "rmse": 0.017603633453445462,
+      "A": 0.1821831944042535,
+      "se": 0.003587753676803481,
+      "coverage": 1,
+      "all49rmse": 0.018090381296761396
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 5,
+      "name": "boxFace",
+      "rmse": 0.05085733339452849,
+      "A": 0.09682902452068724,
+      "se": 0.0036551241666110427,
+      "coverage": 1,
+      "all49rmse": 0.05117851100345499
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 5,
+      "name": "wallFoot",
+      "rmse": 0.0019625751824054525,
+      "A": 0.0051991151224631835,
+      "se": 0.0016725734091714393,
+      "coverage": 1,
+      "all49rmse": 0.002394613482632979
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 5,
+      "name": "pillarFoot",
+      "rmse": 0.01142858259368072,
+      "A": 0.13219062893788217,
+      "se": 0.0032133632771378026,
+      "coverage": 1,
+      "all49rmse": 0.011109485904591234
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 5,
+      "name": "ceiling",
+      "rmse": 0.001999605380829151,
+      "A": 0.0042066669656055196,
+      "se": 0.0014091733615649743,
+      "coverage": 1,
+      "all49rmse": 0.00223332783159843
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 5,
+      "name": "doorway",
+      "rmse": 0.004062415652736706,
+      "A": 0.08764115557484115,
+      "se": 0.002571557827181717,
+      "coverage": 1,
+      "all49rmse": 0.004131093109140764
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 19,
+      "name": "boxFloor",
+      "rmse": 0.01718986755128746,
+      "A": 0.1821831944042535,
+      "se": 0.003587753676803481,
+      "coverage": 1,
+      "all49rmse": 0.01799705944389134
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 19,
+      "name": "boxFace",
+      "rmse": 0.05103371432407686,
+      "A": 0.09682902452068724,
+      "se": 0.0036551241666110427,
+      "coverage": 1,
+      "all49rmse": 0.051204659452229316
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 19,
+      "name": "wallFoot",
+      "rmse": 0.0021608033637274876,
+      "A": 0.0051991151224631835,
+      "se": 0.0016725734091714393,
+      "coverage": 1,
+      "all49rmse": 0.0027190469293921116
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 19,
+      "name": "pillarFoot",
+      "rmse": 0.011119883143759977,
+      "A": 0.13219062893788217,
+      "se": 0.0032133632771378026,
+      "coverage": 1,
+      "all49rmse": 0.011631949671831959
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 19,
+      "name": "ceiling",
+      "rmse": 0.0023597344282865976,
+      "A": 0.0042066669656055196,
+      "se": 0.0014091733615649743,
+      "coverage": 1,
+      "all49rmse": 0.002251794381139688
+    },
+    {
+      "heldOut": false,
+      "samples": 16,
+      "seed": 19,
+      "name": "doorway",
+      "rmse": 0.005083189263262533,
+      "A": 0.08764115557484115,
+      "se": 0.002571557827181717,
+      "coverage": 1,
+      "all49rmse": 0.004516526911553734
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 0,
+      "name": "boxFloor",
+      "rmse": 0.017626110952487478,
+      "A": 0.1821831944042535,
+      "se": 0.003587753676803481,
+      "coverage": 1,
+      "all49rmse": 0.018135877660623717
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 0,
+      "name": "boxFace",
+      "rmse": 0.05128534722654666,
+      "A": 0.09682902452068724,
+      "se": 0.0036551241666110427,
+      "coverage": 1,
+      "all49rmse": 0.05171456157226522
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 0,
+      "name": "wallFoot",
+      "rmse": 0.0020019539530979893,
+      "A": 0.0051991151224631835,
+      "se": 0.0016725734091714393,
+      "coverage": 1,
+      "all49rmse": 0.0023183196017957683
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 0,
+      "name": "pillarFoot",
+      "rmse": 0.011680539629322589,
+      "A": 0.13219062893788217,
+      "se": 0.0032133632771378026,
+      "coverage": 1,
+      "all49rmse": 0.011548493191082108
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 0,
+      "name": "ceiling",
+      "rmse": 0.0021018008220137284,
+      "A": 0.0042066669656055196,
+      "se": 0.0014091733615649743,
+      "coverage": 1,
+      "all49rmse": 0.002194806755333592
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 0,
+      "name": "doorway",
+      "rmse": 0.0038940792342861135,
+      "A": 0.08764115557484115,
+      "se": 0.002571557827181717,
+      "coverage": 1,
+      "all49rmse": 0.0038985792098168255
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 5,
+      "name": "boxFloor",
+      "rmse": 0.01742764708459135,
+      "A": 0.1821831944042535,
+      "se": 0.003587753676803481,
+      "coverage": 1,
+      "all49rmse": 0.0180496413030189
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 5,
+      "name": "boxFace",
+      "rmse": 0.051359860213136425,
+      "A": 0.09682902452068724,
+      "se": 0.0036551241666110427,
+      "coverage": 1,
+      "all49rmse": 0.051536119435835505
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 5,
+      "name": "wallFoot",
+      "rmse": 0.0018794467162915071,
+      "A": 0.0051991151224631835,
+      "se": 0.0016725734091714393,
+      "coverage": 1,
+      "all49rmse": 0.0023495050790499016
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 5,
+      "name": "pillarFoot",
+      "rmse": 0.011692744535255954,
+      "A": 0.13219062893788217,
+      "se": 0.0032133632771378026,
+      "coverage": 1,
+      "all49rmse": 0.011220785226089016
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 5,
+      "name": "ceiling",
+      "rmse": 0.0019220250233302977,
+      "A": 0.0042066669656055196,
+      "se": 0.0014091733615649743,
+      "coverage": 1,
+      "all49rmse": 0.002166383092866092
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 5,
+      "name": "doorway",
+      "rmse": 0.004470009135520212,
+      "A": 0.08764115557484115,
+      "se": 0.002571557827181717,
+      "coverage": 1,
+      "all49rmse": 0.004048574204763572
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 19,
+      "name": "boxFloor",
+      "rmse": 0.018173779101543577,
+      "A": 0.1821831944042535,
+      "se": 0.003587753676803481,
+      "coverage": 1,
+      "all49rmse": 0.018086135019204284
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 19,
+      "name": "boxFace",
+      "rmse": 0.0511406489987913,
+      "A": 0.09682902452068724,
+      "se": 0.0036551241666110427,
+      "coverage": 1,
+      "all49rmse": 0.05110649822841186
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 19,
+      "name": "wallFoot",
+      "rmse": 0.0018158007810125918,
+      "A": 0.0051991151224631835,
+      "se": 0.0016725734091714393,
+      "coverage": 1,
+      "all49rmse": 0.002443178217573113
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 19,
+      "name": "pillarFoot",
+      "rmse": 0.011958328802010183,
+      "A": 0.13219062893788217,
+      "se": 0.0032133632771378026,
+      "coverage": 1,
+      "all49rmse": 0.011700464918774068
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 19,
+      "name": "ceiling",
+      "rmse": 0.0019853741099670804,
+      "A": 0.0042066669656055196,
+      "se": 0.0014091733615649743,
+      "coverage": 1,
+      "all49rmse": 0.0022321847126067274
+    },
+    {
+      "heldOut": false,
+      "samples": 32,
+      "seed": 19,
+      "name": "doorway",
+      "rmse": 0.004043476324162845,
+      "A": 0.08764115557484115,
+      "se": 0.002571557827181717,
+      "coverage": 1,
+      "all49rmse": 0.00394976242398943
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 0,
+      "name": "boxFloor",
+      "rmse": 0.0226277982912132,
+      "A": 0.28547649642296635,
+      "se": 0.004603653198971002,
+      "coverage": 1,
+      "all49rmse": 0.023787391227394667
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 0,
+      "name": "boxFace",
+      "rmse": 0.07605741993792238,
+      "A": 0.12037935050492235,
+      "se": 0.004406257403382687,
+      "coverage": 1,
+      "all49rmse": 0.07820955666791393
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 0,
+      "name": "wallFoot",
+      "rmse": 0.03977298762747866,
+      "A": 0.2534999374847139,
+      "se": 0.0017519493671132838,
+      "coverage": 1,
+      "all49rmse": 0.03605632131614
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 0,
+      "name": "pillarFoot",
+      "rmse": 0.024978126002298207,
+      "A": 0.21640052844086857,
+      "se": 0.00393911230230146,
+      "coverage": 1,
+      "all49rmse": 0.023429243972678777
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 0,
+      "name": "ceiling",
+      "rmse": 0.021483799241013492,
+      "A": 0.08948954439238656,
+      "se": 0.001699877007183436,
+      "coverage": 1,
+      "all49rmse": 0.020146681162445328
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 0,
+      "name": "doorway",
+      "rmse": 0.012435539514541249,
+      "A": 0.11798535960935697,
+      "se": 0.002619393807489738,
+      "coverage": 1,
+      "all49rmse": 0.012850489581383967
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 5,
+      "name": "boxFloor",
+      "rmse": 0.024397081963348523,
+      "A": 0.28547649642296635,
+      "se": 0.004603653198971002,
+      "coverage": 1,
+      "all49rmse": 0.02401795593079941
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 5,
+      "name": "boxFace",
+      "rmse": 0.07629419160694365,
+      "A": 0.12037935050492235,
+      "se": 0.004406257403382687,
+      "coverage": 1,
+      "all49rmse": 0.07847515253706347
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 5,
+      "name": "wallFoot",
+      "rmse": 0.03945768706815445,
+      "A": 0.2534999374847139,
+      "se": 0.0017519493671132838,
+      "coverage": 1,
+      "all49rmse": 0.0359862425787481
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 5,
+      "name": "pillarFoot",
+      "rmse": 0.023987506761292438,
+      "A": 0.21640052844086857,
+      "se": 0.00393911230230146,
+      "coverage": 1,
+      "all49rmse": 0.023361082385274325
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 5,
+      "name": "ceiling",
+      "rmse": 0.022631563107300717,
+      "A": 0.08948954439238656,
+      "se": 0.001699877007183436,
+      "coverage": 1,
+      "all49rmse": 0.020756820407292542
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 5,
+      "name": "doorway",
+      "rmse": 0.012667451478023431,
+      "A": 0.11798535960935697,
+      "se": 0.002619393807489738,
+      "coverage": 1,
+      "all49rmse": 0.013236304304283785
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 19,
+      "name": "boxFloor",
+      "rmse": 0.024122924629141205,
+      "A": 0.28547649642296635,
+      "se": 0.004603653198971002,
+      "coverage": 1,
+      "all49rmse": 0.023946742490670754
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 19,
+      "name": "boxFace",
+      "rmse": 0.0760480633074483,
+      "A": 0.12037935050492235,
+      "se": 0.004406257403382687,
+      "coverage": 1,
+      "all49rmse": 0.07828799075205953
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 19,
+      "name": "wallFoot",
+      "rmse": 0.03931176394476693,
+      "A": 0.2534999374847139,
+      "se": 0.0017519493671132838,
+      "coverage": 1,
+      "all49rmse": 0.03586335655249821
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 19,
+      "name": "pillarFoot",
+      "rmse": 0.0228314248964718,
+      "A": 0.21640052844086857,
+      "se": 0.00393911230230146,
+      "coverage": 1,
+      "all49rmse": 0.022790416835012012
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 19,
+      "name": "ceiling",
+      "rmse": 0.021473033342767033,
+      "A": 0.08948954439238656,
+      "se": 0.001699877007183436,
+      "coverage": 1,
+      "all49rmse": 0.020298508128030048
+    },
+    {
+      "heldOut": true,
+      "samples": 16,
+      "seed": 19,
+      "name": "doorway",
+      "rmse": 0.012206658968864128,
+      "A": 0.11798535960935697,
+      "se": 0.002619393807489738,
+      "coverage": 1,
+      "all49rmse": 0.012797560872551024
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 0,
+      "name": "boxFloor",
+      "rmse": 0.02287465108359595,
+      "A": 0.28547649642296635,
+      "se": 0.004603653198971002,
+      "coverage": 1,
+      "all49rmse": 0.02364088290231646
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 0,
+      "name": "boxFace",
+      "rmse": 0.07642196419306305,
+      "A": 0.12037935050492235,
+      "se": 0.004406257403382687,
+      "coverage": 1,
+      "all49rmse": 0.07841625777446654
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 0,
+      "name": "wallFoot",
+      "rmse": 0.03925676620161282,
+      "A": 0.2534999374847139,
+      "se": 0.0017519493671132838,
+      "coverage": 1,
+      "all49rmse": 0.03597538784415164
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 0,
+      "name": "pillarFoot",
+      "rmse": 0.023569463789509193,
+      "A": 0.21640052844086857,
+      "se": 0.00393911230230146,
+      "coverage": 1,
+      "all49rmse": 0.022763177451428775
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 0,
+      "name": "ceiling",
+      "rmse": 0.021591452046577825,
+      "A": 0.08948954439238656,
+      "se": 0.001699877007183436,
+      "coverage": 1,
+      "all49rmse": 0.02028656556528749
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 0,
+      "name": "doorway",
+      "rmse": 0.012697092227044857,
+      "A": 0.11798535960935697,
+      "se": 0.002619393807489738,
+      "coverage": 1,
+      "all49rmse": 0.013115224276755547
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 5,
+      "name": "boxFloor",
+      "rmse": 0.023471192390668014,
+      "A": 0.28547649642296635,
+      "se": 0.004603653198971002,
+      "coverage": 1,
+      "all49rmse": 0.023774798605094818
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 5,
+      "name": "boxFace",
+      "rmse": 0.07615865217518113,
+      "A": 0.12037935050492235,
+      "se": 0.004406257403382687,
+      "coverage": 1,
+      "all49rmse": 0.07840401076632855
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 5,
+      "name": "wallFoot",
+      "rmse": 0.039244397259055167,
+      "A": 0.2534999374847139,
+      "se": 0.0017519493671132838,
+      "coverage": 1,
+      "all49rmse": 0.03596289626143648
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 5,
+      "name": "pillarFoot",
+      "rmse": 0.02346005517308057,
+      "A": 0.21640052844086857,
+      "se": 0.00393911230230146,
+      "coverage": 1,
+      "all49rmse": 0.02281938280376623
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 5,
+      "name": "ceiling",
+      "rmse": 0.021966688545673727,
+      "A": 0.08948954439238656,
+      "se": 0.001699877007183436,
+      "coverage": 1,
+      "all49rmse": 0.020440967853012557
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 5,
+      "name": "doorway",
+      "rmse": 0.012797350578580781,
+      "A": 0.11798535960935697,
+      "se": 0.002619393807489738,
+      "coverage": 1,
+      "all49rmse": 0.013208675481802695
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 19,
+      "name": "boxFloor",
+      "rmse": 0.02298472732249954,
+      "A": 0.28547649642296635,
+      "se": 0.004603653198971002,
+      "coverage": 1,
+      "all49rmse": 0.023811379351991836
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 19,
+      "name": "boxFace",
+      "rmse": 0.0756990970729764,
+      "A": 0.12037935050492235,
+      "se": 0.004406257403382687,
+      "coverage": 1,
+      "all49rmse": 0.07793891013409004
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 19,
+      "name": "wallFoot",
+      "rmse": 0.039231966648632086,
+      "A": 0.2534999374847139,
+      "se": 0.0017519493671132838,
+      "coverage": 1,
+      "all49rmse": 0.03592555543728246
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 19,
+      "name": "pillarFoot",
+      "rmse": 0.022189704241801243,
+      "A": 0.21640052844086857,
+      "se": 0.00393911230230146,
+      "coverage": 1,
+      "all49rmse": 0.022257221390215434
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 19,
+      "name": "ceiling",
+      "rmse": 0.022013471889405705,
+      "A": 0.08948954439238656,
+      "se": 0.001699877007183436,
+      "coverage": 1,
+      "all49rmse": 0.020372360441136026
+    },
+    {
+      "heldOut": true,
+      "samples": 32,
+      "seed": 19,
+      "name": "doorway",
+      "rmse": 0.012656955892916415,
+      "A": 0.11798535960935697,
+      "se": 0.002619393807489738,
+      "coverage": 1,
+      "all49rmse": 0.012946116871519711
+    }
+  ],
+  "roi": [
+    {
+      "name": "original-boxFoot-balanced-s0",
+      "raw": 0.04148854880361669,
+      "filtered": 0.005494388526077233,
+      "reduction": 0.8675685536246505,
+      "total": 0.021392743602266204,
+      "A": 0.07334134878854806,
+      "coverage": 0.9997783203125
+    },
+    {
+      "name": "original-boxFoot-balanced-s5",
+      "raw": 0.04268572492019697,
+      "filtered": 0.005203593076868095,
+      "reduction": 0.8780952394132591,
+      "total": 0.021295868684757042,
+      "A": 0.07334132477766749,
+      "coverage": 0.9997783203125
+    },
+    {
+      "name": "original-boxFoot-balanced-s19",
+      "raw": 0.04169791850261558,
+      "filtered": 0.005631293309755154,
+      "reduction": 0.8649502538261731,
+      "total": 0.021425040535776946,
+      "A": 0.07334132477766749,
+      "coverage": 0.9997783203125
+    },
+    {
+      "name": "original-pillarFoot-balanced-s0",
+      "raw": 0.04061771601315469,
+      "filtered": 0.003691949921367455,
+      "reduction": 0.9091049353889874,
+      "total": 0.013241885334301986,
+      "A": 0.054158174148614555,
+      "coverage": 0.9939365234375
+    },
+    {
+      "name": "original-pillarFoot-balanced-s5",
+      "raw": 0.03936026197548197,
+      "filtered": 0.00389754714474596,
+      "reduction": 0.9009776117045716,
+      "total": 0.01321538055817724,
+      "A": 0.054158174148614555,
+      "coverage": 0.9939365234375
+    },
+    {
+      "name": "original-pillarFoot-balanced-s19",
+      "raw": 0.03989915768187826,
+      "filtered": 0.0037604822787305394,
+      "reduction": 0.9057503341621042,
+      "total": 0.013311473835650204,
+      "A": 0.054158174148614555,
+      "coverage": 0.9939365234375
+    },
+    {
+      "name": "original-ceiling-balanced-s0",
+      "raw": 0.03002104681165353,
+      "filtered": 0.0017174028917131508,
+      "reduction": 0.942793370847865,
+      "total": 0.00321923329115602,
+      "A": 0.00734594317237397,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "original-ceiling-balanced-s5",
+      "raw": 0.029943978881800386,
+      "filtered": 0.001855051987616849,
+      "reduction": 0.938049248734131,
+      "total": 0.003186574242470859,
+      "A": 0.00734594317237397,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "original-ceiling-balanced-s19",
+      "raw": 0.030301116233010954,
+      "filtered": 0.0016494788797234844,
+      "reduction": 0.9455637585414596,
+      "total": 0.0031229942331335663,
+      "A": 0.00734594317237397,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "original-boxFoot-high-s0",
+      "raw": 0.02615426312718483,
+      "filtered": 0.005198075524920186,
+      "reduction": 0.8012532220983397,
+      "total": 0.021283230624179483,
+      "A": 0.07334134658539548,
+      "coverage": 0.9997783203125
+    },
+    {
+      "name": "original-boxFoot-high-s5",
+      "raw": 0.026176194413024597,
+      "filtered": 0.005144508905206416,
+      "reduction": 0.803466125593618,
+      "total": 0.021336636376082747,
+      "A": 0.07334134658539548,
+      "coverage": 0.9997783203125
+    },
+    {
+      "name": "original-boxFoot-high-s19",
+      "raw": 0.02593432282583962,
+      "filtered": 0.005203234610437629,
+      "reduction": 0.7993687884052483,
+      "total": 0.021275754581752265,
+      "A": 0.07334134658539548,
+      "coverage": 0.9997783203125
+    },
+    {
+      "name": "original-pillarFoot-high-s0",
+      "raw": 0.02252741883293265,
+      "filtered": 0.0033886507553653896,
+      "reduction": 0.8495766079329271,
+      "total": 0.013266799576809356,
+      "A": 0.05415816945566161,
+      "coverage": 0.9939365234375
+    },
+    {
+      "name": "original-pillarFoot-high-s5",
+      "raw": 0.02279674066634254,
+      "filtered": 0.0033859034727783,
+      "reduction": 0.8514742294815285,
+      "total": 0.013145868769696626,
+      "A": 0.054158188574598115,
+      "coverage": 0.9939365234375
+    },
+    {
+      "name": "original-pillarFoot-high-s19",
+      "raw": 0.021841381543359042,
+      "filtered": 0.0034808428469971097,
+      "reduction": 0.8406308300559187,
+      "total": 0.01325789542134357,
+      "A": 0.054158188574598115,
+      "coverage": 0.9939365234375
+    },
+    {
+      "name": "original-ceiling-high-s0",
+      "raw": 0.019268364452286232,
+      "filtered": 0.001339917359053592,
+      "reduction": 0.9304602441804755,
+      "total": 0.003014597516188753,
+      "A": 0.00734594317237397,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "original-ceiling-high-s5",
+      "raw": 0.019119831148577935,
+      "filtered": 0.0014486516591110156,
+      "reduction": 0.9242330307284768,
+      "total": 0.002959844919669475,
+      "A": 0.00734594317237397,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "original-ceiling-high-s19",
+      "raw": 0.019477374352288353,
+      "filtered": 0.0014606607945058712,
+      "reduction": 0.9250073049843979,
+      "total": 0.0029628223685061682,
+      "A": 0.00734594317237397,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s0",
+      "raw": 0.04101104118802223,
+      "filtered": 0.003928042659149517,
+      "reduction": 0.9042198748102803,
+      "total": 0.016123046653481323,
+      "A": 0.049444770147823565,
+      "coverage": 0.9998818359375
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s5",
+      "raw": 0.04102546116405463,
+      "filtered": 0.004086407023010679,
+      "reduction": 0.9003933921261786,
+      "total": 0.015958231805684075,
+      "A": 0.049444638700043,
+      "coverage": 0.9998818359375
+    },
+    {
+      "name": "held-out-boxFoot-balanced-s19",
+      "raw": 0.039418734284074095,
+      "filtered": 0.004338853943879227,
+      "reduction": 0.8899291409863405,
+      "total": 0.016094437221442815,
+      "A": 0.049444638700043,
+      "coverage": 0.9998818359375
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s0",
+      "raw": 0.04013534273299599,
+      "filtered": 0.0030325187782859224,
+      "reduction": 0.9244426838843752,
+      "total": 0.017426006489285155,
+      "A": 0.07264167525390444,
+      "coverage": 0.999625
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s5",
+      "raw": 0.04044524725200964,
+      "filtered": 0.0029604868674141986,
+      "reduction": 0.9268026018244431,
+      "total": 0.01755307266239959,
+      "A": 0.07264167525390444,
+      "coverage": 0.999625
+    },
+    {
+      "name": "held-out-pillarFoot-balanced-s19",
+      "raw": 0.0403319084702592,
+      "filtered": 0.0030890821606943436,
+      "reduction": 0.9234084803358057,
+      "total": 0.01747482203134999,
+      "A": 0.07264167525390444,
+      "coverage": 0.999625
+    },
+    {
+      "name": "held-out-ceiling-balanced-s0",
+      "raw": 0.032475379273209655,
+      "filtered": 0.0017039532396204403,
+      "reduction": 0.9475309210314257,
+      "total": 0.014618013993292961,
+      "A": 0.060226989309266434,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "held-out-ceiling-balanced-s5",
+      "raw": 0.03269098046282349,
+      "filtered": 0.0015889983229855846,
+      "reduction": 0.951393372101745,
+      "total": 0.014752942203828064,
+      "A": 0.060226989309266434,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "held-out-ceiling-balanced-s19",
+      "raw": 0.032280550680412266,
+      "filtered": 0.001670355141525215,
+      "reduction": 0.9482550605142315,
+      "total": 0.014710759710238582,
+      "A": 0.060226989309266434,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "held-out-boxFoot-high-s0",
+      "raw": 0.026067451247046663,
+      "filtered": 0.0038306606279592983,
+      "reduction": 0.8530481330278388,
+      "total": 0.01601955590341766,
+      "A": 0.04944467276690258,
+      "coverage": 0.9998818359375
+    },
+    {
+      "name": "held-out-boxFoot-high-s5",
+      "raw": 0.026130296616091342,
+      "filtered": 0.0038502209258668815,
+      "reduction": 0.8526529957759503,
+      "total": 0.016024834458827655,
+      "A": 0.04944467276690258,
+      "coverage": 0.9998818359375
+    },
+    {
+      "name": "held-out-boxFoot-high-s19",
+      "raw": 0.026453622335909806,
+      "filtered": 0.0037137255121295304,
+      "reduction": 0.8596137245412971,
+      "total": 0.016020131637011225,
+      "A": 0.04944467276690258,
+      "coverage": 0.9998818359375
+    },
+    {
+      "name": "held-out-pillarFoot-high-s0",
+      "raw": 0.023669470480113697,
+      "filtered": 0.002572011701181172,
+      "reduction": 0.8913363227393662,
+      "total": 0.017392938293171963,
+      "A": 0.07264151950251535,
+      "coverage": 0.999625
+    },
+    {
+      "name": "held-out-pillarFoot-high-s5",
+      "raw": 0.023261156720019344,
+      "filtered": 0.002578466484980008,
+      "reduction": 0.8891514073863364,
+      "total": 0.01738838133303375,
+      "A": 0.07264167131157004,
+      "coverage": 0.999625
+    },
+    {
+      "name": "held-out-pillarFoot-high-s19",
+      "raw": 0.02331746119102895,
+      "filtered": 0.002630067587452691,
+      "reduction": 0.8872060913533515,
+      "total": 0.01739078353645692,
+      "A": 0.07264167131157004,
+      "coverage": 0.999625
+    },
+    {
+      "name": "held-out-ceiling-high-s0",
+      "raw": 0.01870926545424107,
+      "filtered": 0.001145148478377029,
+      "reduction": 0.9387924405061321,
+      "total": 0.014641988652993453,
+      "A": 0.060226989309266434,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "held-out-ceiling-high-s5",
+      "raw": 0.019070109398469252,
+      "filtered": 0.001140176150834681,
+      "reduction": 0.9402113471396131,
+      "total": 0.014615259659577126,
+      "A": 0.060226989309266434,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "held-out-ceiling-high-s19",
+      "raw": 0.01897730221181479,
+      "filtered": 0.0011628331809569732,
+      "reduction": 0.9387250533306561,
+      "total": 0.01462289641167007,
+      "A": 0.060226989309266434,
+      "coverage": 0.9999990234375
+    },
+    {
+      "name": "gallery-courtyard-high-s0",
+      "raw": 0.021407919670904888,
+      "filtered": 0.004453024042274341,
+      "reduction": 0.7919917436757592,
+      "total": 0.02295718809077732,
+      "A": 0.08231097832770959,
+      "coverage": 0.990765380859375
+    },
+    {
+      "name": "gallery-courtyard-high-s5",
+      "raw": 0.022101221909507453,
+      "filtered": 0.0043521046476470955,
+      "reduction": 0.8030830754305527,
+      "total": 0.022877468026000262,
+      "A": 0.08231097832770959,
+      "coverage": 0.990765380859375
+    },
+    {
+      "name": "gallery-courtyard-high-s19",
+      "raw": 0.021923597538696157,
+      "filtered": 0.004487846562384849,
+      "reduction": 0.7952960706168961,
+      "total": 0.023068219794286103,
+      "A": 0.08231097832770959,
+      "coverage": 0.990765380859375
+    },
+    {
+      "name": "gallery-skylight-high-s0",
+      "raw": 0.04673227819713769,
+      "filtered": 0.0036065796993924896,
+      "reduction": 0.9228246548525129,
+      "total": 0.04763545419128451,
+      "A": 0.12549963123955393,
+      "coverage": 0.9935063493748438
+    },
+    {
+      "name": "gallery-skylight-high-s5",
+      "raw": 0.04609850200289231,
+      "filtered": 0.003618144178124317,
+      "reduction": 0.9215127602650232,
+      "total": 0.047588784597743655,
+      "A": 0.12549962311774002,
+      "coverage": 0.9935063493748438
+    },
+    {
+      "name": "gallery-skylight-high-s19",
+      "raw": 0.04748266549705371,
+      "filtered": 0.003715943375408419,
+      "reduction": 0.9217410535716662,
+      "total": 0.047634387431887734,
+      "A": 0.12549962311774002,
+      "coverage": 0.9935063493748438
+    },
+    {
+      "name": "gallery-emitter-high-s0",
+      "raw": 0.06961852190553044,
+      "filtered": 0.007679358926759252,
+      "reduction": 0.8896937378650492,
+      "total": 0.06764358772467122,
+      "A": 0.1839643034804917,
+      "coverage": 0.989187744140625
+    },
+    {
+      "name": "gallery-emitter-high-s5",
+      "raw": 0.06966649784394828,
+      "filtered": 0.007648037234877942,
+      "reduction": 0.8902192951910772,
+      "total": 0.06728563146683458,
+      "A": 0.1839643034804917,
+      "coverage": 0.989187744140625
+    },
+    {
+      "name": "gallery-emitter-high-s19",
+      "raw": 0.07080169214126208,
+      "filtered": 0.007665190869989655,
+      "reduction": 0.8917371797457012,
+      "total": 0.06761786409748416,
+      "A": 0.1839643034804917,
+      "coverage": 0.989187744140625
+    },
+    {
+      "name": "slanted-thin-left-high-s0",
+      "raw": 0.02723737624053997,
+      "filtered": 0.001768369096191681,
+      "reduction": 0.9350756445637503,
+      "total": 0.007614918359509408,
+      "A": 0.025160335793291605,
+      "coverage": 0.999818359375
+    },
+    {
+      "name": "slanted-thin-left-high-s5",
+      "raw": 0.02744376400893345,
+      "filtered": 0.001895632113691183,
+      "reduction": 0.9309266719727615,
+      "total": 0.007578113287012075,
+      "A": 0.025160335793291605,
+      "coverage": 0.999818359375
+    },
+    {
+      "name": "slanted-thin-left-high-s19",
+      "raw": 0.027978044559058862,
+      "filtered": 0.0019132329692511157,
+      "reduction": 0.9316166301325144,
+      "total": 0.007549318668592674,
+      "A": 0.025160335793291605,
+      "coverage": 0.999818359375
+    },
+    {
+      "name": "slanted-thin-right-high-s0",
+      "raw": 0.00009908445101334099,
+      "filtered": 0.000008574891698529825,
+      "reduction": 0.9134587555278952,
+      "total": 0.0003776349737263457,
+      "A": 0.000854251860554268,
+      "coverage": 0.9988828125
+    },
+    {
+      "name": "slanted-thin-right-high-s5",
+      "raw": 0.00009449453690537452,
+      "filtered": 0.000008570665873962684,
+      "reduction": 0.9092998796052598,
+      "total": 0.00037781708993363787,
+      "A": 0.0008383375204403838,
+      "coverage": 0.9988828125
+    },
+    {
+      "name": "slanted-thin-right-high-s19",
+      "raw": 0.00010383428879937529,
+      "filtered": 0.000009057144482913789,
+      "reduction": 0.9127730869287922,
+      "total": 0.00037749940960575263,
+      "A": 0.0008383375204403838,
+      "coverage": 0.9988828125
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s0",
+      "raw": 0.01603652190139262,
+      "filtered": 0.003120916659165731,
+      "reduction": 0.8053869362473973,
+      "total": 0.0721318013660163,
+      "A": 0.0733408675429206,
+      "coverage": 0.0645
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s5",
+      "raw": 0.01609498833417464,
+      "filtered": 0.0031466740004574595,
+      "reduction": 0.8044935519601405,
+      "total": 0.07212106971609475,
+      "A": 0.0733408675429206,
+      "coverage": 0.0645
+    },
+    {
+      "name": "original-scale-boxFoot-roi-s19",
+      "raw": 0.016520906309840724,
+      "filtered": 0.0031267597252064225,
+      "reduction": 0.8107392132994569,
+      "total": 0.07213355993615035,
+      "A": 0.0733408675429206,
+      "coverage": 0.0645
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s0",
+      "raw": 0.0468543803728913,
+      "filtered": 0.005608268768120341,
+      "reduction": 0.8803042805499326,
+      "total": 0.021402189316487002,
+      "A": 0.0733408675429206,
+      "coverage": 0.9996728515625
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s5",
+      "raw": 0.047024611475235525,
+      "filtered": 0.005590300341692143,
+      "reduction": 0.8811196910231539,
+      "total": 0.021661214443146788,
+      "A": 0.0733408675429206,
+      "coverage": 0.9996728515625
+    },
+    {
+      "name": "original-scale-boxFoot-fast-s19",
+      "raw": 0.0480349904424953,
+      "filtered": 0.0057579856964021705,
+      "reduction": 0.880129346475143,
+      "total": 0.021399968587814743,
+      "A": 0.0733408675429206,
+      "coverage": 0.9996728515625
+    }
+  ]
+}

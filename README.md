@@ -42,6 +42,19 @@ await scene.lumen.finalGather.configure({
 
 启用后保留同 revision 的原始 E_(k−1)、材质与照明输入；FG 替换/混合完整 E。Ns!=Ng、不支持视图、预算或数据失败会回退。相机只更新接收/FG，不重建静态 BVH。FG 每个活动绘制帧增加开销，世界重照的3ms调度目标不代表屏幕FG成本上限。16/32r存在独立画质失败与噪声，不能默认开启；总验收 npm run test:r6 因质量失败返回1，回归、质量、性能分别报告。
 
+## FG 重建与 Earth GI Gallery（R7）
+
+[Earth GI Gallery](http://localhost:8090/demo/gallery.html) 是独立原创建筑展示，包含庭院、天窗与大面积发光壁龛；本地真实 Globe 无需 token。原 Earth GI Lab 保留回归场景。
+
+可选 sampling 为 fixed-reference、scrambled-single-frame（无历史）或 reconstructed（线性 E 历史/几何过滤）。重建 FG 仍是实验模式，DDGI 保持默认；性能未过关时总验收返回 1。详见[代码、前后截图、独立数值与实际 GPU 成本](reports/fg-reconstruction-showcase-v6/README.md)，或[可运行证据查看页](http://localhost:8090/reports/fg-reconstruction-showcase-v6/index.html)。
+
+    npm run test:r7
+    npm run test:r7:quality
+    npm run test:r7:temporal
+    npm run test:r7:lifecycle
+    npm run test:gallery
+    npm run benchmark:r7
+
 ## 接口
 
 ```js
@@ -273,7 +286,11 @@ DDGI 的方向辐照度和距离矩方法参考 [NVIDIA RTXGI 的公开算法资
 world.publicationEvent.addEventListener(({ revision, bounce, final }) => {
   console.log(revision, bounce, final);
 });
-const final = world.solve({ publicationMode: "progressive", skyRadiance: [.2, .2, .3], bounces: 3 });
+const final = world.solve({
+  publicationMode: "progressive",
+  skyRadiance: [0.2, 0.2, 0.3],
+  bounces: 3,
+});
 const preview = await world.firstPublished;
 await final;
 ```

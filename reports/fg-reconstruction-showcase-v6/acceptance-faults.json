@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "scope": "pure aggregation fault matrix; no GPU success inferred",
+  "rows": [
+    {
+      "name": "stale passed JSON after child exit",
+      "exitCode": 0,
+      "accepted": true
+    },
+    {
+      "name": "stale passed JSON after child exit",
+      "exitCode": 1,
+      "accepted": false
+    },
+    {
+      "name": "stale passed JSON after child exit",
+      "exitCode": "unavailable",
+      "accepted": false
+    },
+    {
+      "name": "stale passed JSON after child exit",
+      "exitCode": "unavailable",
+      "accepted": false
+    }
+  ],
+  "checks": [
+    "fresh child success required",
+    "missing exit rejected",
+    "stale success cannot override failure",
+    "empty performance checks rejected",
+    "incomplete windows rejected",
+    "cached is explicit; source hashes separately required"
+  ]
+}

@@ -1,10 +1,44 @@
 {
+  "version": {
+    "head": "68835d5f4c05872507c6416ea7d4d69baf87da76",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "demo/globe.js": "91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1",
+      "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+      "scripts/browser-tools.mjs": "bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+      "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+    },
+    "compiledBundle": "6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240",
+    "modifiedSources": []
+  },
   "status": "passed",
   "checks": [
     "pending unavailable disjoint dropped",
     "second owner invalidated before consuming cleared flag",
     "no contaminated scheduling cost",
     "complete frame accepted only after every query",
-    "missing timer extension creates no unbounded frame ledger"
+    "missing timer extension creates no unbounded frame ledger",
+    "initial postMessage and Worker failure rollback",
+    "query back-pressure preserves draws and skips whole timer groups",
+    "unsupported/source/outside fallback reasons are not stale success"
   ]
 }

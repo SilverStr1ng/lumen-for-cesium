@@ -1,0 +1,558 @@
+{
+  "version": {
+    "head": "68835d5f4c05872507c6416ea7d4d69baf87da76",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "demo/globe.js": "91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1",
+      "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+      "scripts/browser-tools.mjs": "bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+      "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+    },
+    "compiledBundle": "6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240",
+    "modifiedSources": []
+  },
+  "started": "2026-10-13T12:01:10.376Z",
+  "tests": [
+    {
+      "script": "lint-r6",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1325.6257,
+      "stdout": "",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-pipeline",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1229.5183,
+      "stdout": "PASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for specular environment maps\nPASS Scene/Model/ImageBasedLightingPipelineStage updates Lumen uniforms without rebuilding and disables them during picking\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for default image-based lighting\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for spherical harmonics\nPASS Scene/Model/LightingPipelineStage supports PBR lighting\nPASS Scene/Model/LightingPipelineStage exports supported opaque and alpha-mask PBR triangles with normals\nPASS Scene/Model/LightingPipelineStage keeps unsupported material paths on the original lighting\nPASS Scene/Model/LightingPipelineStage supports unlit lighting\nPASS Scene/Model/LightingPipelineStage supports light color\n9 pipeline specs; 0 failed; passed\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-transport",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 194.5296000000003,
+      "stdout": "PASS 500 BVH rays agree with independent brute-force plane/barycentric reference\nPASS alpha rejection continues traversal; exhausted traversal is Unknown\nPASS directional DDGI integration yields pi * sky radiance without bounce energy growth\nPASS directional distance moments suppress cross-wall probe leakage by >1000x\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-environment",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 150.43550000000005,
+      "stdout": "{\n  \"tolerance\": 0.025,\n  \"checks\": [\n    {\n      \"name\": \"sphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.005319031076975733,\n      \"passed\": true\n    },\n    {\n      \"name\": \"upper-hemisphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.017878325282171925,\n      \"passed\": true\n    },\n    {\n      \"name\": \"root domain includes 200m blocker and retains historical 100m floor\",\n      \"maximum\": 201.01999900009997,\n      \"full\": {\n        \"status\": \"Hit\",\n        \"triangle\": 0,\n        \"u\": 0.25,\n        \"v\": 0.5,\n        \"distance\": 200,\n        \"backface\": true\n      },\n      \"passed\": true\n    }\n  ],\n  \"status\": \"passed\"\n}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-globe-controls",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 43.495800000000145,
+      "stdout": "PASS provider identity/generation guards, single fallback, terrain disable, stale status, foundation range, redaction and CSS order\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1996.6056000000003,
+      "stdout": "[{\"strategy\":\"median\",\"bins\":12,\"stats\":{\"persistentBytes\":7808,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":7,\"triangles\":514,\"nodes\":131,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":60762,\"triangles\":60507,\"accept\":358},\"milliseconds\":24.7208999999998},{\"strategy\":\"sah\",\"bins\":8,\"stats\":{\"persistentBytes\":10208,\"strategy\":\"sah\",\"bins\":8,\"maxDepth\":8,\"triangles\":514,\"nodes\":191,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":65950,\"triangles\":34267,\"accept\":360},\"milliseconds\":17.889599999999973},{\"strategy\":\"sah\",\"bins\":12,\"stats\":{\"persistentBytes\":9968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":8,\"triangles\":514,\"nodes\":185,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63446,\"triangles\":36899,\"accept\":358},\"milliseconds\":15.853700000000117},{\"strategy\":\"sah\",\"bins\":16,\"stats\":{\"persistentBytes\":9888,\"strategy\":\"sah\",\"bins\":16,\"maxDepth\":8,\"triangles\":514,\"nodes\":183,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63544,\"triangles\":36041,\"accept\":357},\"milliseconds\":8.719900000000052},{\"strategy\":\"sah\",\"bins\":32,\"stats\":{\"persistentBytes\":9488,\"strategy\":\"sah\",\"bins\":32,\"maxDepth\":8,\"triangles\":514,\"nodes\":173,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":61648,\"triangles\":38845,\"accept\":358},\"milliseconds\":9.394799999999805}]\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fixtures",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 12600.579999999998,
+      "stdout": "PASS untextured: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS untextured: finite HDR irradiance and accounted texture memory\nPASS untextured: valid 1x1 material atlas\nPASS sky lighting produces actual receiver irradiance changes\nPASS exhausted GPU traversal is Unknown\nPASS untextured: GL has no framebuffer feedback or errors\nPASS two-rooms: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS two-rooms: finite HDR irradiance and accounted texture memory\nPASS two-rooms: real wall agrees with independent CPU intersection\nPASS two-rooms: wall blocks red emissive transport\nPASS two-rooms: GL has no framebuffer feedback or errors\nPASS alpha-mask: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS alpha-mask: finite HDR irradiance and accounted texture memory\nPASS alpha mask: transparent texel passes through; opaque texel occludes\nPASS black light preserves valid coverage and zero irradiance\nPASS destroy releases owned resources and reload restores GPU lighting\nPASS alpha-mask: GL has no framebuffer feedback or errors\nPASS no render, worker, browser or GL exceptions\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-relighting",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8700.7418,
+      "stdout": "PASS valid sun cache has no Unknown slots\nPASS skyOnly: zero new probe intersections, sun BVH work and moments\nPASS intensityOnly: zero new probe intersections, sun BVH work and moments\nPASS direction refreshes sun visibility without retracing probe hits\nPASS distance moments remain bit-identical through energy, direction and material changes\nPASS RGB/emission updates have independent material versions and reuse geometry and visibility\nPASS immutable jobs resist caller mutation and unsafe hit-semantic changes are rejected\nPASS distance moments match an independent CPU formula\nPASS Unknown sun visibility is retained as invalid lighting without changing geometry\nPASS actual foreground HDR responds to sky changes\nPASS no GL feedback or errors in dependency and HDR diagnostics\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-integration",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 7957.905399999996,
+      "stdout": "PASS arithmetic and LUT produce matching fixed-input E and final HDR\nPASS every octahedral border is an exact mirror without cross-probe reads\nPASS sampling is continuous across octahedral seams\nPASS distance moments remain unchanged across integration variants\nPASS copying uses distinct GL images and bounded owned resources\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-progressive",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8811.1129,
+      "stdout": "PASS first complete round is usable before completed resolves\nPASS forward HDR uses the new first-round texture without old-field warm start\nPASS each completed progressive round is displayed in a distinct frame\nPASS published/read/write ownership refers only to completed reads and separate writes\nPASS same N-bounce progressive and snapshot E/moments/final HDR agree\nPASS rapid requests publish during input and settle the newest revision\nPASS superseded promises reject and obsolete deeper rounds are skipped\nPASS publication versions are monotonic and pending work is bounded\nPASS on-demand rendering stops GI submissions and frames after settling\nPASS actual GL texture/FBO resources remain stable and shader cache does not grow\nPASS destroy rejects both lighting promises and pending worker requests\nPASS initialization failure rejects preview/final and releases resources\nPASS reload restores all rounds without GL feedback, errors or blocking waits\nPASS no unexpected render/worker/browser errors\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-publication-lifecycle",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 16740.685699999995,
+      "stdout": "PASS non-final publication: destroy-world\nPASS non-final publication: destroy-scene\nPASS non-final publication: replace-world\nPASS non-final publication: solve\nPASS non-final publication: throw\nPASS final publication: destroy-world\nPASS final publication: destroy-scene\nPASS final publication: replace-world\nPASS final publication: solve\nPASS final publication: throw\nPASS progressive: firstPublished.then destruction cancels queued event\nPASS snapshot: firstPublished.then destruction cancels queued event\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility-gpu",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 17172.678,
+      "stdout": "untextured [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9096,\"p50\":3,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":21324,\"p50\":7,\"p95\":7,\"max\":12},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":696,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":1,\"triangles\":16,\"nodes\":3,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.5},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":1188,\"p50\":0,\"p95\":8,\"max\":8},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9096,\"p50\":3,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":21324,\"p50\":7,\"p95\":7,\"max\":12},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":696,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":1,\"triangles\":16,\"nodes\":3,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.600000001490116},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":1188,\"p50\":0,\"p95\":8,\"max\":8},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9186,\"p50\":3,\"p95\":3,\"max\":6},\"triangleTests\":{\"sum\":9286,\"p50\":3,\"p95\":3,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":856,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":3,\"triangles\":16,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.6000000014901161,\"tieRankOffset\":16,\"tieRankBytes\":64,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":4.0999999940395355},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":695,\"p50\":0,\"p95\":4,\"max\":4},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9186,\"p50\":3,\"p95\":3,\"max\":6},\"triangleTests\":{\"sum\":9286,\"p50\":3,\"p95\":3,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":856,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":3,\"triangles\":16,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.5,\"tieRankOffset\":16,\"tieRankBytes\":64,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":3.8000000044703484},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":695,\"p50\":0,\"p95\":4,\"max\":4},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}}]\nalpha-mask [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.29999999701976776,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":5.200000002980232},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.19999999552965164,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":5.5},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":6,\"tieRankBytes\":32,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":6.199999995529652},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.19999999552965164,\"tieRankOffset\":6,\"tieRankBytes\":32,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":6.300000004470348},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}}]\ntwo-rooms [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":22130,\"p50\":3,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":24213,\"p50\":4,\"p95\":8,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":888,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":2,\"triangles\":24,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0.09999999403953552,\"prepareMilliseconds\":3.600000001490116},\"distribution\":{\"nodeVisits\":{\"sum\":1317,\"p50\":1,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":1310,\"p50\":0,\"p95\":9,\"max\":18},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":22130,\"p50\":3,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":24213,\"p50\":4,\"p95\":8,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":888,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":2,\"triangles\":24,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.4000000059604645,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":3.5},\"distribution\":{\"nodeVisits\":{\"sum\":1317,\"p50\":1,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":1310,\"p50\":0,\"p95\":9,\"max\":18},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":19658,\"p50\":2,\"p95\":8,\"max\":8},\"triangleTests\":{\"sum\":17278,\"p50\":1,\"p95\":10,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":4,\"triangles\":24,\"nodes\":9,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.7000000029802322,\"tieRankOffset\":24,\"tieRankBytes\":96,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":4.100000001490116},\"distribution\":{\"nodeVisits\":{\"sum\":1633,\"p50\":1,\"p95\":8,\"max\":9},\"triangleTests\":{\"sum\":929,\"p50\":0,\"p95\":9,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":19658,\"p50\":2,\"p95\":8,\"max\":8},\"triangleTests\":{\"sum\":17278,\"p50\":1,\"p95\":10,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":4,\"triangles\":24,\"nodes\":9,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.7000000029802322,\"tieRankOffset\":24,\"tieRankBytes\":96,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":4},\"distribution\":{\"nodeVisits\":{\"sum\":1633,\"p50\":1,\"p95\":8,\"max\":9},\"triangleTests\":{\"sum\":929,\"p50\":0,\"p95\":9,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}}]\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility-domain",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 6823.295899999997,
+      "stdout": "{\n  grid: {\n    origin: [ -1.5, -1.5, -0.5 ],\n    counts: [ 4, 4, 152 ],\n    total: 2432,\n    spacing: 1,\n    normalBias: 0.02,\n    rays: 128,\n    width: 160,\n    height: 1520\n  },\n  checked: 523,\n  leaks: 0,\n  short: [\n    {\n      status: 'Miss',\n      triangle: undefined,\n      gpuTriangle: -2,\n      u: 0,\n      v: 0,\n      distance: 100,\n      backface: false\n    }\n  ],\n  complete: [\n    {\n      status: 'Hit',\n      triangle: 3,\n      gpuTriangle: 3,\n      u: 0.550000011920929,\n      v: 0.050000011920928955,\n      distance: 149.97999572753906,\n      backface: true\n    }\n  ]\n}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility-edges",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 9307.522700000001,
+      "stdout": "[\n  {\n    mode: 'reference',\n    rays: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    hits: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    any: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    cpu: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    stats: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ]\n  },\n  {\n    mode: 'optimized',\n    rays: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    hits: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    any: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    cpu: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    stats: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ]\n  }\n]\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-globe",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 13871.79250000001,
+      "stdout": "",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-solid-probes",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1663.281799999997,
+      "stdout": "{\"totalInside\":0,\"activeInside\":0,\"probes\":924}\nPASS actual glTF -> BVH -> relocation/classification rejects solid interiors\nPASS explicitly double-sided solid interior rejected\nPASS double-sided thin sheet supports both sides\nPASS doorway room valid dark free space survives classification/integration/material transport\nPASS overlapping slabs / cumulative relocation bound\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-spatial-kernel",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 46.523099999991246,
+      "stdout": "{\"x\":0,\"actual\":[0,0,0],\"expected\":[0,0,0],\"weight\":1}\n{\"x\":0.01,\"actual\":[0.01,0.02,0.03],\"expected\":[0.01,0.02,0.03],\"weight\":1}\n{\"x\":0.25,\"actual\":[0.25,0.5,0.75],\"expected\":[0.25,0.5,0.75],\"weight\":1}\n{\"x\":0.5,\"actual\":[0.5,1,1.5],\"expected\":[0.5,1,1.5],\"weight\":1}\n{\"x\":0.75,\"actual\":[0.75,1.5,2.25],\"expected\":[0.75,1.5,2.25],\"weight\":1}\n{\"x\":0.99,\"actual\":[0.99,1.98,2.9699999999999998],\"expected\":[0.99,1.98,2.9699999999999998],\"weight\":1}\n{\"x\":1,\"actual\":[1,2,3],\"expected\":[1,2,3],\"weight\":1}\nPASS independent linear field / normalized trilinear kernel\nPASS constant field, low reliability, Ng/Ns, invalid data versus valid darkness\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-spatial-gpu",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 7954.219199999992,
+      "stdout": "passed \n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-pbr-environment",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 11450.311199999996,
+      "stdout": "{\"status\":\"passed\",\"checks\":[\"real cubemap mips, roughness/direction response, manual solar refresh, zero production sync readbacks\",\"90 materials/view angles: white furnace, linear source scaling, coverage conservation, zero metal diffuse, independent specular MS\"],\"errors\":[]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-display-presets",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 22442.247099999993,
+      "stdout": "passed \n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-probe-display",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8228.650900000008,
+      "stdout": "passed \n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-ibl-policy",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8326.73509999999,
+      "stdout": "passed 0 \n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-final-gather",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 11211.830499999982,
+      "stdout": "passed \n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-receiver",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 17064.8156,
+      "stdout": "PASS full-resolution ROI production equals fixed point FG\nPASS same-frame E replaces complete DDGI; direct and emitter unchanged\nPASS ordinary/log depth and forced multiframe-frustum receiver ownership\nUnknown evidence {\"max\":0.00830078125,\"roiMax\":0,\"locations\":[{\"x\":486,\"y\":217,\"channel\":0,\"a\":0.422607421875,\"b\":0.430908203125}],\"unknown\":65536,\"valid\":65536}\nPASS Unknown does not become sky; invalid FG uses DDGI\nPASS memory and ray budgets reject atomically\nPASS new revision and material do not reuse old FG input\nPASS resize, AA, no history and camera movements retain static BVH\nPASS FG off restores raw solver and releases resources over 20 cycles\nPASS no production readback, feedback or nested timer queries\nPASS static requestRenderMode sleeps; camera requests FG frame\ndestroy evidence {\"restored\":{\"mode\":\"fg\",\"quality\":\"fast\",\"ready\":true},\"active\":true,\"oldDestroyed\":true,\"ownedTextures\":0,\"ownedFramebuffers\":0,\"worldTextures\":0,\"live\":{\"textures\":9,\"framebuffers\":1,\"queries\":0,\"programs\":0,\"syncs\":0}}\nPASS saved view restores FG mode and settings; reload and destroy release\npassed\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-reconstruction",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 10146.166499999992,
+      "stdout": "passed \n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-resource-lifecycle",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 254.7490000000107,
+      "stdout": "passed class resource guards and late lease cleanup\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-r7-acceptance",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 43.20749999998952,
+      "stdout": "PASS R7 aggregation rejects failed/null children and stale/empty/incomplete success JSON\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-r7-timers",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 348.82769999999437,
+      "stdout": "PASS actual FG/world modules: shared disjoint pending invalidation and complete frames\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-sampling",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 10238.152700000006,
+      "stdout": "{\"status\":\"passed\",\"maximumCpuGpuError\":0.0000019073486328125,\"rows\":[{\"k\":1,\"seed\":0,\"rmseFirst\":0.005820470629549272,\"rmse32\":0.004541992006721648,\"mean\":[[1.002534992992878,0.4524999661371112,0.6150220856070518]]},{\"k\":1,\"seed\":5,\"rmseFirst\":0.08556336807885279,\"rmse32\":0.007500004537324612,\"mean\":[[1.0075991433113813,0.45207873452454805,0.6143206004053354]]},{\"k\":1,\"seed\":19,\"rmseFirst\":0.0400480783765695,\"rmse32\":0.008726657917841243,\"mean\":[[0.9799764789640903,0.45467159431427717,0.6185622680932283]]},{\"k\":2,\"seed\":0,\"rmseFirst\":0.006506007953562951,\"rmse32\":0.004565463262674518,\"mean\":[[1.0890961717814207,0.4579898761585355,0.6187456659972668]]},{\"k\":2,\"seed\":5,\"rmseFirst\":0.09627124163224951,\"rmse32\":0.007838277492634181,\"mean\":[[1.0946142356842756,0.45728604029864073,0.6176451370120049]]},{\"k\":2,\"seed\":19,\"rmseFirst\":0.04494111178099605,\"rmse32\":0.009526033355572668,\"mean\":[[1.0653648097068071,0.46107487101107836,0.6235043592751026]]},{\"k\":3,\"seed\":0,\"rmseFirst\":0.007586857690556742,\"rmse32\":0.004605096386231167,\"mean\":[[1.1128596924245358,0.4587546195834875,0.6192916035652161]]},{\"k\":3,\"seed\":5,\"rmseFirst\":0.09725474732907495,\"rmse32\":0.007957731752460786,\"mean\":[[1.1185047663748264,0.4580185543745756,0.6181446369737387]]},{\"k\":3,\"seed\":19,\"rmseFirst\":0.04415099992737936,\"rmse32\":0.0097072277239286,\"mean\":[[1.0888326559215784,0.46207763999700546,0.6243914719671011]]}]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-history",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 12327.347399999999,
+      "stdout": "{\"status\":\"passed\",\"rows\":[{\"frame\":1,\"max\":1,\"mean\":1,\"valid\":64000,\"nonfinite\":0,\"passes\":1,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"frame\":4,\"max\":4,\"mean\":3.9998476867675783,\"valid\":64000,\"nonfinite\":0,\"passes\":4,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"frame\":8,\"max\":8,\"mean\":7.997819458007813,\"valid\":64000,\"nonfinite\":0,\"passes\":8,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"frame\":16,\"max\":16,\"mean\":15.98716455078125,\"valid\":64000,\"nonfinite\":0,\"passes\":16,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"frame\":32,\"max\":32,\"mean\":31.941143798828126,\"valid\":64000,\"nonfinite\":0,\"passes\":32,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"name\":\"static stopped\",\"sameSampling\":true,\"max\":32,\"mean\":31.941143798828126,\"valid\":64000,\"nonfinite\":0,\"passes\":32,\"source\":2,\"round\":3,\"status\":\"experimental FG: accumulation paused\",\"bytes\":18061760},{\"name\":\"projection change\",\"sampled\":true,\"max\":32,\"mean\":31.707921875,\"valid\":64000,\"nonfinite\":0,\"passes\":33,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"name\":\"camera reproject\",\"max\":32,\"mean\":31.334985229492187,\"valid\":64000,\"nonfinite\":0,\"passes\":34,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"name\":\"camera cut\",\"max\":1,\"mean\":1,\"valid\":55697,\"nonfinite\":0,\"passes\":1,\"source\":2,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"name\":\"new revision\",\"max\":2,\"mean\":1.9999975453121352,\"valid\":55697,\"nonfinite\":0,\"passes\":2,\"source\":3,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760},{\"name\":\"ordinary depth multifrustum\",\"max\":5,\"mean\":4.999332336425781,\"valid\":64000,\"nonfinite\":0,\"passes\":5,\"source\":3,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760,\"owned\":64000,\"maxPositionDelta\":0,\"maxLocalMagnitude\":10.700000762939453,\"splits\":[0.1,1,10,100,1000,10000,100000,130841.61302838869],\"sampledOnce\":true},{\"name\":\"log depth multifrustum\",\"max\":5,\"mean\":4.99910498046875,\"valid\":64000,\"nonfinite\":0,\"passes\":5,\"source\":3,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760,\"owned\":64000,\"maxPositionDelta\":0,\"maxLocalMagnitude\":10.700000762939453,\"splits\":[0.1,1,10,100,1000,10000,100000,130841.61302838869],\"sampledOnce\":true},{\"name\":\"orthographic width change\",\"paused\":true,\"sampled\":true,\"max\":32,\"mean\":30.12546875,\"valid\":64000,\"nonfinite\":0,\"passes\":33,\"source\":3,\"round\":3,\"status\":\"active experimental FG\",\"bytes\":18061760}]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-barriers",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8274.854800000001,
+      "stdout": "{\"version\":{\"head\":\"68835d5f4c05872507c6416ea7d4d69baf87da76\",\"sources\":{\"cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js\":\"ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b\",\"cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js\":\"336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95\",\"cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl\":\"e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402\",\"lumen/gpu-worker.js\":\"c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c\",\"lumen/math.js\":\"ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041\",\"lumen/gltf.js\":\"471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f\",\"cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js\":\"028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2\",\"cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js\":\"92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6\",\"cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js\":\"16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db\",\"cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js\":\"bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117\",\"cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js\":\"c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30\",\"cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js\":\"d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e\",\"cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js\":\"962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c\",\"cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js\":\"baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c\",\"demo/globe.js\":\"91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1\",\"demo/benchmark.js\":\"b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583\",\"scripts/browser-tools.mjs\":\"bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8\",\"demo/fg-reconstruction-diagnostics.js\":\"3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8\",\"demo/receiver-diagnostics.js\":\"234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3\",\"lumen/path-reference.js\":\"a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985\",\"scripts/cpu-image-fixtures.mjs\":\"26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf\",\"scripts/measure-fg-canonical.mjs\":\"ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a\",\"scripts/capture-fg-reconstruction.mjs\":\"7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283\",\"scripts/benchmark-fg-reconstruction.mjs\":\"8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99\"},\"compiledBundle\":\"6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240\",\"modifiedSources\":[]},\"errors\":[],\"rows\":[{\"name\":\"same-center-near-wall\",\"actual\":[99,99,99,1]},{\"name\":\"thin-wall\",\"actual\":[0.10000000149011612,0.20000000298023224,0.30000001192092896,0]},{\"name\":\"open-segment\",\"actual\":[99,99,99,1]},{\"name\":\"other-owner\",\"actual\":[0.10000000149011612,0.20000000298023224,0.30000001192092896,0]},{\"name\":\"other-plane\",\"actual\":[0.10000000149011612,0.20000000298023224,0.30000001192092896,0]},{\"name\":\"unknown-current\",\"actual\":[0.10000000149011612,0.20000000298023224,0.30000001192092896,0]},{\"name\":\"missing-current\",\"actual\":[0.10000000149011612,0.20000000298023224,0.30000001192092896,0]},{\"name\":\"FP16-overflow-raw-preserved\",\"actual\":[10000,10000,10000,1]}],\"status\":\"passed\"}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-statistics",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8691.646899999992,
+      "stdout": "{\"status\":\"passed\",\"rows\":[{\"name\":\"31 dark plus one rare bright\",\"E\":[3.125,3.125,3.125,32],\"moments\":[3.125,312.5,9.453125,0],\"filtered\":[3.125,3.125,3.125,32]},{\"name\":\"Unknown current invalidates pixel\",\"E\":[0,0,0,0],\"moments\":[0,0,0,4],\"filtered\":[0,0,0,0]},{\"name\":\"HDR rejected by half storage without altering raw\",\"E\":[0,0,0,0],\"moments\":[0,0,0,5],\"filtered\":[0,0,0,0],\"raw\":[10000,10000,10000,1]},{\"name\":\"constant FP16 accuracy\",\"E\":[0.1234130859375,1.234375,23.453125,32],\"moments\":[2.6015625,6.7734375,0.00016069412231445312,0],\"filtered\":[0.1234130859375,1.234375,23.453125,32]},{\"name\":\"repeated direction does not add information\",\"E\":[0.1234130859375,1.234375,23.453125,32],\"moments\":[2.6015625,6.7734375,0.0001659393310546875,0],\"filtered\":[0.1234130859375,1.234375,23.453125,32],\"before\":32,\"after\":32},{\"name\":\"known black valid\",\"E\":[0,0,0,1],\"moments\":[0,0,0.0099945068359375,1],\"filtered\":[0,0,0,1]}]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-temporal",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 23562.802199999976,
+      "stdout": "{\"name\":\"static-32\",\"ready\":true,\"length\":31.966019205729168,\"passes\":32,\"revision\":1,\"rmse\":0.004823010132992946}\n{\"name\":\"slow-pan-0\",\"ready\":true,\"length\":31.738868055555557,\"passes\":33,\"revision\":1,\"rmse\":0.004248453144426799}\n{\"name\":\"slow-pan-1\",\"ready\":true,\"length\":31.452288845486112,\"passes\":34,\"revision\":1,\"rmse\":0.0037102386761245884}\n{\"name\":\"slow-pan-2\",\"ready\":true,\"length\":31.17330345323351,\"passes\":35,\"revision\":1,\"rmse\":0.004074930986583346}\n{\"name\":\"slow-pan-3\",\"ready\":true,\"length\":30.908264105902777,\"passes\":36,\"revision\":1,\"rmse\":0.004016145555444429}\n{\"name\":\"slow-pan-4\",\"ready\":true,\"length\":30.64426373969184,\"passes\":37,\"revision\":1,\"rmse\":0.004000977842875321}\n{\"name\":\"slow-pan-5\",\"ready\":true,\"length\":30.388119547526042,\"passes\":38,\"revision\":1,\"rmse\":0.0038142799593093224}\n{\"name\":\"slow-pan-6\",\"ready\":true,\"length\":30.17154059516059,\"passes\":39,\"revision\":1,\"rmse\":0.004090969297048582}\n{\"name\":\"slow-pan-7\",\"ready\":true,\"length\":29.940712714301217,\"passes\":40,\"revision\":1,\"rmse\":0.004271483670881425}\n{\"name\":\"around-pillar-0\",\"ready\":true,\"length\":1,\"passes\":1,\"revision\":1,\"rmse\":0.02037743997224578}\n{\"name\":\"around-pillar-1\",\"ready\":true,\"length\":1.8967288275824652,\"passes\":2,\"revision\":1,\"rmse\":0.016403349418473476}\n{\"name\":\"around-pillar-2\",\"ready\":true,\"length\":2.6995118476019964,\"passes\":3,\"revision\":1,\"rmse\":0.014523593221069985}\n{\"name\":\"around-pillar-3\",\"ready\":true,\"length\":3.419460462782118,\"passes\":4,\"revision\":1,\"rmse\":0.008655354753738053}\n{\"name\":\"around-pillar-4\",\"ready\":true,\"length\":4.082338216145834,\"passes\":5,\"revision\":1,\"rmse\":0.007369848563928374}\n{\"name\":\"around-pillar-5\",\"ready\":true,\"length\":4.692549601236979,\"passes\":6,\"revision\":1,\"rmse\":0.011810776390658308}\n{\"name\":\"around-pillar-6\",\"ready\":true,\"length\":5.271852620442709,\"passes\":7,\"revision\":1,\"rmse\":0.011470024348185712}\n{\"name\":\"around-pillar-7\",\"ready\":true,\"length\":5.866773261176215,\"passes\":8,\"revision\":1,\"rmse\":0.009041610481941121}\n{\"name\":\"doorway-entry\",\"ready\":true,\"length\":1,\"passes\":1,\"revision\":1,\"rmse\":0.014995327074959592}\n{\"name\":\"doorway-reveal-0\",\"ready\":true,\"length\":1.8572790593007114,\"passes\":2,\"revision\":1,\"rmse\":0.014019891765513054}\n{\"name\":\"doorway-reveal-1\",\"ready\":true,\"length\":2.644917208895795,\"passes\":3,\"revision\":1,\"rmse\":0.02387798224359619}\n{\"name\":\"doorway-reveal-2\",\"ready\":true,\"length\":3.31048031587267,\"passes\":4,\"revision\":1,\"rmse\":0.01709158009079091}\n{\"name\":\"doorway-reveal-3\",\"ready\":true,\"length\":3.8785663357969784,\"passes\":5,\"revision\":1,\"rmse\":0.015085958151306336}\n{\"name\":\"doorway-reveal-4\",\"ready\":true,\"length\":4.286995761230011,\"passes\":6,\"revision\":1,\"rmse\":0.007181546001551535}\n{\"name\":\"doorway-reveal-5\",\"ready\":true,\"length\":4.626178401455214,\"passes\":7,\"revision\":1,\"rmse\":0.0152092236407833}\n{\"name\":\"doorway-reveal-6\",\"ready\":true,\"length\":4.689510276455096,\"passes\":8,\"revision\":1,\"rmse\":0.018128140769837122}\n{\"name\":\"doorway-reveal-7\",\"ready\":true,\"length\":4.610493302646572,\"passes\":9,\"revision\":1,\"rmse\":0.012337219522421247}\n{\"name\":\"camera-cut\",\"ready\":true,\"length\":1,\"passes\":1,\"revision\":1,\"rmse\":0.012126764497883273}\n{\"name\":\"resize\",\"ready\":true,\"length\":1,\"passes\":1,\"revision\":7,\"rmse\":0.02069989788505564}\n{\"name\":\"AA-change\",\"ready\":true,\"length\":1.99999994140625,\"passes\":2,\"revision\":7,\"rmse\":0.016351933127203854}\n{\"status\":\"passed\",\"steps\":37,\"checks\":[\"display exposure leaves raw solver and converged E untouched\",\"fixed epoch adds one information pass and then caches\",\"on-demand finite accumulation sleeps and camera wakes\",\"material/world reload destroys history and leased old input\"]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-lifecycle",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 20542.822400000005,
+      "stdout": "{\"status\":\"passed\",\"checks\":[{\"name\":\"20 enable resize AA disable and world reload cycles\",\"status\":\"passed\"},{\"name\":\"history MRT allocation rollback and binding restore\",\"status\":\"passed\"},{\"name\":\"real context loss then explicit fresh Scene rebuild\",\"status\":\"passed\",\"evidence\":{\"loss\":{\"supported\":true},\"lost\":true,\"rebuilt\":{\"lost\":false,\"ready\":true}}},{\"name\":\"Chromium page frozen/active restore uses matching source\",\"status\":\"passed\",\"evidence\":{\"ready\":true,\"revision\":1,\"requested\":1}}]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-gallery",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 22454.9939,
+      "stdout": "{\"status\":\"passed\",\"rows\":[{\"view\":\"overview\",\"probes\":1764,\"valid\":82944,\"lengthMean\":31.931257459852432,\"totalBytes\":66061952},{\"view\":\"courtyard\",\"probes\":1764,\"valid\":256000,\"lengthMean\":31.94444073486328,\"totalBytes\":66061952},{\"view\":\"skylight\",\"probes\":1764,\"valid\":255553,\"lengthMean\":31.942514615363546,\"totalBytes\":66061952},{\"view\":\"doorway\",\"probes\":1764,\"valid\":256000,\"lengthMean\":31.956127563476564,\"totalBytes\":66061952},{\"view\":\"emitter\",\"probes\":1764,\"valid\":256000,\"lengthMean\":31.94973419189453,\"totalBytes\":66061952}],\"errors\":[]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "measure-fg-canonical",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 66839.70289999997,
+      "stdout": "{\"heldOut\":false,\"samples\":16,\"seed\":0,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":false,\"samples\":16,\"seed\":5,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":false,\"samples\":16,\"seed\":19,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":false,\"samples\":32,\"seed\":0,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":false,\"samples\":32,\"seed\":5,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":false,\"samples\":32,\"seed\":19,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":true,\"samples\":16,\"seed\":0,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":true,\"samples\":16,\"seed\":5,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":true,\"samples\":16,\"seed\":19,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":true,\"samples\":32,\"seed\":0,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":true,\"samples\":32,\"seed\":5,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"heldOut\":true,\"samples\":32,\"seed\":19,\"coverage\":{\"boxFloor\":49,\"boxFace\":49,\"wallFoot\":49,\"pillarFoot\":49,\"ceiling\":49,\"doorway\":49}}\n{\"status\":\"executed\",\"cases\":12}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "capture-fg-reconstruction",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 326521.4638,
+      "stdout": "{\"name\":\"original-boxFoot-balanced-s0\",\"first\":0.04148854880361669,\"final\":0.005494388526077233,\"total\":0.021392743602266204,\"coverage\":0.9997783203125}\n{\"name\":\"original-boxFoot-balanced-s5\",\"first\":0.04268572492019697,\"final\":0.005203593076868095,\"total\":0.021295868684757042,\"coverage\":0.9997783203125}\n{\"name\":\"original-boxFoot-balanced-s19\",\"first\":0.04169791850261558,\"final\":0.005631293309755154,\"total\":0.021425040535776946,\"coverage\":0.9997783203125}\n{\"name\":\"original-pillarFoot-balanced-s0\",\"first\":0.04061771601315469,\"final\":0.003691949921367455,\"total\":0.013241885334301986,\"coverage\":0.9939365234375}\n{\"name\":\"original-pillarFoot-balanced-s5\",\"first\":0.03936026197548197,\"final\":0.00389754714474596,\"total\":0.01321538055817724,\"coverage\":0.9939365234375}\n{\"name\":\"original-pillarFoot-balanced-s19\",\"first\":0.03989915768187826,\"final\":0.0037604822787305394,\"total\":0.013311473835650204,\"coverage\":0.9939365234375}\n{\"name\":\"original-ceiling-balanced-s0\",\"first\":0.03002104681165353,\"final\":0.0017174028917131508,\"total\":0.00321923329115602,\"coverage\":0.9999990234375}\n{\"name\":\"original-ceiling-balanced-s5\",\"first\":0.029943978881800386,\"final\":0.001855051987616849,\"total\":0.003186574242470859,\"coverage\":0.9999990234375}\n{\"name\":\"original-ceiling-balanced-s19\",\"first\":0.030301116233010954,\"final\":0.0016494788797234844,\"total\":0.0031229942331335663,\"coverage\":0.9999990234375}\n{\"name\":\"original-boxFoot-high-s0\",\"first\":0.02615426312718483,\"final\":0.005198075524920186,\"total\":0.021283230624179483,\"coverage\":0.9997783203125}\n{\"name\":\"original-boxFoot-high-s5\",\"first\":0.026176194413024597,\"final\":0.005144508905206416,\"total\":0.021336636376082747,\"coverage\":0.9997783203125}\n{\"name\":\"original-boxFoot-high-s19\",\"first\":0.02593432282583962,\"final\":0.005203234610437629,\"total\":0.021275754581752265,\"coverage\":0.9997783203125}\n{\"name\":\"original-pillarFoot-high-s0\",\"first\":0.02252741883293265,\"final\":0.0033886507553653896,\"total\":0.013266799576809356,\"coverage\":0.9939365234375}\n{\"name\":\"original-pillarFoot-high-s5\",\"first\":0.02279674066634254,\"final\":0.0033859034727783,\"total\":0.013145868769696626,\"coverage\":0.9939365234375}\n{\"name\":\"original-pillarFoot-high-s19\",\"first\":0.021841381543359042,\"final\":0.0034808428469971097,\"total\":0.01325789542134357,\"coverage\":0.9939365234375}\n{\"name\":\"original-ceiling-high-s0\",\"first\":0.019268364452286232,\"final\":0.001339917359053592,\"total\":0.003014597516188753,\"coverage\":0.9999990234375}\n{\"name\":\"original-ceiling-high-s5\",\"first\":0.019119831148577935,\"final\":0.0014486516591110156,\"total\":0.002959844919669475,\"coverage\":0.9999990234375}\n{\"name\":\"original-ceiling-high-s19\",\"first\":0.019477374352288353,\"final\":0.0014606607945058712,\"total\":0.0029628223685061682,\"coverage\":0.9999990234375}\n{\"name\":\"held-out-boxFoot-balanced-s0\",\"first\":0.04101104118802223,\"final\":0.003928042659149517,\"total\":0.016123046653481323,\"coverage\":0.9998818359375}\n{\"name\":\"held-out-boxFoot-balanced-s5\",\"first\":0.04102546116405463,\"final\":0.004086407023010679,\"total\":0.015958231805684075,\"coverage\":0.9998818359375}\n{\"name\":\"held-out-boxFoot-balanced-s19\",\"first\":0.039418734284074095,\"final\":0.004338853943879227,\"total\":0.016094437221442815,\"coverage\":0.9998818359375}\n{\"name\":\"held-out-pillarFoot-balanced-s0\",\"first\":0.04013534273299599,\"final\":0.0030325187782859224,\"total\":0.017426006489285155,\"coverage\":0.999625}\n{\"name\":\"held-out-pillarFoot-balanced-s5\",\"first\":0.04044524725200964,\"final\":0.0029604868674141986,\"total\":0.01755307266239959,\"coverage\":0.999625}\n{\"name\":\"held-out-pillarFoot-balanced-s19\",\"first\":0.0403319084702592,\"final\":0.0030890821606943436,\"total\":0.01747482203134999,\"coverage\":0.999625}\n{\"name\":\"held-out-ceiling-balanced-s0\",\"first\":0.032475379273209655,\"final\":0.0017039532396204403,\"total\":0.014618013993292961,\"coverage\":0.9999990234375}\n{\"name\":\"held-out-ceiling-balanced-s5\",\"first\":0.03269098046282349,\"final\":0.0015889983229855846,\"total\":0.014752942203828064,\"coverage\":0.9999990234375}\n{\"name\":\"held-out-ceiling-balanced-s19\",\"first\":0.032280550680412266,\"final\":0.001670355141525215,\"total\":0.014710759710238582,\"coverage\":0.9999990234375}\n{\"name\":\"held-out-boxFoot-high-s0\",\"first\":0.026067451247046663,\"final\":0.0038306606279592983,\"total\":0.01601955590341766,\"coverage\":0.9998818359375}\n{\"name\":\"held-out-boxFoot-high-s5\",\"first\":0.026130296616091342,\"final\":0.0038502209258668815,\"total\":0.016024834458827655,\"coverage\":0.9998818359375}\n{\"name\":\"held-out-boxFoot-high-s19\",\"first\":0.026453622335909806,\"final\":0.0037137255121295304,\"total\":0.016020131637011225,\"coverage\":0.9998818359375}\n{\"name\":\"held-out-pillarFoot-high-s0\",\"first\":0.023669470480113697,\"final\":0.002572011701181172,\"total\":0.017392938293171963,\"coverage\":0.999625}\n{\"name\":\"held-out-pillarFoot-high-s5\",\"first\":0.023261156720019344,\"final\":0.002578466484980008,\"total\":0.01738838133303375,\"coverage\":0.999625}\n{\"name\":\"held-out-pillarFoot-high-s19\",\"first\":0.02331746119102895,\"final\":0.002630067587452691,\"total\":0.01739078353645692,\"coverage\":0.999625}\n{\"name\":\"held-out-ceiling-high-s0\",\"first\":0.01870926545424107,\"final\":0.001145148478377029,\"total\":0.014641988652993453,\"coverage\":0.9999990234375}\n{\"name\":\"held-out-ceiling-high-s5\",\"first\":0.019070109398469252,\"final\":0.001140176150834681,\"total\":0.014615259659577126,\"coverage\":0.9999990234375}\n{\"name\":\"held-out-ceiling-high-s19\",\"first\":0.01897730221181479,\"final\":0.0011628331809569732,\"total\":0.01462289641167007,\"coverage\":0.9999990234375}\n{\"name\":\"gallery-courtyard-high-s0\",\"first\":0.021407919670904888,\"final\":0.004453024042274341,\"total\":0.02295718809077732,\"coverage\":0.990765380859375}\n{\"name\":\"gallery-courtyard-high-s5\",\"first\":0.022101221909507453,\"final\":0.0043521046476470955,\"total\":0.022877468026000262,\"coverage\":0.990765380859375}\n{\"name\":\"gallery-courtyard-high-s19\",\"first\":0.021923597538696157,\"final\":0.004487846562384849,\"total\":0.023068219794286103,\"coverage\":0.990765380859375}\n{\"name\":\"gallery-skylight-high-s0\",\"first\":0.04673227819713769,\"final\":0.0036065796993924896,\"total\":0.04763545419128451,\"coverage\":0.9935063493748438}\n{\"name\":\"gallery-skylight-high-s5\",\"first\":0.04609850200289231,\"final\":0.003618144178124317,\"total\":0.047588784597743655,\"coverage\":0.9935063493748438}\n{\"name\":\"gallery-skylight-high-s19\",\"first\":0.04748266549705371,\"final\":0.003715943375408419,\"total\":0.047634387431887734,\"coverage\":0.9935063493748438}\n{\"name\":\"gallery-emitter-high-s0\",\"first\":0.06961852190553044,\"final\":0.007679358926759252,\"total\":0.06764358772467122,\"coverage\":0.989187744140625}\n{\"name\":\"gallery-emitter-high-s5\",\"first\":0.06966649784394828,\"final\":0.007648037234877942,\"total\":0.06728563146683458,\"coverage\":0.989187744140625}\n{\"name\":\"gallery-emitter-high-s19\",\"first\":0.07080169214126208,\"final\":0.007665190869989655,\"total\":0.06761786409748416,\"coverage\":0.989187744140625}\n{\"name\":\"slanted-thin-left-high-s0\",\"first\":0.02723737624053997,\"final\":0.001768369096191681,\"total\":0.007614918359509408,\"coverage\":0.999818359375}\n{\"name\":\"slanted-thin-left-high-s5\",\"first\":0.02744376400893345,\"final\":0.001895632113691183,\"total\":0.007578113287012075,\"coverage\":0.999818359375}\n{\"name\":\"slanted-thin-left-high-s19\",\"first\":0.027978044559058862,\"final\":0.0019132329692511157,\"total\":0.007549318668592674,\"coverage\":0.999818359375}\n{\"name\":\"slanted-thin-right-high-s0\",\"first\":0.00009908445101334099,\"final\":0.000008574891698529825,\"total\":0.0003776349737263457,\"coverage\":0.9988828125}\n{\"name\":\"slanted-thin-right-high-s5\",\"first\":0.00009449453690537452,\"final\":0.000008570665873962684,\"total\":0.00037781708993363787,\"coverage\":0.9988828125}\n{\"name\":\"slanted-thin-right-high-s19\",\"first\":0.00010383428879937529,\"final\":0.000009057144482913789,\"total\":0.00037749940960575263,\"coverage\":0.9988828125}\n{\"name\":\"original-scale-boxFoot-roi-s0\",\"first\":0.01603652190139262,\"final\":0.003120916659165731,\"total\":0.0721318013660163,\"coverage\":0.0645}\n{\"name\":\"original-scale-boxFoot-roi-s5\",\"first\":0.01609498833417464,\"final\":0.0031466740004574595,\"total\":0.07212106971609475,\"coverage\":0.0645}\n{\"name\":\"original-scale-boxFoot-roi-s19\",\"first\":0.016520906309840724,\"final\":0.0031267597252064225,\"total\":0.07213355993615035,\"coverage\":0.0645}\n{\"name\":\"original-scale-boxFoot-fast-s0\",\"first\":0.0468543803728913,\"final\":0.005608268768120341,\"total\":0.021402189316487002,\"coverage\":0.9996728515625}\n{\"name\":\"original-scale-boxFoot-fast-s5\",\"first\":0.047024611475235525,\"final\":0.005590300341692143,\"total\":0.021661214443146788,\"coverage\":0.9996728515625}\n{\"name\":\"original-scale-boxFoot-fast-s19\",\"first\":0.0480349904424953,\"final\":0.0057579856964021705,\"total\":0.021399968587814743,\"coverage\":0.9996728515625}\n{\"status\":\"executed\",\"cases\":57}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "benchmark-fg-reconstruction",
+      "args": [],
+      "exitCode": 1,
+      "milliseconds": 22485.10859999992,
+      "stdout": "{\"round\":0,\"mode\":\"ddgi\",\"gpu\":{\"mean\":2.8960787999999984,\"p50\":3.167264,\"p95\":3.735328,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":0,\"mode\":\"raw\",\"gpu\":{\"mean\":4.133918799999998,\"p50\":4.002304,\"p95\":5.241856,\"samples\":80},\"actualFG\":100,\"means\":{\"receiver\":0.05193973333333334,\"trace\":2.4481360000000003,\"shade\":0.9657338666666667,\"neighborhood\":0.03096213333333334,\"forward\":0.5138634666666666}}\n{\"round\":0,\"mode\":\"reconstructed\",\"gpu\":{\"mean\":7.283312399999997,\"p50\":7.247008,\"p95\":7.780064,\"samples\":80},\"actualFG\":100,\"means\":{\"receiver\":0.055235733333333335,\"trace\":3.9534847999999982,\"shade\":2.243901333333333,\"neighborhood\":0.04318666666666667,\"connections\":0.09955893333333332,\"temporal\":0.11496373333333335,\"filter1\":0.027540799999999997,\"filter2\":0.014147200000000004,\"forward\":0.6318874666666666}}\n{\"round\":1,\"mode\":\"reconstructed\",\"gpu\":{\"mean\":7.232132799999998,\"p50\":7.226112,\"p95\":7.643968,\"samples\":80},\"actualFG\":100,\"means\":{\"receiver\":0.0607488,\"trace\":3.9370853333333318,\"shade\":2.261598399999999,\"neighborhood\":0.04336746666666668,\"connections\":0.10487573333333332,\"temporal\":0.07677013333333331,\"filter1\":0.024622400000000003,\"filter2\":0.013660799999999997,\"forward\":0.6402757333333332}}\n{\"round\":1,\"mode\":\"raw\",\"gpu\":{\"mean\":4.096659600000001,\"p50\":3.807872,\"p95\":5.484384,\"samples\":80},\"actualFG\":100,\"means\":{\"receiver\":0.059344533333333324,\"trace\":2.4705743999999994,\"shade\":1.0343253333333335,\"neighborhood\":0.03428479999999999,\"forward\":0.5026789333333334}}\n{\"round\":1,\"mode\":\"ddgi\",\"gpu\":{\"mean\":2.9618896000000006,\"p50\":3.332,\"p95\":3.693056,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":2,\"mode\":\"ddgi\",\"gpu\":{\"mean\":2.9008156000000005,\"p50\":3.258752,\"p95\":3.794688,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":2,\"mode\":\"raw\",\"gpu\":{\"mean\":4.103172000000002,\"p50\":3.999424,\"p95\":4.780864,\"samples\":80},\"actualFG\":100,\"means\":{\"receiver\":0.05232053333333333,\"trace\":2.4996831999999998,\"shade\":0.9686581333333332,\"neighborhood\":0.04358986666666666,\"forward\":0.5038074666666666}}\n{\"round\":2,\"mode\":\"reconstructed\",\"gpu\":{\"mean\":7.151676400000002,\"p50\":7.141152,\"p95\":7.66928,\"samples\":80},\"actualFG\":100,\"means\":{\"receiver\":0.058582933333333316,\"trace\":3.9640378666666667,\"shade\":2.2289978666666665,\"neighborhood\":0.02903200000000001,\"connections\":0.08815733333333337,\"temporal\":0.10763573333333333,\"filter1\":0.027180266666666664,\"filter2\":0.013756800000000001,\"forward\":0.638616}}\n{\"status\":\"failed\",\"targets\":{\"additionalReconstructionP95\":{\"value\":2.5287359999999994,\"limit\":1},\"completeFGP95\":{\"value\":3.9567466666666675,\"limit\":3},\"memory\":{\"value\":63373760,\"limit\":67108864}},\"checks\":{\"completeQueries\":true,\"activeFG\":true,\"resourceBudget\":true,\"productionReadback\":true,\"targetReconstruction\":false,\"targetCompleteFG\":false},\"error\":\"AssertionError [ERR_ASSERTION]: {\\\"completeQueries\\\":true,\\\"activeFG\\\":true,\\\"resourceBudget\\\":true,\\\"productionReadback\\\":true,\\\"targetReconstruction\\\":false,\\\"targetCompleteFG\\\":false}\\n    at file:///D:/Nothing/lumen-for-cesium/scripts/benchmark-fg-reconstruction.mjs:200:3\"}\n",
+      "stderr": "",
+      "status": "failed"
+    },
+    {
+      "script": "verify-fg-quality",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 108.22979999997187,
+      "stdout": "{\"status\":\"passed\",\"checks\":512,\"failed\":[]}\n",
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fg-quality",
+      "args": [
+        "--inject-error"
+      ],
+      "exitCode": 1,
+      "milliseconds": 110.79899999999907,
+      "stdout": "{\"status\":\"failed\",\"checks\":512,\"failed\":[{\"name\":\"original 16r s0 pillarFoot absolute\",\"actual\":10,\"threshold\":0.033018738250725134,\"scope\":\"unchanged exact original absolute RMSE\",\"status\":\"failed\"},{\"name\":\"original 16r s0 pillarFoot relative\",\"actual\":10,\"threshold\":0.09309472976916375,\"scope\":\"unchanged 30% improvement threshold\",\"status\":\"failed\"},{\"name\":\"original 16r s0 pillarFoot no regression\",\"actual\":10,\"threshold\":0.14183071876929557,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"original 16r s5 pillarFoot absolute\",\"actual\":10,\"threshold\":0.033018738250725134,\"scope\":\"unchanged exact original absolute RMSE\",\"status\":\"failed\"},{\"name\":\"original 16r s5 pillarFoot relative\",\"actual\":10,\"threshold\":0.09309472976916375,\"scope\":\"unchanged 30% improvement threshold\",\"status\":\"failed\"},{\"name\":\"original 16r s5 pillarFoot no regression\",\"actual\":10,\"threshold\":0.14183071876929557,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"original 16r s19 pillarFoot absolute\",\"actual\":10,\"threshold\":0.033018738250725134,\"scope\":\"unchanged exact original absolute RMSE\",\"status\":\"failed\"},{\"name\":\"original 16r s19 pillarFoot relative\",\"actual\":10,\"threshold\":0.09309472976916375,\"scope\":\"unchanged 30% improvement threshold\",\"status\":\"failed\"},{\"name\":\"original 16r s19 pillarFoot no regression\",\"actual\":10,\"threshold\":0.14183071876929557,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"original 32r s0 pillarFoot absolute\",\"actual\":10,\"threshold\":0.033018738250725134,\"scope\":\"unchanged exact original absolute RMSE\",\"status\":\"failed\"},{\"name\":\"original 32r s0 pillarFoot relative\",\"actual\":10,\"threshold\":0.09309472976916375,\"scope\":\"unchanged 30% improvement threshold\",\"status\":\"failed\"},{\"name\":\"original 32r s0 pillarFoot no regression\",\"actual\":10,\"threshold\":0.14183071876929557,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"original 32r s5 pillarFoot absolute\",\"actual\":10,\"threshold\":0.033018738250725134,\"scope\":\"unchanged exact original absolute RMSE\",\"status\":\"failed\"},{\"name\":\"original 32r s5 pillarFoot relative\",\"actual\":10,\"threshold\":0.09309472976916375,\"scope\":\"unchanged 30% improvement threshold\",\"status\":\"failed\"},{\"name\":\"original 32r s5 pillarFoot no regression\",\"actual\":10,\"threshold\":0.14183071876929557,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"original 32r s19 pillarFoot absolute\",\"actual\":10,\"threshold\":0.033018738250725134,\"scope\":\"unchanged exact original absolute RMSE\",\"status\":\"failed\"},{\"name\":\"original 32r s19 pillarFoot relative\",\"actual\":10,\"threshold\":0.09309472976916375,\"scope\":\"unchanged 30% improvement threshold\",\"status\":\"failed\"},{\"name\":\"original 32r s19 pillarFoot no regression\",\"actual\":10,\"threshold\":0.14183071876929557,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"held-out 16r s0 pillarFoot no regression\",\"actual\":10,\"threshold\":0.22821786534777294,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"held-out 16r s5 pillarFoot no regression\",\"actual\":10,\"threshold\":0.22821786534777294,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"held-out 16r s19 pillarFoot no regression\",\"actual\":10,\"threshold\":0.22821786534777294,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"held-out 32r s0 pillarFoot no regression\",\"actual\":10,\"threshold\":0.22821786534777294,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"held-out 32r s5 pillarFoot no regression\",\"actual\":10,\"threshold\":0.22821786534777294,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"},{\"name\":\"held-out 32r s19 pillarFoot no regression\",\"actual\":10,\"threshold\":0.22821786534777294,\"scope\":\"current A + 3 RMS independent D SE; candidate variance never widens gate\",\"status\":\"failed\"}]}\n",
+      "stderr": "",
+      "status": "failed"
+    },
+    {
+      "script": "verify-export-patch",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 946.0603999999585,
+      "stdout": "PASS 27 patch files apply and match tested tree\n",
+      "stderr": "",
+      "status": "passed"
+    }
+  ],
+  "notRun": [
+    {
+      "name": "browser background suspension",
+      "reason": "headless browser does not provide a real OS background/foreground transition; visibility-event safety is tested separately"
+    },
+    {
+      "name": "native WebGL resource restoration without rebuilding Scene",
+      "reason": "explicit fresh Scene rebuild tested; engine does not promise native restoration"
+    },
+    {
+      "name": "authenticated ion / World Terrain",
+      "reason": "no token supplied; local mode and existing mocked failures executed"
+    }
+  ],
+  "captureMode": "fresh numerical/performance captures",
+  "regression": "passed",
+  "quality": "passed",
+  "temporal": "passed",
+  "performance": "failed",
+  "showcase": "passed",
+  "captureVersions": {
+    "canonical.json": {
+      "head": "68835d5f4c05872507c6416ea7d4d69baf87da76",
+      "sources": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+        "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6",
+        "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+        "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+        "demo/globe.js": "91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1",
+        "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+        "scripts/browser-tools.mjs": "bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8",
+        "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+        "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+        "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+        "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+        "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+        "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+        "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+      },
+      "compiledBundle": "6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240",
+      "modifiedSources": []
+    },
+    "screen/data.json": {
+      "head": "68835d5f4c05872507c6416ea7d4d69baf87da76",
+      "sources": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+        "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6",
+        "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+        "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+        "demo/globe.js": "91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1",
+        "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+        "scripts/browser-tools.mjs": "bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8",
+        "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+        "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+        "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+        "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+        "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+        "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+        "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+      },
+      "compiledBundle": "6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240",
+      "modifiedSources": []
+    },
+    "performance.json": {
+      "head": "68835d5f4c05872507c6416ea7d4d69baf87da76",
+      "sources": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+        "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6",
+        "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+        "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+        "demo/globe.js": "91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1",
+        "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+        "scripts/browser-tools.mjs": "bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8",
+        "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+        "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+        "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+        "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+        "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+        "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+        "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+      },
+      "compiledBundle": "6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240",
+      "modifiedSources": []
+    },
+    "gallery/data.json": {
+      "head": "68835d5f4c05872507c6416ea7d4d69baf87da76",
+      "sources": {
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "ee026abe7487e636e5e501487fd73440352ed0853aaaf6471658b1fae4ee896b",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+        "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+        "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+        "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+        "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+        "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92daab4de8b22058b821e8c63520a05cf1313ea56b6195e56ec3cc6668ff72a6",
+        "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+        "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+        "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+        "demo/globe.js": "91890622f543df0cd4182b1870feea29ece788765c3f0bd85154f01689b984e1",
+        "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+        "scripts/browser-tools.mjs": "bed9b0f5bd76d655ae3ba7ceaf99208b5c4f19aca71a1ff79e18ac28f81576c8",
+        "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+        "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+        "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+        "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+        "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+        "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+        "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+      },
+      "compiledBundle": "6b6cd3896c17986a9bac39d89804e7bd0cdf608ed8b9f5956bce120072261240",
+      "modifiedSources": []
+    }
+  },
+  "captureSourceMatch": true,
+  "restorationErrors": [],
+  "status": "failed",
+  "recommended": false,
+  "finished": "2026-10-13T12:13:20.075Z"
+}

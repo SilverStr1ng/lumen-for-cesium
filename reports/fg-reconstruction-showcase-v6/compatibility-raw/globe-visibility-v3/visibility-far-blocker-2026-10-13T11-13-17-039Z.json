@@ -1,0 +1,74 @@
+{
+  "startedAt": "2026-10-13T11:13:10.432Z",
+  "version": {
+    "head": "948a1584acc0b4b509876bc51453bf09a0b62cdf",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "802c16dd81a8579818cf8af13e9e3b91473005854c6ffba73d3597549a8a4f13",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "702b233c5f870c13350a738662bb97f7ca32aca0a2c1b5b000feec74a6d8d0c1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "bbc3337e6b30160e376230ebcae97c174bc0aaf7c8755811d2c4d07717fb0117",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c"
+    },
+    "compiledBundle": "a615ae0507411ac808fe1e98fe46d87f4c3398328c4e8f41e14430f6f0c7e3d2",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js"
+    ]
+  },
+  "scene": "fixtures/far-blocker.gltf",
+  "errors": [],
+  "result": {
+    "grid": {
+      "origin": [
+        -1.5,
+        -1.5,
+        -0.5
+      ],
+      "counts": [
+        4,
+        4,
+        152
+      ],
+      "total": 2432,
+      "spacing": 1,
+      "normalBias": 0.02,
+      "rays": 128,
+      "width": 160,
+      "height": 1520
+    },
+    "checked": 523,
+    "leaks": 0,
+    "short": [
+      {
+        "status": "Miss",
+        "gpuTriangle": -2,
+        "u": 0,
+        "v": 0,
+        "distance": 100,
+        "backface": false
+      }
+    ],
+    "complete": [
+      {
+        "status": "Hit",
+        "triangle": 3,
+        "gpuTriangle": 3,
+        "u": 0.550000011920929,
+        "v": 0.050000011920928955,
+        "distance": 149.97999572753906,
+        "backface": true
+      }
+    ]
+  },
+  "status": "passed"
+}
