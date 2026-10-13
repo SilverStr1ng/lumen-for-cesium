@@ -152,9 +152,6 @@ class LumenGpuWorld {
       "EXT_disjoint_timer_query_webgl2",
     );
     this.worker = new Worker(options.workerUrl, { type: "module" });
-    this._unregisterTimer = LumenGpuTimer.register(scene.context, () =>
-      this._invalidateTimers(),
-    );
     this._promise();
     this.worker.onmessage = ({ data }) => {
       if (this._closed) {
@@ -176,15 +173,24 @@ class LumenGpuWorld {
       scene.requestRender();
     };
     this.worker.onerror = (e) => this._fail(new Error(e.message));
-    this.worker.postMessage({
-      type: "load",
-      url: options.url,
-      axisMatrix: options.axisMatrix,
-      options: {
-        ...this.options,
-        maxTextureSize: ContextLimits.maximumTextureSize,
-      },
-    });
+    try {
+      this.worker.postMessage({
+        type: "load",
+        url: options.url,
+        axisMatrix: options.axisMatrix,
+        options: {
+          ...this.options,
+          maxTextureSize: ContextLimits.maximumTextureSize,
+        },
+      });
+    } catch (error) {
+      this._closed = true;
+      this.worker.terminate();
+      throw error;
+    }
+    this._unregisterTimer = LumenGpuTimer.register(scene.context, () =>
+      this._invalidateTimers(),
+    );
   }
   _validate(o) {
     if (
@@ -1601,6 +1607,15 @@ class LumenGpuWorld {
     if (
       !["fixed-reference", "scrambled-single-frame", "reconstructed"].includes(
         sampling,
+      ) ||
+      !Number.isInteger(seed) ||
+      seed < -2147483648 ||
+      seed > 2147483647 ||
+      !Array.isArray(pixel) ||
+      pixel.length !== 2 ||
+      pixel.some(
+        (value) =>
+          !Number.isInteger(value) || value < -2147483648 || value > 2147483647,
       ) ||
       !Number.isInteger(epoch) ||
       epoch < 0 ||

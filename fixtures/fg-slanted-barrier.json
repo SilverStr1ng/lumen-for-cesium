@@ -1,0 +1,102 @@
+{
+  "name": "fg-slanted-barrier",
+  "upAxis": "Z",
+  "anchor": {
+    "longitude": 114.1,
+    "latitude": 22.3,
+    "height": 1.5,
+    "heading": 0
+  },
+  "spacing": 2,
+  "rays": 128,
+  "bounces": 3,
+  "cameras": {
+    "overview": {
+      "eye": [
+        5,
+        -5,
+        2
+      ],
+      "target": [
+        0,
+        0,
+        0.5
+      ]
+    },
+    "left": {
+      "eye": [
+        -3,
+        -4,
+        1.6
+      ],
+      "target": [
+        -4,
+        1,
+        0.4
+      ]
+    },
+    "right": {
+      "eye": [
+        3,
+        -4,
+        1.6
+      ],
+      "target": [
+        3,
+        1,
+        0.4
+      ]
+    }
+  },
+  "lightingPresets": {
+    "night": {
+      "sunDirection": [
+        1,
+        0,
+        0.65
+      ],
+      "sunRadiance": [
+        0,
+        0,
+        0
+      ],
+      "skyRadiance": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "receivers": [
+    {
+      "position": [
+        -2,
+        0,
+        0.151
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "position": [
+        2,
+        0,
+        0.151
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "barrier": {
+    "angleDegrees": 25,
+    "thickness": 0.05,
+    "height": 3.05
+  },
+  "coverage": "Closed divided room; a 25 degree thin wall splits the SAME floor primitive. Only the left room contains emission."
+}

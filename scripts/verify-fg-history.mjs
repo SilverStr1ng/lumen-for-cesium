@@ -92,6 +92,81 @@ try {
     d.widget.useDefaultRenderLoop = false;
     d.widget.render();
     rows.push({ name: "new revision", ...snapshot() });
+    // Receiver world positions, rather than decoded depth, guide this history.
+    d.camera("boxFoot");
+    const position = () => {
+      const a = d.world._read(
+        f.receiver.framebuffer,
+        f.receiver.position.width,
+        f.receiver.position.height,
+        0,
+      );
+      return Array.from(a);
+    };
+    const originalRatio = d.scene.farToNearRatio,
+      originalLogRatio = d.scene.logarithmicDepthFarToNearRatio;
+    for (const logarithmic of [false, true]) {
+      d.scene.logarithmicDepthBuffer = logarithmic;
+      d.scene.farToNearRatio = 10;
+      d.scene.logarithmicDepthFarToNearRatio = 10;
+      f.reconstruction.invalidate("depth contract test");
+      f._stableFrames = 0;
+      for (let i = 0; i < 4; i++) d.widget.render();
+      const before = position(),
+        count = f.metrics.frames;
+      d.widget.render();
+      const after = position();
+      let maxPositionDelta = 0,
+        maxLocalMagnitude = 0,
+        owned = 0;
+      for (let i = 0; i < after.length; i += 4)
+        if (before[i + 3] > 0 && after[i + 3] > 0) {
+          owned++;
+          for (let c = 0; c < 3; c++) {
+            maxPositionDelta = Math.max(
+              maxPositionDelta,
+              Math.abs(before[i + c] - after[i + c]),
+            );
+            maxLocalMagnitude = Math.max(
+              maxLocalMagnitude,
+              Math.abs(after[i + c]),
+            );
+          }
+        }
+      rows.push({
+        name: logarithmic
+          ? "log depth multifrustum"
+          : "ordinary depth multifrustum",
+        ...snapshot(),
+        owned,
+        maxPositionDelta,
+        maxLocalMagnitude,
+        splits: [...d.scene.frameState.frustumSplits],
+        sampledOnce: f.metrics.frames === count + 1,
+      });
+    }
+    d.scene.farToNearRatio = originalRatio;
+    d.scene.logarithmicDepthFarToNearRatio = originalLogRatio;
+    d.scene.camera.frustum = new C.OrthographicFrustum({
+      width: 6,
+      aspectRatio: 1.6,
+      near: 0.1,
+      far: 100000,
+    });
+    f.reconstruction.invalidate("orthographic test");
+    f._stableFrames = 0;
+    for (let i = 0; i < 32; i++) d.widget.render();
+    const orthoFrames = f.metrics.frames;
+    d.widget.render();
+    const orthoPaused = f.metrics.frames === orthoFrames;
+    d.scene.camera.frustum.width = 6.2;
+    d.widget.render();
+    rows.push({
+      name: "orthographic width change",
+      paused: orthoPaused,
+      sampled: f.metrics.frames > orthoFrames,
+      ...snapshot(),
+    });
     return rows;
   });
   for (const r of report.rows) assert.equal(r.nonfinite, 0);
@@ -101,6 +176,21 @@ try {
   assert(report.rows.find((x) => x.name === "camera reproject").max >= 30);
   assert(report.rows.find((x) => x.name === "camera cut").max <= 1.01);
   assert(report.rows.find((x) => x.name === "new revision").max <= 2.01);
+  for (const row of report.rows.filter((x) =>
+    x.name?.endsWith("depth multifrustum"),
+  )) {
+    assert(row.owned > 1000);
+    assert(row.splits.length >= 3, "must actually exercise multiple frustums");
+    assert(row.sampledOnce, "one FG execution per Scene lifecycle");
+    assert(row.maxPositionDelta < 0.005);
+    assert(
+      row.maxLocalMagnitude < 1000,
+      "history guides stay in local coordinates",
+    );
+    assert(row.max >= 4);
+  }
+  const ortho = report.rows.find((x) => x.name === "orthographic width change");
+  assert(ortho.paused && ortho.sampled && ortho.valid > 1000);
   assert.deepEqual(report.errors, []);
   report.status = "passed";
 } catch (e) {

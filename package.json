@@ -39,6 +39,14 @@
     "benchmark:receiver": "node scripts/benchmark-receiver.mjs",
     "lint:r6": "node scripts/lint-r6.mjs",
     "test:acceptance": "node scripts/verify-r6-acceptance.mjs",
-    "test:patch": "node scripts/verify-export-patch.mjs"
+    "test:patch": "node scripts/verify-export-patch.mjs",
+    "fixtures:gallery": "node scripts/generate-gallery.mjs && node scripts/generate-fg-barrier.mjs",
+    "test:r7": "node scripts/verify-r7.mjs",
+    "test:r7:quality": "node scripts/verify-fg-quality.mjs",
+    "test:r7:temporal": "node scripts/verify-fg-temporal.mjs",
+    "test:r7:lifecycle": "node scripts/verify-fg-lifecycle.mjs",
+    "benchmark:r7": "node scripts/benchmark-fg-reconstruction.mjs",
+    "capture:r7": "node scripts/capture-fg-reconstruction.mjs",
+    "test:gallery": "node scripts/verify-gallery.mjs"
   }
 }

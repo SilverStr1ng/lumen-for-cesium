@@ -2,6 +2,11 @@ import { spawnSync } from "node:child_process";
 const files = [
   "Lumen",
   "LumenFinalGather",
+  "LumenFinalGatherSampling",
+  "LumenFinalGatherGeometry",
+  "LumenFinalGatherReconstruction",
+  "LumenFinalGatherReconstructionShaders",
+  "LumenGpuTimer",
   "LumenReceiverPass",
   "LumenFinalGatherSnapshot",
   "LumenGpuShaders",

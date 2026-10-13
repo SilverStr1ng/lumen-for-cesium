@@ -25,7 +25,7 @@ import {
   receiverNeighborhood,
 } from "./LumenGpuShaders.js";
 
-// All presets are deterministic, have no history, and leave the 2m DDGI grid unchanged.
+// Quality sets resolution/sample count; the sampling policy controls history.
 const presets = Object.freeze({
   balanced: Object.freeze({ scale: 0.5, samples: 16 }),
   high: Object.freeze({ scale: 0.5, samples: 32 }),
@@ -102,6 +102,10 @@ class LumenFinalGather {
     seed = this.seed,
     sequenceEpoch = this.sequenceEpoch,
   } = {}) {
+    // null explicitly clears a deterministic override; omission preserves it.
+    if (sequenceEpoch === null) {
+      sequenceEpoch = undefined;
+    }
     if (!["ddgi", "fg", "raw"].includes(mode) || !presets[quality]) {
       throw new DeveloperError("Invalid final gather mode or quality");
     }
@@ -162,6 +166,9 @@ class LumenFinalGather {
     this.ready = false;
     this._executingMain = false;
     this._poll();
+    // Reserve space for a complete frame of queries. Skip instrumentation as a
+    // group under query latency instead of filling the cap halfway through FG.
+    this._profileFrame = this._queries.length <= 32;
   }
   supported(model, frameState) {
     return (
@@ -351,7 +358,7 @@ class LumenFinalGather {
   _measure(stage, draw) {
     const gl = this.scene.context._gl,
       ext = this._timer;
-    if (!ext) {
+    if (!ext || this._profileFrame === false) {
       this.metrics.timingUnavailable++;
       return draw();
     }
@@ -455,6 +462,7 @@ class LumenFinalGather {
       w = this.lumen.world,
       fs = s.frameState;
     this.ready = false;
+    this.fallbackReason = 1;
     if (this.mode === "ddgi" || !this.lumen.enabled) {
       return;
     }
@@ -466,6 +474,7 @@ class LumenFinalGather {
       !w.finalGatherSnapshot
     ) {
       this.release();
+      this.fallbackReason = 2;
       this.metrics.status = "DDGI fallback: no complete FG input";
       return;
     }
@@ -494,6 +503,7 @@ class LumenFinalGather {
       new Cartesian3(),
     );
     if (Cartesian3.magnitude(local) > 2000) {
+      this.fallbackReason = 9;
       this.metrics.status = "DDGI fallback: outside local view";
       return;
     }
@@ -538,9 +548,12 @@ class LumenFinalGather {
       this.freezeSampling &&
       this.texture &&
       this._sampleWorld === w &&
+      this.metrics.revision === snapshot.revision &&
+      this.metrics.round === snapshot.round &&
       this._sampleCameraKey === cameraKey
     ) {
       this.ready = true;
+      this.fallbackReason = 0;
       return;
     }
     const reconstructionKey = JSON.stringify([
@@ -566,6 +579,7 @@ class LumenFinalGather {
       !this.continuousSampling
     ) {
       this.ready = true;
+      this.fallbackReason = 0;
       this.metrics.status = "experimental FG: accumulation paused";
       return;
     }
@@ -651,7 +665,6 @@ class LumenFinalGather {
         if (this._historyWorld !== w) {
           this.reconstruction.invalidate("world generation");
         }
-        const before = this.reconstruction.frames;
         this.reconstruction.execute({
           key: reconstructionKey,
           raw: this.texture,
@@ -663,13 +676,14 @@ class LumenFinalGather {
           eye,
           direction,
         });
-        if (this.reconstruction.frames > before) {
+        if (this.reconstruction.addedInformation) {
           this._stableFrames++;
         }
         this._historyWorld = w;
         this._historyKey = reconstructionKey;
         this._historyCameraKey = cameraKey;
         this.metrics.accumulationPasses = this.reconstruction.frames;
+        this.metrics.stablePasses = this._stableFrames;
         this.metrics.history = true;
         this.metrics.historyReset = this.reconstruction.reason;
         if (
@@ -712,6 +726,7 @@ class LumenFinalGather {
       });
     } catch (error) {
       this.release();
+      this.fallbackReason = 10;
       this.metrics.status = `DDGI fallback: ${error.message}`;
     } finally {
       snapshot.release();

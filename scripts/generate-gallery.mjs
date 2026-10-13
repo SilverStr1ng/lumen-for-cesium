@@ -443,7 +443,7 @@ const metadata = {
   coverage:
     "Gallery, foundation, roof, benches and steps participate in GI. Globe/terrain are background.",
   license:
-    "Self-authored geometry and mineral texture, MIT (repository LICENSE); no baked lighting/AO.",
+    "Self-authored geometry and mineral texture; no external assets and no baked lighting/AO.",
 };
 await save("earth-gi-gallery", s, materials, metadata, true);
 const off = structuredClone(materials);

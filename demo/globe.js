@@ -7,11 +7,13 @@ const selectedAsset = () =>
     ? galleryEmitter
       ? "earth-gi-gallery"
       : "earth-gi-gallery-off"
-    : currentPreset === "presentation"
-      ? "earth-pavilion-presentation"
-      : params.has("heldOut")
-        ? "earth-pavilion-held-out"
-        : "earth-pavilion";
+    : params.has("barrier")
+      ? "fg-slanted-barrier"
+      : currentPreset === "presentation"
+        ? "earth-pavilion-presentation"
+        : params.has("heldOut")
+          ? "earth-pavilion-held-out"
+          : "earth-pavilion";
 let currentPreset =
   params.get("preset") === "presentation" || gallery
     ? "presentation"
@@ -514,9 +516,9 @@ scene.postRender.addEventListener(() => {
     m = fg.metrics;
   if (gallery)
     $("gallerySummary").textContent =
-      `${w?.status === "ready" ? "光照已完成" : "正在更新光照"} · ${fg.mode === "ddgi" ? "DDGI" : fg.sampling}\n${fg.mode === "ddgi" ? "" : `采样 pass ${m.accumulationPasses ?? 0}/32 · `}${scene.drawingBufferWidth}×${scene.drawingBufferHeight}\n发光壁 ${galleryEmitter ? "开启" : "关闭"} · 曝光 ${scene.postProcessStages.exposure}`;
+      `${w?.status === "ready" ? "光照已完成" : "正在更新光照"} · ${fg.mode === "ddgi" ? "DDGI" : fg.sampling}\n${fg.mode === "ddgi" ? "" : `来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32 · `}${scene.drawingBufferWidth}×${scene.drawingBufferHeight}\n发光壁 ${galleryEmitter ? "开启" : "关闭"} · 曝光 ${scene.postProcessStages.exposure}`;
   $("status").textContent +=
-    `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n${fg.sampling} · 积累pass ${m.accumulationPasses ?? 0}/32（逐像素有效长度另测） · 原求解不读 FG`;
+    `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n${fg.sampling} · 来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32（逐像素有效长度另测） · 原求解不读 FG`;
 });
 // Reproducible diagnostics deliberately omit ion credentials and URLs.
 async function saveView() {
@@ -893,10 +895,11 @@ fetch("../fixtures/" + selectedAsset() + ".json")
   .then((m) => {
     metadata = m;
     Object.assign(anchor, metadata.anchor);
-    if (gallery) {
+    if (gallery || params.has("barrier")) {
       const preset =
-        metadata.lightingPresets[params.get("light") ?? "day"] ??
-        metadata.lightingPresets.day;
+        metadata.lightingPresets[
+          params.get("light") ?? (gallery ? "day" : "night")
+        ] ?? metadata.lightingPresets.day;
       Object.assign(lighting, preset);
       $("sun").value = String(
         C.Math.toDegrees(
@@ -913,7 +916,7 @@ fetch("../fixtures/" + selectedAsset() + ".json")
       );
     }
     const loading = reload();
-    if (gallery) camera("overview");
+    if (gallery || params.has("barrier")) camera("overview");
     return loading;
   })
   .catch(fail);
@@ -926,7 +929,9 @@ if (gallery) {
   };
   $("galleryLight").value = params.get("light") ?? "day";
   $("galleryLight").onchange = () => {
-    Object.assign(lighting, metadata.lightingPresets[$("galleryLight").value]);
+    const preset = metadata?.lightingPresets?.[$("galleryLight").value];
+    if (!preset) return;
+    Object.assign(lighting, preset);
     $("sun").value = String(
       C.Math.toDegrees(
         Math.atan2(lighting.sunDirection[1], lighting.sunDirection[0]),

@@ -124,6 +124,7 @@ class LumenFinalGatherReconstruction {
   }
   invalidate(reason) {
     this._valid = false;
+    this.addedInformation = false;
     this.frames = 0;
     this.reason = reason;
     this._lastEpoch = undefined;
@@ -213,13 +214,14 @@ class LumenFinalGatherReconstruction {
     this._filterInput = this.texture;
     for (let i = 0; i < 2; i++) {
       this._step = i + 1;
-      this.controller._measure(`filter${  this._step}`, () =>
+      this.controller._measure(`filter${this._step}`, () =>
         this._draw(this._commands.spatial, this.filterTargets[i].framebuffer),
       );
       this._filterInput = this.filterTargets[i].texture;
     }
     this.texture = this._filterInput;
-    if (this._state.newInformation) {
+    this.addedInformation = this._state.newInformation;
+    if (this.addedInformation) {
       this.frames++;
     }
     this._lastEpoch = epoch;

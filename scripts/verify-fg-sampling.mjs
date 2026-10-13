@@ -79,6 +79,43 @@ try {
       cmd.shaderProgram.destroy();
       w._freeTexture(O, fb);
     }
+    const analytic = [];
+    const analyticOut = w._texture(32, 1),
+      analyticFb = w._framebuffer([analyticOut]),
+      analyticCmd = w.scene.context.createViewportQuadCommand(
+        sampling +
+          "\nvoid main(){vec3 d=fgDirection(vec3(0,0,1),int(gl_FragCoord.x),ivec2(4,9));bool rectangle=abs(d.x)<=d.z&&abs(d.y)<=0.5*d.z;out_FragColor=vec4(czm_pi,czm_pi*step(0.0,d.x),rectangle?czm_pi:0.0,1.0);}",
+        {
+          uniformMap: {
+            u_fgSamples: () => 32,
+            u_fgSeed: () => seed,
+            u_fgSampling: () => 2,
+            u_fgEpoch: () => epoch,
+            u_fgPixelOffset: () => C.Cartesian2.ZERO,
+            u_fgPreviousEnabled: () => false,
+            u_fgRayBias: () => 0.0002,
+          },
+        },
+      );
+    try {
+      w._commands.analyticSamplerTest = analyticCmd;
+      for (const s of [0, 5, 19]) {
+        seed = s;
+        const mean = [0, 0, 0];
+        for (let e = 0; e < 32; e++) {
+          epoch = e;
+          w._draw("analyticSamplerTest", analyticFb, 0, 0, 32, 1);
+          const data = w._read(analyticFb, 32, 1);
+          for (let i = 0; i < 32; i++)
+            for (let c = 0; c < 3; c++) mean[c] += data[i * 4 + c] / 1024;
+        }
+        analytic.push({ seed: s, mean });
+      }
+    } finally {
+      delete w._commands.analyticSamplerTest;
+      analyticCmd.shaderProgram.destroy();
+      w._freeTexture(analyticOut, analyticFb);
+    }
     w.setFinalGatherCapture(true);
     const transport = [];
     for (const k of [1, 2, 3]) {
@@ -99,8 +136,34 @@ try {
         transport.push({ k, seed: s, points, reference, estimates });
       }
     }
-    return { directions: rows, transport };
+    return { directions: rows, transport, analytic };
   });
+  // Analytic cosine-measure integrands exercise the compiled shared GPU sampler.
+  // Real world BVH/solar/finite-bounce transport is checked separately below.
+  const rectangleE =
+    2 *
+    ((1 / Math.sqrt(2)) * Math.atan(0.5 / Math.sqrt(2)) +
+      (0.5 / Math.sqrt(1.25)) * Math.atan(1 / Math.sqrt(1.25)));
+  report.analytic = {
+    scope:
+      "constant sky, black half-space and unit-radiance centered rectangle quadrature; actual compiled GPU sampler, not an additional world-tracing fixture",
+    expected: [Math.PI, Math.PI / 2, rectangleE],
+    rows: report.gpu.analytic,
+    tolerance: [
+      1e-6,
+      ...[0.5, rectangleE / Math.PI].map(
+        (p) => 3 * Math.PI * Math.sqrt((p * (1 - p)) / 1024),
+      ),
+    ],
+    toleranceContract:
+      "three independent Bernoulli standard errors at 1024 directions; derived from analytic probability, never candidate errors",
+  };
+  for (const row of report.gpu.analytic)
+    for (let c = 0; c < 3; c++)
+      assert(
+        Math.abs(row.mean[c] - report.analytic.expected[c]) <
+          report.analytic.tolerance[c],
+      );
   let maximumError = 0;
   for (const r of report.gpu.directions)
     for (let i = 0; i < 32; i++) {
