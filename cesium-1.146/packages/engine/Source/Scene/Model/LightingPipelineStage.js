@@ -1,4 +1,5 @@
-import { defined } from "@cesium/core";
+import { Cartesian2, defined } from "@cesium/core";
+const surfaceOwners = new WeakMap();
 import ShaderDestination from "../../Renderer/ShaderDestination.js";
 import LightingStageFS from "../../Shaders/Model/LightingStageFS.js";
 import LightingModel from "./LightingModel.js";
@@ -27,7 +28,11 @@ const LightingPipelineStage = {
  *
  * @private
  */
-LightingPipelineStage.process = function (renderResources, primitive) {
+LightingPipelineStage.process = function (
+  renderResources,
+  primitive,
+  frameState,
+) {
   const { model, lightingOptions, shaderBuilder } = renderResources;
 
   if (defined(model.lightColor)) {
@@ -70,6 +75,60 @@ LightingPipelineStage.process = function (renderResources, primitive) {
       undefined,
       ShaderDestination.FRAGMENT,
     );
+    if (frameState?.context?.webgl2) {
+      shaderBuilder.addDefine(
+        "LUMEN_RECEIVER_COMPOSITE",
+        undefined,
+        ShaderDestination.FRAGMENT,
+      );
+      let owners = surfaceOwners.get(model);
+      if (!owners) {
+        owners = { next: 1, map: new WeakMap() };
+        surfaceOwners.set(model, owners);
+      }
+      const ownerKey = renderResources.runtimePrimitive ?? primitive;
+      if (!owners.map.has(ownerKey)) owners.map.set(ownerKey, owners.next++);
+      const id = owners.map.get(ownerKey),
+        fg = () => frameState.lumen?.finalGather;
+      const uniforms = {
+        u_lumenFgSurfaceId: ["float", () => id],
+        u_lumenReceiverSupported: [
+          "bool",
+          () => fg()?.supported(model, frameState) ?? false,
+        ],
+        u_lumenFgEnabled: [
+          "bool",
+          () => fg()?.enabledFor(model, frameState) ?? false,
+        ],
+        u_lumenFgRawMode: [
+          "bool",
+          () => fg()?.mode === "raw" && fg()?.enabledFor(model, frameState),
+        ],
+        u_lumenFgTexture: [
+          "sampler2D",
+          () => fg()?.texture ?? frameState.context.defaultTexture,
+        ],
+        u_lumenReceiverPosition: [
+          "sampler2D",
+          () => fg()?.receiver?.position ?? frameState.context.defaultTexture,
+        ],
+        u_lumenReceiverNormal: [
+          "sampler2D",
+          () => fg()?.receiver?.normal ?? frameState.context.defaultTexture,
+        ],
+        u_lumenReceiverSize: [
+          "vec2",
+          () => fg()?.receiverSize ?? Cartesian2.ONE,
+        ],
+        u_lumenFgSize: ["vec2", () => fg()?.resultSize ?? Cartesian2.ONE],
+        u_lumenFgOffset: ["vec2", () => fg()?.offset ?? Cartesian2.ZERO],
+        u_lumenFgSceneSize: ["vec2", () => fg()?.sceneSize ?? Cartesian2.ONE],
+      };
+      for (const [name, [type, value]] of Object.entries(uniforms)) {
+        shaderBuilder.addUniform(type, name, ShaderDestination.FRAGMENT);
+        renderResources.uniformMap[name] = value;
+      }
+    }
   }
   if (lightingModel === LightingModel.PBR) {
     shaderBuilder.addDefine(

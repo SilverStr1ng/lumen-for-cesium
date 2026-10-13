@@ -1,6 +1,7 @@
 import { Cartesian3, DeveloperError, destroyObject } from "@cesium/core";
 import LumenWorld from "./LumenWorld.js";
 import LumenGpuWorld from "./LumenGpuWorld.js";
+import LumenFinalGather from "./LumenFinalGather.js";
 
 /**
  * Experimental diffuse-lighting integration. Irradiance is linear E (not E/pi).
@@ -18,6 +19,7 @@ function Lumen(scene) {
   this._diffuseResponse = "lambert";
   this._iblPolicy = "enhanced";
   this.world = undefined;
+  this.finalGather = new LumenFinalGather(this);
 }
 
 Object.defineProperties(Lumen.prototype, {
@@ -86,14 +88,14 @@ Object.defineProperties(Lumen.prototype, {
       this._scene.requestRender();
     },
   },
-  /** 0: final, 1: direct, 2: indirect diffuse, 3: emissive, 4: E, 5: coverage, 6: shadow, 7/8: direct diffuse/specular, 9/10: specular/diffuse IBL, 11: local GI removed, 12: multiple scattering. All precede display transforms. */
+  /** 0: final, 1: direct, 2: indirect diffuse, 3: emissive, 4: E, 5: coverage, 6: shadow, 7/8: direct diffuse/specular, 9/10: specular/diffuse IBL, 11: local GI removed, 12: multiple scattering, 13: raw FG, 14: reconstructed FG, 15: reconstruction weight. All precede display transforms. */
   debugMode: {
     get() {
       return this._debugMode;
     },
     set(value) {
-      if (!Number.isInteger(value) || value < 0 || value > 12) {
-        throw new DeveloperError("debugMode must be an integer in [0, 12].");
+      if (!Number.isInteger(value) || value < 0 || value > 15) {
+        throw new DeveloperError("debugMode must be an integer in [0, 15].");
       }
       this._debugMode = value;
       this._scene.requestRender();
@@ -108,12 +110,14 @@ Object.defineProperties(Lumen.prototype, {
  * @returns {object} The world adapter.
  */
 Lumen.prototype.loadWorld = function (options) {
+  this.finalGather.release();
   this.world?.destroy();
   const World = options.backend === "gpu" ? LumenGpuWorld : LumenWorld;
   this.world = new World(this._scene, options);
   return this.world;
 };
 Lumen.prototype.update = function () {
+  this.finalGather.beginFrame();
   this.world?.update();
 };
 
@@ -121,6 +125,7 @@ Lumen.prototype.isDestroyed = function () {
   return false;
 };
 Lumen.prototype.destroy = function () {
+  this.finalGather.destroy();
   this.world?.destroy();
   this._scene = undefined;
   return destroyObject(this);

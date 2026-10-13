@@ -113,6 +113,24 @@
         </select></label
       >
       <label
+        >接收光照<select id="fgMode">
+          <option value="ddgi">DDGI baseline</option>
+          <option value="fg">DDGI + world-traced FG</option>
+          <option value="raw">Raw FG diagnostic</option>
+        </select></label
+      >
+      <label
+        >FG 质量<select id="fgQuality">
+          <option value="balanced">实验 · 半分辨率 / 16r</option>
+          <option value="high">实验 · 半分辨率 / 32r</option>
+          <option value="fast">实验 · 四分之一 / 16r</option>
+          <option value="roi">正确性 · 全分辨率 ROI / 64r</option>
+        </select></label
+      >
+      <small
+        >世界 BVH 第一命中；无历史。额外成本见诊断。外围地形仍只作背景。</small
+      >
+      <label
         >产品 A/B · Lumen<input id="enabled" type="checkbox" checked /></label
       ><small>关闭时使用原有 IBL 回退；相机、曝光、直射不变。</small>
       <label
@@ -125,6 +143,9 @@
           <option value="6">太阳阴影可见性</option>
           <option value="9">环境镜面</option>
           <option value="11">仅移除局部 GI</option>
+          <option value="13">Raw FG E</option>
+          <option value="14">重建 FG E</option>
+          <option value="15">FG 几何权重</option>
         </select></label
       >
       <label

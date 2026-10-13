@@ -27,6 +27,14 @@ scene.atmosphere.dynamicLighting = C.DynamicAtmosphereLightingType.SCENE_LIGHT;
 scene.highDynamicRange = true;
 scene.gBuffer.enabled = false;
 scene.lumen.enabled = true;
+scene.lumen.finalGather.mode = ["fg", "raw"].includes(params.get("fg"))
+  ? params.get("fg")
+  : "ddgi";
+scene.lumen.finalGather.quality = ["balanced", "high", "fast", "roi"].includes(
+  params.get("fgQuality"),
+)
+  ? params.get("fgQuality")
+  : "balanced";
 scene.shadowMap.enabled = true;
 scene.shadowMap.size = 2048;
 scene.shadowMap.maximumDistance = 150;
@@ -359,8 +367,10 @@ async function reload() {
         rays: metadata.rays,
         targetGpuMilliseconds: 3,
         maxBatch: 128,
+        captureFinalGather: scene.lumen.finalGather.mode !== "ddgi",
         ...options(),
       });
+      scene.lumen.finalGather.model = fresh;
       world.gain = 1;
       world.completed.catch(fail);
     });
@@ -425,6 +435,18 @@ async function place() {
     $("network").textContent += "；采样不可用，保留原稳定椭球高";
   }
 }
+$("fgMode").value = scene.lumen.finalGather.mode;
+$("fgQuality").value = scene.lumen.finalGather.quality;
+for (const id of ["fgMode", "fgQuality"])
+  $(id).onchange = () => {
+    scene.lumen.finalGather
+      .configure({
+        mode: $("fgMode").value,
+        quality: $("fgQuality").value,
+        model,
+      })
+      .catch(fail);
+  };
 $("enabled").onchange = () => {
   scene.lumen.enabled = $("enabled").checked;
   scene.requestRender();
@@ -459,6 +481,10 @@ scene.postRender.addEventListener(() => {
   $("saveView").disabled = !w?.ready || w.isDestroyed();
   $("status").textContent =
     `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing ${grid?.spacing ?? "…"}m\n${grid?.rays ?? "…"} rays · ${w?.options.bounces ?? "…"} bounces · ${w?.options.targetGpuMilliseconds ?? "…"}ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n显示 ${(w?.displaySettled ?? true) ? "已稳定" : "过渡中"}\n发布时间为 CPU 提交，不等于 GPU 完成`;
+  const fg = scene.lumen.finalGather,
+    m = fg.metrics;
+  $("status").textContent +=
+    `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n无历史 · 原求解不读 FG`;
 });
 // Reproducible diagnostics deliberately omit ion credentials and URLs.
 async function saveView() {
@@ -477,6 +503,11 @@ async function saveView() {
     preset: currentPreset,
     qualityPreset: currentQuality,
     diffuseResponse: scene.lumen.diffuseResponse,
+    iblPolicy: scene.lumen.iblPolicy,
+    finalGather: {
+      mode: scene.lumen.finalGather.mode,
+      quality: scene.lumen.finalGather.quality,
+    },
     displayTransitionMilliseconds: w.displayTransitionMilliseconds,
     publicationMode: $("publication").value,
     neutralMaterials: $("neutral").checked ? [1, 2] : [],
@@ -569,6 +600,7 @@ async function restoreView(saved) {
     throw Error("saved view superseded by a newer reload");
   if (saved.diffuseResponse)
     scene.lumen.diffuseResponse = saved.diffuseResponse;
+  if (saved.iblPolicy) scene.lumen.iblPolicy = saved.iblPolicy;
   w.setDisplayTransition(saved.displayTransitionMilliseconds ?? 0);
   if (saved.enabled !== undefined) scene.lumen.enabled = saved.enabled;
   if (saved.debugMode !== undefined) scene.lumen.debugMode = saved.debugMode;
@@ -645,6 +677,11 @@ async function restoreView(saved) {
     ].some((k) => JSON.stringify(w.options[k]) !== JSON.stringify(target[k]))
   )
     await w.solve(target);
+  if (saved.finalGather) {
+    await scene.lumen.finalGather.configure({ ...saved.finalGather, model });
+    $("fgMode").value = scene.lumen.finalGather.mode;
+    $("fgQuality").value = scene.lumen.finalGather.quality;
+  }
   scene.requestRender();
 }
 let probePoints;

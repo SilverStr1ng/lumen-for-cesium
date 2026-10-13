@@ -29,7 +29,7 @@ const outputDeclarationRegex =
   /layout\s*\(location\s*=\s*\d+\)\s*out\s+vec4\s+out_Frag(?:Color|Data_\d+)\s*;|\bout\s+vec4\s+out_Frag(?:Color|Data_\d+)\s*;/g;
 const gBufferPasses = [Pass.GLOBE, Pass.CESIUM_3D_TILE, Pass.OPAQUE];
 
-function createWorkingFrustum(camera) {
+export function createWorkingFrustum(camera) {
   const { frustum } = camera;
   if (defined(frustum.fov)) {
     return frustum.clone(scratchPerspectiveFrustum);
@@ -43,7 +43,7 @@ function createWorkingFrustum(camera) {
   return frustum.clone(scratchOrthographicOffCenterFrustum);
 }
 
-function getGBufferRenderState(gBuffer, renderState) {
+export function getGBufferRenderState(gBuffer, renderState) {
   const cache = gBuffer._renderStateCache;
   const cachedState = cache[renderState.id];
   if (defined(cachedState)) {
@@ -155,7 +155,7 @@ void main()
   });
 }
 
-function selectSourceCommand(scene, command) {
+export function selectSourceCommand(scene, command) {
   scene.updateDerivedCommands(command);
 
   let sourceCommand = command;
@@ -248,7 +248,7 @@ function executePass(gBuffer, scene, passState, frustumCommands, passId) {
   }
 }
 
-function restoreFramebufferState(context, framebuffer) {
+export function restoreFramebufferState(context, framebuffer) {
   const gl = context._gl;
   // A resize can destroy a framebuffer still referenced by the context cache.
   // Resolve-framebuffers will bind its new targets; never rebind the old handle.

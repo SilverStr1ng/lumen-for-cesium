@@ -462,7 +462,7 @@ class LumenGpuWorld {
     }
     this.scene.requestRender();
   }
-  finalGatherUniforms(snapshot) {
+  finalGatherUniforms(snapshot, exact = this._fgExact ?? false) {
     snapshot.assertAlive();
     const base = this._uniforms(),
       g = snapshot.geometry;
@@ -479,7 +479,7 @@ class LumenGpuWorld {
       u_upperHemisphere: () => snapshot.light.upperHemisphere,
       u_neutral: () => snapshot.light.neutral,
       u_lumenProbeIrradiance: () =>
-        this._fgExact ? snapshot.current : snapshot.previous,
+        exact ? snapshot.current : snapshot.previous,
       u_lumenProbeDistances: () => snapshot.moments,
       u_lumenProbePositions: () => snapshot.positions,
       u_lumenProbeOrigin: () => snapshot.origin,

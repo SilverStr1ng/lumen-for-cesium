@@ -121,6 +121,11 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         if (u_lumenDebugMode == 10) color = lumen_environmentDiffuse;
         if (u_lumenDebugMode == 11) color -= indirectDiffuse;
         if (u_lumenDebugMode == 12) color = lumen_environmentMultiple;
+        #ifdef LUMEN_RECEIVER_COMPOSITE
+        if(u_lumenDebugMode==13||u_lumenFgRawMode)color=lumen_rawFg;
+        if(u_lumenDebugMode==14)color=lumen_filteredFg;
+        if(u_lumenDebugMode==15)color=vec3(lumen_fgWeight);
+        #endif
     }
     #endif
     return color;
@@ -137,6 +142,17 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
  */
 void lightingStage(inout czm_modelMaterial material, ProcessedAttributes attributes)
 {
+    #ifdef LUMEN_RECEIVER_PASS
+        #if defined(LUMEN_MODEL_LIGHTING) && defined(LUMEN_RECEIVER_COMPOSITE)
+        vec3 ng=lumen_triangleNormal(attributes.positionEC);
+        if(u_lumenReceiverSupported&&dot(ng,material.normalEC)>=0.999) {
+            lumen_receiverPosition=vec4((u_lumenEyeToLocal*vec4(attributes.positionEC,1.0)).xyz,u_lumenFgSurfaceId);
+            lumen_receiverNormal=vec4(normalize(mat3(u_lumenEyeToLocal)*ng),u_lumenFgSurfaceId);
+        }
+        #endif
+        // Remaining alpha/clipping/log-depth stages still execute in the original main.
+        return;
+    #endif
     #ifdef LIGHTING_PBR
         #ifdef HAS_NORMALS
             // Attribute normal is the macro normal before normal mapping. Align for double-sided faces.

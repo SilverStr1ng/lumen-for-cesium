@@ -849,9 +849,17 @@ Object.defineProperties(Scene.prototype, {
    * @see {@link https://www.khronos.org/registry/webgl/specs/1.0/#DOM-WebGLRenderingContext-drawingBufferHeight|drawingBufferHeight}
    */
   /** Material inputs for the experimental GI renderer. @type {GBuffer} @readonly */
-  gBuffer: { get: function () { return this._gBuffer; } },
+  gBuffer: {
+    get: function () {
+      return this._gBuffer;
+    },
+  },
   /** Controlled diffuse lighting integration. @type {Lumen} @readonly */
-  lumen: { get: function () { return this._lumen; } },
+  lumen: {
+    get: function () {
+      return this._lumen;
+    },
+  },
   drawingBufferHeight: {
     get: function () {
       return this._context.drawingBufferHeight;
@@ -3667,7 +3675,16 @@ function executeCommandsInViewport(firstViewport, scene, passState) {
     }
   }
 
-  executeCommands(scene, passState);
+  const fg = scene._lumen.finalGather;
+  if (firstViewport && !renderTranslucentDepthForPick)
+    fg.executePrepared(passState, view.frustumCommandsList);
+  // Only the main opaque draw may read this camera's same-frame receiver result.
+  fg._executingMain = firstViewport;
+  try {
+    executeCommands(scene, passState);
+  } finally {
+    fg._executingMain = false;
+  }
 }
 
 const scratchCullingVolume = new CullingVolume();
