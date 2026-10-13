@@ -71,6 +71,9 @@ vec3 lumen_triangleNormal(vec3 p) {
     #endif
     return ng;
 }
+#ifdef LUMEN_FG_RECONSTRUCTION
+bool lumen_fgSegment(vec3 p,vec3 q,vec3 ng);
+#endif
 vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     lumen_rawFg=vec3(0.0);lumen_filteredFg=vec3(0.0);lumen_fgWeight=0.0;
     lumen_fgFallbackReason=1.0;
@@ -90,6 +93,31 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     }
     else lumen_fgFallbackReason=9.0;
     float footprint=max(0.02,3.0*czm_metersPerPixel(vec4(positionEC,1.0),1.0)*u_lumenFgSceneSize.y/u_lumenReceiverSize.y);
+
+    #ifdef LUMEN_FG_RECONSTRUCTION
+    if(u_lumenFgHistory) {
+        // Select one geometrically corresponding center before any barrier query.
+        // At most one bounded world segment per high-resolution receiver pixel.
+        ivec2 best=ivec2(-1);float nearestDistance=1e20;vec3 bestPosition=vec3(0);vec4 bestE=vec4(0);
+        for(int y=0;y<2;y++)for(int x=0;x<2;x++){
+            ivec2 c=base+ivec2(x,y);
+            if(any(lessThan(c,ivec2(0)))||any(greaterThanEqual(c,size))){lumen_fgFallbackReason=9.0;continue;}
+            vec4 raw=texelFetch(u_lumenFgTexture,c,0),r=texelFetch(u_lumenReceiverPosition,c+ivec2(u_lumenFgOffset),0),n=texelFetch(u_lumenReceiverNormal,c+ivec2(u_lumenFgOffset),0);
+            if(raw.a<.5){lumen_fgFallbackReason=raw.a==-2.0?4.0:raw.a<0.0?3.0:5.0;continue;}
+            if(abs(r.a-u_lumenFgSurfaceId)>.1||dot(ng,n.xyz)<.995){lumen_fgFallbackReason=7.0;continue;}
+            vec3 delta=r.xyz-p;float distance=length(delta);
+            if(abs(dot(delta,ng))>.005||distance>footprint){lumen_fgFallbackReason=8.0;continue;}
+            if(distance<nearestDistance){best=c;nearestDistance=distance;bestPosition=r.xyz;bestE=texelFetch(u_lumenFgFiltered,c,0);if(bestE.a<.5)bestE=raw;}
+        }
+        if(best.x<0)return baseline;
+        bool safe=texelFetch(u_lumenFgNeighborhood,best,0).r>.5;
+        if(!safe&&!lumen_fgSegment(p,bestPosition,ng)){lumen_fgFallbackReason=6.0;return baseline;}
+        // A valid, connected center supplies a complete E estimate. The source's
+        // discarded interpolation neighbors do not darken it or blend in DDGI.
+        lumen_filteredFg=bestE.rgb;lumen_fgWeight=1.0;lumen_fgFallbackReason=0.0;
+        return lumen_filteredFg*u_lumenWorldGain;
+    }
+    #endif
     vec3 sum=vec3(0.0);float weight=0.0;
     for(int y=0;y<2;y++)for(int x=0;x<2;x++) {
         ivec2 c=base+ivec2(x,y);if(any(lessThan(c,ivec2(0)))||any(greaterThanEqual(c,size)))continue;

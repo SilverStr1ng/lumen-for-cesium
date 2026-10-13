@@ -35,6 +35,14 @@ scene.lumen.finalGather.quality = ["balanced", "high", "fast", "roi"].includes(
 )
   ? params.get("fgQuality")
   : "balanced";
+scene.lumen.finalGather.sampling = [
+  "fixed-reference",
+  "scrambled-single-frame",
+  "reconstructed",
+].includes(params.get("fgSampling"))
+  ? params.get("fgSampling")
+  : "fixed-reference";
+scene.lumen.finalGather.seed = Number(params.get("fgSeed") ?? 0) | 0;
 scene.shadowMap.enabled = true;
 scene.shadowMap.size = 2048;
 scene.shadowMap.maximumDistance = 150;
@@ -437,12 +445,14 @@ async function place() {
 }
 $("fgMode").value = scene.lumen.finalGather.mode;
 $("fgQuality").value = scene.lumen.finalGather.quality;
-for (const id of ["fgMode", "fgQuality"])
+$("fgSampling").value = scene.lumen.finalGather.sampling;
+for (const id of ["fgMode", "fgQuality", "fgSampling"])
   $(id).onchange = () => {
     scene.lumen.finalGather
       .configure({
         mode: $("fgMode").value,
         quality: $("fgQuality").value,
+        sampling: $("fgSampling").value,
         model,
       })
       .catch(fail);
@@ -484,7 +494,7 @@ scene.postRender.addEventListener(() => {
   const fg = scene.lumen.finalGather,
     m = fg.metrics;
   $("status").textContent +=
-    `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n无历史 · 原求解不读 FG`;
+    `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n${fg.sampling} · 积累pass ${m.accumulationPasses ?? 0}/32（逐像素有效长度另测） · 原求解不读 FG`;
 });
 // Reproducible diagnostics deliberately omit ion credentials and URLs.
 async function saveView() {
@@ -507,6 +517,8 @@ async function saveView() {
     finalGather: {
       mode: scene.lumen.finalGather.mode,
       quality: scene.lumen.finalGather.quality,
+      sampling: scene.lumen.finalGather.sampling,
+      seed: scene.lumen.finalGather.seed,
     },
     displayTransitionMilliseconds: w.displayTransitionMilliseconds,
     publicationMode: $("publication").value,
@@ -681,6 +693,7 @@ async function restoreView(saved) {
     await scene.lumen.finalGather.configure({ ...saved.finalGather, model });
     $("fgMode").value = scene.lumen.finalGather.mode;
     $("fgQuality").value = scene.lumen.finalGather.quality;
+    $("fgSampling").value = scene.lumen.finalGather.sampling;
   }
   scene.requestRender();
 }

@@ -1,16 +1,26 @@
 {
   "version": {
-    "head": "bfb5200a6086dfa5c584afddd05c5a25cdaf7bc9",
+    "head": "346f49eaa7ab5de89bbdb2546c91bf7f9648a4b9",
     "sources": {
-      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "39d23cc872d67fed1fb980636f3a16d48ff9e7d376bd3c4a97417d13a8100a26",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "840b231611749adcde683110b37c9990e13f377978737f33d0f040672f8ecc43",
       "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
-      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "5a966daebf7eeb1174d0fa047b0a244a29408254ef2f04f30ecb616fb40af627",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
       "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
       "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
-      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92b8a319c1c952154b69fc5210c6f71261e1c7bcbb35a5442aa41256e910d53a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "1a406437d0d4b29fa961cf03093438241681e48a78e7be46bb3a2ec59e065668",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "6bf3efb86d73bb2e11113f3b08cc494cf0031d93f970c0389359a8555de79c0c"
     },
-    "compiledBundle": "2d1047c4b9de8715a5cdcb6f36392c5075837b65c8ef8ac6fbe43e173421d01f",
+    "compiledBundle": "87356aa82636ab9bf2dbd2797a030d73457d071013a33094bc218d934f806d7f",
     "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
       "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
     ]
   },
@@ -27,104 +37,117 @@
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
       "frame": 4,
       "max": 4,
-      "mean": 3.2787195739746093,
+      "mean": 3.9998387756347658,
       "valid": 64000,
       "nonfinite": 0,
       "passes": 4,
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
       "frame": 8,
       "max": 8,
-      "mean": 6.313617492675781,
+      "mean": 7.997781372070312,
       "valid": 64000,
       "nonfinite": 0,
       "passes": 8,
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
       "frame": 16,
       "max": 16,
-      "mean": 12.370903076171874,
+      "mean": 15.987037719726562,
       "valid": 64000,
       "nonfinite": 0,
       "passes": 16,
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
       "frame": 32,
       "max": 32,
-      "mean": 24.425266357421876,
+      "mean": 31.940681640625,
       "valid": 64000,
       "nonfinite": 0,
       "passes": 32,
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
       "name": "static stopped",
       "sameSampling": true,
       "max": 32,
-      "mean": 24.425266357421876,
+      "mean": 31.940681640625,
       "valid": 64000,
       "nonfinite": 0,
       "passes": 32,
       "source": 2,
       "round": 3,
       "status": "experimental FG: accumulation paused",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
-      "name": "camera reproject",
+      "name": "projection change",
+      "sampled": true,
       "max": 32,
-      "mean": 22.373008041381837,
+      "mean": 31.707921875,
       "valid": 64000,
       "nonfinite": 0,
       "passes": 33,
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
+    },
+    {
+      "name": "camera reproject",
+      "max": 32,
+      "mean": 31.334985229492187,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 34,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 18061760
     },
     {
       "name": "camera cut",
       "max": 1,
       "mean": 1,
-      "valid": 55605,
+      "valid": 55697,
       "nonfinite": 0,
       "passes": 1,
       "source": 2,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     },
     {
       "name": "new revision",
       "max": 2,
-      "mean": 1.1775200071935976,
-      "valid": 55605,
+      "mean": 1.9999975453121352,
+      "valid": 55697,
       "nonfinite": 0,
       "passes": 2,
       "source": 3,
       "round": 3,
       "status": "active experimental FG",
-      "bytes": 16781760
+      "bytes": 18061760
     }
   ],
   "status": "passed"

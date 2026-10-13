@@ -16,6 +16,12 @@ export function sourceVersion(extraFiles = []) {
     "lumen/gpu-worker.js",
     "lumen/math.js",
     "lumen/gltf.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
     ...extraFiles,
   ];
   const sha256 = (file) =>
@@ -300,7 +306,8 @@ export async function environment(page, browser) {
     browser: browser.version(),
     headless: process.env.LUMEN_HEADFUL !== "1",
     ...(await page.evaluate(() => {
-      const scene = (window.lumenTest ?? window.lumenDemo ?? window.earthLab).scene,
+      const scene = (window.lumenTest ?? window.lumenDemo ?? window.earthLab)
+          .scene,
         gl = scene.context._gl,
         extension = gl.getExtension("WEBGL_debug_renderer_info");
       return {

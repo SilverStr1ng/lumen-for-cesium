@@ -72,6 +72,19 @@ fg._poll();
 assert.equal(fg.metrics.completedTimings[0].stages.trace, 999);
 unregister();
 fg.destroy();
+const noTimer = new LumenFinalGather({
+  _scene: {
+    context: { _gl: { getExtension: () => null } },
+    frameState: { frameNumber: 0 },
+  },
+});
+for (let frame = 0; frame < 1000; frame++) {
+  noTimer.scene.frameState.frameNumber = frame;
+  noTimer._measure("trace", () => {});
+}
+assert.equal(noTimer._timerFrames.size, 0);
+assert.equal(noTimer.metrics.timingUnavailable, 1000);
+noTimer.destroy();
 await mkdir("reports/fg-reconstruction-showcase-v6", { recursive: true });
 await writeFile(
   "reports/fg-reconstruction-showcase-v6/timers.json",
@@ -83,6 +96,7 @@ await writeFile(
         "second owner invalidated before consuming cleared flag",
         "no contaminated scheduling cost",
         "complete frame accepted only after every query",
+        "missing timer extension creates no unbounded frame ledger",
       ],
     },
     null,

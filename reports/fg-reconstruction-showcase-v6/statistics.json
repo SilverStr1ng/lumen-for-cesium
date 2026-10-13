@@ -1,0 +1,166 @@
+{
+  "version": {
+    "head": "346f49eaa7ab5de89bbdb2546c91bf7f9648a4b9",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "840b231611749adcde683110b37c9990e13f377978737f33d0f040672f8ecc43",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "379dd5e7e3ecc3d575e0ab5c6d423928c2db7396afef2d55cc6e2f06af830a05",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "1a406437d0d4b29fa961cf03093438241681e48a78e7be46bb3a2ec59e065668",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "6bf3efb86d73bb2e11113f3b08cc494cf0031d93f970c0389359a8555de79c0c"
+    },
+    "compiledBundle": "ff070a6bde3c4df313e458565a7a1b7925e35a9ba7f538a7155c02a22eb549da",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "errors": [],
+  "rows": [
+    {
+      "name": "31 dark plus one rare bright",
+      "E": [
+        3.125,
+        3.125,
+        3.125,
+        32
+      ],
+      "moments": [
+        3.125,
+        312.5,
+        9.453125,
+        0
+      ],
+      "filtered": [
+        3.125,
+        3.125,
+        3.125,
+        32
+      ]
+    },
+    {
+      "name": "Unknown current invalidates pixel",
+      "E": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "moments": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "filtered": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "HDR rejected by half storage without altering raw",
+      "E": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "moments": [
+        0,
+        0,
+        0,
+        5
+      ],
+      "filtered": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "raw": [
+        10000,
+        10000,
+        10000,
+        1
+      ]
+    },
+    {
+      "name": "constant FP16 accuracy",
+      "E": [
+        0.1234130859375,
+        1.234375,
+        23.453125,
+        32
+      ],
+      "moments": [
+        2.6015625,
+        6.7734375,
+        0.00016069412231445312,
+        0
+      ],
+      "filtered": [
+        0.1234130859375,
+        1.234375,
+        23.453125,
+        32
+      ]
+    },
+    {
+      "name": "repeated direction does not add information",
+      "E": [
+        0.1234130859375,
+        1.234375,
+        23.453125,
+        32
+      ],
+      "moments": [
+        2.6015625,
+        6.7734375,
+        0.0001659393310546875,
+        0
+      ],
+      "filtered": [
+        0.1234130859375,
+        1.234375,
+        23.453125,
+        32
+      ],
+      "before": 32,
+      "after": 32
+    },
+    {
+      "name": "known black valid",
+      "E": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "moments": [
+        0,
+        0,
+        0.0099945068359375,
+        1
+      ],
+      "filtered": [
+        0,
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "maxRelativeHalfError": 0.00034760613092920794,
+  "status": "passed"
+}

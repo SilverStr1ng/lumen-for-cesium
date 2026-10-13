@@ -1,6 +1,8 @@
 import { Cartesian2, defined } from "@cesium/core";
 const surfaceOwners = new WeakMap();
+import ContextLimits from "../../Renderer/ContextLimits.js";
 import ShaderDestination from "../../Renderer/ShaderDestination.js";
+import { functions as fgGeometry } from "../LumenFinalGatherGeometry.js";
 import LightingStageFS from "../../Shaders/Model/LightingStageFS.js";
 import LightingModel from "./LightingModel.js";
 
@@ -75,7 +77,17 @@ LightingPipelineStage.process = function (
       undefined,
       ShaderDestination.FRAGMENT,
     );
-    if (frameState?.context?.webgl2) {
+    // Reserve world (3), FG (7), IBL (2) and shadow (1) units in addition
+    // to the material samplers already installed. Omit the adapter at shader
+    // build time when it would exceed the fragment sampler limit.
+    const materialSamplers =
+      shaderBuilder._fragmentShaderParts.uniformLines.filter((line) =>
+        /uniform\s+sampler/.test(line),
+      ).length;
+    if (
+      frameState?.context?.webgl2 &&
+      ContextLimits.maximumTextureImageUnits >= 13 + materialSamplers
+    ) {
       shaderBuilder.addDefine(
         "LUMEN_RECEIVER_COMPOSITE",
         undefined,
@@ -86,6 +98,12 @@ LightingPipelineStage.process = function (
         undefined,
         ShaderDestination.FRAGMENT,
       );
+      shaderBuilder.addDefine(
+        "LUMEN_FG_RECONSTRUCTION",
+        undefined,
+        ShaderDestination.FRAGMENT,
+      );
+      shaderBuilder.addFragmentLines(fgGeometry);
       let owners = surfaceOwners.get(model);
       if (!owners) {
         owners = { next: 1, map: new WeakMap() };
@@ -96,7 +114,11 @@ LightingPipelineStage.process = function (
         owners.map.set(ownerKey, owners.next++);
       }
       const id = owners.map.get(ownerKey),
-        fg = () => frameState.lumen?.finalGather;
+        fg = () => frameState.lumen?.finalGather,
+        source = () => {
+          const world = frameState.lumen?.world;
+          return world?.ready && !world.isDestroyed() ? world : undefined;
+        };
       const uniforms = {
         u_lumenFgSurfaceId: ["float", () => id],
         u_lumenFgFallbackCode: ["float", () => fg()?.fallbackReason ?? 1],
@@ -112,8 +134,30 @@ LightingPipelineStage.process = function (
           "bool",
           () => fg()?.mode === "raw" && fg()?.enabledFor(model, frameState),
         ],
-        u_lumenFgHistory: ["bool",()=>fg()?.sampling==="reconstructed"&&!!fg()?.reconstruction?.texture],
-        u_lumenFgFiltered: ["sampler2D",()=>fg()?.reconstruction?.texture??frameState.context.defaultTexture],
+        u_lumenFgNodes: [
+          "sampler2D",
+          () => source()?._nodes ?? frameState.context.defaultTexture,
+        ],
+        u_lumenFgVertices: [
+          "sampler2D",
+          () => source()?._vertices ?? frameState.context.defaultTexture,
+        ],
+        u_lumenFgNodeCount: ["int", () => source()?.packet?.bvh?.nodes ?? 0],
+        u_lumenFgBarrierBudget: [
+          "int",
+          () => Math.min(256, fg()?.traversalBudget ?? 256),
+        ],
+        u_lumenFgHistory: [
+          "bool",
+          () =>
+            fg()?.sampling === "reconstructed" &&
+            !!fg()?.reconstruction?.texture,
+        ],
+        u_lumenFgFiltered: [
+          "sampler2D",
+          () =>
+            fg()?.reconstruction?.texture ?? frameState.context.defaultTexture,
+        ],
         u_lumenFgTexture: [
           "sampler2D",
           () => fg()?.texture ?? frameState.context.defaultTexture,

@@ -151,11 +151,11 @@ class LumenGpuWorld {
     this._timer = scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
     );
+    this.worker = new Worker(options.workerUrl, { type: "module" });
     this._unregisterTimer = LumenGpuTimer.register(scene.context, () =>
       this._invalidateTimers(),
     );
     this._promise();
-    this.worker = new Worker(options.workerUrl, { type: "module" });
     this.worker.onmessage = ({ data }) => {
       if (this._closed) {
         return;
@@ -729,7 +729,9 @@ class LumenGpuWorld {
     this.metrics.disjoint++;
     const gl = this.scene.context._gl;
     for (const q of this._queries) {
-      if (q.stage) {q.stage.timerMissing++;}
+      if (q.stage) {
+        q.stage.timerMissing++;
+      }
       this.metrics.timerMissing++;
       gl.deleteQuery(q.query);
     }
@@ -741,7 +743,9 @@ class LumenGpuWorld {
     if (!ext) {
       return;
     }
-    if (LumenGpuTimer.poll(this.scene.context, ext)) {return;}
+    if (LumenGpuTimer.poll(this.scene.context, ext)) {
+      return;
+    }
     while (
       this._queries.length &&
       gl.getQueryParameter(this._queries[0].query, gl.QUERY_RESULT_AVAILABLE)
@@ -1577,7 +1581,7 @@ class LumenGpuWorld {
       seed = 0,
       sampling = "fixed-reference",
       epoch = 0,
-      pixel = [0,0],
+      pixel = [0, 0],
       budget,
     } = {},
   ) {
@@ -1594,12 +1598,22 @@ class LumenGpuWorld {
     ) {
       throw Error("FG budget in [1,4096] required");
     }
-    if(!["fixed-reference","scrambled-single-frame","reconstructed"].includes(sampling) || !Number.isInteger(epoch) || epoch<0 || epoch>4294967295) {throw Error("Invalid FG query sequence");}
+    if (
+      !["fixed-reference", "scrambled-single-frame", "reconstructed"].includes(
+        sampling,
+      ) ||
+      !Number.isInteger(epoch) ||
+      epoch < 0 ||
+      epoch > 4294967295
+    ) {
+      throw Error("Invalid FG query sequence");
+    }
     this._fgInput = snapshot.retain();
     this._fgSamples = samples;
     this._fgSeed = seed;
-    this._fgSampling = sampling==="fixed-reference"?0:sampling==="reconstructed"?2:1;
-    this._fgEpoch=epoch|0;
+    this._fgSampling =
+      sampling === "fixed-reference" ? 0 : sampling === "reconstructed" ? 2 : 1;
+    this._fgEpoch = epoch | 0;
     this._fgPixelOffset = Cartesian2.fromArray(pixel);
     this._fgBudget = budget;
     this._fgExact = false;

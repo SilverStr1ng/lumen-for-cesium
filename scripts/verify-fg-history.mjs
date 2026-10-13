@@ -74,6 +74,13 @@ try {
       sameSampling: f.metrics.frames === frames,
       ...snapshot(),
     });
+    d.scene.camera.frustum.aspectRatio *= 1.01;
+    d.widget.render();
+    rows.push({
+      name: "projection change",
+      sampled: f.metrics.frames > frames,
+      ...snapshot(),
+    });
     d.scene.camera.moveRight(0.05);
     d.widget.render();
     rows.push({ name: "camera reproject", ...snapshot() });
@@ -90,6 +97,7 @@ try {
   for (const r of report.rows) assert.equal(r.nonfinite, 0);
   assert(report.rows.find((x) => x.frame === 32).max >= 31);
   assert(report.rows.find((x) => x.name === "static stopped").sameSampling);
+  assert(report.rows.find((x) => x.name === "projection change").sampled);
   assert(report.rows.find((x) => x.name === "camera reproject").max >= 30);
   assert(report.rows.find((x) => x.name === "camera cut").max <= 1.01);
   assert(report.rows.find((x) => x.name === "new revision").max <= 2.01);

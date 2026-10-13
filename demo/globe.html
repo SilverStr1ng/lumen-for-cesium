@@ -127,8 +127,16 @@
           <option value="roi">正确性 · 全分辨率 ROI / 64r</option>
         </select></label
       >
+      <label
+        >FG 采样<select id="fgSampling">
+          <option value="fixed-reference">固定参考 · 无历史</option>
+          <option value="scrambled-single-frame">像素去相关 · 单帧</option>
+          <option value="reconstructed">时空重建 · 实验</option>
+        </select></label
+      >
       <small
-        >世界 BVH 第一命中；无历史。额外成本见诊断。外围地形仍只作背景。</small
+        >世界 BVH 第一命中；重建仅积累线性
+        E。额外成本见诊断。外围地形仍只作背景。</small
       >
       <label
         >产品 A/B · Lumen<input id="enabled" type="checkbox" checked /></label
@@ -146,6 +154,8 @@
           <option value="13">Raw FG E</option>
           <option value="14">重建 FG E</option>
           <option value="15">FG 几何权重</option>
+          <option value="16">原保护掩码</option>
+          <option value="17">回退原因编号</option>
         </select></label
       >
       <label

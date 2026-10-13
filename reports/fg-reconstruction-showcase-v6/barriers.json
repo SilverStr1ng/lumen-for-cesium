@@ -1,0 +1,103 @@
+{
+  "version": {
+    "head": "346f49eaa7ab5de89bbdb2546c91bf7f9648a4b9",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "840b231611749adcde683110b37c9990e13f377978737f33d0f040672f8ecc43",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "e72e0544f6b05eb22ce6b9b809830b1b7d17a2e106cecc7bfa10e70374c0d402",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "92b8a319c1c952154b69fc5210c6f71261e1c7bcbb35a5442aa41256e910d53a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "c94b5c17179667822bc038ce897383e2edbdb7ddd9a18037ec647ca4046b3d30",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "1a406437d0d4b29fa961cf03093438241681e48a78e7be46bb3a2ec59e065668",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "6bf3efb86d73bb2e11113f3b08cc494cf0031d93f970c0389359a8555de79c0c"
+    },
+    "compiledBundle": "87356aa82636ab9bf2dbd2797a030d73457d071013a33094bc218d934f806d7f",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "errors": [],
+  "rows": [
+    {
+      "name": "same-center-near-wall",
+      "actual": [
+        99,
+        99,
+        99,
+        1
+      ]
+    },
+    {
+      "name": "thin-wall",
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    },
+    {
+      "name": "open-segment",
+      "actual": [
+        99,
+        99,
+        99,
+        1
+      ]
+    },
+    {
+      "name": "other-owner",
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    },
+    {
+      "name": "other-plane",
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    },
+    {
+      "name": "unknown-current",
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    },
+    {
+      "name": "missing-current",
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    },
+    {
+      "name": "FP16-overflow-raw-preserved",
+      "actual": [
+        10000,
+        10000,
+        10000,
+        1
+      ]
+    }
+  ],
+  "status": "passed"
+}

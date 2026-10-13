@@ -105,13 +105,29 @@ class LumenFinalGather {
     if (!["ddgi", "fg", "raw"].includes(mode) || !presets[quality]) {
       throw new DeveloperError("Invalid final gather mode or quality");
     }
-    if(!["fixed-reference","scrambled-single-frame","reconstructed"].includes(sampling) ||
-       !Number.isInteger(seed) || seed < -2147483648 || seed > 2147483647 ||
-       (sequenceEpoch!==undefined && (!Number.isInteger(sequenceEpoch)||sequenceEpoch<0||sequenceEpoch>4294967295))) {
+    if (
+      !["fixed-reference", "scrambled-single-frame", "reconstructed"].includes(
+        sampling,
+      ) ||
+      !Number.isInteger(seed) ||
+      seed < -2147483648 ||
+      seed > 2147483647 ||
+      (sequenceEpoch !== undefined &&
+        (!Number.isInteger(sequenceEpoch) ||
+          sequenceEpoch < 0 ||
+          sequenceEpoch > 4294967295))
+    ) {
       throw new DeveloperError("Invalid FG sampling contract");
     }
-    const changed = this.quality !== quality || this.model !== model || this.sampling!==sampling || this.seed!==seed;
-    this.sampling=sampling;this.seed=seed;this.sequenceEpoch=sequenceEpoch;
+    const changed =
+      this.quality !== quality ||
+      this.model !== model ||
+      this.sampling !== sampling ||
+      this.seed !== seed ||
+      this.sequenceEpoch !== sequenceEpoch;
+    this.sampling = sampling;
+    this.seed = seed;
+    this.sequenceEpoch = sequenceEpoch;
 
     this.mode = mode;
     this.quality = quality;
@@ -153,6 +169,7 @@ class LumenFinalGather {
       !model?.isDestroyed() &&
       this.mode !== "ddgi" &&
       this.lumen.enabled &&
+      ContextLimits.maximumTextureImageUnits >= 13 &&
       frameState.mode === 3 &&
       frameState.passes.render &&
       !frameState.passes.pick &&
@@ -164,7 +181,11 @@ class LumenFinalGather {
       this.ready &&
       this._compositeEnabled &&
       this._executingMain &&
-      this.supported(model, frameState) && this._sampleWorld === this.lumen.world && this.lumen.world?.requestedRevision === this.metrics.revision
+      this.supported(model, frameState) &&
+      this._sampleWorld === this.lumen.world &&
+      this.lumen.world?.ready &&
+      !this.lumen.world.isDestroyed() &&
+      this.lumen.world.requestedRevision === this.metrics.revision
     );
   }
   _layout() {
@@ -184,8 +205,17 @@ class LumenFinalGather {
       ox,
       oy,
       samples: p.samples,
-      bytes: rw * rh * 36 + width * height * 100 + (this.sampling==="reconstructed"?LumenFinalGatherReconstruction.estimate(width,height):0),
+      bytes:
+        rw * rh * 36 +
+        width * height * 100 +
+        (this.sampling === "reconstructed"
+          ? LumenFinalGatherReconstruction.estimate(width, height)
+          : 0),
       slots: width * height * p.samples,
+      geometrySlots:
+        this.sampling === "reconstructed"
+          ? width * height * 8 + s.drawingBufferWidth * s.drawingBufferHeight
+          : 0,
     };
   }
   _texture(width, height, datatype = PixelDatatype.FLOAT) {
@@ -208,7 +238,13 @@ class LumenFinalGather {
     return { texture: t, framebuffer: f };
   }
   _allocate(l) {
-    const key = [l.rw, l.rh, l.width, l.height].join(":");
+    const key = [
+      l.rw,
+      l.rh,
+      l.width,
+      l.height,
+      this.sampling === "reconstructed",
+    ].join(":");
     if (this._layoutKey === key) {
       return;
     }
@@ -226,7 +262,10 @@ class LumenFinalGather {
         this._texture(l.width, l.height),
         this._texture(l.width, l.height),
       ];
-      if(this.sampling==="reconstructed"){this.reconstruction=new LumenFinalGatherReconstruction(this);this.reconstruction.update(l.width,l.height);}
+      if (this.sampling === "reconstructed") {
+        this.reconstruction = new LumenFinalGatherReconstruction(this);
+        this.reconstruction.update(l.width, l.height);
+      }
       const c = this.scene.context,
         gl = c._gl,
         binding = c._currentFramebuffer;
@@ -260,7 +299,9 @@ class LumenFinalGather {
   _invalidateTimers() {
     const gl = this.scene.context._gl;
     this.metrics.disjoint++;
-    for (const q of this._queries) {gl.deleteQuery(q.query);}
+    for (const q of this._queries) {
+      gl.deleteQuery(q.query);
+    }
     this._queries.length = 0;
     this.metrics.incompleteTimerFrames += this._timerFrames.size;
     this._timerFrames.clear();
@@ -268,16 +309,23 @@ class LumenFinalGather {
   _poll() {
     const gl = this.scene.context._gl,
       ext = this._timer;
-    if (!ext) {return;}
-    if (LumenGpuTimer.poll(this.scene.context, ext)) {return;}
+    if (!ext) {
+      return;
+    }
+    if (LumenGpuTimer.poll(this.scene.context, ext)) {
+      return;
+    }
     this._queries = this._queries.filter((q) => {
-      if (!gl.getQueryParameter(q.query, gl.QUERY_RESULT_AVAILABLE))
-        {return true;}
+      if (!gl.getQueryParameter(q.query, gl.QUERY_RESULT_AVAILABLE)) {
+        return true;
+      }
       const ms = gl.getQueryParameter(q.query, gl.QUERY_RESULT) / 1e6;
       const a =
         this.metrics.stages[q.stage] ?? (this.metrics.stages[q.stage] = []);
       a.push({ frame: q.frame, milliseconds: ms });
-      if (a.length > 4096) {a.shift();}
+      if (a.length > 4096) {
+        a.shift();
+      }
       const frame = this._timerFrames.get(q.frame);
       if (frame) {
         frame.received++;
@@ -290,9 +338,12 @@ class LumenFinalGather {
       if (frame.closed && frame.received === frame.submitted) {
         if (!frame.missing && frame.submitted) {
           this.metrics.completedTimings.push(frame);
-          if (this.metrics.completedTimings.length > 2048)
-            {this.metrics.completedTimings.shift();}
-        } else {this.metrics.incompleteTimerFrames++;}
+          if (this.metrics.completedTimings.length > 2048) {
+            this.metrics.completedTimings.shift();
+          }
+        } else {
+          this.metrics.incompleteTimerFrames++;
+        }
         this._timerFrames.delete(id);
       }
     }
@@ -300,6 +351,10 @@ class LumenFinalGather {
   _measure(stage, draw) {
     const gl = this.scene.context._gl,
       ext = this._timer;
+    if (!ext) {
+      this.metrics.timingUnavailable++;
+      return draw();
+    }
     const id = this.scene.frameState.frameNumber;
     let frame = this._timerFrames.get(id);
     if (!frame) {
@@ -330,7 +385,9 @@ class LumenFinalGather {
     try {
       return draw();
     } finally {
-      if (stage === "forward") {frame.closed = true;}
+      if (stage === "forward") {
+        frame.closed = true;
+      }
       if (query) {
         gl.endQuery(ext.TIME_ELAPSED_EXT);
         this._queries.push({
@@ -362,7 +419,12 @@ class LumenFinalGather {
         u_fgNeedsNeighborhood: () => this.quality !== "roi",
         u_fgSamples: () => this.samples,
         u_fgSeed: () => this.seed,
-        u_fgSampling: () => this.sampling === "fixed-reference" ? 0 : this.sampling === "reconstructed" ? 2 : 1,
+        u_fgSampling: () =>
+          this.sampling === "fixed-reference"
+            ? 0
+            : this.sampling === "reconstructed"
+              ? 2
+              : 1,
         u_fgEpoch: () => this._epochForFrame | 0,
         u_fgPixelOffset: () => Cartesian2.ZERO,
         u_budget: () => this.traversalBudget,
@@ -410,7 +472,7 @@ class LumenFinalGather {
     if (w.finalGatherSnapshot.revision !== w.requestedRevision) {
       this.fallbackReason = 2;
       this.reconstruction?.invalidate("requested revision unavailable");
-      this._stableFrames=0;
+      this._stableFrames = 0;
       this.metrics.status = "DDGI fallback: waiting for matching revision";
       return;
     }
@@ -449,7 +511,7 @@ class LumenFinalGather {
       l.rw > ContextLimits.maximumTextureSize ||
       l.rh > ContextLimits.maximumTextureSize ||
       l.bytes + snapshotBytes > this.maxMemoryBytes ||
-      l.slots > this.maxRayInvocations ||
+      l.slots + l.geometrySlots > this.maxRayInvocations ||
       !Number.isInteger(this.traversalBudget) ||
       this.traversalBudget < 1 ||
       this.traversalBudget > 4096
@@ -461,11 +523,17 @@ class LumenFinalGather {
     }
     const cameraKey = [
       ...Matrix4.toArray(s.camera.viewMatrix),
-      s.camera.frustum.fov,
+      ...Matrix4.toArray(s.camera.frustum.projectionMatrix),
+      s.camera.frustum.near,
+      s.camera.frustum.far,
       s.drawingBufferWidth,
       s.drawingBufferHeight,
       this.quality,
-    ].map((value) => typeof value === "number" ? value.toPrecision(10) : value).join(":");
+    ]
+      .map((value) =>
+        typeof value === "number" ? value.toPrecision(10) : value,
+      )
+      .join(":");
     if (
       this.freezeSampling &&
       this.texture &&
@@ -475,13 +543,39 @@ class LumenFinalGather {
       this.ready = true;
       return;
     }
-    const reconstructionKey=JSON.stringify([snapshot.revision,snapshot.round,snapshot.versions,Matrix4.toArray(w.inverseFrame),this.quality,this.seed,this.sampling]);
-    const cameraChanged=this._historyCameraKey!==cameraKey;
-    if(this.sampling==="reconstructed" && this.reconstruction && this._historyWorld===w && this._historyKey===reconstructionKey &&
-       !cameraChanged && this._stableFrames>=this.reconstruction.targetFrames && !this.continuousSampling){
-      this.ready=true;this.metrics.status="experimental FG: accumulation paused";return;
+    const reconstructionKey = JSON.stringify([
+      snapshot.revision,
+      snapshot.round,
+      snapshot.versions,
+      Matrix4.toArray(w.inverseFrame),
+      this.quality,
+      this.seed,
+      this.sampling,
+      this.sequenceEpoch,
+    ]);
+    const cameraChanged = this._historyCameraKey !== cameraKey;
+    if (
+      this.sampling === "reconstructed" &&
+      this.reconstruction &&
+      this._historyWorld === w &&
+      this._historyKey === reconstructionKey &&
+      !cameraChanged &&
+      (this._stableFrames >= this.reconstruction.targetFrames ||
+        (this.sequenceEpoch !== undefined &&
+          this._sampleCameraKey === cameraKey)) &&
+      !this.continuousSampling
+    ) {
+      this.ready = true;
+      this.metrics.status = "experimental FG: accumulation paused";
+      return;
     }
-    if(cameraChanged || this._historyWorld!==w || this._historyKey!==reconstructionKey){this._stableFrames=0;}
+    if (
+      cameraChanged ||
+      this._historyWorld !== w ||
+      this._historyKey !== reconstructionKey
+    ) {
+      this._stableFrames = 0;
+    }
     snapshot.retain();
 
     try {
@@ -533,18 +627,57 @@ class LumenFinalGather {
           l.height,
         ),
       );
-      if(this.reconstruction){
-        Matrix4.multiply(s.camera.frustum.projectionMatrix,this._localToEye,this._currentVP);
-        const eye=Cartesian3.fromElements(w.eyeToLocal[12],w.eyeToLocal[13],w.eyeToLocal[14],new Cartesian3());
-        const direction=Cartesian3.normalize(Cartesian3.fromElements(-w.eyeToLocal[8],-w.eyeToLocal[9],-w.eyeToLocal[10],new Cartesian3()),new Cartesian3());
-        if(this._historyWorld!==w){this.reconstruction.invalidate("world generation");}
-        const before=this.reconstruction.frames;
-        this.reconstruction.execute({key:reconstructionKey,raw:this.texture,receiver:this.receiver,neighborhood:this.neighborhood.texture,vp:this._currentVP,localToEye:this._localToEye,epoch:this._epochForFrame,eye,direction});
-        if(this.reconstruction.frames>before){this._stableFrames++;}
-        this._historyWorld=w;this._historyKey=reconstructionKey;this._historyCameraKey=cameraKey;
-        this.metrics.accumulationPasses=this.reconstruction.frames;
-        this.metrics.history=true;this.metrics.historyReset=this.reconstruction.reason;
-        if(this._stableFrames<this.reconstruction.targetFrames){s.requestRender();}
+      if (this.reconstruction) {
+        Matrix4.multiply(
+          s.camera.frustum.projectionMatrix,
+          this._localToEye,
+          this._currentVP,
+        );
+        const eye = Cartesian3.fromElements(
+          w.eyeToLocal[12],
+          w.eyeToLocal[13],
+          w.eyeToLocal[14],
+          new Cartesian3(),
+        );
+        const direction = Cartesian3.normalize(
+          Cartesian3.fromElements(
+            -w.eyeToLocal[8],
+            -w.eyeToLocal[9],
+            -w.eyeToLocal[10],
+            new Cartesian3(),
+          ),
+          new Cartesian3(),
+        );
+        if (this._historyWorld !== w) {
+          this.reconstruction.invalidate("world generation");
+        }
+        const before = this.reconstruction.frames;
+        this.reconstruction.execute({
+          key: reconstructionKey,
+          raw: this.texture,
+          receiver: this.receiver,
+          neighborhood: this.neighborhood.texture,
+          vp: this._currentVP,
+          localToEye: this._localToEye,
+          epoch: this._epochForFrame,
+          eye,
+          direction,
+        });
+        if (this.reconstruction.frames > before) {
+          this._stableFrames++;
+        }
+        this._historyWorld = w;
+        this._historyKey = reconstructionKey;
+        this._historyCameraKey = cameraKey;
+        this.metrics.accumulationPasses = this.reconstruction.frames;
+        this.metrics.history = true;
+        this.metrics.historyReset = this.reconstruction.reason;
+        if (
+          this.sequenceEpoch === undefined &&
+          this._stableFrames < this.reconstruction.targetFrames
+        ) {
+          s.requestRender();
+        }
       }
       this.ready = true;
       this.fallbackReason = 0;
@@ -573,6 +706,7 @@ class LumenFinalGather {
         primaryRayUpperBound: l.slots,
         solarRayUpperBound: l.slots,
         traversalBudget: this.traversalBudget,
+        geometryRayUpperBound: l.geometrySlots,
         snapshotBytes,
         totalAdditionalBytes: l.bytes + snapshotBytes,
       });
@@ -587,8 +721,11 @@ class LumenFinalGather {
   release() {
     this.ready = false;
     this.texture = undefined;
-    this.reconstruction?.destroy();this.reconstruction=undefined;
-    this._historyWorld=this._historyKey=this._historyCameraKey=undefined;this._stableFrames=0;
+    this._sampleWorld = this._inputUniforms = this._input = undefined;
+    this.reconstruction?.destroy();
+    this.reconstruction = undefined;
+    this._historyWorld = this._historyKey = this._historyCameraKey = undefined;
+    this._stableFrames = 0;
     this.neighborhood = this.hits = this.ping = undefined;
     this._layoutKey = undefined;
     this.receiver?.destroy();
@@ -617,7 +754,8 @@ class LumenFinalGather {
     }
     this._queries = [];
     this._timerFrames.clear();
-    this.metrics.history=false;this.metrics.accumulationPasses=0;
+    this.metrics.history = false;
+    this.metrics.accumulationPasses = 0;
     this.metrics.memoryBytes = 0;
     this.metrics.snapshotBytes =
       this.lumen.world?.finalGatherSnapshot?.resources.reduce(
