@@ -85,7 +85,9 @@ ImageBasedLightingPipelineStage.process = function (
     u_lumenProbeIrradiance: [
       "sampler2D",
       () =>
-        lumen?.world?.irradianceTexture ?? frameState.context.defaultTexture,
+        lumen?.world?.displayIrradianceTexture ??
+        lumen?.world?.irradianceTexture ??
+        frameState.context.defaultTexture,
     ],
     u_lumenProbeDistances: [
       "sampler2D",

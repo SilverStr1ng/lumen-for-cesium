@@ -312,7 +312,12 @@ void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 a=texelFetch(u_queryOrigin,c,0)
 export const querySample = `${gather}
 uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
+export const displayBlend = `precision highp float;
+uniform sampler2D u_displayHistory,u_displayTarget;
+uniform float u_displayAlpha;
+void main(){ivec2 p=ivec2(gl_FragCoord.xy);vec4 target=texelFetch(u_displayTarget,p,0);out_FragColor=vec4(mix(texelFetch(u_displayHistory,p,0).rgb,target.rgb,u_displayAlpha),target.a);}`;
 export default {
+  displayBlend,
   relocate,
   intersect,
   classify,

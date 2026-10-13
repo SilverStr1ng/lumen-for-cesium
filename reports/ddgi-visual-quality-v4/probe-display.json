@@ -1,0 +1,73 @@
+{
+  "version": {
+    "head": "c12433cdd42f7cb5566a27d83160a4dfdc0c0fef",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "3112809a04bb88edbf06fe439083c08568606f7c645507457e6745bd6031c37c",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "fac45a7ac4347dd89d90ce4b81590409f6290a1e06c6330b42171a68c8a81cf2",
+      "lumen/gpu-worker.js": "820ade0e8364c8ff9b1a556c2d1b0c6eeea54f880c9c33ba792428d9822b8e10",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": "8465ef44d5a6b8aaa5ab90cd5e4dae21cf297e5d501dee46b0e416822e349557"
+    },
+    "compiledBundle": "0f90aa5d41dab2a8ccc787eb154ede5ab4f47407ae43c416d914e6f5b1efddd9",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "checks": [],
+  "result": {
+    "extraBytes": 864000,
+    "expectedExtraBytes": 864000,
+    "initialAlpha": 0,
+    "duration": 50,
+    "initialDifference": 3.266107976436615,
+    "settledDifference": 0,
+    "settledMilliseconds": 74.40000000037253,
+    "draws": 6,
+    "idleDraws": 6,
+    "released": true,
+    "rawDifference": 0,
+    "budgetRejected": true,
+    "rejectedClean": true,
+    "invalidated": true,
+    "destroyed": true,
+    "gl": [
+      {
+        "phase": "display-diagnostic",
+        "phases": {
+          "initialization": {
+            "draws": 957
+          },
+          "display-production": {
+            "draws": 310
+          },
+          "display-diagnostic": {
+            "draws": 377,
+            "readPixels": 11
+          }
+        },
+        "feedback": [],
+        "errors": [],
+        "live": {
+          "textures": 17,
+          "framebuffers": 9,
+          "queries": 0,
+          "programs": 22,
+          "syncs": 0
+        },
+        "peak": {
+          "textures": 40,
+          "framebuffers": 25,
+          "queries": 15,
+          "programs": 22,
+          "syncs": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

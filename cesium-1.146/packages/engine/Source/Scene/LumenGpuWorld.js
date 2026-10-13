@@ -20,6 +20,7 @@ import TextureMinificationFilter from "../Renderer/TextureMinificationFilter.js"
 import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.js";
 import ContextLimits from "../Renderer/ContextLimits.js";
 import * as shaders from "./LumenGpuShaders.js";
+import LumenProbeDisplay from "./LumenProbeDisplay.js";
 
 const defaultGatherControl = new Cartesian4(0, 0, -1, -1);
 const nearest = new Sampler({
@@ -87,9 +88,12 @@ class LumenGpuWorld {
       bvhBins: 12,
       visibilityMode: "optimized",
       reconstructionMode: "spatial",
+      displayTransitionMilliseconds: 0,
       ...options,
     };
     this._validate(this.options);
+    this.displayTransitionMilliseconds =
+      this.options.displayTransitionMilliseconds;
     this.options = immutableOptions(this.options);
     this.inverseFrame = Matrix4.inverse(options.modelMatrix, new Matrix4());
     this.eyeToLocal = new Matrix4();
@@ -176,6 +180,14 @@ class LumenGpuWorld {
     });
   }
   _validate(o) {
+    if (
+      !Number.isFinite(o.displayTransitionMilliseconds) ||
+      o.displayTransitionMilliseconds < 0 ||
+      o.displayTransitionMilliseconds > 250
+    )
+      throw new DeveloperError(
+        "display transition must be finite in [0,250] ms",
+      );
     if (!["spatial", "legacy"].includes(o.reconstructionMode))
       throw new DeveloperError("reconstructionMode must be spatial or legacy");
     if (!["sphere", "upper-hemisphere"].includes(o.environmentMode)) {
@@ -564,7 +576,13 @@ class LumenGpuWorld {
       u_queryAnyHit: () => this._diagnosticAnyHit ?? false,
       u_queryStats: () => this._diagnosticStats ?? false,
       u_neutral: () => this._lighting.neutral,
-      u_lumenProbeIrradiance: () => this._atlases[this._previous].E,
+      u_lumenProbeIrradiance: () =>
+        this._phase === "query" && this._sampleDisplay
+          ? this.displayIrradianceTexture
+          : this._atlases[this._previous].E,
+      u_displayHistory: () => this._display?.inputHistory ?? c.defaultTexture,
+      u_displayTarget: () => this._display?.inputTarget ?? c.defaultTexture,
+      u_displayAlpha: () => this._display?.alpha ?? 1,
       u_lumenProbeDistances: () => this._atlases[this._previous].M,
       u_lumenProbePositions: () =>
         ["intersect", "classify"].includes(this._phase)
@@ -762,11 +780,84 @@ class LumenGpuWorld {
       complete: false,
     };
   }
+  get displayIrradianceTexture() {
+    return this.displayTransitionMilliseconds > 0 && this._display?.ready
+      ? this._display.shown.E
+      : this.irradianceTexture;
+  }
+  get displaySettled() {
+    return !this._display?.active || this.displayTransitionMilliseconds === 0;
+  }
+  setDisplayTransition(milliseconds) {
+    if (
+      !Number.isFinite(milliseconds) ||
+      milliseconds < 0 ||
+      milliseconds > 250
+    )
+      throw new DeveloperError(
+        "display transition must be finite in [0,250] ms",
+      );
+    if (milliseconds > 0 && this.ready && !this._display)
+      this._ensureDisplay().publish(
+        this.irradianceTexture,
+        this.packet.versions ?? this.versions,
+        this.options,
+        this.publishedRevision,
+        0,
+      );
+    this.displayTransitionMilliseconds = milliseconds;
+    if (milliseconds === 0 && this._display) {
+      for (const resource of this._display.resources) {
+        const bytes = resource.E.sizeInBytes;
+        resource.fb.destroy();
+        resource.E.destroy();
+        this.memoryBytes -= bytes;
+        this._textures = this._textures.filter((t) => t !== resource.E);
+        this._framebuffers = this._framebuffers.filter(
+          (f) => f !== resource.fb,
+        );
+      }
+      this._display = undefined;
+      this.metrics.memory.currentBytes = this.memoryBytes;
+      this.metrics.memory.textures = this._textures.length;
+      this.metrics.memory.framebuffers = this._framebuffers.length;
+    }
+    this.scene.requestRender();
+  }
+  _ensureDisplay() {
+    if (!this._display) {
+      const g = this.packet.grid;
+      if (this.memoryBytes + 3 * g.width * g.height * 16 > this.maxMemoryBytes)
+        throw new DeveloperError(
+          "display transition exceeds GPU memory budget",
+        );
+      const resources = Array.from({ length: 3 }, () => {
+        const E = this._texture(
+          g.width,
+          g.height,
+          PixelDatatype.FLOAT,
+          undefined,
+          this.linearAtlas ? linear : nearest,
+        );
+        return { E, fb: this._framebuffer([E]) };
+      });
+      this._display = new LumenProbeDisplay(this, resources);
+    }
+    return this._display;
+  }
   _publishRound(final) {
     const metadata = this._atlasMetadata[this._previous];
     if (!metadata.complete || metadata.revision < this.publishedRevision) {
       throw new Error("Cannot publish a partial or older DDGI atlas");
     }
+    if (this.displayTransitionMilliseconds > 0)
+      this._ensureDisplay().publish(
+        this._atlases[this._previous].E,
+        this._jobVersions,
+        this._jobOptions,
+        this._jobRevision,
+        this.displayTransitionMilliseconds,
+      );
     this._published = this._previous;
     this.irradianceTexture = this._atlases[this._published].E;
     this.distanceTexture = this._atlases[this._published].M;
@@ -918,6 +1009,7 @@ class LumenGpuWorld {
     try {
       this._inUpdate = true;
       this._pollTimers();
+      if (this.displayTransitionMilliseconds > 0) this._display?.update();
       if (this._prepared) {
         const p = this._prepared;
         this._prepared = undefined;
@@ -1357,9 +1449,11 @@ class LumenGpuWorld {
   }
   sample(points, diagnostic = {}) {
     const old = this._sampleGatherControl,
+      oldDisplay = this._sampleDisplay,
       oldLegacy = this._sampleLegacyKernel;
     try {
       this._sampleLegacyKernel = diagnostic.legacyKernel;
+      this._sampleDisplay = diagnostic.display === true;
       this._sampleGatherControl = new Cartesian4(
         diagnostic.visibility === false ? 1 : 0,
         diagnostic.crush === false ? 1 : 0,
@@ -1374,6 +1468,7 @@ class LumenGpuWorld {
       );
     } finally {
       this._sampleGatherControl = old;
+      this._sampleDisplay = oldDisplay;
       this._sampleLegacyKernel = oldLegacy;
     }
   }
@@ -1469,6 +1564,7 @@ class LumenGpuWorld {
       t.destroy();
     }
     this._textures = [];
+    this._display = undefined;
     this.memoryBytes = 0;
     this.metrics.memory.currentBytes = 0;
     this.metrics.memory.textures = this.metrics.memory.framebuffers = 0;
