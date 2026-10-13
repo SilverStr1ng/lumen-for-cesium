@@ -1,0 +1,144 @@
+html,
+body,
+#view {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #182128;
+}
+body {
+  font:
+    14px/1.55 system-ui,
+    sans-serif;
+  color: #e8e7e0;
+}
+aside {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  bottom: 66px;
+  width: 274px;
+  padding: 25px;
+  background: rgba(25, 31, 32, 0.89);
+  backdrop-filter: blur(12px);
+  border: 1px solid #7e89834d;
+  border-radius: 4px;
+  overflow: auto;
+  scrollbar-width: thin;
+  box-sizing: border-box;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #cec6b4;
+}
+h1 {
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+  margin: 18px 0;
+}
+p {
+  color: #c7cbc5;
+  font-size: 12px;
+  margin: 16px 0;
+}
+.bookmarks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin: 20px 0;
+}
+button,
+select,
+input {
+  color: #efeee6;
+  background: #343e3c;
+  border: 1px solid #66726c;
+  border-radius: 3px;
+  font: inherit;
+  font-size: 12px;
+  padding: 7px;
+  max-width: 140px;
+  box-sizing: border-box;
+}
+button {
+  cursor: pointer;
+}
+button:hover {
+  background: #52605a;
+}
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0;
+  gap: 8px;
+  font-size: 12px;
+}
+#gallerySummary {
+  border-top: 1px solid #66726c;
+  padding-top: 14px;
+  margin-top: 18px;
+  color: #d8dcce;
+  font-size: 12px;
+  white-space: pre-line;
+}
+.quiet,
+small {
+  color: #a8b3ab;
+  font-size: 11px;
+}
+summary {
+  cursor: pointer;
+  font-size: 12px;
+  margin: 16px 0;
+}
+#status {
+  white-space: pre-wrap;
+  font:
+    10px/1.7 ui-monospace,
+    monospace;
+  margin-top: 15px;
+}
+#error {
+  color: #ffc8a6;
+}
+nav {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0 0;
+}
+a {
+  color: #d9d0b8;
+  font-size: 11px;
+}
+footer {
+  position: absolute;
+  left: 324px;
+  bottom: 35px;
+  right: 20px;
+  color: #e7e7dc;
+  background: #1c2928aa;
+  padding: 8px 14px;
+  font-size: 11px;
+  border-radius: 3px;
+}
+@media (max-width: 800px) {
+  aside {
+    left: 10px;
+    top: 10px;
+    width: 240px;
+    padding: 18px;
+    bottom: 70px;
+  }
+  footer {
+    left: 10px;
+    font-size: 10px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+}

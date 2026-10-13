@@ -1,0 +1,197 @@
+{
+  "name": "earth-gi-gallery",
+  "upAxis": "Z",
+  "theme": "Earth GI Gallery — courtyard, skylight hall, luminous wall",
+  "anchor": {
+    "longitude": 114.1,
+    "latitude": 22.3,
+    "height": 1.5,
+    "heading": 0
+  },
+  "spacing": 2,
+  "rays": 128,
+  "bounces": 3,
+  "dimensions": [
+    31,
+    23,
+    7.85
+  ],
+  "foundationCorners": [
+    [
+      -15.5,
+      -11.5
+    ],
+    [
+      -15.5,
+      11.5
+    ],
+    [
+      15.5,
+      -11.5
+    ],
+    [
+      15.5,
+      11.5
+    ]
+  ],
+  "cameras": {
+    "overview": {
+      "eye": [
+        -29,
+        -34,
+        22
+      ],
+      "target": [
+        0,
+        1,
+        2.4
+      ]
+    },
+    "courtyard": {
+      "eye": [
+        -12.7,
+        -5.4,
+        1.8
+      ],
+      "target": [
+        -5.3,
+        2.7,
+        0.65
+      ]
+    },
+    "skylight": {
+      "eye": [
+        11.8,
+        -7.2,
+        2
+      ],
+      "target": [
+        5.5,
+        2.4,
+        2.1
+      ]
+    },
+    "doorway": {
+      "eye": [
+        -3.2,
+        -1.4,
+        1.7
+      ],
+      "target": [
+        8.5,
+        2.5,
+        1.25
+      ]
+    },
+    "emitter": {
+      "eye": [
+        12.8,
+        7.4,
+        2
+      ],
+      "target": [
+        7.2,
+        9.5,
+        1.4
+      ]
+    }
+  },
+  "receivers": [
+    {
+      "position": [
+        -12,
+        -0.9,
+        0.202
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "name": "courtyard color bounce"
+    },
+    {
+      "position": [
+        7,
+        3,
+        0.202
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "name": "skylight interior floor"
+    },
+    {
+      "position": [
+        7.2,
+        9.5,
+        0.202
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "name": "luminous bay floor"
+    }
+  ],
+  "lightingPresets": {
+    "day": {
+      "sunDirection": [
+        -1,
+        -0.35,
+        1.1
+      ],
+      "sunRadiance": [
+        2,
+        2,
+        2
+      ],
+      "skyRadiance": [
+        0.15,
+        0.18,
+        0.25
+      ]
+    },
+    "sunset": {
+      "sunDirection": [
+        -0.8,
+        -0.6,
+        0.22
+      ],
+      "sunRadiance": [
+        1.6,
+        1.05,
+        0.68
+      ],
+      "skyRadiance": [
+        0.09,
+        0.12,
+        0.18
+      ]
+    },
+    "night": {
+      "sunDirection": [
+        1,
+        0,
+        0.65
+      ],
+      "sunRadiance": [
+        0,
+        0,
+        0
+      ],
+      "skyRadiance": [
+        0.01,
+        0.015,
+        0.02
+      ]
+    }
+  },
+  "exposure": 1,
+  "ownership": "One self-authored static glTF; identical display and GI asset",
+  "coverage": "Gallery, foundation, roof, benches and steps participate in GI. Globe/terrain are background.",
+  "license": "Self-authored geometry and mineral texture, MIT (repository LICENSE); no baked lighting/AO."
+}

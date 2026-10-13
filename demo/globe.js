@@ -1,7 +1,21 @@
 import { LightingEnvironment } from "./lighting-environment.js";
 const params = new URLSearchParams(location.search);
+const gallery = document.documentElement.dataset.scene === "gallery";
+let galleryEmitter = !params.has("emitterOff");
+const selectedAsset = () =>
+  gallery
+    ? galleryEmitter
+      ? "earth-gi-gallery"
+      : "earth-gi-gallery-off"
+    : currentPreset === "presentation"
+      ? "earth-pavilion-presentation"
+      : params.has("heldOut")
+        ? "earth-pavilion-held-out"
+        : "earth-pavilion";
 let currentPreset =
-  params.get("preset") === "presentation" ? "presentation" : "regression";
+  params.get("preset") === "presentation" || gallery
+    ? "presentation"
+    : "regression";
 let currentQuality = params.get("quality") === "fine" ? "fine" : "original";
 const C = Cesium,
   $ = (id) => document.getElementById(id);
@@ -20,6 +34,14 @@ const widget = new C.CesiumWidget("view", {
   },
 });
 const scene = widget.scene;
+if (gallery) {
+  const limitResolution = () => {
+    widget.resolutionScale = Math.min(1, 1280 / innerWidth, 800 / innerHeight);
+    scene.requestRender();
+  };
+  limitResolution();
+  addEventListener("resize", limitResolution);
+}
 const wantsEnvironment = () =>
   currentPreset === "presentation" || params.get("ibl") === "dynamic";
 const lightingEnvironment = new LightingEnvironment(wantsEnvironment());
@@ -322,12 +344,7 @@ async function reload() {
   lightingController.update();
   $("error").textContent = "";
   try {
-    const assetName =
-      currentPreset === "presentation"
-        ? "earth-pavilion-presentation"
-        : params.has("heldOut")
-          ? "earth-pavilion-held-out"
-          : "earth-pavilion";
+    const assetName = selectedAsset();
     const selectedMetadata = await (
       await fetch("../fixtures/" + assetName + ".json")
     ).json();
@@ -390,10 +407,12 @@ async function reload() {
 async function terrainHeight(provider) {
   const points = [
     [0, 0],
-    [-12, -9],
-    [-12, 9],
-    [12, -9],
-    [12, 9],
+    ...(metadata?.foundationCorners ?? [
+      [-12, -9],
+      [-12, 9],
+      [12, -9],
+      [12, 9],
+    ]),
   ].map(([x, y]) =>
     C.Cartographic.fromCartesian(
       C.Matrix4.multiplyByPoint(
@@ -493,6 +512,9 @@ scene.postRender.addEventListener(() => {
     `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing ${grid?.spacing ?? "…"}m\n${grid?.rays ?? "…"} rays · ${w?.options.bounces ?? "…"} bounces · ${w?.options.targetGpuMilliseconds ?? "…"}ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n显示 ${(w?.displaySettled ?? true) ? "已稳定" : "过渡中"}\n发布时间为 CPU 提交，不等于 GPU 完成`;
   const fg = scene.lumen.finalGather,
     m = fg.metrics;
+  if (gallery)
+    $("gallerySummary").textContent =
+      `${w?.status === "ready" ? "光照已完成" : "正在更新光照"} · ${fg.mode === "ddgi" ? "DDGI" : fg.sampling}\n${fg.mode === "ddgi" ? "" : `采样 pass ${m.accumulationPasses ?? 0}/32 · `}${scene.drawingBufferWidth}×${scene.drawingBufferHeight}\n发光壁 ${galleryEmitter ? "开启" : "关闭"} · 曝光 ${scene.postProcessStages.exposure}`;
   $("status").textContent +=
     `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n${fg.sampling} · 积累pass ${m.accumulationPasses ?? 0}/32（逐像素有效长度另测） · 原求解不读 FG`;
 });
@@ -502,14 +524,12 @@ async function saveView() {
     w = scene.lumen.world;
   if (!w?.ready || w.isDestroyed())
     throw Error("wait for the GI world before saving");
-  const assetName =
-    currentPreset === "presentation"
-      ? "earth-pavilion-presentation"
-      : params.has("heldOut")
-        ? "earth-pavilion-held-out"
-        : "earth-pavilion";
+  const assetName = selectedAsset();
   // Capture every mutable scene value before the first asynchronous hash operation.
   const saved = {
+    scene: gallery ? "gallery" : "pavilion",
+    galleryEmitter,
+    assetName,
     preset: currentPreset,
     qualityPreset: currentQuality,
     diffuseResponse: scene.lumen.diffuseResponse,
@@ -576,10 +596,15 @@ async function saveView() {
 }
 async function restoreView(saved) {
   const reloadNeeded =
+    (gallery &&
+      saved.galleryEmitter !== undefined &&
+      saved.galleryEmitter !== galleryEmitter) ||
     (saved.preset && saved.preset !== currentPreset) ||
     (saved.qualityPreset && saved.qualityPreset !== currentQuality) ||
     Object.keys(saved.anchor).some((k) => saved.anchor[k] !== anchor[k]);
   const previous = scene.lumen.world;
+  galleryEmitter = saved.galleryEmitter ?? galleryEmitter;
+  if (gallery) $("emitter").checked = galleryEmitter;
   currentPreset = saved.preset ?? currentPreset;
   currentQuality = saved.qualityPreset ?? currentQuality;
   Object.assign(anchor, saved.anchor);
@@ -792,18 +817,18 @@ window.earthLab = {
   },
 };
 function applyDisplayPreset() {
-  const presentation = currentPreset === "presentation";
+  const presentation = currentPreset === "presentation" || gallery;
   scene.lumen.diffuseResponse = presentation ? "cesium" : "lambert";
   scene.msaaSamples = presentation ? 4 : 1;
   scene.postProcessStages.fxaa.enabled = false;
-  scene.shadowMap.normalOffset = !presentation;
+  scene.shadowMap.normalOffset = gallery || !presentation;
   scene.shadowMap.softShadows = presentation;
   scene.shadowMap.maximumDistance = presentation ? 75 : 150;
   $("preset").value = currentPreset;
   $("quality").value = currentQuality;
   $("response").value = scene.lumen.diffuseResponse;
   $("aa").value = presentation ? "msaa4" : "off";
-  $("shadow").value = presentation ? "contact" : "original";
+  $("shadow").value = scene.shadowMap.normalOffset ? "original" : "contact";
 }
 $("preset").onchange = () => {
   currentPreset = $("preset").value;
@@ -863,11 +888,76 @@ applyDisplayPreset();
 lightingController.update();
 camera("earth");
 localLayers().catch(fail);
-fetch("../fixtures/earth-pavilion.json")
+fetch("../fixtures/" + selectedAsset() + ".json")
   .then((r) => r.json())
   .then((m) => {
     metadata = m;
     Object.assign(anchor, metadata.anchor);
-    return reload();
+    if (gallery) {
+      const preset =
+        metadata.lightingPresets[params.get("light") ?? "day"] ??
+        metadata.lightingPresets.day;
+      Object.assign(lighting, preset);
+      $("sun").value = String(
+        C.Math.toDegrees(
+          Math.atan2(lighting.sunDirection[1], lighting.sunDirection[0]),
+        ),
+      );
+      $("sunHeight").value = String(
+        C.Math.toDegrees(
+          Math.atan2(
+            lighting.sunDirection[2],
+            Math.hypot(...lighting.sunDirection.slice(0, 2)),
+          ),
+        ),
+      );
+    }
+    const loading = reload();
+    if (gallery) camera("overview");
+    return loading;
   })
   .catch(fail);
+
+if (gallery) {
+  $("emitter").checked = galleryEmitter;
+  $("emitter").onchange = () => {
+    galleryEmitter = $("emitter").checked;
+    reload();
+  };
+  $("galleryLight").value = params.get("light") ?? "day";
+  $("galleryLight").onchange = () => {
+    Object.assign(lighting, metadata.lightingPresets[$("galleryLight").value]);
+    $("sun").value = String(
+      C.Math.toDegrees(
+        Math.atan2(lighting.sunDirection[1], lighting.sunDirection[0]),
+      ),
+    );
+    $("sunHeight").value = String(
+      C.Math.toDegrees(
+        Math.atan2(
+          lighting.sunDirection[2],
+          Math.hypot(...lighting.sunDirection.slice(0, 2)),
+        ),
+      ),
+    );
+    relight();
+  };
+  $("galleryCompare").onchange = () => {
+    const value = $("galleryCompare").value,
+      fg = scene.lumen.finalGather;
+    scene.lumen.debugMode = value === "without" ? 11 : 0;
+    $("mode").value = String(scene.lumen.debugMode);
+    const mode =
+      value === "raw" ? "raw" : value === "reconstructed" ? "fg" : "ddgi";
+    fg.configure({
+      mode,
+      quality: "high",
+      sampling: value === "raw" ? "scrambled-single-frame" : "reconstructed",
+      model,
+    }).catch(fail);
+    $("fgMode").value = mode;
+    $("fgQuality").value = "high";
+    $("fgSampling").value = fg.sampling;
+    scene.requestRender();
+  };
+}

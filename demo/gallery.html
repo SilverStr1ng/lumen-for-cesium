@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN" data-scene="gallery">
+  <head>
+    <meta charset="utf-8" />
+    <title>Earth GI Gallery</title>
+    <link rel="icon" href="data:," />
+    <link
+      rel="stylesheet"
+      href="../cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css"
+    />
+    <link rel="stylesheet" href="gallery.css" />
+  </head>
+  <body>
+    <div id="view"></div>
+    <aside>
+      <div class="eyebrow">EARTH · LIGHT · MATERIAL</div>
+      <h1>Earth GI<br />Gallery</h1>
+      <p>日光庭院、天窗展廊与发光壁龛。<br />一座地球上的小型石材艺术馆。</p>
+      <div id="cameras" class="bookmarks">
+        <button data-camera="overview">01 建筑总览</button>
+        <button data-camera="courtyard">02 庭院反弹</button>
+        <button data-camera="skylight">03 天窗展廊</button>
+        <button data-camera="doorway">04 门洞遮挡</button>
+        <button data-camera="emitter">05 发光壁龛</button>
+        <button data-camera="earth">地球 / 飞出</button>
+      </div>
+      <label
+        >光源<select id="galleryLight">
+          <option value="day">昼间</option>
+          <option value="sunset">斜阳</option>
+          <option value="night">夜间</option>
+        </select></label
+      >
+      <label>发光壁<input id="emitter" type="checkbox" checked /></label>
+      <label
+        >同条件对照<select id="galleryCompare">
+          <option value="ddgi">DDGI</option>
+          <option value="without">仅移除局部 GI</option>
+          <option value="raw">Raw FG · 诊断</option>
+          <option value="reconstructed">重建 FG · 实验</option>
+        </select></label
+      >
+      <div id="gallerySummary" aria-live="polite">建筑和间接光正在准备…</div>
+      <p class="quiet">
+        固定曝光 1 · 本地无 token 可用<br />重建尚未标为推荐；成本与验收见报告。
+      </p>
+      <details>
+        <summary>渲染与诊断</summary>
+        <label
+          >显示<select id="preset">
+            <option value="presentation">Gallery 材质</option>
+            <option value="regression">传输对照</option>
+          </select></label
+        >
+        <label
+          >探针<select id="quality">
+            <option value="original">2m / 128r / 3b</option>
+            <option value="fine">1.5m 实验</option>
+          </select></label
+        >
+        <label
+          >接收光照<select id="fgMode">
+            <option value="ddgi">DDGI</option>
+            <option value="fg">完整 E 重建替换</option>
+            <option value="raw">Raw E 诊断</option>
+          </select></label
+        >
+        <label
+          >FG 档<select id="fgQuality">
+            <option value="balanced">半分辨率 / 16r</option>
+            <option value="high">半分辨率 / 32r</option>
+            <option value="fast">四分之一 / 16r</option>
+            <option value="roi">全分辨率 ROI / 64r</option>
+          </select></label
+        >
+        <label
+          >采样<select id="fgSampling">
+            <option value="fixed-reference">固定参考</option>
+            <option value="scrambled-single-frame">像素单帧</option>
+            <option value="reconstructed">时空重建 · 实验</option>
+          </select></label
+        >
+        <label
+          >Lumen 产品开关<input id="enabled" type="checkbox" checked
+        /></label>
+        <small
+          >关闭 Lumen 会启用原 IBL 回退；与仅移除局部 GI 的对照不同。</small
+        >
+        <label
+          >分量<select id="mode">
+            <option value="0">最终光照</option>
+            <option value="1">直接光</option>
+            <option value="2">间接光</option>
+            <option value="4">最终 E used</option>
+            <option value="5">覆盖</option>
+            <option value="6">阴影可见性</option>
+            <option value="9">环境镜面</option>
+            <option value="11">仅移除局部 GI</option>
+            <option value="13">Raw FG E</option>
+            <option value="14">Filtered FG E</option>
+            <option value="15">最终权重</option>
+            <option value="16">原保护掩码</option>
+            <option value="17">Fallback 原因</option>
+          </select></label
+        >
+        <label
+          >太阳方位<input id="sun" type="number" value="0" step="any"
+        /></label>
+        <label
+          >太阳高度<input
+            id="sunHeight"
+            type="number"
+            min="1"
+            max="89"
+            step="any"
+        /></label>
+        <label
+          >发布<select id="publication">
+            <option value="snapshot">完整快照</option>
+            <option value="progressive">逐轮预览</option>
+          </select></label
+        >
+        <label>探针显示过渡<input id="transition" type="checkbox" /></label>
+        <label
+          >漫反射<select id="response">
+            <option value="cesium">Cesium PBR</option>
+            <option value="lambert">Lambert</option>
+          </select></label
+        >
+        <label
+          >AA<select id="aa">
+            <option value="msaa4">MSAA 4x</option>
+            <option value="off">1x</option>
+            <option value="fxaa">FXAA</option>
+          </select></label
+        >
+        <label
+          >阴影<select id="shadow">
+            <option value="contact">接触 / PCF</option>
+            <option value="original">原 normal offset</option>
+          </select></label
+        >
+        <label
+          >映射<select id="tonemapper">
+            <option value="PBR_NEUTRAL">PBR Neutral</option>
+            <option value="ACES">ACES</option>
+          </select></label
+        >
+        <label
+          >曝光<input
+            id="exposure"
+            type="number"
+            value="1"
+            min=".2"
+            max="3"
+            step=".1"
+        /></label>
+        <label>GI 彩墙中性化<input id="neutral" type="checkbox" /></label>
+        <button id="saveView">保存复现配置</button
+        ><button id="restoreView" disabled>恢复配置</button>
+        <button id="cancel">停止飞行</button
+        ><button id="reload">重载建筑</button>
+        <div id="status"></div>
+      </details>
+      <details>
+        <summary>可选 ion / 地形</summary>
+        <label
+          >Public token<input id="token" type="password" autocomplete="off"
+        /></label>
+        <label>影像 asset ID<input id="asset" type="number" /></label>
+        <label>World Terrain<input id="terrain" type="checkbox" /></label>
+        <button id="online">应用增强</button><button id="local">本地模式</button
+        ><button id="place">采样共享地基高度</button>
+        <p id="network">本地 NaturalEarthII + 椭球地形</p>
+        <small>凭据只存内存。显示和 GI 同步采用采样后的稳定地基高度。</small>
+      </details>
+      <p id="error" role="alert"></p>
+      <nav>
+        <a href="globe.html">原展馆回归</a
+        ><a href="../reports/fg-reconstruction-showcase-v6/index.html"
+          >验收报告</a
+        >
+      </nav>
+    </aside>
+    <footer>
+      31 × 23m · 自创几何 / 材质 · Globe 与地形为背景，不参与局部
+      GI。左键导航，滚轮缩放。
+    </footer>
+    <script>
+      window.CESIUM_BASE_URL = "/cesium-1.146/Build/CesiumUnminified/";
+    </script>
+    <script src="../cesium-1.146/Build/CesiumUnminified/Cesium.js"></script>
+    <script type="module" src="globe.js"></script>
+  </body>
+</html>

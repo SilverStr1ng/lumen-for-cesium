@@ -77,16 +77,16 @@ LightingPipelineStage.process = function (
       undefined,
       ShaderDestination.FRAGMENT,
     );
-    // Reserve world (3), FG (7), IBL (2) and shadow (1) units in addition
-    // to the material samplers already installed. Omit the adapter at shader
-    // build time when it would exceed the fragment sampler limit.
-    const materialSamplers =
+    // World and explicit IBL samplers are already installed by the preceding
+    // pipeline. Reserve seven FG samplers plus the automatic BRDF, global
+    // environment cube and shadow samplers without counting World twice.
+    const existingSamplers =
       shaderBuilder._fragmentShaderParts.uniformLines.filter((line) =>
         /uniform\s+sampler/.test(line),
       ).length;
     if (
       frameState?.context?.webgl2 &&
-      ContextLimits.maximumTextureImageUnits >= 13 + materialSamplers
+      ContextLimits.maximumTextureImageUnits >= 10 + existingSamplers
     ) {
       shaderBuilder.addDefine(
         "LUMEN_RECEIVER_COMPOSITE",
