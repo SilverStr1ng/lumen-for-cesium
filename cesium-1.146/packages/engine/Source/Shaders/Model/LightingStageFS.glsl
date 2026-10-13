@@ -62,7 +62,7 @@ vec3 addClearcoatReflection(vec3 baseLayerColor, vec3 position, vec3 lightDirect
 #endif
 
 #if defined(LIGHTING_PBR) && defined(HAS_NORMALS)
-vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position)
+vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3 geometricNormal)
 {
     #ifdef USE_CUSTOM_LIGHT_COLOR
         vec3 lightColorHdr = model_lightColorHdr;
@@ -82,7 +82,7 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position)
     vec3 indirectDiffuse = vec3(0.0), queriedE = vec3(0.0);
     if (u_lumenEnabled) {
         directColor *= lumen_shadowVisibility;
-        vec3 irradiance = lumen_irradiance(position, normal);
+        vec3 irradiance = lumen_irradiance(position, normal, geometricNormal);
         queriedE = irradiance;
         indirectDiffuse = material.diffuse * irradiance * (lumen_materialCoverage / czm_pi);
     }
@@ -131,7 +131,10 @@ void lightingStage(inout czm_modelMaterial material, ProcessedAttributes attribu
 {
     #ifdef LIGHTING_PBR
         #ifdef HAS_NORMALS
-            vec3 color = computePbrLighting(material, attributes.positionEC);
+            // Attribute normal is the macro normal before normal mapping. Align for double-sided faces.
+            vec3 geometricNormal = normalize(attributes.normalEC);
+            if (dot(geometricNormal, material.normalEC) < 0.0) geometricNormal = -geometricNormal;
+            vec3 color = computePbrLighting(material, attributes.positionEC, geometricNormal);
         #else
             vec3 color = material.diffuse * material.occlusion + material.emissive;
         #endif

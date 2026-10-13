@@ -15,14 +15,18 @@ vec4 lumen_atlas(sampler2D atlas, ivec2 tile, vec3 direction) {
     vec2 f = fract(p);
     return mix(mix(texelFetch(atlas,i,0),texelFetch(atlas,i+ivec2(1,0),0),f.x),mix(texelFetch(atlas,i+ivec2(0,1),0),texelFetch(atlas,i+ivec2(1,1),0),f.x),f.y);
 }
-vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) {
+vec4 lumen_worldIrradianceWithNormals(vec3 positionEC, vec3 geometricNormalEC, vec3 shadingNormalEC) {
     vec3 p = (u_lumenEyeToLocal * vec4(positionEC,1.0)).xyz;
-    vec3 n = normalize(mat3(u_lumenEyeToLocal) * normalEC);
-    vec3 q = (p-u_lumenProbeOrigin)/u_lumenProbeSpacing;
+    vec3 n = normalize(mat3(u_lumenEyeToLocal) * shadingNormalEC);
+    vec3 ng = normalize(mat3(u_lumenEyeToLocal) * geometricNormalEC);
+    // Ng biases geometry; Ns only addresses directional E. Logical grid stays unrelocated.
+    vec3 biased=p+ng*u_lumenNormalBias;
+    vec3 kernelPosition=u_lumenLegacyKernel?p:biased;
+    vec3 q = (kernelPosition-u_lumenProbeOrigin)/u_lumenProbeSpacing;
     if (any(lessThan(q,vec3(0.0))) || any(greaterThan(q,u_lumenProbeCounts-1.0))) return vec4(0.0);
     ivec3 counts = ivec3(u_lumenProbeCounts);
     ivec3 base = clamp(ivec3(floor(q)),ivec3(0),counts-2);
-    vec3 f = q-vec3(base),biased = p+n*u_lumenNormalBias;
+    vec3 f = q-vec3(base);
     vec3 irradiance = vec3(0.0); float weight = 0.0,available = 0.0;
     for (int z=0;z<2;z++) for (int y=0;y<2;y++) for (int x=0;x<2;x++) {
         ivec3 c=base+ivec3(x,y,z);ivec2 tile=ivec2(c.x+counts.x*c.y,c.z);
@@ -34,22 +38,25 @@ vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) {
         if(e.a<0.95 || m.a<0.95) continue;
         vec3 a=mix(1.0-f,f,vec3(x,y,z));float trilinear=a.x*a.y*a.z;
         available+=trilinear;
-        vec3 toward=probe.xyz-p;float wrap=(dot(toward/max(length(toward),0.00001),n)+1.0)*0.5;
+        vec3 toward=probe.xyz-p;float wrap=(dot(toward/max(length(toward),0.00001),ng)+1.0)*0.5;
         float facing=u_lumenGatherControl.w>=0.0 ? u_lumenGatherControl.w : max(0.05,wrap*wrap);
-        float w=trilinear*facing;
-        if(u_lumenGatherControl.x<0.5 && distance>m.x) {float variance=max(0.0001,m.y-m.x*m.x);float visibility=variance/(variance+(distance-m.x)*(distance-m.x));w*=max(0.000001,visibility*visibility*visibility);}
-        if(u_lumenGatherControl.y<0.5 && w<0.2) w*=w*w/0.04;
+        float reliability=facing;
+        if(u_lumenGatherControl.x<0.5 && distance>m.x) {float variance=max(0.0001,m.y-m.x*m.x);float visibility=variance/(variance+(distance-m.x)*(distance-m.x));reliability*=max(0.000001,visibility*visibility*visibility);}
+        if(!u_lumenLegacyKernel && u_lumenGatherControl.y<0.5 && reliability<0.2) reliability*=reliability*reliability/0.04;
+        float w=trilinear*reliability;
+        if(u_lumenLegacyKernel && u_lumenGatherControl.y<0.5 && w<0.2) w*=w*w/0.04;
         if(u_lumenGatherControl.z>=0.0) e.rgb=vec3(u_lumenGatherControl.z);
         weight+=w;irradiance+=e.rgb*w;
     }
     return weight>1e-10 ? vec4(irradiance/weight,clamp(available,0.0,1.0)) : vec4(0.0);
 }
+vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) { return lumen_worldIrradianceWithNormals(positionEC,normalEC,normalEC); }
 #endif
-vec3 lumen_irradiance(vec3 positionEC,vec3 normalEC) {
+vec3 lumen_irradiance(vec3 positionEC,vec3 normalEC,vec3 geometricNormalEC) {
     lumen_materialCoverage=u_lumenCoverage;
     #if defined(LUMEN_WORLD_SUPPORTED) && !defined(LUMEN_GBUFFER)
     if(u_lumenWorldEnabled) {
-        vec4 field=lumen_worldIrradiance(positionEC,normalEC);
+        vec4 field=lumen_worldIrradianceWithNormals(positionEC,geometricNormalEC,normalEC);
         lumen_materialCoverage*=field.a;
         return field.rgb*u_lumenWorldGain;
     }

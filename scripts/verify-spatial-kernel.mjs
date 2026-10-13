@@ -52,3 +52,38 @@ for (const x of [0, 0.01, 0.25, 0.5, 0.75, 0.99, 1]) {
 }
 assert.deepEqual(failures, []);
 console.log("PASS independent linear field / normalized trilinear kernel");
+
+for (const reliability of [1, 0.1, 0.001])
+  for (const x of [0.001, 0.25, 0.999]) {
+    const a = f.sample([x, 0.5, 0.5], [0, 0, 1], {
+      fixedFacing: reliability,
+      fixedIrradiance: [2, 3, 4],
+      diagnostics: true,
+    });
+    assert.deepEqual(
+      a.irradiance.map((v) => Math.round(v * 1e6) / 1e6),
+      [2, 3, 4],
+    );
+    assert.equal(a.coverage, 1);
+  }
+const ng = [0, 0, 1],
+  p = [0.5, 0.5, 0.5];
+g.normalBias = 0.075;
+const a = f.sample(p, [1, 0, 0], { geometricNormal: ng, diagnostics: true }),
+  b = f.sample(p, [-1, 0, 0], { geometricNormal: ng, diagnostics: true });
+assert.deepEqual(a.biasedPosition, b.biasedPosition);
+assert.deepEqual(a.kernelPosition, a.biasedPosition);
+positions[3] = 0;
+const left = f.sample([0.5, 0.5, 0.5], [0, 0, 1], { diagnostics: true });
+assert.ok(left.coverage < 1);
+assert.equal(left.candidates[0].weight, 0);
+E.fill(0);
+for (let i = 3; i < E.length; i += 4) E[i] = 1;
+const dark = f.sample([0.5, 0.5, 0.5], [0, 0, 1]);
+assert.deepEqual(dark.irradiance, [0, 0, 0]);
+assert.ok(dark.coverage > 0);
+positions.fill(0);
+assert.equal(f.sample([0.5, 0.5, 0.5], [0, 0, 1]).coverage, 0);
+console.log(
+  "PASS constant field, low reliability, Ng/Ns, invalid data versus valid darkness",
+);

@@ -1,0 +1,356 @@
+{
+  "version": {
+    "head": "ec88367727f1289e980728a193328ca478f26ce0",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "319186bd7c13f19d9b05879078f9cdc74c2da7df940d72d016c978f7758007a6",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "e42f9a036c9ea879bb264b3bc28a02447b80ba7f1accab40d0c894a5d4eed824",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "9f82a3b870f2a93bed0377e41466e38a551361921c215da90a44fc08ab160113",
+      "lumen/gpu-worker.js": "820ade0e8364c8ff9b1a556c2d1b0c6eeea54f880c9c33ba792428d9822b8e10",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "8ab4b7e74a3744d5ba00924c96f938bedb75043e7252ccceba7d757ac8b156c2",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "checks": [],
+  "result": {
+    "points": [
+      {
+        "position": [
+          0,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.01,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.25,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.75,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.99999,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.00001,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.25,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.75,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          2,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      }
+    ],
+    "actual": [
+      {
+        "irradiance": [
+          2.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5099997520446777,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.75,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.25,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.4999899864196777,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5000100135803223,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.75,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.25,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "legacy": [
+      {
+        "irradiance": [
+          2.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5000014305114746,
+          1.9999998807907104,
+          3.999999761581421
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5357141494750977,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.4642856121063232,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5357141494750977,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.464285850524902,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "separate": [
+      {
+        "irradiance": [
+          3.2249999046325684,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.2249999046325684,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

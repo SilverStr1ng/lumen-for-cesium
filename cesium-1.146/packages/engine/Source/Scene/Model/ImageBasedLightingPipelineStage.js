@@ -97,6 +97,12 @@ ImageBasedLightingPipelineStage.process = function (
     u_lumenProbeSpacing: ["float", () => lumen?.world?.spacing ?? 1],
     u_lumenNormalBias: ["float", () => lumen?.world?.normalBias ?? 0],
     u_lumenWorldGain: ["float", () => lumen?.world?.gain ?? 1],
+    u_lumenLegacyKernel: [
+      "bool",
+      () =>
+        lumen?.world?.displayLegacyKernel ??
+        lumen?.world?.options.reconstructionMode === "legacy",
+    ],
     u_lumenGatherControl: [
       "vec4",
       () => lumen?.world?.displayGatherControl ?? defaultGatherControl,

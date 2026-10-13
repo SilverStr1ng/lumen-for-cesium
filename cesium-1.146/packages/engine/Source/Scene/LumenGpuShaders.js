@@ -9,6 +9,7 @@ uniform vec3 u_lumenProbeOrigin, u_lumenProbeCounts, u_lumenIrradiance;
 uniform float u_lumenProbeSpacing, u_lumenNormalBias, u_lumenWorldGain, u_lumenCoverage;
 uniform bool u_lumenWorldEnabled, u_lumenLinearAtlas;
 uniform vec4 u_lumenGatherControl;
+uniform bool u_lumenLegacyKernel;
 `;
 const common = `
 precision highp sampler2D;
@@ -167,7 +168,8 @@ const gather = `#define LUMEN_WORLD_SUPPORTED\nprecision highp sampler2D;\n${wor
 export const relocate = `${common + worldUniforms}
 void main() {
     ivec2 c=ivec2(gl_FragCoord.xy);int nx=int(u_lumenProbeCounts.x);
-    vec3 p=u_lumenProbeOrigin+vec3(c.x%nx,c.x/nx,c.y)*u_lumenProbeSpacing;
+    vec3 logical=u_lumenProbeOrigin+vec3(c.x%nx,c.x/nx,c.y)*u_lumenProbeSpacing;
+    vec3 p=logical;bool safe=true;
     for(int attempt=0;attempt<3;attempt++) {
         float closest=1e20;vec3 shift=vec3(0.0);
         for(int j=0;j<6;j++) {
@@ -175,12 +177,21 @@ void main() {
             vec4 h=trace(p,d,u_lumenProbeSpacing*0.3,-1,false);
             if(h.x < -1.0 && h.w<closest) {
                 vec3 a,b,cc;int m;vec2 uv0;vec4 uv12;triangle(int(-h.x)-2,a,b,cc,m,uv0,uv12);
-                if(mat(m,1).z<0.5) {closest=h.w;shift=normalize(cross(b-a,cc-a))*(h.w+0.08);}
+                if(mat(m,2).w>0.5) {closest=h.w;shift=normalize(cross(b-a,cc-a))*(h.w+0.08);}
             }
         }
-        if(closest==1e20) break;p+=shift;
+        if(closest==1e20) break;
+        vec3 candidate=p+shift,n=normalize(shift);float distance=length(shift);
+        if(length(candidate-logical)>u_lumenProbeSpacing*0.45) {safe=false;break;}
+        vec4 h=trace(p,n,distance,-1,false);
+        if(h.x>=-1.0) {safe=false;break;}
+        int m=int(fetch1(u_vertices,(int(-h.x)-2)*3).w);
+        if(mat(m,2).w<0.5) {safe=false;break;}
+        float remaining=distance-h.w-0.0002;
+        if(remaining>0.0 && trace(p+n*(h.w+0.0002),n,remaining,-1,false).x!=0.0) {safe=false;break;}
+        p=candidate;
     }
-    out_FragColor=vec4(p,1.0);
+    out_FragColor=vec4(p,safe?1.0:0.0);
 }`;
 export const intersect = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);int width=textureSize(u_lumenProbePositions,0).x;
@@ -190,8 +201,8 @@ export const classify = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);int probe=c.x+c.y*textureSize(u_lumenProbePositions,0).x;
 int back=0,unknown=0;
 for(int i=0;i<512;i++) {if(i>=u_rays) break;vec4 h=texelFetch(u_hits,ivec2(i,probe),0);
-if(h.x==-1.0) unknown++;if(h.x < -1.0) {int m=int(fetch1(u_vertices,(int(-h.x)-2)*3).w);if(mat(m,1).z<0.5) back++;}}
-out_FragColor=vec4(texelFetch(u_lumenProbePositions,c,0).xyz,unknown==0&&float(back)/float(u_rays)<0.25?1.0:0.0);}`;
+if(h.x==-1.0) unknown++;if(h.x < -1.0) {int m=int(fetch1(u_vertices,(int(-h.x)-2)*3).w);if(mat(m,2).w>0.5) back++;}}
+out_FragColor=vec4(texelFetch(u_lumenProbePositions,c,0).xyz,texelFetch(u_lumenProbePositions,c,0).a>0.5&&unknown==0&&float(back)/float(u_rays)<0.25?1.0:0.0);}`;
 // Energy-independent sun visibility. RGB = visibility, validity, actual trace flag.
 export const visibility = `${common + worldUniforms}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);int width=textureSize(u_lumenProbePositions,0).x;
@@ -299,8 +310,8 @@ ${common}
 uniform sampler2D u_queryOrigin,u_queryDirection;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 a=texelFetch(u_queryOrigin,c,0),b=texelFetch(u_queryDirection,c,0);vec4 hit=u_queryAnyHit?(u_visibilityOptimized?occluded(a.xyz,b.xyz,a.w,int(b.w)):trace(a.xyz,b.xyz,a.w,int(b.w),true)):trace(a.xyz,b.xyz,a.w,int(b.w),false);out_FragColor=u_queryStats?vec4(traversalCounts,hit.x==-1.0?-1.0:(hit.x==0.0?0.0:1.0)):hit;}`;
 export const querySample = `${gather}
-uniform sampler2D u_queryOrigin,u_queryDirection;
-void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradiance(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
+uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
+void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
 export default {
   relocate,
   intersect,

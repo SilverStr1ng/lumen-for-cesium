@@ -71,12 +71,14 @@ export class ProbeField {
     const g = this.grid,
       n = normalize(normal),
       ng = normalize(o.geometricNormal ?? normal),
-      q = position.map((v, i) => (v - g.origin[i]) / g.spacing);
+      biased = add(position, mul(ng, g.normalBias)),
+      legacy = o.legacyKernel ?? g.reconstructionMode === "legacy",
+      kernelPosition = legacy ? position : biased,
+      q = kernelPosition.map((v, i) => (v - g.origin[i]) / g.spacing);
     if (q.some((v, i) => v < 0 || v > g.counts[i] - 1))
       return { irradiance: [0, 0, 0], coverage: 0 };
     const base = q.map((v, i) => clamp(Math.floor(v), 0, g.counts[i] - 2)),
       fraction = q.map((v, i) => v - base[i]),
-      biased = add(position, mul(ng, g.normalBias)),
       sum = [0, 0, 0];
     let weights = 0,
       available = 0;
@@ -108,7 +110,7 @@ export class ProbeField {
               e[3] >= 0.95 &&
               m[3] >= 0.95,
             towardProbe = normalize(sub(probe, position)),
-            wrap = (dot(towardProbe, n) + 1) * 0.5,
+            wrap = (dot(towardProbe, ng) + 1) * 0.5,
             facing = o.fixedFacing ?? Math.max(0.05, wrap * wrap),
             variance = Math.max(0.0001, m[1] - m[0] * m[0]);
           let visibility = 1;
@@ -116,8 +118,11 @@ export class ProbeField {
             const v = variance / (variance + (distance - m[0]) ** 2);
             visibility = Math.max(0.000001, v ** 3);
           }
-          let w = trilinear * facing * visibility;
-          if (o.crush !== false && w < 0.2) w *= (w * w) / 0.04;
+          let reliability = facing * visibility;
+          if (!legacy && o.crush !== false && reliability < 0.2)
+            reliability *= (reliability * reliability) / 0.04;
+          let w = trilinear * reliability;
+          if (legacy && o.crush !== false && w < 0.2) w *= (w * w) / 0.04;
           if (!valid) w = 0;
           if (valid) available += trilinear;
           const E = o.fixedIrradiance ?? e.slice(0, 3);
@@ -152,7 +157,7 @@ export class ProbeField {
         available,
         surfacePosition: position,
         biasedPosition: biased,
-        kernelPosition: position,
+        kernelPosition,
         irradianceDirection: n,
         geometricNormal: ng,
       });
@@ -188,6 +193,7 @@ export class DDGI {
       width: BORDERED * counts[0] * counts[1],
       height: BORDERED * counts[2],
       normalBias: spacing * 0.075,
+      reconstructionMode: options.reconstructionMode ?? "spatial",
       rays,
     };
     if (

@@ -86,6 +86,7 @@ class LumenGpuWorld {
       bvhStrategy: "sah",
       bvhBins: 12,
       visibilityMode: "optimized",
+      reconstructionMode: "spatial",
       ...options,
     };
     this._validate(this.options);
@@ -175,6 +176,8 @@ class LumenGpuWorld {
     });
   }
   _validate(o) {
+    if (!["spatial", "legacy"].includes(o.reconstructionMode))
+      throw new DeveloperError("reconstructionMode must be spatial or legacy");
     if (!["sphere", "upper-hemisphere"].includes(o.environmentMode)) {
       throw new DeveloperError(
         "environmentMode must be sphere or upper-hemisphere",
@@ -576,6 +579,11 @@ class LumenGpuWorld {
       u_lumenCoverage: () => 1,
       u_lumenWorldEnabled: () => true,
       u_lumenLinearAtlas: () => this.linearAtlas,
+      u_lumenLegacyKernel: () =>
+        this._phase === "query"
+          ? (this._sampleLegacyKernel ??
+            this.options.reconstructionMode === "legacy")
+          : (this._jobOptions ?? this.options).reconstructionMode === "legacy",
       // Display/query ablations never enter the raw bounce solver.
       u_lumenGatherControl: () =>
         this._phase === "query"
@@ -584,6 +592,8 @@ class LumenGpuWorld {
       u_lumenIrradiance: () => Cartesian3.ZERO,
       u_queryOrigin: () => this._queryOrigin ?? c.defaultTexture,
       u_queryDirection: () => this._queryDirection ?? c.defaultTexture,
+      u_queryGeometricNormal: () =>
+        this._queryGeometricNormal ?? c.defaultTexture,
     };
   }
   _draw(name, framebuffer, x, y, width, height) {
@@ -1300,10 +1310,20 @@ class LumenGpuWorld {
         sampler: nearest,
         source: { width: points.length, height: 1, arrayBufferView: data },
       });
+    const geometric = points.some((p) => p.geometricNormal)
+      ? new Float32Array(points.length * 4)
+      : undefined;
+    points.forEach((p, i) =>
+      geometric?.set(
+        [...(p.geometricNormal ?? p.normal ?? p.direction), 0],
+        i * 4,
+      ),
+    );
     const oldPrevious = this._previous,
       oldPhase = this._phase;
     const inputA = make(a),
       inputB = make(b),
+      inputNg = geometric ? make(geometric) : inputB,
       output = make(new Float32Array(a.length));
     const fb = new Framebuffer({
       context: c,
@@ -1313,6 +1333,7 @@ class LumenGpuWorld {
     try {
       this._queryOrigin = inputA;
       this._queryDirection = inputB;
+      this._queryGeometricNormal = inputNg;
       this._previous = this._published;
       this._phase = "query";
       this._draw(name, fb, 0, 0, points.length, 1);
@@ -1321,18 +1342,24 @@ class LumenGpuWorld {
         Array.from(data.subarray(i * 4, i * 4 + 4)),
       );
     } finally {
-      this._queryOrigin = this._queryDirection = undefined;
+      this._queryOrigin =
+        this._queryDirection =
+        this._queryGeometricNormal =
+          undefined;
       this._previous = oldPrevious;
       this._phase = oldPhase;
       fb.destroy();
       inputA.destroy();
       inputB.destroy();
+      if (inputNg !== inputB) inputNg.destroy();
       output.destroy();
     }
   }
   sample(points, diagnostic = {}) {
-    const old = this._sampleGatherControl;
+    const old = this._sampleGatherControl,
+      oldLegacy = this._sampleLegacyKernel;
     try {
+      this._sampleLegacyKernel = diagnostic.legacyKernel;
       this._sampleGatherControl = new Cartesian4(
         diagnostic.visibility === false ? 1 : 0,
         diagnostic.crush === false ? 1 : 0,
@@ -1347,6 +1374,7 @@ class LumenGpuWorld {
       );
     } finally {
       this._sampleGatherControl = old;
+      this._sampleLegacyKernel = oldLegacy;
     }
   }
   trace(rays, { anyHit = false, statistics = false } = {}) {
