@@ -49,6 +49,9 @@ class LumenFinalGather {
     this.maxRayInvocations = 16 * 1048576;
     this.traversalBudget = 256;
     this.seed = 0;
+    this.sampling = "fixed-reference";
+    this.sequenceEpoch = undefined;
+    this._sampleEpoch = 0;
     this.freezeSampling = false; // explicit image diagnostics only
     this.fallbackReason = 1;
     this.ready = false;
@@ -91,11 +94,21 @@ class LumenFinalGather {
     mode = this.mode,
     quality = this.quality,
     model = this.model,
+    sampling = this.sampling,
+    seed = this.seed,
+    sequenceEpoch = this.sequenceEpoch,
   } = {}) {
     if (!["ddgi", "fg", "raw"].includes(mode) || !presets[quality]) {
       throw new DeveloperError("Invalid final gather mode or quality");
     }
-    const changed = this.quality !== quality || this.model !== model;
+    if(!["fixed-reference","scrambled-single-frame","reconstructed"].includes(sampling) ||
+       !Number.isInteger(seed) || seed < -2147483648 || seed > 2147483647 ||
+       (sequenceEpoch!==undefined && (!Number.isInteger(sequenceEpoch)||sequenceEpoch<0||sequenceEpoch>4294967295))) {
+      throw new DeveloperError("Invalid FG sampling contract");
+    }
+    const changed = this.quality !== quality || this.model !== model || this.sampling!==sampling || this.seed!==seed;
+    this.sampling=sampling;this.seed=seed;this.sequenceEpoch=sequenceEpoch;
+
     this.mode = mode;
     this.quality = quality;
     this.model = model;
@@ -344,6 +357,9 @@ class LumenFinalGather {
         u_fgNeedsNeighborhood: () => this.quality !== "roi",
         u_fgSamples: () => this.samples,
         u_fgSeed: () => this.seed,
+        u_fgSampling: () => this.sampling === "fixed-reference" ? 0 : this.sampling === "reconstructed" ? 2 : 1,
+        u_fgEpoch: () => this._epochForFrame | 0,
+        u_fgPixelOffset: () => Cartesian2.ZERO,
         u_budget: () => this.traversalBudget,
         u_fgPreviousEnabled: () => this._input.round > 1,
       });
@@ -469,6 +485,7 @@ class LumenFinalGather {
       this.metrics.receiverDraws = this._measure("receiver", () =>
         this.receiver.execute(s, passState, list, l.rw, l.rh),
       );
+      this._epochForFrame = this.sequenceEpoch ?? this._sampleEpoch;
       this._accumulation = this.ping[1].texture;
       for (let start = 0; start < l.samples; start += 4) {
         this._start = start;
@@ -506,6 +523,9 @@ class LumenFinalGather {
       this._sampleWorld = w;
       this._sampleCameraKey = cameraKey;
       this.metrics.frames++;
+      this.metrics.sampleEpoch = this._epochForFrame;
+      this.metrics.sampling = this.sampling;
+      this._sampleEpoch = (this._sampleEpoch + 1) >>> 0;
       const timerFrame = this._timerFrames.get(fs.frameNumber);
       if (timerFrame) {
         timerFrame.fgExecuted = true;

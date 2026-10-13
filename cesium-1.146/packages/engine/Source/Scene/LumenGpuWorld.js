@@ -510,6 +510,9 @@ class LumenGpuWorld {
       u_fgPreviousEnabled: () => snapshot.round > 1,
       u_fgSamples: () => this._fgSamples ?? 32,
       u_fgSeed: () => this._fgSeed ?? 0,
+      u_fgSampling: () => this._fgSampling ?? 0,
+      u_fgEpoch: () => this._fgEpoch ?? 0,
+      u_fgPixelOffset: () => this._fgPixelOffset ?? Cartesian2.ZERO,
       u_fgRayBias: () => 0.0002,
     };
   }
@@ -1572,6 +1575,9 @@ class LumenGpuWorld {
       snapshot = this.finalGatherSnapshot,
       samples = 256,
       seed = 0,
+      sampling = "fixed-reference",
+      epoch = 0,
+      pixel = [0,0],
       budget,
     } = {},
   ) {
@@ -1588,9 +1594,13 @@ class LumenGpuWorld {
     ) {
       throw Error("FG budget in [1,4096] required");
     }
+    if(!["fixed-reference","scrambled-single-frame","reconstructed"].includes(sampling) || !Number.isInteger(epoch) || epoch<0 || epoch>4294967295) {throw Error("Invalid FG query sequence");}
     this._fgInput = snapshot.retain();
     this._fgSamples = samples;
     this._fgSeed = seed;
+    this._fgSampling = sampling==="fixed-reference"?0:sampling==="reconstructed"?2:1;
+    this._fgEpoch=epoch|0;
+    this._fgPixelOffset = Cartesian2.fromArray(pixel);
     this._fgBudget = budget;
     this._fgExact = false;
     try {

@@ -24,6 +24,7 @@ for (const file of [
   "packages/engine/Source/Scene/LumenProbeDisplay.js",
   "packages/engine/Source/Scene/LumenFinalGather.js",
   "packages/engine/Source/Scene/LumenGpuTimer.js",
+  "packages/engine/Source/Scene/LumenFinalGatherSampling.js",
   "packages/engine/Source/Scene/LumenFinalGatherSnapshot.js",
   "packages/engine/Source/Scene/LumenReceiverPass.js",
   "packages/engine/Source/Scene/destroyLumenResource.js",
@@ -50,5 +51,5 @@ for (const file of [
 await mkdir(path.join(root, "artifacts"), { recursive: true });
 await writeFile(path.join(root, "artifacts", "cesium-lumen.patch"), patch);
 console.log(
-  `Wrote ${files.length + 12} file diffs to artifacts/cesium-lumen.patch`,
+  `Wrote ${files.length + 13} file diffs to artifacts/cesium-lumen.patch`,
 );

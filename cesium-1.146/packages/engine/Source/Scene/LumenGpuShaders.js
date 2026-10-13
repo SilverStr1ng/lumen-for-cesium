@@ -1,3 +1,4 @@
+import finalGatherSampling from "./LumenFinalGatherSampling.js";
 import LumenStageFS from "../Shaders/Model/LumenStageFS.js";
 
 const worldUniforms = `
@@ -326,13 +327,7 @@ export const querySample = `${gather}
 uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
 export const fgCopy = `precision highp sampler2D;uniform sampler2D u_fgCopySource;void main(){out_FragColor=texelFetch(u_fgCopySource,ivec2(gl_FragCoord.xy),0);}`;
-const finalGather = `uniform int u_fgSamples,u_fgSeed;uniform bool u_fgPreviousEnabled;uniform float u_fgRayBias;
-float reverseBits(int i){uint b=uint(i);b=(b<<16u)|(b>>16u);b=((b&0x55555555u)<<1u)|((b&0xAAAAAAAAu)>>1u);b=((b&0x33333333u)<<2u)|((b&0xCCCCCCCCu)>>2u);b=((b&0x0F0F0F0Fu)<<4u)|((b&0xF0F0F0F0u)>>4u);b=((b&0x00FF00FFu)<<8u)|((b&0xFF00FF00u)>>8u);return float(b)*2.3283064365386963e-10;}
-vec3 fgDirection(vec3 ng,int i){
- vec3 t=normalize(cross(abs(ng.z)<0.9?vec3(0,0,1):vec3(0,1,0),ng)),b=cross(ng,t);
- float u=(float(i)+0.5)/float(u_fgSamples),phi=czm_twoPi*fract(reverseBits(i)+float(u_fgSeed)*0.61803398875);
- return t*sqrt(u)*cos(phi)+b*sqrt(u)*sin(phi)+ng*sqrt(1.0-u);
-}
+const finalGather = `${finalGatherSampling}
 vec4 fgRadiance(vec4 h,vec3 d){
  if(h.x==-1.0)return vec4(0,0,0,-1);
  if(h.x==0.0)return vec4(u_upperHemisphere==0||d.z>=0.0?u_skyRadiance:vec3(0),1);
@@ -353,7 +348,7 @@ vec4 fgRadiance(vec4 h,vec3 d){
 vec4 receiverFinalGather(vec3 p,vec3 ng,vec3 ns){
  if(dot(ng,ns)<0.999)return vec4(0);
  vec3 origin=p+ng*u_fgRayBias,sum=vec3(0);
- for(int i=0;i<1024;i++){if(i>=u_fgSamples)break;vec3 d=fgDirection(ng,i);
+ for(int i=0;i<1024;i++){if(i>=u_fgSamples)break;vec3 d=fgDirection(ng,i,ivec2(gl_FragCoord.xy)+u_fgPixelOffset);
   vec4 L=fgRadiance(trace(origin,d,completeDistance(origin),-1,false),d);
   if(L.a<=0.0)return vec4(0,0,0,L.a);sum+=L.rgb;
  }
@@ -374,7 +369,7 @@ export const receiverTrace = `${common + gather + finalGather}
 uniform sampler2D u_receiverPosition,u_receiverNormal;uniform ivec2 u_receiverOffset;uniform int u_fgStart;
 void main(){ivec2 c=ivec2(gl_FragCoord.xy),p=ivec2(c.x/4,c.y),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);int i=u_fgStart+c.x%4;
  if(x.a<0.5||i>=u_fgSamples){out_FragColor=vec4(0);return;}
- vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz),o=x.xyz+ng*u_fgRayBias,d=fgDirection(ng,i);
+ vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz),o=x.xyz+ng*u_fgRayBias,d=fgDirection(ng,i,r+u_fgPixelOffset);
  out_FragColor=trace(o,d,completeDistance(o),-1,false);
 }`;
 export const receiverShade = `${common + gather + finalGather}
@@ -382,7 +377,7 @@ uniform sampler2D u_receiverPosition,u_receiverNormal,u_receiverHits,u_fgAccumul
 void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);
  if(x.a<0.5){out_FragColor=vec4(0);return;}
  vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);
- for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec4 h=texelFetch(u_receiverHits,ivec2(p.x*4+j,p.y),0),L=fgRadiance(h,fgDirection(ng,i));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
+ for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec4 h=texelFetch(u_receiverHits,ivec2(p.x*4+j,p.y),0),L=fgRadiance(h,fgDirection(ng,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
  out_FragColor=sum;
 }`;
 // Conservative spatial support: a low-resolution cell cannot borrow light across
