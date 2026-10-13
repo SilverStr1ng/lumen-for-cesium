@@ -1,4 +1,4 @@
-import { DeveloperError } from "@cesium/core";
+import DeveloperError from "../../../core/Source/DeveloperError.js";
 import finalGatherSampling from "./LumenFinalGatherSampling.js";
 import LumenStageFS from "../Shaders/Model/LumenStageFS.js";
 
