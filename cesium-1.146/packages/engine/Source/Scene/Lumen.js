@@ -16,10 +16,23 @@ function Lumen(scene) {
   this._coverage = 1.0;
   this._debugMode = 0;
   this._diffuseResponse = "lambert";
+  this._iblPolicy = "enhanced";
   this.world = undefined;
 }
 
 Object.defineProperties(Lumen.prototype, {
+  /** Enhanced multiscatter allocation is opt-in within active supported Lumen materials. Disabled Lumen always restores the original engine IBL. */
+  iblPolicy: {
+    get() {
+      return this._iblPolicy;
+    },
+    set(value) {
+      if (!["legacy", "enhanced"].includes(value))
+        throw new DeveloperError("IBL policy must be legacy or enhanced");
+      this._iblPolicy = value;
+      this._scene.requestRender();
+    },
+  },
   /** lambert: controlled rho E/pi; cesium: reuse IBL Fresnel/multiscatter energy allocation. */
   diffuseResponse: {
     get() {

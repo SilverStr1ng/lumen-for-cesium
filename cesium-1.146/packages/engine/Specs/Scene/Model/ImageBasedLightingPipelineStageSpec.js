@@ -83,6 +83,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
+      "uniform bool u_lumenEnhancedIbl;",
       "uniform bool u_lumenPbrDiffuseResponse;",
       "uniform bool u_lumenLegacyKernel;",
       "uniform vec4 u_lumenGatherControl;",
@@ -169,6 +170,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
+      "uniform bool u_lumenEnhancedIbl;",
       "uniform bool u_lumenPbrDiffuseResponse;",
       "uniform bool u_lumenLegacyKernel;",
       "uniform vec4 u_lumenGatherControl;",
@@ -250,6 +252,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
+      "uniform bool u_lumenEnhancedIbl;",
       "uniform bool u_lumenPbrDiffuseResponse;",
       "uniform bool u_lumenLegacyKernel;",
       "uniform vec4 u_lumenGatherControl;",

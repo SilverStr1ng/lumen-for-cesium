@@ -28,6 +28,8 @@
     "benchmark:integration": "node scripts/benchmark-integration.mjs",
     "report:relighting": "node scripts/summarize-relighting.mjs",
     "benchmark:relighting": "node scripts/benchmark-relighting.mjs",
-    "test:r5": "node scripts/verify-r5.mjs"
+    "test:r5": "node scripts/verify-r5.mjs",
+    "test:quality": "node scripts/verify-quality.mjs",
+    "test:ibl-policy": "node scripts/verify-ibl-policy.mjs"
   }
 }

@@ -71,13 +71,18 @@ vec3 textureIBL(vec3 viewDirectionEC, vec3 normalEC, czm_modelMaterial material)
     vec3 averageFresnel = f0 + (1.0 - f0) / 21.0;
     float Ems = specularWeight * (1.0 - brdfLut.x - brdfLut.y);
     vec3 FmsEms = FssEss * averageFresnel * Ems / (1.0 - averageFresnel * Ems);
+    bool enhanced = false;
+    #ifdef LUMEN_MODEL_LIGHTING
+        enhanced = u_lumenEnabled && u_lumenEnhancedIbl;
+    #endif
     // material.diffuse already contains the metallic attenuation. No second (1-metallic).
-    vec3 dielectricScattering = max(vec3(0.0), 1.0 - FssEss - FmsEms) * material.diffuse;
+    vec3 scattering = 1.0 - FssEss - FmsEms;
+    vec3 dielectricScattering = (enhanced ? max(vec3(0.0), scattering) : scattering) * material.diffuse;
     vec3 normalMC = normalize(model_iblReferenceFrameMatrix * normalEC);
     #ifdef DIFFUSE_IBL
         // Cesium SH is a diffuse radiance response (E/pi), unlike the DDGI linear E atlas.
         vec3 irradiance = sampleDiffuseEnvironment(normalMC);
-        vec3 diffuseContribution = irradiance * dielectricScattering * model_iblFactor.x;
+        vec3 diffuseContribution = irradiance * (enhanced ? dielectricScattering : FmsEms + dielectricScattering) * model_iblFactor.x;
     #else
         vec3 diffuseContribution = vec3(0.0);
     #endif
@@ -89,9 +94,9 @@ vec3 textureIBL(vec3 viewDirectionEC, vec3 normalEC, czm_modelMaterial material)
     #ifdef SPECULAR_IBL
         // Broad prefiltered environment supplies the existing multiscatter approximation,
         // including when diffuse IBL factor is zero. It is not directional DDGI radiance.
-        vec3 multipleContribution = sampleSpecularEnvironment(normalMC, 1.0) * FmsEms * model_iblFactor.y;
+        vec3 multipleContribution = enhanced ? sampleSpecularEnvironment(normalMC, 1.0) * FmsEms * model_iblFactor.y : vec3(0.0);
     #elif defined(DIFFUSE_IBL)
-        vec3 multipleContribution = irradiance * FmsEms * model_iblFactor.x;
+        vec3 multipleContribution = enhanced ? irradiance * FmsEms * model_iblFactor.x : vec3(0.0);
     #else
         vec3 multipleContribution = vec3(0.0);
     #endif

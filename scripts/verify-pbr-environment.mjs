@@ -5,7 +5,8 @@ import {
   installGlObserver,
   sourceVersion,
 } from "./browser-tools.mjs";
-const out = "reports/ddgi-visual-quality-v4";
+const out =
+  process.env.LUMEN_REPORT_DIRECTORY ?? "reports/ddgi-visual-quality-v4";
 await mkdir(out, { recursive: true });
 const report = { version: sourceVersion(), checks: [], errors: [] };
 const browser = await launchBrowser(),
@@ -192,7 +193,7 @@ try {
       scale = 1,
       mode = 0;
     const shader =
-      "#define DIFFUSE_IBL\n#define SPECULAR_IBL\n#define LUMEN_MODEL_LIGHTING\nprecision highp float;uniform bool u_lumenEnabled;uniform sampler2D u_materialInput;uniform float u_environmentScale;uniform float u_coverage;uniform int u_mode;uniform mat3 model_iblReferenceFrameMatrix;uniform vec2 model_iblFactor;float lumen_materialCoverage=0.0;float lumen_environmentCoverage=0.0;\n" +
+      "#define DIFFUSE_IBL\n#define SPECULAR_IBL\n#define LUMEN_MODEL_LIGHTING\nprecision highp float;uniform bool u_lumenEnabled;const bool u_lumenEnhancedIbl=true;uniform sampler2D u_materialInput;uniform float u_environmentScale;uniform float u_coverage;uniform int u_mode;uniform mat3 model_iblReferenceFrameMatrix;uniform vec2 model_iblFactor;float lumen_materialCoverage=0.0;float lumen_environmentCoverage=0.0;\n" +
       source +
       "\nvoid main(){vec4 v=texelFetch(u_materialInput,ivec2(gl_FragCoord.xy),0);czm_modelMaterial m;m.diffuse=vec3(v.x*(1.0-v.y));m.specular=mix(vec3(0.04),vec3(v.x),v.y);m.roughness=v.z;m.occlusion=1.0;vec3 n=vec3(0,0,1),eye=vec3(sqrt(1.0-v.w*v.w),0,v.w);lumen_materialCoverage=u_coverage;lumen_environmentCoverage=u_coverage;vec3 color=textureIBL(eye,n,m);vec3 local=lumen_iblDiffuseResponse*u_environmentScale*u_coverage;color+=local;if(u_mode==1)color=local;if(u_mode==2)color=lumen_environmentDiffuse;if(u_mode==3)color=lumen_environmentSpecular;if(u_mode==4)color=lumen_environmentMultiple;if(u_mode==99)color=czm_pbrLighting(eye,n,n,m);out_FragColor=vec4(color,1.0);}";
     const cmd = d.scene.context.createViewportQuadCommand(shader, {

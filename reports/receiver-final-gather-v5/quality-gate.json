@@ -1,0 +1,40 @@
+{
+  "input": "reports/ddgi-visual-quality-v4/independent-reference.json",
+  "regression": "not-run",
+  "quality": "failed",
+  "performance": "not-run",
+  "slowReference": "historical executed R5 independent paths; no fresh slow R6 run",
+  "checks": [
+    {
+      "name": "boxFloor",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "boxFace",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "wallFoot",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "pillarFoot",
+      "status": "tracked-failure",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "ceiling",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "doorway",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    }
+  ],
+  "injected": false
+}
