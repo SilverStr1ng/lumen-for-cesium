@@ -1,7 +1,13 @@
 import { spawnSync, execFileSync } from "node:child_process";
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { sourceVersion } from "./browser-tools.mjs";
+import {
+  testPassed,
+  performancePassed,
+  captureMatches,
+} from "./r7-acceptance.mjs";
 const out = "reports/fg-reconstruction-showcase-v6",
   fast = process.argv.includes("--fast"),
   cached = process.argv.includes("--cached");
@@ -61,7 +67,12 @@ const untrackedReports = () =>
     .filter((p) => p && !p.startsWith(out + "/"));
 const initialUntracked = new Set(untrackedReports());
 const saved = new Map(
-  await Promise.all(tracked.map(async (p) => [p, await readFile(p)])),
+  await Promise.all(
+    [...new Set([...tracked, ...initialUntracked])].map(async (p) => [
+      p,
+      await readFile(p),
+    ]),
+  ),
 );
 const run = (script, args = []) => {
   const start = performance.now(),
@@ -102,6 +113,7 @@ try {
     : "failed";
   if (!fast) {
     for (const name of [
+      "r7-acceptance",
       "r7-timers",
       "fg-sampling",
       "fg-history",
@@ -125,19 +137,36 @@ try {
       injected.exitCode === 1
         ? "passed"
         : "failed";
+    const child = (name) =>
+      report.tests.find((x) => x.script === name && !x.args.length);
+    if (
+      !cached &&
+      ["measure-fg-canonical", "capture-fg-reconstruction"].some(
+        (name) => child(name)?.exitCode !== 0,
+      )
+    )
+      report.quality = "failed";
     const temporal = await json("temporal/data.json"),
       life = await json("lifecycle.json");
     report.temporal =
-      temporal.status === "passed" && life.status === "passed"
+      testPassed(temporal, child("verify-fg-temporal")) &&
+      testPassed(life, child("verify-fg-lifecycle"))
         ? "passed"
         : "failed";
     const perf = await json("performance.json");
-    report.performance =
-      perf.status === "passed" &&
-      Object.values(perf.checks ?? {}).every(Boolean)
-        ? "passed"
-        : "failed";
-    report.showcase = (await json("gallery/data.json")).status;
+    report.performance = performancePassed(
+      perf,
+      child("benchmark-fg-reconstruction"),
+      cached,
+    )
+      ? "passed"
+      : "failed";
+    report.showcase = testPassed(
+      await json("gallery/data.json"),
+      child("verify-gallery"),
+    )
+      ? "passed"
+      : "failed";
     report.captureVersions = Object.fromEntries(
       await Promise.all(
         [
@@ -148,13 +177,40 @@ try {
         ].map(async (file) => [file, (await json(file)).version]),
       ),
     );
+    const captureFiles = [
+      ...new Set(
+        Object.values(report.captureVersions).flatMap((v) =>
+          Object.keys(v?.sources ?? {}),
+        ),
+      ),
+    ];
+    const sourceRoot = path.resolve(".") + path.sep;
+    const currentCaptureSources = Object.fromEntries(
+      await Promise.all(
+        captureFiles.map(async (file) => {
+          if (!path.resolve(file).startsWith(sourceRoot))
+            return [file, undefined];
+          try {
+            return [
+              file,
+              createHash("sha256")
+                .update((await readFile(file, "utf8")).replaceAll("\r\n", "\n"))
+                .digest("hex"),
+            ];
+          } catch {
+            return [file, undefined];
+          }
+        }),
+      ),
+    );
     report.captureSourceMatch = Object.values(report.captureVersions).every(
       (v) =>
-        v &&
-        Object.entries(report.version.sources).every(
-          ([file, hash]) => v.sources?.[file] === hash,
-        ) &&
-        v.compiledBundle === report.version.compiledBundle,
+        captureMatches(
+          v,
+          currentCaptureSources,
+          report.version.compiledBundle,
+          Object.keys(report.version.sources),
+        ),
     );
     if (!report.captureSourceMatch) {
       report.notRun.push({
@@ -162,7 +218,8 @@ try {
         reason:
           "capture source hashes or compiled bundle differ; existing snapshots remain inspectable",
       });
-      report.quality = report.performance = "not-run";
+      if (report.quality !== "failed") report.quality = "not-run";
+      if (report.performance !== "failed") report.performance = "not-run";
     }
     report.notRun.push(...(temporal.notRun ?? []), ...(life.notRun ?? []), {
       name: "authenticated ion / World Terrain",

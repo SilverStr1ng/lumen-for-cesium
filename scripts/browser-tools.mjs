@@ -25,6 +25,15 @@ export function sourceVersion(extraFiles = []) {
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
     "demo/globe.js",
+    "demo/benchmark.js",
+    "scripts/browser-tools.mjs",
+    "demo/fg-reconstruction-diagnostics.js",
+    "demo/receiver-diagnostics.js",
+    "lumen/path-reference.js",
+    "scripts/cpu-image-fixtures.mjs",
+    "scripts/measure-fg-canonical.mjs",
+    "scripts/capture-fg-reconstruction.mjs",
+    "scripts/benchmark-fg-reconstruction.mjs",
     ...extraFiles,
   ];
   const sha256 = (file) =>

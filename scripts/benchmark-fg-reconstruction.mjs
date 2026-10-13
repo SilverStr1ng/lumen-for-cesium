@@ -5,7 +5,11 @@ import {
   sourceVersion,
   installGlObserver,
 } from "./browser-tools.mjs";
-const report = { version: sourceVersion(), rounds: [], errors: [] };
+const report = {
+  version: sourceVersion(["scripts/benchmark-fg-reconstruction.mjs"]),
+  rounds: [],
+  errors: [],
+};
 const b = await launchBrowser(),
   p = await b.newPage({ viewport: { width: 1280, height: 800 } });
 p.on("pageerror", (e) => report.errors.push(String(e)));

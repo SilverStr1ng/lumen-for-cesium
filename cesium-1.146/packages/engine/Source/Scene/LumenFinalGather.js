@@ -63,6 +63,7 @@ class LumenFinalGather {
     this._framebuffers = [];
     this._commands = {};
     this._queries = [];
+    this._profileFrame = undefined;
     this.receiverSize = new Cartesian2(1, 1);
     this.resultSize = new Cartesian2(1, 1);
     this.offset = new Cartesian2();
