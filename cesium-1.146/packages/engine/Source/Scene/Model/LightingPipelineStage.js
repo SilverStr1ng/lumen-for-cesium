@@ -112,6 +112,8 @@ LightingPipelineStage.process = function (
           "bool",
           () => fg()?.mode === "raw" && fg()?.enabledFor(model, frameState),
         ],
+        u_lumenFgHistory: ["bool",()=>fg()?.sampling==="reconstructed"&&!!fg()?.reconstruction?.texture],
+        u_lumenFgFiltered: ["sampler2D",()=>fg()?.reconstruction?.texture??frameState.context.defaultTexture],
         u_lumenFgTexture: [
           "sampler2D",
           () => fg()?.texture ?? frameState.context.defaultTexture,

@@ -94,6 +94,9 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     for(int y=0;y<2;y++)for(int x=0;x<2;x++) {
         ivec2 c=base+ivec2(x,y);if(any(lessThan(c,ivec2(0)))||any(greaterThanEqual(c,size)))continue;
         vec4 E=texelFetch(u_lumenFgTexture,c,0),r=texelFetch(u_lumenReceiverPosition,c+ivec2(u_lumenFgOffset),0),n=texelFetch(u_lumenReceiverNormal,c+ivec2(u_lumenFgOffset),0);
+        #ifdef LUMEN_FG_REASONS
+        if(u_lumenFgHistory){vec4 h=texelFetch(u_lumenFgFiltered,c,0);if(h.a>.5)E=h;}
+        #endif
         // Reject Unknown and other surfaces. Never average foreground/background positions.
         if(texelFetch(u_lumenFgNeighborhood,c,0).r<0.5||E.a<0.5||abs(r.a-u_lumenFgSurfaceId)>0.1||abs(n.a-r.a)>0.1||dot(ng,n.xyz)<0.995)continue;
         vec3 delta=r.xyz-p;

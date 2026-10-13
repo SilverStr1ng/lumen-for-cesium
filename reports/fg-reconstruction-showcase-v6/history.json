@@ -1,0 +1,131 @@
+{
+  "version": {
+    "head": "bfb5200a6086dfa5c584afddd05c5a25cdaf7bc9",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "39d23cc872d67fed1fb980636f3a16d48ff9e7d376bd3c4a97417d13a8100a26",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "336575510803f5aba97064ff39888d70e4c4e72014705c780bbef97bf36dea95",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "5a966daebf7eeb1174d0fa047b0a244a29408254ef2f04f30ecb616fb40af627",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "2d1047c4b9de8715a5cdcb6f36392c5075837b65c8ef8ac6fbe43e173421d01f",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "checks": [],
+  "errors": [],
+  "rows": [
+    {
+      "frame": 1,
+      "max": 1,
+      "mean": 1,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 1,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "frame": 4,
+      "max": 4,
+      "mean": 3.2787195739746093,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 4,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "frame": 8,
+      "max": 8,
+      "mean": 6.313617492675781,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 8,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "frame": 16,
+      "max": 16,
+      "mean": 12.370903076171874,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 16,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "frame": 32,
+      "max": 32,
+      "mean": 24.425266357421876,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 32,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "name": "static stopped",
+      "sameSampling": true,
+      "max": 32,
+      "mean": 24.425266357421876,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 32,
+      "source": 2,
+      "round": 3,
+      "status": "experimental FG: accumulation paused",
+      "bytes": 16781760
+    },
+    {
+      "name": "camera reproject",
+      "max": 32,
+      "mean": 22.373008041381837,
+      "valid": 64000,
+      "nonfinite": 0,
+      "passes": 33,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "name": "camera cut",
+      "max": 1,
+      "mean": 1,
+      "valid": 55605,
+      "nonfinite": 0,
+      "passes": 1,
+      "source": 2,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    },
+    {
+      "name": "new revision",
+      "max": 2,
+      "mean": 1.1775200071935976,
+      "valid": 55605,
+      "nonfinite": 0,
+      "passes": 2,
+      "source": 3,
+      "round": 3,
+      "status": "active experimental FG",
+      "bytes": 16781760
+    }
+  ],
+  "status": "passed"
+}

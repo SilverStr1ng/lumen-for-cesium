@@ -18,6 +18,7 @@ import TextureMinificationFilter from "../Renderer/TextureMinificationFilter.js"
 import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.js";
 import ContextLimits from "../Renderer/ContextLimits.js";
 import LumenReceiverPass from "./LumenReceiverPass.js";
+import LumenFinalGatherReconstruction from "./LumenFinalGatherReconstruction.js";
 import {
   receiverTrace,
   receiverShade,
@@ -66,6 +67,9 @@ class LumenFinalGather {
     this.resultSize = new Cartesian2(1, 1);
     this.offset = new Cartesian2();
     this.sceneSize = new Cartesian2(1, 1);
+    this._currentVP = new Matrix4();
+    this._stableFrames = 0;
+    this.continuousSampling = false;
     this._localToEye = new Matrix4();
     this._timer = this.scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
@@ -160,7 +164,7 @@ class LumenFinalGather {
       this.ready &&
       this._compositeEnabled &&
       this._executingMain &&
-      this.supported(model, frameState)
+      this.supported(model, frameState) && this._sampleWorld === this.lumen.world && this.lumen.world?.requestedRevision === this.metrics.revision
     );
   }
   _layout() {
@@ -180,7 +184,7 @@ class LumenFinalGather {
       ox,
       oy,
       samples: p.samples,
-      bytes: rw * rh * 36 + width * height * 100,
+      bytes: rw * rh * 36 + width * height * 100 + (this.sampling==="reconstructed"?LumenFinalGatherReconstruction.estimate(width,height):0),
       slots: width * height * p.samples,
     };
   }
@@ -222,6 +226,7 @@ class LumenFinalGather {
         this._texture(l.width, l.height),
         this._texture(l.width, l.height),
       ];
+      if(this.sampling==="reconstructed"){this.reconstruction=new LumenFinalGatherReconstruction(this);this.reconstruction.update(l.width,l.height);}
       const c = this.scene.context,
         gl = c._gl,
         binding = c._currentFramebuffer;
@@ -404,6 +409,8 @@ class LumenFinalGather {
     }
     if (w.finalGatherSnapshot.revision !== w.requestedRevision) {
       this.fallbackReason = 2;
+      this.reconstruction?.invalidate("requested revision unavailable");
+      this._stableFrames=0;
       this.metrics.status = "DDGI fallback: waiting for matching revision";
       return;
     }
@@ -468,7 +475,15 @@ class LumenFinalGather {
       this.ready = true;
       return;
     }
+    const reconstructionKey=JSON.stringify([snapshot.revision,snapshot.round,snapshot.versions,Matrix4.toArray(w.inverseFrame),this.quality,this.seed,this.sampling]);
+    const cameraChanged=this._historyCameraKey!==cameraKey;
+    if(this.sampling==="reconstructed" && this.reconstruction && this._historyWorld===w && this._historyKey===reconstructionKey &&
+       !cameraChanged && this._stableFrames>=this.reconstruction.targetFrames && !this.continuousSampling){
+      this.ready=true;this.metrics.status="experimental FG: accumulation paused";return;
+    }
+    if(cameraChanged || this._historyWorld!==w || this._historyKey!==reconstructionKey){this._stableFrames=0;}
     snapshot.retain();
+
     try {
       this._allocate(l);
       this._input = snapshot;
@@ -518,8 +533,22 @@ class LumenFinalGather {
           l.height,
         ),
       );
+      if(this.reconstruction){
+        Matrix4.multiply(s.camera.frustum.projectionMatrix,this._localToEye,this._currentVP);
+        const eye=Cartesian3.fromElements(w.eyeToLocal[12],w.eyeToLocal[13],w.eyeToLocal[14],new Cartesian3());
+        const direction=Cartesian3.normalize(Cartesian3.fromElements(-w.eyeToLocal[8],-w.eyeToLocal[9],-w.eyeToLocal[10],new Cartesian3()),new Cartesian3());
+        if(this._historyWorld!==w){this.reconstruction.invalidate("world generation");}
+        const before=this.reconstruction.frames;
+        this.reconstruction.execute({key:reconstructionKey,raw:this.texture,receiver:this.receiver,neighborhood:this.neighborhood.texture,vp:this._currentVP,localToEye:this._localToEye,epoch:this._epochForFrame,eye,direction});
+        if(this.reconstruction.frames>before){this._stableFrames++;}
+        this._historyWorld=w;this._historyKey=reconstructionKey;this._historyCameraKey=cameraKey;
+        this.metrics.accumulationPasses=this.reconstruction.frames;
+        this.metrics.history=true;this.metrics.historyReset=this.reconstruction.reason;
+        if(this._stableFrames<this.reconstruction.targetFrames){s.requestRender();}
+      }
       this.ready = true;
       this.fallbackReason = 0;
+
       this._sampleWorld = w;
       this._sampleCameraKey = cameraKey;
       this.metrics.frames++;
@@ -558,6 +587,8 @@ class LumenFinalGather {
   release() {
     this.ready = false;
     this.texture = undefined;
+    this.reconstruction?.destroy();this.reconstruction=undefined;
+    this._historyWorld=this._historyKey=this._historyCameraKey=undefined;this._stableFrames=0;
     this.neighborhood = this.hits = this.ping = undefined;
     this._layoutKey = undefined;
     this.receiver?.destroy();
@@ -586,6 +617,7 @@ class LumenFinalGather {
     }
     this._queries = [];
     this._timerFrames.clear();
+    this.metrics.history=false;this.metrics.accumulationPasses=0;
     this.metrics.memoryBytes = 0;
     this.metrics.snapshotBytes =
       this.lumen.world?.finalGatherSnapshot?.resources.reduce(
