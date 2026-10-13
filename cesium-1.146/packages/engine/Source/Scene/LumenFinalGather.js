@@ -51,6 +51,7 @@ class LumenFinalGather {
     this.traversalBudget = 256;
     this.seed = 0;
     this.sampling = "fixed-reference";
+    this.reconstructionEnabled = true;
     this.sequenceEpoch = undefined;
     this._sampleEpoch = 0;
     this.freezeSampling = false; // explicit image diagnostics only
@@ -100,6 +101,7 @@ class LumenFinalGather {
     quality = this.quality,
     model = this.model,
     sampling = this.sampling,
+    reconstruction = this.reconstructionEnabled,
     seed = this.seed,
     sequenceEpoch = this.sequenceEpoch,
   } = {}) {
@@ -128,8 +130,13 @@ class LumenFinalGather {
       this.quality !== quality ||
       this.model !== model ||
       this.sampling !== sampling ||
+      this.reconstructionEnabled !== reconstruction ||
       this.seed !== seed ||
       this.sequenceEpoch !== sequenceEpoch;
+    if (typeof reconstruction !== "boolean") {
+      throw new DeveloperError("FG reconstruction must be boolean");
+    }
+    this.reconstructionEnabled = reconstruction;
     this.sampling = sampling;
     this.seed = seed;
     this.sequenceEpoch = sequenceEpoch;
@@ -216,12 +223,12 @@ class LumenFinalGather {
       bytes:
         rw * rh * 36 +
         width * height * 100 +
-        (this.sampling === "reconstructed"
+        (this.sampling === "reconstructed" && this.reconstructionEnabled
           ? LumenFinalGatherReconstruction.estimate(width, height)
           : 0),
       slots: width * height * p.samples,
       geometrySlots:
-        this.sampling === "reconstructed"
+        this.sampling === "reconstructed" && this.reconstructionEnabled
           ? width * height * 8 + s.drawingBufferWidth * s.drawingBufferHeight
           : 0,
     };
@@ -251,7 +258,7 @@ class LumenFinalGather {
       l.rh,
       l.width,
       l.height,
-      this.sampling === "reconstructed",
+      this.sampling === "reconstructed" && this.reconstructionEnabled,
     ].join(":");
     if (this._layoutKey === key) {
       return;
@@ -270,7 +277,7 @@ class LumenFinalGather {
         this._texture(l.width, l.height),
         this._texture(l.width, l.height),
       ];
-      if (this.sampling === "reconstructed") {
+      if (this.sampling === "reconstructed" && this.reconstructionEnabled) {
         this.reconstruction = new LumenFinalGatherReconstruction(this);
         this.reconstruction.update(l.width, l.height);
       }
@@ -570,6 +577,7 @@ class LumenFinalGather {
     const cameraChanged = this._historyCameraKey !== cameraKey;
     if (
       this.sampling === "reconstructed" &&
+      this.reconstructionEnabled &&
       this.reconstruction &&
       this._historyWorld === w &&
       this._historyKey === reconstructionKey &&
