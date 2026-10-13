@@ -49,6 +49,9 @@
     "capture:r7": "node scripts/capture-fg-reconstruction.mjs",
     "test:gallery": "node scripts/verify-gallery.mjs",
     "test:r8:budget": "node scripts/verify-fg-budget.mjs",
-    "benchmark:r8": "node scripts/benchmark-fg-runtime.mjs"
+    "benchmark:r8": "node scripts/benchmark-fg-runtime.mjs --azimuth --lazy",
+    "test:r8": "node scripts/verify-r8.mjs",
+    "test:r8:quality": "node scripts/verify-r8-quality.mjs",
+    "test:r8:desktop": "node scripts/verify-fg-desktop.mjs"
   }
 }

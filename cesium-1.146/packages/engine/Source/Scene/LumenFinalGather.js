@@ -151,11 +151,11 @@ class LumenFinalGather {
     if (!["original", "azimuth"].includes(rayOrder)) {
       throw new DeveloperError("Invalid FG ray ordering");
     }
-    this.rayOrder = rayOrder;
-    this.execution = execution;
     if (typeof reconstruction !== "boolean") {
       throw new DeveloperError("FG reconstruction must be boolean");
     }
+    this.rayOrder = rayOrder;
+    this.execution = execution;
     this.reconstructionEnabled = reconstruction;
     this.sampling = sampling;
     this.seed = seed;

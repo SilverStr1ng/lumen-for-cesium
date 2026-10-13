@@ -1,0 +1,5238 @@
+{
+  "version": {
+    "head": "ca474f4be8cd9c57aee44fdb9713673160b8202e",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4cedbcd4929d3db78927db08d1899ef873cdf5785761624c44f8523eadf5b837",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "27877e0dd5617f8d565ad63105e86c26b47a7f85f9d8af4c15feb8f5f8281c08",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "0fc728a42ef6e8df9edaa069abaf06a21e935c415436c6a713d83bb473ee27d0",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "5f6058743cd61b61416fe508fe130f4e8b45a2ecc4ac3fdb3a3a01eed406bc73",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "df0f679d79f823a46f953a7f7316382ee813378cc228ef75894db9e85f9c7c02",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "26b9435ee9b44830a7701cfa5d8d903a30bab507d9190dcfe855ee21518ea00a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "6e5cd4257607c427793c76a0b61026e98a31a5054769fb37b36cdd10b63124da",
+      "demo/globe.js": "12341895e3abacea3af77d42708429c4b7c9993ef0cee3b5d3366fa09fc5dea3",
+      "demo/benchmark.js": "df74768e374181839acf71cabf67d113e3eca99b0530faf40500707ab4128f89",
+      "scripts/browser-tools.mjs": "247736b0a5e33f1f3d0f7ef29157f56a38c15c4186b5c922a33f1931edce1863",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "1f0d19b5313a7fb35bae8ba65e7014cd664c85ddaf66b9c5baea702ed9facb18",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "scripts/verify-fg-desktop.mjs": "5ffe01f13538b411320c574bbca0fdba3097fe31d0991636a7abbfd080e75d23"
+    },
+    "compiledBundle": "bc56b05ae64b035a0fe412dcd587b0417134d9dd1afdcfab6da53bdae8921d82",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
+      "demo/benchmark.js",
+      "demo/globe.js",
+      "scripts/browser-tools.mjs",
+      "scripts/capture-fg-reconstruction.mjs",
+      "scripts/measure-fg-canonical.mjs"
+    ]
+  },
+  "rows": [
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 63373760,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 20,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 60416000,
+        "draws": 420,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 119,
+              "milliseconds": 308.381024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.391712
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.041792
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.041664
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.177728
+            }
+          ],
+          "trace": [
+            {
+              "frame": 119,
+              "milliseconds": 1271.377056
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.402688
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.356672
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.290848
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.757088
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.5176
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.357216
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.530624
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.960672
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.358464
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.486272
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.339584
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.352704
+            },
+            {
+              "frame": 120,
+              "milliseconds": 2.133664
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.497792
+            },
+            {
+              "frame": 121,
+              "milliseconds": 1.804864
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.36336
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298272
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.399616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.780128
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.352608
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.522656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.495744
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.406592
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.354304
+            },
+            {
+              "frame": 124,
+              "milliseconds": 3.272576
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.415296
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.338272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.348448
+            },
+            {
+              "frame": 124,
+              "milliseconds": 1.387008
+            },
+            {
+              "frame": 126,
+              "milliseconds": 41.429472
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.283552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.241824
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.198912
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.279552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 3.528416
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.238688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.35488
+            }
+          ],
+          "shade": [
+            {
+              "frame": 119,
+              "milliseconds": 1.694912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.142112
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.262912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.305792
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.349856
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.315456
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.26416
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.3064
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.201376
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.140192
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.31024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.345696
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.333408
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.278816
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.312224
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.19952
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.148256
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.26384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.303776
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.335072
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.32032
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.27696
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298848
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.20288
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.142528
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.263904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.315904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.347872
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.306656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.2776
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.298048
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.211392
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.141504
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.265152
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.327296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.341184
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.325408
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.27296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.285792
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 119,
+              "milliseconds": 172.735104
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.0384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.03888
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.042592
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.033824
+            }
+          ],
+          "connections": [
+            {
+              "frame": 119,
+              "milliseconds": 245.952992
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.105632
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.106272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.114368
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.090272
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 119,
+              "milliseconds": 285.901248
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.083616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.088128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.084832
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.073056
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 119,
+              "milliseconds": 1.481664
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015552
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.372192
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.01856
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.02016
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 119,
+              "milliseconds": 0.015488
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015424
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.016128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.014688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.01504
+            }
+          ]
+        },
+        "timingUnavailable": 242,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 63373760,
+        "planChanges": 2,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 9,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 19,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 63373760
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 3624
+            },
+            "production": {
+              "draws": 406
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 63,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 71,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 720,
+          "rh": 450,
+          "width": 720,
+          "height": 450,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 76464000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 79421760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 79421760,
+          "slots": 10368000,
+          "geometrySlots": 3888000,
+          "checkedInvocations": 14256000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 11664000,
+            "hitBytes": 20736000,
+            "workBytes": 11664000,
+            "historyBytes": 32400000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 79421760,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.45",
+        "scale": 0.45,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 648,
+        "rh": 405,
+        "width": 648,
+        "height": 405,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 61935840,
+        "snapshotBytes": 2957760,
+        "totalBytes": 64893600,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 64893600,
+        "slots": 8398080,
+        "geometrySlots": 3395520,
+        "checkedInvocations": 11793600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9447840,
+          "hitBytes": 16796160,
+          "workBytes": 9447840,
+          "historyBytes": 26244000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              720,
+              450
+            ],
+            "totalBytes": 79421760,
+            "checkedInvocations": 14256000,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 61935840,
+      "total": 64893600,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 27,
+        "memoryBytes": 61935840,
+        "peakMemoryBytes": 61935840,
+        "draws": 567,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 119,
+              "milliseconds": 308.381024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.391712
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.041792
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.041664
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.177728
+            }
+          ],
+          "trace": [
+            {
+              "frame": 119,
+              "milliseconds": 1271.377056
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.402688
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.356672
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.290848
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.757088
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.5176
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.357216
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.530624
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.960672
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.358464
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.486272
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.339584
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.352704
+            },
+            {
+              "frame": 120,
+              "milliseconds": 2.133664
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.497792
+            },
+            {
+              "frame": 121,
+              "milliseconds": 1.804864
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.36336
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298272
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.399616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.780128
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.352608
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.522656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.495744
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.406592
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.354304
+            },
+            {
+              "frame": 124,
+              "milliseconds": 3.272576
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.415296
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.338272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.348448
+            },
+            {
+              "frame": 124,
+              "milliseconds": 1.387008
+            },
+            {
+              "frame": 126,
+              "milliseconds": 41.429472
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.283552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.241824
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.198912
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.279552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 3.528416
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.238688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.35488
+            }
+          ],
+          "shade": [
+            {
+              "frame": 119,
+              "milliseconds": 1.694912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.142112
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.262912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.305792
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.349856
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.315456
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.26416
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.3064
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.201376
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.140192
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.31024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.345696
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.333408
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.278816
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.312224
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.19952
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.148256
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.26384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.303776
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.335072
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.32032
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.27696
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298848
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.20288
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.142528
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.263904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.315904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.347872
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.306656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.2776
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.298048
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.211392
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.141504
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.265152
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.327296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.341184
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.325408
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.27296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.285792
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 119,
+              "milliseconds": 172.735104
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.0384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.03888
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.042592
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.033824
+            }
+          ],
+          "connections": [
+            {
+              "frame": 119,
+              "milliseconds": 245.952992
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.105632
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.106272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.114368
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.090272
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 119,
+              "milliseconds": 285.901248
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.083616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.088128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.084832
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.073056
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 119,
+              "milliseconds": 1.481664
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015552
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.372192
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.01856
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.02016
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 119,
+              "milliseconds": 0.015488
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015424
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.016128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.014688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.01504
+            }
+          ]
+        },
+        "timingUnavailable": 352,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 64893600,
+        "planChanges": 4,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.45",
+          "scale": 0.45,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 648,
+          "rh": 405,
+          "width": 648,
+          "height": 405,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 61935840,
+          "snapshotBytes": 2957760,
+          "totalBytes": 64893600,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 64893600,
+          "slots": 8398080,
+          "geometrySlots": 3395520,
+          "checkedInvocations": 11793600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9447840,
+            "hitBytes": 16796160,
+            "workBytes": 9447840,
+            "historyBytes": 26244000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 79421760,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 9,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 26,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          648,
+          405
+        ],
+        "receiverResolution": [
+          648,
+          405
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.45",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8398080,
+        "primaryRayUpperBound": 8398080,
+        "solarRayUpperBound": 8398080,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3395520,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 3624
+            },
+            "production": {
+              "draws": 840
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 71,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1920,
+        1080
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 960,
+          "rh": 540,
+          "width": 960,
+          "height": 540,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 122342400,
+          "snapshotBytes": 2957760,
+          "totalBytes": 125300160,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 125300160,
+          "slots": 16588800,
+          "geometrySlots": 6220800,
+          "checkedInvocations": 22809600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 18662400,
+            "hitBytes": 33177600,
+            "workBytes": 18662400,
+            "historyBytes": 51840000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 125300160,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 2957760,
+        "totalBytes": 57332160,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 57332160,
+        "slots": 7372800,
+        "geometrySlots": 3916800,
+        "checkedInvocations": 11289600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              540
+            ],
+            "totalBytes": 125300160,
+            "checkedInvocations": 22809600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              486
+            ],
+            "totalBytes": 102055104,
+            "checkedInvocations": 18869760,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 81256896,
+            "checkedInvocations": 15344640,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 57332160,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 34,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 61935840,
+        "draws": 714,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 119,
+              "milliseconds": 308.381024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.391712
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.041792
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.041664
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.177728
+            }
+          ],
+          "trace": [
+            {
+              "frame": 119,
+              "milliseconds": 1271.377056
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.402688
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.356672
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.290848
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.757088
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.5176
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.357216
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.530624
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.960672
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.358464
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.486272
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.339584
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.352704
+            },
+            {
+              "frame": 120,
+              "milliseconds": 2.133664
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.497792
+            },
+            {
+              "frame": 121,
+              "milliseconds": 1.804864
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.36336
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298272
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.399616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.780128
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.352608
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.522656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.495744
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.406592
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.354304
+            },
+            {
+              "frame": 124,
+              "milliseconds": 3.272576
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.415296
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.338272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.348448
+            },
+            {
+              "frame": 124,
+              "milliseconds": 1.387008
+            },
+            {
+              "frame": 126,
+              "milliseconds": 41.429472
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.283552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.241824
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.198912
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.279552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 3.528416
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.238688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.35488
+            }
+          ],
+          "shade": [
+            {
+              "frame": 119,
+              "milliseconds": 1.694912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.142112
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.262912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.305792
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.349856
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.315456
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.26416
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.3064
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.201376
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.140192
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.31024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.345696
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.333408
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.278816
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.312224
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.19952
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.148256
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.26384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.303776
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.335072
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.32032
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.27696
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298848
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.20288
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.142528
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.263904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.315904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.347872
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.306656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.2776
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.298048
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.211392
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.141504
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.265152
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.327296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.341184
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.325408
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.27296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.285792
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 119,
+              "milliseconds": 172.735104
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.0384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.03888
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.042592
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.033824
+            }
+          ],
+          "connections": [
+            {
+              "frame": 119,
+              "milliseconds": 245.952992
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.105632
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.106272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.114368
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.090272
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 119,
+              "milliseconds": 285.901248
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.083616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.088128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.084832
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.073056
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 119,
+              "milliseconds": 1.481664
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015552
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.372192
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.01856
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.02016
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 119,
+              "milliseconds": 0.015488
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015424
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.016128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.014688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.01504
+            }
+          ]
+        },
+        "timingUnavailable": 462,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 57332160,
+        "planChanges": 6,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.3333333333333333",
+          "scale": 0.3333333333333333,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 2957760,
+          "totalBytes": 57332160,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 57332160,
+          "slots": 7372800,
+          "geometrySlots": 3916800,
+          "checkedInvocations": 11289600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 125300160,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                864,
+                486
+              ],
+              "totalBytes": 102055104,
+              "checkedInvocations": 18869760,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 81256896,
+              "checkedInvocations": 15344640,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 9,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 33,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3916800,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 3624
+            },
+            "production": {
+              "draws": 1274
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 71,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        2560,
+        1440
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 1280,
+          "rh": 720,
+          "width": 1280,
+          "height": 720,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 217497600,
+          "snapshotBytes": 2957760,
+          "totalBytes": 220455360,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 220455360,
+          "slots": 29491200,
+          "geometrySlots": 11059200,
+          "checkedInvocations": 40550400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 33177600,
+            "hitBytes": 58982400,
+            "workBytes": 33177600,
+            "historyBytes": 92160000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 220455360,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.25",
+        "scale": 0.25,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 2957760,
+        "totalBytes": 57332160,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 57332160,
+        "slots": 7372800,
+        "geometrySlots": 5529600,
+        "checkedInvocations": 12902400,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              1280,
+              720
+            ],
+            "totalBytes": 220455360,
+            "checkedInvocations": 40550400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              1152,
+              648
+            ],
+            "totalBytes": 179130816,
+            "checkedInvocations": 33546240,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              1024,
+              576
+            ],
+            "totalBytes": 142156224,
+            "checkedInvocations": 27279360,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3333333333333333,
+            "receiver": [
+              854,
+              480
+            ],
+            "totalBytes": 99698880,
+            "checkedInvocations": 20083200,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 81256896,
+            "checkedInvocations": 16957440,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 57332160,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 41,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 61935840,
+        "draws": 861,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 119,
+              "milliseconds": 308.381024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.391712
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.041792
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.041664
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.177728
+            }
+          ],
+          "trace": [
+            {
+              "frame": 119,
+              "milliseconds": 1271.377056
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.402688
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.356672
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.290848
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.757088
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.5176
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.357216
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.530624
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.960672
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.358464
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.486272
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.339584
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.352704
+            },
+            {
+              "frame": 120,
+              "milliseconds": 2.133664
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.497792
+            },
+            {
+              "frame": 121,
+              "milliseconds": 1.804864
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.36336
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298272
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.399616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.780128
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.352608
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.522656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.495744
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.406592
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.354304
+            },
+            {
+              "frame": 124,
+              "milliseconds": 3.272576
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.415296
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.338272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.348448
+            },
+            {
+              "frame": 124,
+              "milliseconds": 1.387008
+            },
+            {
+              "frame": 126,
+              "milliseconds": 41.429472
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.283552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.241824
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.198912
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.279552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 3.528416
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.238688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.35488
+            }
+          ],
+          "shade": [
+            {
+              "frame": 119,
+              "milliseconds": 1.694912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.142112
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.262912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.305792
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.349856
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.315456
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.26416
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.3064
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.201376
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.140192
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.31024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.345696
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.333408
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.278816
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.312224
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.19952
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.148256
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.26384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.303776
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.335072
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.32032
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.27696
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298848
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.20288
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.142528
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.263904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.315904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.347872
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.306656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.2776
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.298048
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.211392
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.141504
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.265152
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.327296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.341184
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.325408
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.27296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.285792
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 119,
+              "milliseconds": 172.735104
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.0384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.03888
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.042592
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.033824
+            }
+          ],
+          "connections": [
+            {
+              "frame": 119,
+              "milliseconds": 245.952992
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.105632
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.106272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.114368
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.090272
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 119,
+              "milliseconds": 285.901248
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.083616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.088128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.084832
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.073056
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 119,
+              "milliseconds": 1.481664
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015552
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.372192
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.01856
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.02016
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 119,
+              "milliseconds": 0.015488
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015424
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.016128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.014688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.01504
+            }
+          ]
+        },
+        "timingUnavailable": 572,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 57332160,
+        "planChanges": 8,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.25",
+          "scale": 0.25,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 2957760,
+          "totalBytes": 57332160,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 57332160,
+          "slots": 7372800,
+          "geometrySlots": 5529600,
+          "checkedInvocations": 12902400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 220455360,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                1152,
+                648
+              ],
+              "totalBytes": 179130816,
+              "checkedInvocations": 33546240,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                1024,
+                576
+              ],
+              "totalBytes": 142156224,
+              "checkedInvocations": 27279360,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3333333333333333,
+              "receiver": [
+                854,
+                480
+              ],
+              "totalBytes": 99698880,
+              "checkedInvocations": 20083200,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 81256896,
+              "checkedInvocations": 16957440,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 10,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 40,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.25",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 5529600,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 3624
+            },
+            "production": {
+              "draws": 1722
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 71,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 63373760,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 49,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 61935840,
+        "draws": 1029,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 119,
+              "milliseconds": 308.381024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.391712
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.041792
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.041664
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.177728
+            }
+          ],
+          "trace": [
+            {
+              "frame": 119,
+              "milliseconds": 1271.377056
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.402688
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.356672
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.290848
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.757088
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.5176
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.357216
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.530624
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.960672
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.358464
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.486272
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.404032
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.339584
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.352704
+            },
+            {
+              "frame": 120,
+              "milliseconds": 2.133664
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.497792
+            },
+            {
+              "frame": 121,
+              "milliseconds": 1.804864
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.36336
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298272
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.399616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.780128
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.352608
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.522656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.495744
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.406592
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.354304
+            },
+            {
+              "frame": 124,
+              "milliseconds": 3.272576
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.415296
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.338272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.348448
+            },
+            {
+              "frame": 124,
+              "milliseconds": 1.387008
+            },
+            {
+              "frame": 126,
+              "milliseconds": 41.429472
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.283552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.241824
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.198912
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.279552
+            },
+            {
+              "frame": 126,
+              "milliseconds": 3.528416
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.238688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.35488
+            }
+          ],
+          "shade": [
+            {
+              "frame": 119,
+              "milliseconds": 1.694912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.142112
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.262912
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.305792
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.349856
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.315456
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.26416
+            },
+            {
+              "frame": 119,
+              "milliseconds": 0.3064
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.201376
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.140192
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.31024
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.345696
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.333408
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.278816
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.312224
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.19952
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.148256
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.26384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.303776
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.335072
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.32032
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.27696
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.298848
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.20288
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.142528
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.263904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.315904
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.347872
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.306656
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.2776
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.298048
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.211392
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.141504
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.265152
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.327296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.341184
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.325408
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.27296
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.285792
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 119,
+              "milliseconds": 172.735104
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.0384
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.03888
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.042592
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.033824
+            }
+          ],
+          "connections": [
+            {
+              "frame": 119,
+              "milliseconds": 245.952992
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.105632
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.106272
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.114368
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.090272
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 119,
+              "milliseconds": 285.901248
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.083616
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.088128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.084832
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.073056
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 119,
+              "milliseconds": 1.481664
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015552
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.372192
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.01856
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.02016
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 119,
+              "milliseconds": 0.015488
+            },
+            {
+              "frame": 120,
+              "milliseconds": 0.015424
+            },
+            {
+              "frame": 121,
+              "milliseconds": 0.016128
+            },
+            {
+              "frame": 124,
+              "milliseconds": 0.014688
+            },
+            {
+              "frame": 126,
+              "milliseconds": 0.01504
+            }
+          ]
+        },
+        "timingUnavailable": 682,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 63373760,
+        "planChanges": 10,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 10,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 48,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 3624
+            },
+            "production": {
+              "draws": 2202
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 71,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 5645952,
+        "totalBytes": 66061952,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 66061952,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 66061952,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 9,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 60416000,
+        "draws": 189,
+        "stages": {},
+        "timingUnavailable": 110,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 66061952,
+        "planChanges": 2,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 129,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 8,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 13665
+            },
+            "production": {
+              "draws": 2149
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 47,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 47,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 720,
+          "rh": 450,
+          "width": 720,
+          "height": 450,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 76464000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 82109952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 82109952,
+          "slots": 10368000,
+          "geometrySlots": 3888000,
+          "checkedInvocations": 14256000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 11664000,
+            "hitBytes": 20736000,
+            "workBytes": 11664000,
+            "historyBytes": 32400000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 82109952,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.4",
+        "scale": 0.4,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 576,
+        "rh": 360,
+        "width": 576,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 48936960,
+        "snapshotBytes": 5645952,
+        "totalBytes": 54582912,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 54582912,
+        "slots": 6635520,
+        "geometrySlots": 2954880,
+        "checkedInvocations": 9590400,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 7464960,
+          "hitBytes": 13271040,
+          "workBytes": 7464960,
+          "historyBytes": 20736000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              720,
+              450
+            ],
+            "totalBytes": 82109952,
+            "checkedInvocations": 14256000,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              648,
+              405
+            ],
+            "totalBytes": 67581792,
+            "checkedInvocations": 11793600,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 48936960,
+      "total": 54582912,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 16,
+        "memoryBytes": 48936960,
+        "peakMemoryBytes": 60416000,
+        "draws": 336,
+        "stages": {},
+        "timingUnavailable": 220,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 54582912,
+        "planChanges": 4,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.4",
+          "scale": 0.4,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 576,
+          "rh": 360,
+          "width": 576,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 48936960,
+          "snapshotBytes": 5645952,
+          "totalBytes": 54582912,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 54582912,
+          "slots": 6635520,
+          "geometrySlots": 2954880,
+          "checkedInvocations": 9590400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 7464960,
+            "hitBytes": 13271040,
+            "workBytes": 7464960,
+            "historyBytes": 20736000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 82109952,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                648,
+                405
+              ],
+              "totalBytes": 67581792,
+              "checkedInvocations": 11793600,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 130,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 15,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          576,
+          360
+        ],
+        "receiverResolution": [
+          576,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.4",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 6635520,
+        "primaryRayUpperBound": 6635520,
+        "solarRayUpperBound": 6635520,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 2954880,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 13665
+            },
+            "production": {
+              "draws": 4469
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 47,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        1920,
+        1080
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 960,
+          "rh": 540,
+          "width": 960,
+          "height": 540,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 122342400,
+          "snapshotBytes": 5645952,
+          "totalBytes": 127988352,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 127988352,
+          "slots": 16588800,
+          "geometrySlots": 6220800,
+          "checkedInvocations": 22809600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 18662400,
+            "hitBytes": 33177600,
+            "workBytes": 18662400,
+            "historyBytes": 51840000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 127988352,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 5645952,
+        "totalBytes": 60020352,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 60020352,
+        "slots": 7372800,
+        "geometrySlots": 3916800,
+        "checkedInvocations": 11289600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              540
+            ],
+            "totalBytes": 127988352,
+            "checkedInvocations": 22809600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              486
+            ],
+            "totalBytes": 104743296,
+            "checkedInvocations": 18869760,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 83945088,
+            "checkedInvocations": 15344640,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 60020352,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 23,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 60416000,
+        "draws": 483,
+        "stages": {},
+        "timingUnavailable": 330,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 60020352,
+        "planChanges": 6,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.3333333333333333",
+          "scale": 0.3333333333333333,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 5645952,
+          "totalBytes": 60020352,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 60020352,
+          "slots": 7372800,
+          "geometrySlots": 3916800,
+          "checkedInvocations": 11289600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 127988352,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                864,
+                486
+              ],
+              "totalBytes": 104743296,
+              "checkedInvocations": 18869760,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 83945088,
+              "checkedInvocations": 15344640,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 128,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 22,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3916800,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 13665
+            },
+            "production": {
+              "draws": 6760
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 47,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        2560,
+        1440
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 1280,
+          "rh": 720,
+          "width": 1280,
+          "height": 720,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 217497600,
+          "snapshotBytes": 5645952,
+          "totalBytes": 223143552,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 223143552,
+          "slots": 29491200,
+          "geometrySlots": 11059200,
+          "checkedInvocations": 40550400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 33177600,
+            "hitBytes": 58982400,
+            "workBytes": 33177600,
+            "historyBytes": 92160000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 223143552,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.25",
+        "scale": 0.25,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 5645952,
+        "totalBytes": 60020352,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 60020352,
+        "slots": 7372800,
+        "geometrySlots": 5529600,
+        "checkedInvocations": 12902400,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              1280,
+              720
+            ],
+            "totalBytes": 223143552,
+            "checkedInvocations": 40550400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              1152,
+              648
+            ],
+            "totalBytes": 181819008,
+            "checkedInvocations": 33546240,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              1024,
+              576
+            ],
+            "totalBytes": 144844416,
+            "checkedInvocations": 27279360,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3333333333333333,
+            "receiver": [
+              854,
+              480
+            ],
+            "totalBytes": 102387072,
+            "checkedInvocations": 20083200,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 83945088,
+            "checkedInvocations": 16957440,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 60020352,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 30,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 60416000,
+        "draws": 630,
+        "stages": {},
+        "timingUnavailable": 440,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 60020352,
+        "planChanges": 8,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.25",
+          "scale": 0.25,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 5645952,
+          "totalBytes": 60020352,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 60020352,
+          "slots": 7372800,
+          "geometrySlots": 5529600,
+          "checkedInvocations": 12902400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 223143552,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                1152,
+                648
+              ],
+              "totalBytes": 181819008,
+              "checkedInvocations": 33546240,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                1024,
+                576
+              ],
+              "totalBytes": 144844416,
+              "checkedInvocations": 27279360,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3333333333333333,
+              "receiver": [
+                854,
+                480
+              ],
+              "totalBytes": 102387072,
+              "checkedInvocations": 20083200,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 83945088,
+              "checkedInvocations": 16957440,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 127,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 29,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.25",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 5529600,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 13665
+            },
+            "production": {
+              "draws": 9036
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 47,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 5645952,
+        "totalBytes": 66061952,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 66061952,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 66061952,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 38,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 60416000,
+        "draws": 798,
+        "stages": {},
+        "timingUnavailable": 550,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 66061952,
+        "planChanges": 10,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 130,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 37,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 13665
+            },
+            "production": {
+              "draws": 11508
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 47,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "scene": "DPR",
+      "scale": 1,
+      "dpr": 2,
+      "buffer": [
+        1920,
+        1200
+      ],
+      "ready": true,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 4352000,
+        "checkedInvocations": 12544000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              600
+            ],
+            "totalBytes": 138893760,
+            "checkedInvocations": 25344000,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              540
+            ],
+            "totalBytes": 113065920,
+            "checkedInvocations": 20966400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              480
+            ],
+            "totalBytes": 89956800,
+            "checkedInvocations": 17049600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "total": 63373760,
+      "history": 2
+    },
+    {
+      "scene": "DPR",
+      "scale": 0.75,
+      "dpr": 2,
+      "buffer": [
+        1440,
+        900
+      ],
+      "ready": true,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.45",
+        "scale": 0.45,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 648,
+        "rh": 405,
+        "width": 648,
+        "height": 405,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 61935840,
+        "snapshotBytes": 2957760,
+        "totalBytes": 64893600,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 64893600,
+        "slots": 8398080,
+        "geometrySlots": 3395520,
+        "checkedInvocations": 11793600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9447840,
+          "hitBytes": 16796160,
+          "workBytes": 9447840,
+          "historyBytes": 26244000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              720,
+              450
+            ],
+            "totalBytes": 79421760,
+            "checkedInvocations": 14256000,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "total": 64893600,
+      "history": 1
+    },
+    {
+      "scene": "DPR",
+      "scale": 1,
+      "dpr": 2,
+      "buffer": [
+        1920,
+        1200
+      ],
+      "ready": true,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 4352000,
+        "checkedInvocations": 12544000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              600
+            ],
+            "totalBytes": 138893760,
+            "checkedInvocations": 25344000,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              540
+            ],
+            "totalBytes": 113065920,
+            "checkedInvocations": 20966400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              480
+            ],
+            "totalBytes": 89956800,
+            "checkedInvocations": 17049600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "total": 63373760,
+      "history": 1
+    }
+  ],
+  "errors": [],
+  "checks": [],
+  "status": "passed"
+}

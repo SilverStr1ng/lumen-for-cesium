@@ -36,7 +36,7 @@ const widget = new C.CesiumWidget("view", {
   },
 });
 const scene = widget.scene;
-if (gallery) {
+if (gallery && !params.has("nativeBuffer")) {
   const limitResolution = () => {
     widget.resolutionScale = Math.min(1, 1280 / innerWidth, 800 / innerHeight);
     scene.requestRender();
@@ -54,9 +54,13 @@ scene.lumen.enabled = true;
 scene.lumen.finalGather.mode = ["fg", "raw"].includes(params.get("fg"))
   ? params.get("fg")
   : "ddgi";
-scene.lumen.finalGather.quality = ["balanced", "high", "fast", "roi"].includes(
-  params.get("fgQuality"),
-)
+scene.lumen.finalGather.quality = [
+  "auto",
+  "balanced",
+  "high",
+  "fast",
+  "roi",
+].includes(params.get("fgQuality"))
   ? params.get("fgQuality")
   : "balanced";
 scene.lumen.finalGather.sampling = [
@@ -516,9 +520,9 @@ scene.postRender.addEventListener(() => {
     m = fg.metrics;
   if (gallery)
     $("gallerySummary").textContent =
-      `${w?.status === "ready" ? "光照已完成" : "正在更新光照"} · ${fg.mode === "ddgi" ? "DDGI" : fg.sampling}\n${fg.mode === "ddgi" ? "" : `来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32 · `}${scene.drawingBufferWidth}×${scene.drawingBufferHeight}\n发光壁 ${galleryEmitter ? "开启" : "关闭"} · 曝光 ${scene.postProcessStages.exposure}`;
+      `${w?.status === "ready" ? "光照已完成" : "正在更新光照"} · ${fg.ready ? "FG：" + fg.quality + "/" + fg.sampling : "DDGI · " + m.status}\n${fg.mode === "ddgi" ? "" : `来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32 · `}${scene.drawingBufferWidth}×${scene.drawingBufferHeight}\n发光壁 ${galleryEmitter ? "开启" : "关闭"} · 曝光 ${scene.postProcessStages.exposure}`;
   $("status").textContent +=
-    `\nFG ${fg.mode} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n${m.resolution?.join("×") ?? "—"} / ${m.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n${fg.sampling} · 来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32（逐像素有效长度另测） · 原求解不读 FG`;
+    `\n请求 ${fg.mode}/${fg.quality} · 实际 ${fg.ready ? "FG（像素回退见诊断）" : "DDGI"}/${m.effectiveQuality ?? "—"} · ${m.status}\n输入 rev ${m.revision ?? "—"} / E_${(m.round ?? 1) - 1} → FG_${m.round ?? "—"}\n主视图 ${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · 接收 ${m.plan?.rw ?? "—"}×${m.plan?.rh ?? "—"} / ${m.samples ?? m.plan?.samples ?? "—"} rays · traversal ${fg.traversalBudget}\nFG ${(m.memoryBytes / 1048576).toFixed(2)} MiB / 总新增 ${((m.totalAdditionalBytes ?? 0) / 1048576).toFixed(2)} MiB\n上限 ${fg.maxMemoryBytes / 1048576} MiB / ${fg.maxRayInvocations} rays\n回退码 ${fg.fallbackReason} · ${m.plan?.reason ?? "—"} · ${fg.execution}\n${fg.sampling} · 来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32（逐像素有效长度另测） · 原求解不读 FG`;
 });
 // Reproducible diagnostics deliberately omit ion credentials and URLs.
 async function saveView() {
@@ -541,6 +545,11 @@ async function saveView() {
       quality: scene.lumen.finalGather.quality,
       sampling: scene.lumen.finalGather.sampling,
       seed: scene.lumen.finalGather.seed,
+      execution: scene.lumen.finalGather.execution,
+      rayOrder: scene.lumen.finalGather.rayOrder,
+      reconstruction: scene.lumen.finalGather.reconstructionEnabled,
+      lazyFallback: scene.lumen.finalGather.lazyFallback,
+      plan: scene.lumen.finalGather.metrics.plan,
     },
     displayTransitionMilliseconds: w.displayTransitionMilliseconds,
     publicationMode: $("publication").value,
@@ -956,12 +965,12 @@ if (gallery) {
       value === "raw" ? "raw" : value === "reconstructed" ? "fg" : "ddgi";
     fg.configure({
       mode,
-      quality: "high",
+      quality: $("fgQuality").value,
       sampling: value === "raw" ? "scrambled-single-frame" : "reconstructed",
       model,
     }).catch(fail);
     $("fgMode").value = mode;
-    $("fgQuality").value = "high";
+    $("fgQuality").value = fg.quality;
     $("fgSampling").value = fg.sampling;
     scene.requestRender();
   };

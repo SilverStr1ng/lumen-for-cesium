@@ -73,9 +73,29 @@ for (const pixelRatio of [1, 1.5, 2])
       result,
     });
   }
-await mkdir("reports/fg-runtime-budget-v7", { recursive: true });
+for (const size of [
+  [1920, 1080],
+  [2560, 1440],
+]) {
+  const args = {
+    width: size[0],
+    height: size[1],
+    quality: "auto",
+    snapshotBytes: 5645952,
+  };
+  const raw = plan({ ...args, reconstruction: false }),
+    full = plan(args);
+  assert.deepEqual([raw.width, raw.height], [full.width, full.height]);
+  assert.equal(raw.attachments.historyBytes, 0);
+  assert(raw.reservedHistoryBytes > 0 && raw.bytes < full.bytes);
+}
+await mkdir(
+  process.env.LUMEN_REPORT_DIRECTORY ?? "reports/fg-runtime-budget-v7",
+  { recursive: true },
+);
 await writeFile(
-  "reports/fg-runtime-budget-v7/budget-plan.json",
+  (process.env.LUMEN_REPORT_DIRECTORY ?? "reports/fg-runtime-budget-v7") +
+    "/budget-plan.json",
   JSON.stringify(
     {
       status: "passed",

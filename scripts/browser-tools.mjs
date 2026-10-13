@@ -24,6 +24,7 @@ export function sourceVersion(extraFiles = []) {
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
+    "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js",
     "demo/globe.js",
     "demo/benchmark.js",
     "scripts/browser-tools.mjs",
@@ -46,6 +47,18 @@ export function sourceVersion(extraFiles = []) {
     }).trim(),
     sources: Object.fromEntries(files.map((file) => [file, sha256(file)])),
     compiledBundle: sha256("cesium-1.146/Build/CesiumUnminified/Cesium.js"),
+    assets: Object.fromEntries(
+      readdirSync("fixtures", { recursive: true })
+        .map((f) => f.replaceAll("\\", "/"))
+        .filter((f) => /\.(gltf|bin|png|jpg|json)$/.test(f))
+        .sort()
+        .map((f) => [
+          "fixtures/" + f,
+          createHash("sha256")
+            .update(readFileSync("fixtures/" + f))
+            .digest("hex"),
+        ]),
+    ),
     modifiedSources: execFileSync(
       "git",
       ["diff", "--name-only", "--", ...files],
