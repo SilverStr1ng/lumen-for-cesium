@@ -1,0 +1,130 @@
+{
+  "startedAt": "2026-10-13T03:16:50.106Z",
+  "version": {
+    "head": "438b7ea487fd85e0276ae230af03ab6359ef9757",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "lumen/bvh.js": "a505d6b19b964115ebc4294a0318fef45bd66d80c3af64daac5d31a912818b53",
+      "scripts/verify-visibility.mjs": "1e68c96ef675daadaf390ea0e2227689537c8165a44e260f4472ebd4e52282e3"
+    },
+    "compiledBundle": "bef5b40a0e7ae81c6a812f424041cf770caa82b6f80e58d1cbc42f95a311e9fb",
+    "modifiedSources": []
+  },
+  "schema": 1,
+  "tolerance": 1e-7,
+  "tieRule": "equal-distance triangles may differ; status and distance must agree",
+  "rays": 3002,
+  "results": [
+    {
+      "strategy": "median",
+      "bins": 12,
+      "stats": {
+        "persistentBytes": 7808,
+        "strategy": "median",
+        "bins": 12,
+        "maxDepth": 7,
+        "triangles": 514,
+        "nodes": 131,
+        "queries": 6006,
+        "unknown": 1,
+        "alphaRejected": 8
+      },
+      "counters": {
+        "nodes": 60762,
+        "triangles": 60507,
+        "accept": 358
+      },
+      "milliseconds": 23.104699999999866
+    },
+    {
+      "strategy": "sah",
+      "bins": 8,
+      "stats": {
+        "persistentBytes": 10208,
+        "strategy": "sah",
+        "bins": 8,
+        "maxDepth": 8,
+        "triangles": 514,
+        "nodes": 191,
+        "queries": 6006,
+        "unknown": 1,
+        "alphaRejected": 8
+      },
+      "counters": {
+        "nodes": 65950,
+        "triangles": 34267,
+        "accept": 360
+      },
+      "milliseconds": 18.266599999999926
+    },
+    {
+      "strategy": "sah",
+      "bins": 12,
+      "stats": {
+        "persistentBytes": 9968,
+        "strategy": "sah",
+        "bins": 12,
+        "maxDepth": 8,
+        "triangles": 514,
+        "nodes": 185,
+        "queries": 6006,
+        "unknown": 1,
+        "alphaRejected": 8
+      },
+      "counters": {
+        "nodes": 63446,
+        "triangles": 36899,
+        "accept": 358
+      },
+      "milliseconds": 14.979299999999967
+    },
+    {
+      "strategy": "sah",
+      "bins": 16,
+      "stats": {
+        "persistentBytes": 9888,
+        "strategy": "sah",
+        "bins": 16,
+        "maxDepth": 8,
+        "triangles": 514,
+        "nodes": 183,
+        "queries": 6006,
+        "unknown": 1,
+        "alphaRejected": 8
+      },
+      "counters": {
+        "nodes": 63544,
+        "triangles": 36041,
+        "accept": 357
+      },
+      "milliseconds": 8.635800000000017
+    },
+    {
+      "strategy": "sah",
+      "bins": 32,
+      "stats": {
+        "persistentBytes": 9488,
+        "strategy": "sah",
+        "bins": 32,
+        "maxDepth": 8,
+        "triangles": 514,
+        "nodes": 173,
+        "queries": 6006,
+        "unknown": 1,
+        "alphaRejected": 8
+      },
+      "counters": {
+        "nodes": 61648,
+        "triangles": 38845,
+        "accept": 358
+      },
+      "milliseconds": 9.111799999999903
+    }
+  ],
+  "status": "passed"
+}

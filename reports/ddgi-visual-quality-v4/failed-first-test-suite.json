@@ -1,0 +1,192 @@
+{
+  "version": {
+    "head": "63e2dccd4c6fa8027b57279d475e04499c1b7f5d",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "3112809a04bb88edbf06fe439083c08568606f7c645507457e6745bd6031c37c",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "820ade0e8364c8ff9b1a556c2d1b0c6eeea54f880c9c33ba792428d9822b8e10",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "a2c29845273554eb31fd9eb5216aeee1e7b7661d271d3fcd1416e84f218ab33c",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "started": "2026-10-13T02:52:14.746Z",
+  "tests": [
+    {
+      "name": "pipeline",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 1398.7171,
+      "stdout": "PASS Scene/Model/LightingPipelineStage supports light color\nPASS Scene/Model/LightingPipelineStage supports PBR lighting\nPASS Scene/Model/LightingPipelineStage supports unlit lighting\nPASS Scene/Model/LightingPipelineStage keeps unsupported material paths on the original lighting\nPASS Scene/Model/LightingPipelineStage exports supported opaque and alpha-mask PBR triangles with normals\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for spherical harmonics\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for default image-based lighting\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for specular environment maps\nPASS Scene/Model/ImageBasedLightingPipelineStage updates Lumen uniforms without rebuilding and disables them during picking\n9 pipeline specs; 0 failed; passed\n",
+      "stderr": ""
+    },
+    {
+      "name": "transport",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 171.14280000000008,
+      "stdout": "PASS 500 BVH rays agree with independent brute-force plane/barycentric reference\nPASS alpha rejection continues traversal; exhausted traversal is Unknown\nPASS directional DDGI integration yields pi * sky radiance without bounce energy growth\nPASS directional distance moments suppress cross-wall probe leakage by >1000x\n",
+      "stderr": ""
+    },
+    {
+      "name": "environment",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 153.05700000000002,
+      "stdout": "{\n  \"tolerance\": 0.025,\n  \"checks\": [\n    {\n      \"name\": \"sphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.005319031076975733,\n      \"passed\": true\n    },\n    {\n      \"name\": \"upper-hemisphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.017878325282171925,\n      \"passed\": true\n    },\n    {\n      \"name\": \"root domain includes 200m blocker and retains historical 100m floor\",\n      \"maximum\": 201.01999900009997,\n      \"full\": {\n        \"status\": \"Hit\",\n        \"triangle\": 0,\n        \"u\": 0.25,\n        \"v\": 0.5,\n        \"distance\": 200,\n        \"backface\": true\n      },\n      \"passed\": true\n    }\n  ],\n  \"status\": \"passed\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "globe-controls",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 46.2050999999999,
+      "stdout": "PASS provider identity/generation guards, single fallback, terrain disable, stale status, foundation range, redaction and CSS order\n",
+      "stderr": ""
+    },
+    {
+      "name": "visibility",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 1928.279,
+      "stdout": "[{\"strategy\":\"median\",\"bins\":12,\"stats\":{\"persistentBytes\":7808,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":7,\"triangles\":514,\"nodes\":131,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":60762,\"triangles\":60507,\"accept\":358},\"milliseconds\":21.863900000000058},{\"strategy\":\"sah\",\"bins\":8,\"stats\":{\"persistentBytes\":10208,\"strategy\":\"sah\",\"bins\":8,\"maxDepth\":8,\"triangles\":514,\"nodes\":191,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":65950,\"triangles\":34267,\"accept\":360},\"milliseconds\":18.25739999999996},{\"strategy\":\"sah\",\"bins\":12,\"stats\":{\"persistentBytes\":9968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":8,\"triangles\":514,\"nodes\":185,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63446,\"triangles\":36899,\"accept\":358},\"milliseconds\":15.492999999999938},{\"strategy\":\"sah\",\"bins\":16,\"stats\":{\"persistentBytes\":9888,\"strategy\":\"sah\",\"bins\":16,\"maxDepth\":8,\"triangles\":514,\"nodes\":183,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63544,\"triangles\":36041,\"accept\":357},\"milliseconds\":8.493399999999838},{\"strategy\":\"sah\",\"bins\":32,\"stats\":{\"persistentBytes\":9488,\"strategy\":\"sah\",\"bins\":32,\"maxDepth\":8,\"triangles\":514,\"nodes\":173,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":61648,\"triangles\":38845,\"accept\":358},\"milliseconds\":9.641300000000001}]\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "fixtures",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 9208.8375,
+      "stdout": "PASS untextured: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS untextured: finite HDR irradiance and accounted texture memory\nPASS untextured: valid 1x1 material atlas\nPASS sky lighting produces actual receiver irradiance changes\nPASS exhausted GPU traversal is Unknown\nPASS untextured: GL has no framebuffer feedback or errors\nPASS two-rooms: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS two-rooms: finite HDR irradiance and accounted texture memory\nPASS two-rooms: real wall agrees with independent CPU intersection\nPASS two-rooms: wall blocks red emissive transport\nPASS two-rooms: GL has no framebuffer feedback or errors\nPASS alpha-mask: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS alpha-mask: finite HDR irradiance and accounted texture memory\nPASS alpha mask: transparent texel passes through; opaque texel occludes\nPASS black light preserves valid coverage and zero irradiance\nPASS destroy releases owned resources and reload restores GPU lighting\nPASS alpha-mask: GL has no framebuffer feedback or errors\nPASS no render, worker, browser or GL exceptions\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "relighting",
+      "status": "failed",
+      "exitCode": 1,
+      "milliseconds": 5999.383399999999,
+      "stdout": "PASS valid sun cache has no Unknown slots\nPASS skyOnly: zero new probe intersections, sun BVH work and moments\nPASS intensityOnly: zero new probe intersections, sun BVH work and moments\nPASS direction refreshes sun visibility without retracing probe hits\nPASS distance moments remain bit-identical through energy, direction and material changes\nPASS RGB/emission updates have independent material versions and reuse geometry and visibility\nPASS immutable jobs resist caller mutation and unsafe hit-semantic changes are rejected\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\nnode:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: distance moments match an independent CPU formula\r\n    at check (file:///D:/Nothing/lumen-for-cesium/scripts/verify-relighting.mjs:31:10)\r\n    at file:///D:/Nothing/lumen-for-cesium/scripts/verify-relighting.mjs:271:3 {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: false,\r\n  expected: true,\r\n  operator: '==',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.11.0\r\n"
+    },
+    {
+      "name": "integration",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 5901.6178,
+      "stdout": "PASS arithmetic and LUT produce matching fixed-input E and final HDR\nPASS every octahedral border is an exact mirror without cross-probe reads\nPASS sampling is continuous across octahedral seams\nPASS distance moments remain unchanged across integration variants\nPASS copying uses distinct GL images and bounded owned resources\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "progressive",
+      "status": "failed",
+      "exitCode": 1,
+      "milliseconds": 6362.372800000001,
+      "stdout": "PASS first complete round is usable before completed resolves\nPASS forward HDR uses the new first-round texture without old-field warm start\nPASS each completed progressive round is displayed in a distinct frame\nPASS published/read/write ownership refers only to completed reads and separate writes\nPASS same N-bounce progressive and snapshot E/moments/final HDR agree\nPASS rapid requests publish during input and settle the newest revision\nPASS superseded promises reject and obsolete deeper rounds are skipped\nPASS publication versions are monotonic and pending work is bounded\nPASS on-demand rendering stops GI submissions and frames after settling\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\nAssertionError [ERR_ASSERTION]: actual GL resources remain stable across repeated updates\n    at check (file:///D:/Nothing/lumen-for-cesium/scripts/verify-progressive.mjs:30:10)\n    at file:///D:/Nothing/lumen-for-cesium/scripts/verify-progressive.mjs:342:3 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n"
+    },
+    {
+      "name": "publication-lifecycle",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 14398.946700000004,
+      "stdout": "PASS non-final publication: destroy-world\nPASS non-final publication: destroy-scene\nPASS non-final publication: replace-world\nPASS non-final publication: solve\nPASS non-final publication: throw\nPASS final publication: destroy-world\nPASS final publication: destroy-scene\nPASS final publication: replace-world\nPASS final publication: solve\nPASS final publication: throw\nPASS progressive: firstPublished.then destruction cancels queued event\nPASS snapshot: firstPublished.then destruction cancels queued event\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "visibility-gpu",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 13500.621100000004,
+      "stdout": "untextured [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9096,\"p50\":3,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":21324,\"p50\":7,\"p95\":7,\"max\":12},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":696,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":1,\"triangles\":16,\"nodes\":3,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.19999999925494194,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.5},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":1188,\"p50\":0,\"p95\":8,\"max\":8},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9096,\"p50\":3,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":21324,\"p50\":7,\"p95\":7,\"max\":12},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":696,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":1,\"triangles\":16,\"nodes\":3,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.5},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":1188,\"p50\":0,\"p95\":8,\"max\":8},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9186,\"p50\":3,\"p95\":3,\"max\":6},\"triangleTests\":{\"sum\":9286,\"p50\":3,\"p95\":3,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":856,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":3,\"triangles\":16,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.599999999627471,\"tieRankOffset\":16,\"tieRankBytes\":64,\"rankAndVertexPackMilliseconds\":0.09999999962747097,\"prepareMilliseconds\":3.699999999254942},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":695,\"p50\":0,\"p95\":4,\"max\":4},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9186,\"p50\":3,\"p95\":3,\"max\":6},\"triangleTests\":{\"sum\":9286,\"p50\":3,\"p95\":3,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":856,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":3,\"triangles\":16,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.599999999627471,\"tieRankOffset\":16,\"tieRankBytes\":64,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":3.700000001117587},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":695,\"p50\":0,\"p95\":4,\"max\":4},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}}]\nalpha-mask [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.2000000011175871,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":4.799999998882413},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0.09999999962747097,\"prepareMilliseconds\":5.400000000372529},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.19999999925494194,\"tieRankOffset\":6,\"tieRankBytes\":32,\"rankAndVertexPackMilliseconds\":0.19999999925494194,\"prepareMilliseconds\":5.699999999254942},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.2000000011175871,\"tieRankOffset\":6,\"tieRankBytes\":32,\"rankAndVertexPackMilliseconds\":0.09999999962747097,\"prepareMilliseconds\":5.599999999627471},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}}]\ntwo-rooms [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":22130,\"p50\":3,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":24213,\"p50\":4,\"p95\":8,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":888,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":2,\"triangles\":24,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.2999999988824129,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.5},\"distribution\":{\"nodeVisits\":{\"sum\":1317,\"p50\":1,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":1310,\"p50\":0,\"p95\":9,\"max\":18},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":22130,\"p50\":3,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":24213,\"p50\":4,\"p95\":8,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":888,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":2,\"triangles\":24,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.40000000037252903,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.599999999627471},\"distribution\":{\"nodeVisits\":{\"sum\":1317,\"p50\":1,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":1310,\"p50\":0,\"p95\":9,\"max\":18},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":19658,\"p50\":2,\"p95\":8,\"max\":8},\"triangleTests\":{\"sum\":17278,\"p50\":1,\"p95\":10,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":4,\"triangles\":24,\"nodes\":9,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.599999999627471,\"tieRankOffset\":24,\"tieRankBytes\":96,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.899999998509884},\"distribution\":{\"nodeVisits\":{\"sum\":1633,\"p50\":1,\"p95\":8,\"max\":9},\"triangleTests\":{\"sum\":929,\"p50\":0,\"p95\":9,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":19658,\"p50\":2,\"p95\":8,\"max\":8},\"triangleTests\":{\"sum\":17278,\"p50\":1,\"p95\":10,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":4,\"triangles\":24,\"nodes\":9,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.599999999627471,\"tieRankOffset\":24,\"tieRankBytes\":96,\"rankAndVertexPackMilliseconds\":0.09999999962747097,\"prepareMilliseconds\":3.599999999627471},\"distribution\":{\"nodeVisits\":{\"sum\":1633,\"p50\":1,\"p95\":8,\"max\":9},\"triangleTests\":{\"sum\":929,\"p50\":0,\"p95\":9,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}}]\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "visibility-domain",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 6607.977399999996,
+      "stdout": "{\n  grid: {\n    origin: [ -1.5, -1.5, -0.5 ],\n    counts: [ 4, 4, 152 ],\n    total: 2432,\n    spacing: 1,\n    normalBias: 0.075,\n    rays: 128,\n    width: 160,\n    height: 1520\n  },\n  checked: 523,\n  leaks: 0,\n  short: [\n    {\n      status: 'Miss',\n      triangle: undefined,\n      gpuTriangle: -2,\n      u: 0,\n      v: 0,\n      distance: 100,\n      backface: false\n    }\n  ],\n  complete: [\n    {\n      status: 'Hit',\n      triangle: 3,\n      gpuTriangle: 3,\n      u: 0.550000011920929,\n      v: 0.050000011920928955,\n      distance: 149.97999572753906,\n      backface: true\n    }\n  ]\n}\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "visibility-edges",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 6947.777300000002,
+      "stdout": "[\n  {\n    mode: 'reference',\n    rays: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    hits: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    any: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    cpu: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    stats: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ]\n  },\n  {\n    mode: 'optimized',\n    rays: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    hits: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    any: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    cpu: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    stats: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ]\n  }\n]\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "globe",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 11462.2883,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/globe.js', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "solid-probes",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 1593.3462,
+      "stdout": "{\"totalInside\":1,\"activeInside\":0,\"probes\":924}\nPASS actual glTF -> BVH -> relocation/classification rejects solid interiors\nPASS explicitly double-sided solid interior rejected\nPASS double-sided thin sheet supports both sides\nPASS doorway room valid dark free space survives classification/integration/material transport\nPASS overlapping slabs / cumulative relocation bound\n",
+      "stderr": ""
+    },
+    {
+      "name": "spatial-kernel",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 47.475500000000466,
+      "stdout": "{\"x\":0,\"actual\":[0,0,0],\"expected\":[0,0,0],\"weight\":1}\n{\"x\":0.01,\"actual\":[0.01,0.02,0.03],\"expected\":[0.01,0.02,0.03],\"weight\":1}\n{\"x\":0.25,\"actual\":[0.25,0.5,0.75],\"expected\":[0.25,0.5,0.75],\"weight\":1}\n{\"x\":0.5,\"actual\":[0.5,1,1.5],\"expected\":[0.5,1,1.5],\"weight\":1}\n{\"x\":0.75,\"actual\":[0.75,1.5,2.25],\"expected\":[0.75,1.5,2.25],\"weight\":1}\n{\"x\":0.99,\"actual\":[0.99,1.98,2.9699999999999998],\"expected\":[0.99,1.98,2.9699999999999998],\"weight\":1}\n{\"x\":1,\"actual\":[1,2,3],\"expected\":[1,2,3],\"weight\":1}\nPASS independent linear field / normalized trilinear kernel\nPASS constant field, low reliability, Ng/Ns, invalid data versus valid darkness\n",
+      "stderr": ""
+    },
+    {
+      "name": "spatial-gpu",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 5575.102900000013,
+      "stdout": "passed \n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "pbr-environment",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 7031.885999999999,
+      "stdout": "{\"status\":\"passed\",\"checks\":[\"real cubemap mips, roughness/direction response, manual solar refresh, zero production sync readbacks\",\"90 materials/view angles: white furnace, linear source scaling, coverage conservation, zero metal diffuse, independent specular MS\"],\"errors\":[]}\n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "display-presets",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 12011.320699999997,
+      "stdout": "passed \n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "name": "probe-display",
+      "status": "passed",
+      "exitCode": 0,
+      "milliseconds": 5908.474700000006,
+      "stdout": "passed \n",
+      "stderr": "warning: in the working copy of 'cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl', LF will be replaced by CRLF the next time Git touches it\n"
+    }
+  ],
+  "notRun": [
+    {
+      "name": "external Sponza asset chain",
+      "reason": "this acceptance run uses self-authored local pavilion and fixtures"
+    },
+    {
+      "name": "real authenticated ion",
+      "reason": "no user token supplied; mocked 401/403 and local fallback tested"
+    }
+  ],
+  "status": "failed",
+  "finished": "2026-10-13T02:54:11.137Z"
+}

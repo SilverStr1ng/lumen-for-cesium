@@ -1,0 +1,935 @@
+{
+  "version": {
+    "head": "e1d99ceabc6a307d64a0b57bc9b014052b97c000",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "3112809a04bb88edbf06fe439083c08568606f7c645507457e6745bd6031c37c",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "820ade0e8364c8ff9b1a556c2d1b0c6eeea54f880c9c33ba792428d9822b8e10",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "a2c29845273554eb31fd9eb5216aeee1e7b7661d271d3fcd1416e84f218ab33c",
+    "modifiedSources": []
+  },
+  "started": "2026-10-13T02:59:40.068Z",
+  "checks": [
+    {
+      "name": "non-final publication: destroy-world",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "GPU border · bounce 1",
+          "target": 0,
+          "previous": 1,
+          "published": 1,
+          "bounce": 2
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "rejected",
+          "error": "Error: GPU world destroyed"
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "lateWorkerErrorInjected": true,
+        "status": "destroyed",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1270
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 17,
+              "framebuffers": 9,
+              "queries": 0,
+              "programs": 20,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 15,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "non-final publication: destroy-scene",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "GPU border · bounce 1",
+          "target": 0,
+          "previous": 1,
+          "published": 1,
+          "bounce": 2
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "rejected",
+          "error": "Error: GPU world destroyed"
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "lateWorkerErrorInjected": true,
+        "status": "destroyed",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": true,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1101
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 1,
+              "framebuffers": 1,
+              "queries": 0,
+              "programs": 0,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 8,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "non-final publication: replace-world",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "GPU border · bounce 1",
+          "target": 0,
+          "previous": 1,
+          "published": 1,
+          "bounce": 2
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "rejected",
+          "error": "Error: GPU world destroyed"
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "replacement": {
+          "state": "resolved",
+          "revision": 1
+        },
+        "lateWorkerErrorInjected": true,
+        "status": "destroyed",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          }
+        ],
+        "newEvents": [
+          {
+            "revision": 1,
+            "bounce": 1
+          },
+          {
+            "revision": 1,
+            "bounce": 2
+          },
+          {
+            "revision": 1,
+            "bounce": 3
+          }
+        ],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "replacementReady": true,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 2167
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 0,
+              "programs": 19,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 10,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "non-final publication: solve",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "GPU border · bounce 1",
+          "target": 0,
+          "previous": 1,
+          "published": 1,
+          "bounce": 2
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "rejected",
+          "error": "Error: GPU lighting generation superseded"
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "resolved"
+        },
+        "next": {
+          "state": "resolved",
+          "revision": 3
+        },
+        "requestedFirst": {
+          "state": "resolved",
+          "revision": 3
+        },
+        "lateWorkerErrorInjected": false,
+        "status": "ready",
+        "closed": false,
+        "memory": 2454532,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 3,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 3,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 3,
+            "bounce": 3,
+            "final": true
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1444
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 0,
+              "programs": 20,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 9,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "non-final publication: throw",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "GPU border · bounce 1",
+          "target": 0,
+          "previous": 1,
+          "published": 1,
+          "bounce": 2
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "rejected",
+          "error": "Error: intentional-publication-listener-failure"
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "lateWorkerErrorInjected": false,
+        "status": "error",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "publicationError": "Error: intentional-publication-listener-failure",
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1105
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 17,
+              "framebuffers": 9,
+              "queries": 0,
+              "programs": 20,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 14,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "final publication: destroy-world",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "ready",
+          "previous": 1,
+          "published": 1,
+          "bounce": 3
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "lateWorkerErrorInjected": true,
+        "status": "destroyed",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 3,
+            "final": true
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1391
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 17,
+              "framebuffers": 9,
+              "queries": 0,
+              "programs": 20,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 11,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "final publication: destroy-scene",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "ready",
+          "previous": 1,
+          "published": 1,
+          "bounce": 3
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "lateWorkerErrorInjected": true,
+        "status": "destroyed",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 3,
+            "final": true
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": true,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1326
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 1,
+              "framebuffers": 1,
+              "queries": 0,
+              "programs": 0,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 15,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "final publication: replace-world",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "ready",
+          "previous": 1,
+          "published": 1,
+          "bounce": 3
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "replacement": {
+          "state": "resolved",
+          "revision": 1
+        },
+        "lateWorkerErrorInjected": true,
+        "status": "destroyed",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 3,
+            "final": true
+          }
+        ],
+        "newEvents": [
+          {
+            "revision": 1,
+            "bounce": 1
+          },
+          {
+            "revision": 1,
+            "bounce": 2
+          },
+          {
+            "revision": 1,
+            "bounce": 3
+          }
+        ],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "replacementReady": true,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 2346
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 0,
+              "programs": 19,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 15,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "final publication: solve",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "ready",
+          "previous": 1,
+          "published": 1,
+          "bounce": 3
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "resolved"
+        },
+        "next": {
+          "state": "resolved",
+          "revision": 3
+        },
+        "requestedFirst": {
+          "state": "resolved",
+          "revision": 3
+        },
+        "lateWorkerErrorInjected": false,
+        "status": "ready",
+        "closed": false,
+        "memory": 2454532,
+        "requests": 0,
+        "queries": 0,
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 3,
+            "final": true
+          },
+          {
+            "revision": 3,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 3,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 3,
+            "bounce": 3,
+            "final": true
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1516
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 0,
+              "programs": 20,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 13,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "final publication: throw",
+      "passed": true,
+      "details": {
+        "acted": true,
+        "eventState": {
+          "status": "ready",
+          "previous": 1,
+          "published": 1,
+          "bounce": 3
+        },
+        "pendingAtAction": 1,
+        "oldCompleted": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "oldFirst": {
+          "state": "resolved",
+          "revision": 2
+        },
+        "worker": {
+          "state": "rejected",
+          "error": "Error: GPU world closed"
+        },
+        "lateWorkerErrorInjected": false,
+        "status": "error",
+        "closed": true,
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "publicationError": "Error: intentional-publication-listener-failure",
+        "callsAfterClose": 0,
+        "workerAfterClose": 0,
+        "batchesAfterSettlement": 0,
+        "events": [
+          {
+            "revision": 2,
+            "bounce": 1,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 2,
+            "final": false
+          },
+          {
+            "revision": 2,
+            "bounce": 3,
+            "final": true
+          }
+        ],
+        "newEvents": [],
+        "fixtureErrors": [],
+        "sceneDestroyed": false,
+        "gl": [
+          {
+            "phase": "initialization",
+            "phases": {
+              "initialization": {
+                "draws": 1247
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 17,
+              "framebuffers": 9,
+              "queries": 0,
+              "programs": 20,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 34,
+              "framebuffers": 21,
+              "queries": 15,
+              "programs": 20,
+              "syncs": 0
+            }
+          }
+        ]
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "progressive: firstPublished.then destruction cancels queued event",
+      "passed": true,
+      "details": {
+        "published": {
+          "revision": 2,
+          "bounce": 1
+        },
+        "completion": "Error: GPU world destroyed",
+        "events": [],
+        "status": "destroyed",
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "batchesAfterClose": 0,
+        "errors": []
+      },
+      "browserErrors": []
+    },
+    {
+      "name": "snapshot: firstPublished.then destruction cancels queued event",
+      "passed": true,
+      "details": {
+        "published": {
+          "revision": 2,
+          "bounce": 3
+        },
+        "completion": "resolved",
+        "events": [],
+        "status": "destroyed",
+        "memory": 0,
+        "requests": 0,
+        "queries": 0,
+        "batchesAfterClose": 0,
+        "errors": []
+      },
+      "browserErrors": []
+    }
+  ],
+  "errors": [],
+  "environment": {
+    "browser": "154.0.8037.98",
+    "headless": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "visibility": "visible",
+    "resolution": [
+      512,
+      384
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
+  },
+  "status": "passed",
+  "finished": "2026-10-13T02:59:54.031Z"
+}

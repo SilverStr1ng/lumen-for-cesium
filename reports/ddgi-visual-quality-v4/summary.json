@@ -1,0 +1,780 @@
+{
+  "reviewBaseline": "9406cafdd631721db2481d7dd9b53ab5b2418784",
+  "implementationHead": "fea491847f99126f665bb6538073edbf742786be",
+  "branch": "feat/ddgi-visual-quality-v4",
+  "mainUnchanged": "cbf38d3a36cf6e6c4850d1f9bdd16297a1be2726",
+  "compiledBundleRawSha256": "b6bf23ce964de142d9d2551f749a933a0b35de100ca53807b53eb1b9c5b31784",
+  "sources": {
+    "cesium-1.146/CHANGES.md": {
+      "bytes": 576388,
+      "rawSha256": "32f47e2c382ec36398a49e558434c138976be59c0a3918832534698944d2bd91",
+      "lfSha256": "32f47e2c382ec36398a49e558434c138976be59c0a3918832534698944d2bd91"
+    },
+    "cesium-1.146/packages/engine/Source/Scene/DynamicEnvironmentMapManager.js": {
+      "bytes": 36111,
+      "rawSha256": "e79b61a2d27a4375f599dd80a8c9659581990afc9d336982b39b56e0ac37e887",
+      "lfSha256": "e79b61a2d27a4375f599dd80a8c9659581990afc9d336982b39b56e0ac37e887"
+    },
+    "cesium-1.146/packages/engine/Source/Scene/Lumen.js": {
+      "bytes": 3575,
+      "rawSha256": "763b4989c1fe5f39d3f1ca4dad5167dcc8efdf18597421951ca353c9cbaa62f3",
+      "lfSha256": "763b4989c1fe5f39d3f1ca4dad5167dcc8efdf18597421951ca353c9cbaa62f3"
+    },
+    "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": {
+      "bytes": 18184,
+      "rawSha256": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f",
+      "lfSha256": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f"
+    },
+    "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": {
+      "bytes": 51809,
+      "rawSha256": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "lfSha256": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55"
+    },
+    "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": {
+      "bytes": 2610,
+      "rawSha256": "f5d66883dc3bf9a9d67c7c8208721d03eb95558c9547a20245cb1266e1b4526b",
+      "lfSha256": "f5d66883dc3bf9a9d67c7c8208721d03eb95558c9547a20245cb1266e1b4526b"
+    },
+    "cesium-1.146/packages/engine/Source/Scene/Model/ImageBasedLightingPipelineStage.js": {
+      "bytes": 8130,
+      "rawSha256": "9dadecafa7714e4329d2673f323e9ae0cd4f30048d11953de68205ce6b348e47",
+      "lfSha256": "9dadecafa7714e4329d2673f323e9ae0cd4f30048d11953de68205ce6b348e47"
+    },
+    "cesium-1.146/packages/engine/Source/Shaders/Builtin/Functions/pbrLighting.glsl": {
+      "bytes": 8254,
+      "rawSha256": "d94015d84590c565b54aa1f86ef4387517e670b6ca49dd1b234538dd87629403",
+      "lfSha256": "d94015d84590c565b54aa1f86ef4387517e670b6ca49dd1b234538dd87629403"
+    },
+    "cesium-1.146/packages/engine/Source/Shaders/Model/ImageBasedLightingStageFS.glsl": {
+      "bytes": 5627,
+      "rawSha256": "9d0caee3554a34011da7d2667858261a4450778d720d3c43c29d63ae59361378",
+      "lfSha256": "9d0caee3554a34011da7d2667858261a4450778d720d3c43c29d63ae59361378"
+    },
+    "cesium-1.146/packages/engine/Source/Shaders/Model/LightingStageFS.glsl": {
+      "bytes": 7162,
+      "rawSha256": "9444f317c75ceae56a2cb57522cd0c8d2ee8bfb57c6d082c7cfd77a232631822",
+      "lfSha256": "9444f317c75ceae56a2cb57522cd0c8d2ee8bfb57c6d082c7cfd77a232631822"
+    },
+    "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": {
+      "bytes": 4618,
+      "rawSha256": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lfSha256": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1"
+    },
+    "cesium-1.146/packages/engine/Specs/Scene/Model/ImageBasedLightingPipelineStageSpec.js": {
+      "bytes": 9369,
+      "rawSha256": "19ca1f2e35d3afcc27ea01ac0814463f59ad3f01640227719ab7b30441c1bbb8",
+      "lfSha256": "19ca1f2e35d3afcc27ea01ac0814463f59ad3f01640227719ab7b30441c1bbb8"
+    },
+    "demo/globe.html": {
+      "bytes": 7874,
+      "rawSha256": "852a08bcfad4015b64ecc6d35cfa966e16ec131439e40c83cbe2294a5ee25720",
+      "lfSha256": "852a08bcfad4015b64ecc6d35cfa966e16ec131439e40c83cbe2294a5ee25720"
+    },
+    "demo/globe.js": {
+      "bytes": 27934,
+      "rawSha256": "639e301b9a3545d1b23a5d34106cd38394b8d9c7f0670708cb647b848b6ee4bd",
+      "lfSha256": "639e301b9a3545d1b23a5d34106cd38394b8d9c7f0670708cb647b848b6ee4bd"
+    },
+    "demo/lighting-environment.js": {
+      "bytes": 1884,
+      "rawSha256": "ebece9c8ee7d2dd6abc80ac647afc92ecb9527ff6694781c4bea1001841f76e8",
+      "lfSha256": "ebece9c8ee7d2dd6abc80ac647afc92ecb9527ff6694781c4bea1001841f76e8"
+    },
+    "fixtures/earth-pavilion-presentation.bin": {
+      "bytes": 377472,
+      "rawSha256": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1"
+    },
+    "fixtures/earth-pavilion-presentation.gltf": {
+      "bytes": 16729,
+      "rawSha256": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9"
+    },
+    "fixtures/earth-pavilion-presentation.json": {
+      "bytes": 1725,
+      "rawSha256": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "lfSha256": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a"
+    },
+    "fixtures/earth-pavilion.gltf": {
+      "bytes": 7419,
+      "rawSha256": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a"
+    },
+    "fixtures/pavilion-detail.png": {
+      "bytes": 2987,
+      "rawSha256": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702"
+    },
+    "lumen/bvh.js": {
+      "bytes": 8992,
+      "rawSha256": "a505d6b19b964115ebc4294a0318fef45bd66d80c3af64daac5d31a912818b53",
+      "lfSha256": "a505d6b19b964115ebc4294a0318fef45bd66d80c3af64daac5d31a912818b53"
+    },
+    "lumen/ddgi.js": {
+      "bytes": 15951,
+      "rawSha256": "b90701c431aedb3124852a690dcfe9d30e6d43d5d56c369d6ccc8aa1786009c6",
+      "lfSha256": "b90701c431aedb3124852a690dcfe9d30e6d43d5d56c369d6ccc8aa1786009c6"
+    },
+    "lumen/gltf.js": {
+      "bytes": 10517,
+      "rawSha256": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "lfSha256": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "lumen/gpu-worker.js": {
+      "bytes": 7436,
+      "rawSha256": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lfSha256": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c"
+    },
+    "package.json": {
+      "bytes": 1800,
+      "rawSha256": "dbc787bb338348e2dc00fe26e7f3c657fe411ec382da2e2b31e60c156dffad43",
+      "lfSha256": "dbc787bb338348e2dc00fe26e7f3c657fe411ec382da2e2b31e60c156dffad43"
+    },
+    "scripts/benchmark-probe-display.mjs": {
+      "bytes": 4376,
+      "rawSha256": "0226d27d2e4c135291cda97d7ef767894490264cd2bd9adf981aca26b1df5aa8",
+      "lfSha256": "0226d27d2e4c135291cda97d7ef767894490264cd2bd9adf981aca26b1df5aa8"
+    },
+    "scripts/benchmark-visual-quality.mjs": {
+      "bytes": 8750,
+      "rawSha256": "990cc68ac553b3a593f3dea913ffcbf2757923e5d807c6d5aa9da4ae8063d670",
+      "lfSha256": "990cc68ac553b3a593f3dea913ffcbf2757923e5d807c6d5aa9da4ae8063d670"
+    },
+    "scripts/generate-globe.mjs": {
+      "bytes": 14336,
+      "rawSha256": "1dc12b55f6d5e05e19b6927d1e7bbd5bf7af860d93744d4450e5ea5bafcf21e0",
+      "lfSha256": "1dc12b55f6d5e05e19b6927d1e7bbd5bf7af860d93744d4450e5ea5bafcf21e0"
+    },
+    "scripts/measure-bias-sweep.mjs": {
+      "bytes": 1936,
+      "rawSha256": "50a1dffd7148c67e65515de7e414dccd0d8ca696cf15ff5a354bb2d6ad2f91ad",
+      "lfSha256": "50a1dffd7148c67e65515de7e414dccd0d8ca696cf15ff5a354bb2d6ad2f91ad"
+    },
+    "scripts/measure-publication-sequence.mjs": {
+      "bytes": 2787,
+      "rawSha256": "633f6580a151eb531d88c26e409848d89fff634d6ff5e8fd92d2bc828e9a8007",
+      "lfSha256": "633f6580a151eb531d88c26e409848d89fff634d6ff5e8fd92d2bc828e9a8007"
+    },
+    "scripts/reference-visual-quality.mjs": {
+      "bytes": 6419,
+      "rawSha256": "ed1db5ab83a0e8e7a0b58c2e9d45763930bb1cdd0762b86204b8eb3a2c7e2161",
+      "lfSha256": "ed1db5ab83a0e8e7a0b58c2e9d45763930bb1cdd0762b86204b8eb3a2c7e2161"
+    },
+    "scripts/verify-display-presets.mjs": {
+      "bytes": 6067,
+      "rawSha256": "b4110383b21e5a37efe44c6d313d8a9d33ae292e9f7251e899aaece65dbf668b",
+      "lfSha256": "b4110383b21e5a37efe44c6d313d8a9d33ae292e9f7251e899aaece65dbf668b"
+    },
+    "scripts/verify-pbr-environment.mjs": {
+      "bytes": 10533,
+      "rawSha256": "6ab7b6b190f988f6a00c31ee45143e5d186a36d09a4aaa0c4375ea0594aea872",
+      "lfSha256": "6ab7b6b190f988f6a00c31ee45143e5d186a36d09a4aaa0c4375ea0594aea872"
+    },
+    "scripts/verify-probe-display.mjs": {
+      "bytes": 6063,
+      "rawSha256": "d1fccbff53ad20ee469f35148223f0565cd048504453dedb0c02ea046122c789",
+      "lfSha256": "d1fccbff53ad20ee469f35148223f0565cd048504453dedb0c02ea046122c789"
+    },
+    "scripts/verify-progressive.mjs": {
+      "bytes": 15471,
+      "rawSha256": "f9d9a096649c6b5750e35c5a3beae7faf61f279ad70a5e4ef8f6e35bcd365651",
+      "lfSha256": "f9d9a096649c6b5750e35c5a3beae7faf61f279ad70a5e4ef8f6e35bcd365651"
+    },
+    "scripts/verify-r5.mjs": {
+      "bytes": 3192,
+      "rawSha256": "f64a45f4e4846931fc950f98749a1801afed0d28431817b05e42aab122fa0479",
+      "lfSha256": "f64a45f4e4846931fc950f98749a1801afed0d28431817b05e42aab122fa0479"
+    },
+    "scripts/verify-relighting.mjs": {
+      "bytes": 15275,
+      "rawSha256": "8efdcf55d549cd0f4d114e2c9bfd9665f7b158085cb1a29930fa8d6e923eea89",
+      "lfSha256": "8efdcf55d549cd0f4d114e2c9bfd9665f7b158085cb1a29930fa8d6e923eea89"
+    },
+    "scripts/verify-solid-probes.mjs": {
+      "bytes": 5991,
+      "rawSha256": "982e8f7d525d7358141c6f4c2cf82d788020f2a6cf4beecf71329d577aa8e08f",
+      "lfSha256": "982e8f7d525d7358141c6f4c2cf82d788020f2a6cf4beecf71329d577aa8e08f"
+    },
+    "scripts/verify-spatial-gpu.mjs": {
+      "bytes": 6099,
+      "rawSha256": "4aa52ac384bae0db9dd8536fed6d582f6d5dafcd167440215fad4d64598ae4aa",
+      "lfSha256": "4aa52ac384bae0db9dd8536fed6d582f6d5dafcd167440215fad4d64598ae4aa"
+    },
+    "scripts/verify-spatial-kernel.mjs": {
+      "bytes": 2999,
+      "rawSha256": "96e4fed88ebbe8929f2166305d8e509f78c5a4937e3f84f86dd657149ef7ccc4",
+      "lfSha256": "96e4fed88ebbe8929f2166305d8e509f78c5a4937e3f84f86dd657149ef7ccc4"
+    },
+    "scripts/verify-visual-quality.mjs": {
+      "bytes": 11316,
+      "rawSha256": "5e8550410616edcae24858ec71a3d25aa1d662dfa3be57eaef4f865a4532cfb0",
+      "lfSha256": "5e8550410616edcae24858ec71a3d25aa1d662dfa3be57eaef4f865a4532cfb0"
+    }
+  },
+  "reference": {
+    "before": {
+      "boxFloor": {
+        "mae": 0.11054600187613636,
+        "rmse": 0.18765071165108677,
+        "maximum": 0.5018886707335207
+      },
+      "boxFace": {
+        "mae": 0.23290660912765984,
+        "rmse": 0.3039858849336796,
+        "maximum": 0.6291978537993896
+      },
+      "wallFoot": {
+        "mae": 0.2954834173316085,
+        "rmse": 0.303540485115132,
+        "maximum": 0.5465001861817825
+      },
+      "pillarFoot": {
+        "mae": 0.0253949852467965,
+        "rmse": 0.033018738250725134,
+        "maximum": 0.0770600393855646
+      },
+      "ceiling": {
+        "mae": 0.145966981580908,
+        "rmse": 0.14987554369618528,
+        "maximum": 0.2129522602409703
+      },
+      "doorway": {
+        "mae": 0.06656499142780893,
+        "rmse": 0.09037324175484689,
+        "maximum": 0.2366208282684003
+      }
+    },
+    "solid-only": {
+      "boxFloor": {
+        "mae": 0.17527206852023797,
+        "rmse": 0.258860852119006,
+        "maximum": 0.6465241521542703
+      },
+      "boxFace": {
+        "mae": 0.20597839813805932,
+        "rmse": 0.23996112230388356,
+        "maximum": 0.4384324373626236
+      },
+      "wallFoot": {
+        "mae": 0.06163012635196175,
+        "rmse": 0.09810453479078064,
+        "maximum": 0.39979436035368254
+      },
+      "pillarFoot": {
+        "mae": 0.04594197690868857,
+        "rmse": 0.05958978837178779,
+        "maximum": 0.1578971094069403
+      },
+      "ceiling": {
+        "mae": 0.006631570456267085,
+        "rmse": 0.007727726127042294,
+        "maximum": 0.014423204637000003
+      },
+      "doorway": {
+        "mae": 0.056873778346181306,
+        "rmse": 0.06918795849534448,
+        "maximum": 0.17811036085831272
+      }
+    },
+    "spatial": {
+      "boxFloor": {
+        "mae": 0.16435702319156847,
+        "rmse": 0.2469007296223683,
+        "maximum": 0.6245896616511993
+      },
+      "boxFace": {
+        "mae": 0.19892300831193777,
+        "rmse": 0.22847981103200712,
+        "maximum": 0.4060217123427514
+      },
+      "wallFoot": {
+        "mae": 0.04890662306117598,
+        "rmse": 0.06933346191268898,
+        "maximum": 0.255549421969279
+      },
+      "pillarFoot": {
+        "mae": 0.0414431891611104,
+        "rmse": 0.05307651705707479,
+        "maximum": 0.13290528840040028
+      },
+      "ceiling": {
+        "mae": 0.003567010284409633,
+        "rmse": 0.004247612097882761,
+        "maximum": 0.009703013474351159
+      },
+      "doorway": {
+        "mae": 0.059697826627979025,
+        "rmse": 0.0889905210540317,
+        "maximum": 0.2368974534248029
+      }
+    },
+    "after": {
+      "boxFloor": {
+        "mae": 0.10192074442104515,
+        "rmse": 0.18026530336064028,
+        "maximum": 0.4947623692064974
+      },
+      "boxFace": {
+        "mae": 0.08181988483683011,
+        "rmse": 0.09657158737706109,
+        "maximum": 0.1682519336702466
+      },
+      "wallFoot": {
+        "mae": 0.00466180340624735,
+        "rmse": 0.0053592859992488235,
+        "maximum": 0.012965748715416447
+      },
+      "pillarFoot": {
+        "mae": 0.13018492227668096,
+        "rmse": 0.13299247109880535,
+        "maximum": 0.19415591150617767
+      },
+      "ceiling": {
+        "mae": 0.0037091068263386115,
+        "rmse": 0.004242171782233549,
+        "maximum": 0.008212398699273427
+      },
+      "doorway": {
+        "mae": 0.059999553302522095,
+        "rmse": 0.08793406100377725,
+        "maximum": 0.23109780227886784
+      }
+    },
+    "fine": {
+      "boxFloor": {
+        "mae": 0.09094890996954322,
+        "rmse": 0.16951965053262025,
+        "maximum": 0.45889172773654197
+      },
+      "boxFace": {
+        "mae": 0.09801655833400567,
+        "rmse": 0.10526787200968934,
+        "maximum": 0.17442597331276577
+      },
+      "wallFoot": {
+        "mae": 0.2031679333400272,
+        "rmse": 0.2431604424855807,
+        "maximum": 0.5785945380803424
+      },
+      "pillarFoot": {
+        "mae": 0.07581513184490023,
+        "rmse": 0.08154074104724066,
+        "maximum": 0.1455345563047592
+      },
+      "ceiling": {
+        "mae": 0.06249906677112772,
+        "rmse": 0.06855059332217191,
+        "maximum": 0.12622738199890254
+      },
+      "doorway": {
+        "mae": 0.04303682825912489,
+        "rmse": 0.06190051216319947,
+        "maximum": 0.17594651853787052
+      }
+    }
+  },
+  "acceptance": [
+    {
+      "name": "boxFloor",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "boxFace",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "wallFoot",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "pillarFoot",
+      "status": "failed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "ceiling",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    },
+    {
+      "name": "doorway",
+      "status": "passed",
+      "metric": "original-quality effective diffuse E RMSE no regression against independent paths"
+    }
+  ],
+  "static60Delta": 0,
+  "publicationMaximumDelta": {
+    "progressive": 0.21740221977233887,
+    "snapshot": 0.111763596534729
+  },
+  "probePositions": {
+    "active": 921,
+    "invalid": 3,
+    "inside": 0,
+    "activeInside": 0
+  },
+  "maximumRelocation": 0.8229824378847374,
+  "geometryBinaryUnchanged": true,
+  "cameraRestoredExactly": true,
+  "settings": {
+    "preset": "regression",
+    "qualityPreset": "original",
+    "diffuseResponse": "lambert",
+    "displayTransitionMilliseconds": 0,
+    "publicationMode": "progressive",
+    "neutralMaterials": [],
+    "enabled": true,
+    "debugMode": 0,
+    "camera": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "position": [
+        -2410763.1890494893,
+        5389344.282873931,
+        2405177.3612248995
+      ],
+      "direction": [
+        0.8179133704288417,
+        -0.22459215834231186,
+        0.5296943277824244
+      ],
+      "up": [
+        -0.14068731408108803,
+        0.8146377508069022,
+        0.5626476824949348
+      ],
+      "right": [
+        -0.5578752531976853,
+        -0.5347183346131056,
+        0.6347058409201899
+      ],
+      "fov": 1.0471975511965976,
+      "near": 0.1,
+      "far": 10000000000
+    },
+    "anchor": {
+      "longitude": 114.1,
+      "latitude": 22.3,
+      "height": 1.5,
+      "heading": 0
+    },
+    "lighting": {
+      "sunDirection": [
+        0.766044443118978,
+        0.6427876096865393,
+        0.65
+      ],
+      "sunRadiance": [
+        2,
+        2,
+        2
+      ],
+      "skyRadiance": [
+        0.15,
+        0.18,
+        0.25
+      ],
+      "bounces": 3,
+      "environmentMode": "upper-hemisphere"
+    },
+    "exposure": 1,
+    "toneMapper": "PBR_NEUTRAL",
+    "automaticExposure": false,
+    "resolution": [
+      1280,
+      800
+    ],
+    "msaaSamples": 1,
+    "fxaaEnabled": false,
+    "shadows": {
+      "enabled": true,
+      "size": 2048,
+      "maximumDistance": 150,
+      "normalOffset": true,
+      "softShadows": false
+    },
+    "quality": {
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3,
+      "budget": 3
+    },
+    "assets": {
+      "gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee"
+    },
+    "worldRevision": {
+      "requested": 1,
+      "published": 1,
+      "settled": 1
+    }
+  },
+  "performance": {
+    "before": {
+      "probes": 924,
+      "spacing": 2,
+      "gpuP50": 3.512256,
+      "gpuP95": 4.340192,
+      "staticFps": 239.97569866342664,
+      "updateFps": 239.97569866342664,
+      "updateScope": "CPU rAF, includes settled frames; stage GPU times listed separately",
+      "giMiB": 11.627750396728516,
+      "textureMiB": 176.5548680623373,
+      "renderbufferMiB": 0,
+      "bufferMiB": null,
+      "totalTrackedMiB": 176.5548680623373,
+      "firstSubmission": 64.79999999981374,
+      "finalSubmission": 98.09999999962747,
+      "updateGpuTotal": 1.029152,
+      "stages": {
+        "visibility": 0.43788800000000005,
+        "direct": 0.013824,
+        "bounce": 0.16220800000000002,
+        "integrate": 0.38566400000000006,
+        "border": 0.029568000000000004
+      },
+      "initialStages": {
+        "relocate": 0.7613120000000001,
+        "intersect": 1.2439039999999992,
+        "classify": 0.9936,
+        "moments": 0.419488,
+        "momentsBorder": 0.712576
+      }
+    },
+    "after": {
+      "probes": 924,
+      "spacing": 2,
+      "gpuP50": 3.121472,
+      "gpuP95": 3.676736,
+      "staticFps": 239.97569866342664,
+      "updateFps": 239.91275899672894,
+      "updateScope": "CPU rAF intervals while requested revision is unsettled; stage GPU totals separately, not GPU completion",
+      "giMiB": 11.627750396728516,
+      "textureMiB": 176.5548680623373,
+      "renderbufferMiB": 0,
+      "bufferMiB": 3.8139381408691406,
+      "totalTrackedMiB": 180.36880620320645,
+      "firstSubmission": 52.90000000037253,
+      "finalSubmission": 98.59999999962747,
+      "updateGpuTotal": 2.3570240000000005,
+      "stages": {
+        "visibility": 0.060256000000000004,
+        "direct": 0.01552,
+        "bounce": 0.4473920000000002,
+        "integrate": 1.1176640000000004,
+        "border": 0.7161919999999999
+      },
+      "initialStages": {
+        "relocate": 4.729216000000001,
+        "intersect": 1.05296,
+        "classify": 2.982624,
+        "moments": 3.157984000000001,
+        "momentsBorder": 0.140352
+      }
+    },
+    "fine": {
+      "probes": 1764,
+      "spacing": 1.5,
+      "gpuP50": 2.971904,
+      "gpuP95": 3.393536,
+      "staticFps": 239.97569866342664,
+      "updateFps": 240.06622516556254,
+      "updateScope": "CPU rAF intervals while requested revision is unsettled; stage GPU totals separately, not GPU completion",
+      "giMiB": 22.112369537353516,
+      "textureMiB": 187.0394872029623,
+      "renderbufferMiB": 0,
+      "bufferMiB": 3.8139381408691406,
+      "totalTrackedMiB": 190.85342534383145,
+      "firstSubmission": 77.40000000037253,
+      "finalSubmission": 127.5,
+      "updateGpuTotal": 6.115264,
+      "stages": {
+        "visibility": 0.77568,
+        "direct": 1.5946559999999996,
+        "bounce": 1.6640640000000002,
+        "integrate": 0.770208,
+        "border": 1.3106559999999998
+      },
+      "initialStages": {
+        "relocate": 1.3959360000000003,
+        "intersect": 3.4500160000000015,
+        "classify": 5.078432,
+        "moments": 1.7539520000000002,
+        "momentsBorder": 5.607712000000003
+      }
+    },
+    "presentation": {
+      "probes": 924,
+      "spacing": 2,
+      "gpuP50": 3.303072,
+      "gpuP95": 3.97152,
+      "staticFps": 239.975698663426,
+      "updateFps": 240.13722126929227,
+      "updateScope": "CPU rAF intervals while requested revision is unsettled; stage GPU totals separately, not GPU completion",
+      "giMiB": 12.87884521484375,
+      "textureMiB": 177.95179621378588,
+      "renderbufferMiB": 93.75,
+      "bufferMiB": 4.148654937744141,
+      "totalTrackedMiB": 275.85045115153,
+      "firstSubmission": 27.399999998509884,
+      "finalSubmission": 64.89999999850988,
+      "updateGpuTotal": 2.151584,
+      "stages": {
+        "visibility": 0.27984,
+        "direct": 0.421504,
+        "bounce": 0.33904,
+        "integrate": 1.0839040000000002,
+        "border": 0.027296
+      },
+      "initialStages": {
+        "relocate": 3.101728,
+        "intersect": 0.9152960000000001,
+        "classify": 1.936448,
+        "moments": 1.1851840000000002,
+        "momentsBorder": 0.45465600000000006
+      }
+    },
+    "presentation-msaa1": {
+      "probes": 924,
+      "spacing": 2,
+      "gpuP50": 3.170304,
+      "gpuP95": 3.791776,
+      "staticFps": 239.9756986634273,
+      "updateFps": 239.99999999999997,
+      "updateScope": "CPU rAF intervals while requested revision is unsettled; stage GPU totals separately, not GPU completion",
+      "giMiB": 12.87884521484375,
+      "textureMiB": 177.9517962137858,
+      "renderbufferMiB": 0,
+      "bufferMiB": 4.148654937744141,
+      "totalTrackedMiB": 182.10045115152994,
+      "firstSubmission": 60.09999999962747,
+      "finalSubmission": 106,
+      "updateGpuTotal": 4.35088,
+      "stages": {
+        "visibility": 0.756768,
+        "direct": 0.24454399999999993,
+        "bounce": 0.6536320000000001,
+        "integrate": 1.7942720000000003,
+        "border": 0.901664
+      },
+      "initialStages": {
+        "relocate": 2.5808000000000004,
+        "intersect": 0.8434240000000001,
+        "classify": 4.020128000000001,
+        "moments": 0.9173759999999996,
+        "momentsBorder": 3.540000000000002
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "pipeline",
+      "status": "passed"
+    },
+    {
+      "name": "transport",
+      "status": "passed"
+    },
+    {
+      "name": "environment",
+      "status": "passed"
+    },
+    {
+      "name": "globe-controls",
+      "status": "passed"
+    },
+    {
+      "name": "visibility",
+      "status": "passed"
+    },
+    {
+      "name": "fixtures",
+      "status": "passed"
+    },
+    {
+      "name": "relighting",
+      "status": "passed"
+    },
+    {
+      "name": "integration",
+      "status": "passed"
+    },
+    {
+      "name": "progressive",
+      "status": "passed"
+    },
+    {
+      "name": "publication-lifecycle",
+      "status": "passed"
+    },
+    {
+      "name": "visibility-gpu",
+      "status": "passed"
+    },
+    {
+      "name": "visibility-domain",
+      "status": "passed"
+    },
+    {
+      "name": "visibility-edges",
+      "status": "passed"
+    },
+    {
+      "name": "globe",
+      "status": "passed"
+    },
+    {
+      "name": "solid-probes",
+      "status": "passed"
+    },
+    {
+      "name": "spatial-kernel",
+      "status": "passed"
+    },
+    {
+      "name": "spatial-gpu",
+      "status": "passed"
+    },
+    {
+      "name": "pbr-environment",
+      "status": "passed"
+    },
+    {
+      "name": "display-presets",
+      "status": "passed"
+    },
+    {
+      "name": "probe-display",
+      "status": "passed"
+    }
+  ],
+  "notRun": [
+    {
+      "name": "external Sponza asset chain",
+      "reason": "this acceptance run uses self-authored local pavilion and fixtures"
+    },
+    {
+      "name": "real authenticated ion",
+      "reason": "no user token supplied; mocked 401/403 and local fallback tested"
+    }
+  ],
+  "overall": "partial visual acceptance: box/wall/ceiling improved; coarse-grid pillar absolute E remains regressed. 20 code/runtime regression groups passed.",
+  "compiledBundleLfSha256": "bef5b40a0e7ae81c6a812f424041cf770caa82b6f80e58d1cbc42f95a311e9fb",
+  "cpuGpuSnapshotGatherMaximumDifference": 0.001023413720787958
+}

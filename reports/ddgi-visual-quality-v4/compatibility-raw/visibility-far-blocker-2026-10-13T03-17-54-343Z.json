@@ -1,0 +1,62 @@
+{
+  "startedAt": "2026-10-13T03:17:47.658Z",
+  "version": {
+    "head": "438b7ea487fd85e0276ae230af03ab6359ef9757",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "bef5b40a0e7ae81c6a812f424041cf770caa82b6f80e58d1cbc42f95a311e9fb",
+    "modifiedSources": []
+  },
+  "scene": "fixtures/far-blocker.gltf",
+  "errors": [],
+  "result": {
+    "grid": {
+      "origin": [
+        -1.5,
+        -1.5,
+        -0.5
+      ],
+      "counts": [
+        4,
+        4,
+        152
+      ],
+      "total": 2432,
+      "spacing": 1,
+      "normalBias": 0.02,
+      "rays": 128,
+      "width": 160,
+      "height": 1520
+    },
+    "checked": 523,
+    "leaks": 0,
+    "short": [
+      {
+        "status": "Miss",
+        "gpuTriangle": -2,
+        "u": 0,
+        "v": 0,
+        "distance": 100,
+        "backface": false
+      }
+    ],
+    "complete": [
+      {
+        "status": "Hit",
+        "triangle": 3,
+        "gpuTriangle": 3,
+        "u": 0.550000011920929,
+        "v": 0.050000011920928955,
+        "distance": 149.97999572753906,
+        "backface": true
+      }
+    ]
+  },
+  "status": "passed"
+}

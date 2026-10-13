@@ -1,0 +1,62 @@
+{
+  "version": {
+    "head": "438b7ea487fd85e0276ae230af03ab6359ef9757",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "bef5b40a0e7ae81c6a812f424041cf770caa82b6f80e58d1cbc42f95a311e9fb",
+    "modifiedSources": []
+  },
+  "mode": "production display draws; asynchronous GPU queries, no synchronous readback",
+  "result": {
+    "extraBytes": 4435200,
+    "expectedExtraBytes": 4435200,
+    "draws": 58,
+    "idleDraws": 58,
+    "samples": 58,
+    "totalGpuMilliseconds": 0.3920640000000001,
+    "p50": 0.007424,
+    "p95": 0.008832,
+    "duration": 150,
+    "requestToRawCompleted": 76.5,
+    "rawCompletedToDisplaySettled": 158.2000000011176,
+    "collisions": 0,
+    "disjoint": 0,
+    "gl": [
+      {
+        "phase": "performance",
+        "phases": {
+          "initialization": {
+            "draws": 2330
+          },
+          "performance": {
+            "draws": 1982
+          }
+        },
+        "feedback": [],
+        "errors": [],
+        "live": {
+          "textures": 48,
+          "framebuffers": 24,
+          "queries": 0,
+          "programs": 21,
+          "syncs": 0
+        },
+        "peak": {
+          "textures": 48,
+          "framebuffers": 24,
+          "queries": 25,
+          "programs": 22,
+          "syncs": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

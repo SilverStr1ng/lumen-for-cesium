@@ -1,21 +1,17 @@
 {
   "version": {
-    "head": "c12433cdd42f7cb5566a27d83160a4dfdc0c0fef",
+    "head": "438b7ea487fd85e0276ae230af03ab6359ef9757",
     "sources": {
       "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
-      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "3112809a04bb88edbf06fe439083c08568606f7c645507457e6745bd6031c37c",
-      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "fac45a7ac4347dd89d90ce4b81590409f6290a1e06c6330b42171a68c8a81cf2",
-      "lumen/gpu-worker.js": "820ade0e8364c8ff9b1a556c2d1b0c6eeea54f880c9c33ba792428d9822b8e10",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
       "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
       "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
-      "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": "8465ef44d5a6b8aaa5ab90cd5e4dae21cf297e5d501dee46b0e416822e349557"
+      "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": "f5d66883dc3bf9a9d67c7c8208721d03eb95558c9547a20245cb1266e1b4526b"
     },
-    "compiledBundle": "0f90aa5d41dab2a8ccc787eb154ede5ab4f47407ae43c416d914e6f5b1efddd9",
-    "modifiedSources": [
-      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
-      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
-      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
-    ]
+    "compiledBundle": "bef5b40a0e7ae81c6a812f424041cf770caa82b6f80e58d1cbc42f95a311e9fb",
+    "modifiedSources": []
   },
   "checks": [],
   "result": {
@@ -23,9 +19,9 @@
     "expectedExtraBytes": 864000,
     "initialAlpha": 0,
     "duration": 50,
-    "initialDifference": 3.266107976436615,
-    "settledDifference": 0,
-    "settledMilliseconds": 74.40000000037253,
+    "initialDifference": 3.2643651962280273,
+    "settledDifference": 2.384185791015625e-7,
+    "settledMilliseconds": 75.40000000037253,
     "draws": 6,
     "idleDraws": 6,
     "released": true,
@@ -39,13 +35,13 @@
         "phase": "display-diagnostic",
         "phases": {
           "initialization": {
-            "draws": 957
+            "draws": 984
           },
           "display-production": {
-            "draws": 310
+            "draws": 522
           },
           "display-diagnostic": {
-            "draws": 377,
+            "draws": 477,
             "readPixels": 11
           }
         },
@@ -55,7 +51,7 @@
           "textures": 17,
           "framebuffers": 9,
           "queries": 0,
-          "programs": 22,
+          "programs": 21,
           "syncs": 0
         },
         "peak": {

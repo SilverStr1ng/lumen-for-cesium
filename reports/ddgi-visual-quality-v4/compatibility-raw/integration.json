@@ -1,0 +1,292 @@
+{
+  "version": {
+    "head": "438b7ea487fd85e0276ae230af03ab6359ef9757",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2798b1b624a82fcdac84337d9f532e8dbdaecafc81e4284c3b74da16c3ca772f",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "bef5b40a0e7ae81c6a812f424041cf770caa82b6f80e58d1cbc42f95a311e9fb",
+    "modifiedSources": []
+  },
+  "mode": "numerical GPU readback",
+  "checks": [
+    {
+      "name": "arithmetic and LUT produce matching fixed-input E and final HDR",
+      "passed": true,
+      "details": {
+        "E": {
+          "maximum": 4.76837158203125e-7,
+          "failures": 0
+        },
+        "HDR": {
+          "maximum": 0.000244140625,
+          "failures": 0
+        },
+        "moments": {
+          "maximum": 0,
+          "failures": 0
+        },
+        "borderE": {
+          "mismatches": 0,
+          "checked": 25920
+        },
+        "borderM": {
+          "mismatches": 0,
+          "checked": 25920
+        },
+        "seams": [
+          5.960464477539063e-8,
+          1.1920928955078125e-7,
+          1.1920928955078125e-7
+        ],
+        "packet": {
+          "mode": "lut",
+          "angularResolution": 8,
+          "borderResolution": 10,
+          "internalBytes": 368640,
+          "weightBytes": 131072
+        },
+        "memory": {
+          "currentBytes": 2585604,
+          "peakBytes": 2585604,
+          "textures": 18,
+          "framebuffers": 13
+        },
+        "gl": [
+          {
+            "phase": "numerical",
+            "phases": {
+              "initialization": {
+                "draws": 1198
+              },
+              "numerical": {
+                "draws": 778,
+                "readPixels": 11
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 35,
+              "framebuffers": 22,
+              "queries": 6,
+              "programs": 23,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 38,
+              "framebuffers": 23,
+              "queries": 15,
+              "programs": 23,
+              "syncs": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "every octahedral border is an exact mirror without cross-probe reads",
+      "passed": true,
+      "details": {
+        "E": {
+          "maximum": 4.76837158203125e-7,
+          "failures": 0
+        },
+        "HDR": {
+          "maximum": 0.000244140625,
+          "failures": 0
+        },
+        "moments": {
+          "maximum": 0,
+          "failures": 0
+        },
+        "borderE": {
+          "mismatches": 0,
+          "checked": 25920
+        },
+        "borderM": {
+          "mismatches": 0,
+          "checked": 25920
+        },
+        "seams": [
+          5.960464477539063e-8,
+          1.1920928955078125e-7,
+          1.1920928955078125e-7
+        ],
+        "packet": {
+          "mode": "lut",
+          "angularResolution": 8,
+          "borderResolution": 10,
+          "internalBytes": 368640,
+          "weightBytes": 131072
+        },
+        "memory": {
+          "currentBytes": 2585604,
+          "peakBytes": 2585604,
+          "textures": 18,
+          "framebuffers": 13
+        },
+        "gl": [
+          {
+            "phase": "numerical",
+            "phases": {
+              "initialization": {
+                "draws": 1198
+              },
+              "numerical": {
+                "draws": 778,
+                "readPixels": 11
+              }
+            },
+            "feedback": [],
+            "errors": [],
+            "live": {
+              "textures": 35,
+              "framebuffers": 22,
+              "queries": 6,
+              "programs": 23,
+              "syncs": 0
+            },
+            "peak": {
+              "textures": 38,
+              "framebuffers": 23,
+              "queries": 15,
+              "programs": 23,
+              "syncs": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "sampling is continuous across octahedral seams",
+      "passed": true,
+      "details": [
+        5.960464477539063e-8,
+        1.1920928955078125e-7,
+        1.1920928955078125e-7
+      ]
+    },
+    {
+      "name": "distance moments remain unchanged across integration variants",
+      "passed": true,
+      "details": {
+        "maximum": 0,
+        "failures": 0
+      }
+    },
+    {
+      "name": "copying uses distinct GL images and bounded owned resources",
+      "passed": true,
+      "details": [
+        {
+          "phase": "numerical",
+          "phases": {
+            "initialization": {
+              "draws": 1198
+            },
+            "numerical": {
+              "draws": 778,
+              "readPixels": 11
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 35,
+            "framebuffers": 22,
+            "queries": 6,
+            "programs": 23,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 38,
+            "framebuffers": 23,
+            "queries": 15,
+            "programs": 23,
+            "syncs": 0
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "tolerance": {
+    "absolute": 0.0002,
+    "relative": 0.001
+  },
+  "result": {
+    "E": {
+      "maximum": 4.76837158203125e-7,
+      "failures": 0
+    },
+    "HDR": {
+      "maximum": 0.000244140625,
+      "failures": 0
+    },
+    "moments": {
+      "maximum": 0,
+      "failures": 0
+    },
+    "borderE": {
+      "mismatches": 0,
+      "checked": 25920
+    },
+    "borderM": {
+      "mismatches": 0,
+      "checked": 25920
+    },
+    "seams": [
+      5.960464477539063e-8,
+      1.1920928955078125e-7,
+      1.1920928955078125e-7
+    ],
+    "packet": {
+      "mode": "lut",
+      "angularResolution": 8,
+      "borderResolution": 10,
+      "internalBytes": 368640,
+      "weightBytes": 131072
+    },
+    "memory": {
+      "currentBytes": 2585604,
+      "peakBytes": 2585604,
+      "textures": 18,
+      "framebuffers": 13
+    },
+    "gl": [
+      {
+        "phase": "numerical",
+        "phases": {
+          "initialization": {
+            "draws": 1198
+          },
+          "numerical": {
+            "draws": 778,
+            "readPixels": 11
+          }
+        },
+        "feedback": [],
+        "errors": [],
+        "live": {
+          "textures": 35,
+          "framebuffers": 22,
+          "queries": 6,
+          "programs": 23,
+          "syncs": 0
+        },
+        "peak": {
+          "textures": 38,
+          "framebuffers": 23,
+          "queries": 15,
+          "programs": 23,
+          "syncs": 0
+        }
+      }
+    ]
+  }
+}

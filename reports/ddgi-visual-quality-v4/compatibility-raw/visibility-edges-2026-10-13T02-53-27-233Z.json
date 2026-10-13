@@ -1,0 +1,751 @@
+{
+  "startedAt": "2026-10-13T02:53:20.864Z",
+  "version": {
+    "head": "63e2dccd4c6fa8027b57279d475e04499c1b7f5d",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "a06644aadd346a311962f614737fae6c60c4fa97461273644975fb9c8b7f6f55",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "3112809a04bb88edbf06fe439083c08568606f7c645507457e6745bd6031c37c",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "820ade0e8364c8ff9b1a556c2d1b0c6eeea54f880c9c33ba792428d9822b8e10",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "a2c29845273554eb31fd9eb5216aeee1e7b7661d271d3fcd1416e84f218ab33c",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl"
+    ]
+  },
+  "scene": "alpha-mask",
+  "errors": [],
+  "runs": [
+    {
+      "mode": "reference",
+      "rays": [
+        {
+          "origin": [
+            -1,
+            -0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 2,
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            -1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 1,
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            -1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            1e-12,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            1.5,
+            0.5,
+            1
+          ],
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            0.999999,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            -1,
+            -0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 2,
+          "maxDistance": 1.5
+        },
+        {
+          "origin": [
+            -1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 1,
+          "maxDistance": 1.5
+        }
+      ],
+      "hits": [
+        {
+          "status": "Hit",
+          "triangle": 3,
+          "gpuTriangle": 3,
+          "u": 0.25,
+          "v": 0.25,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 0.5,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 1.5,
+          "backface": false
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        }
+      ],
+      "any": [
+        {
+          "status": "Hit",
+          "triangle": 3,
+          "gpuTriangle": 3,
+          "u": 0.25,
+          "v": 0.25,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 0.5,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 1.5,
+          "backface": false
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        }
+      ],
+      "cpu": [
+        {
+          "status": "Hit",
+          "triangle": 3,
+          "u": 0.25,
+          "v": 0.25,
+          "distance": 2,
+          "backface": true,
+          "material": 0
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true,
+          "material": 1
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "u": 0.25000000000050004,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true,
+          "material": 1
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 0.5,
+          "backface": false,
+          "material": 0
+        },
+        {
+          "status": "Miss",
+          "distance": 10
+        },
+        {
+          "status": "Miss",
+          "distance": 10
+        },
+        {
+          "status": "Miss",
+          "distance": 1.5
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true,
+          "material": 1
+        }
+      ],
+      "stats": [
+        {
+          "nodeVisits": 1,
+          "triangleTests": 4,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 3,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 3,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 3,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 6,
+          "alphaTests": 0,
+          "status": "Miss"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 6,
+          "alphaTests": 0,
+          "status": "Miss"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 6,
+          "alphaTests": 1,
+          "status": "Miss"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 5,
+          "alphaTests": 1,
+          "status": "Hit"
+        }
+      ]
+    },
+    {
+      "mode": "optimized",
+      "rays": [
+        {
+          "origin": [
+            -1,
+            -0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 2,
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            -1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 1,
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            -1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            1e-12,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            1.5,
+            0.5,
+            1
+          ],
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            0.999999,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "maxDistance": 10
+        },
+        {
+          "origin": [
+            -1,
+            -0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 2,
+          "maxDistance": 1.5
+        },
+        {
+          "origin": [
+            -1,
+            0.5,
+            1
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "distance": 1,
+          "maxDistance": 1.5
+        }
+      ],
+      "hits": [
+        {
+          "status": "Hit",
+          "triangle": 3,
+          "gpuTriangle": 3,
+          "u": 0.25,
+          "v": 0.25,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 0.5,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 1.5,
+          "backface": false
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        }
+      ],
+      "any": [
+        {
+          "status": "Hit",
+          "triangle": 3,
+          "gpuTriangle": 3,
+          "u": 0.25,
+          "v": 0.25,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 2,
+          "backface": true
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "gpuTriangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 0.5,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 10,
+          "backface": false
+        },
+        {
+          "status": "Miss",
+          "gpuTriangle": -2,
+          "u": 0,
+          "v": 0,
+          "distance": 1.5,
+          "backface": false
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "gpuTriangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true
+        }
+      ],
+      "cpu": [
+        {
+          "status": "Hit",
+          "triangle": 3,
+          "u": 0.25,
+          "v": 0.25,
+          "distance": 2,
+          "backface": true,
+          "material": 0
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true,
+          "material": 1
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "u": 0.25000000000050004,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true,
+          "material": 1
+        },
+        {
+          "status": "Hit",
+          "triangle": 2,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 0.5,
+          "backface": false,
+          "material": 0
+        },
+        {
+          "status": "Miss",
+          "distance": 10
+        },
+        {
+          "status": "Miss",
+          "distance": 10
+        },
+        {
+          "status": "Miss",
+          "distance": 1.5
+        },
+        {
+          "status": "Hit",
+          "triangle": 4,
+          "u": 0.25,
+          "v": 0.5,
+          "distance": 1,
+          "backface": true,
+          "material": 1
+        }
+      ],
+      "stats": [
+        {
+          "nodeVisits": 1,
+          "triangleTests": 4,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 3,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 3,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 3,
+          "alphaTests": 0,
+          "status": "Hit"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 6,
+          "alphaTests": 0,
+          "status": "Miss"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 6,
+          "alphaTests": 0,
+          "status": "Miss"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 6,
+          "alphaTests": 1,
+          "status": "Miss"
+        },
+        {
+          "nodeVisits": 1,
+          "triangleTests": 5,
+          "alphaTests": 1,
+          "status": "Hit"
+        }
+      ]
+    }
+  ],
+  "status": "passed"
+}
