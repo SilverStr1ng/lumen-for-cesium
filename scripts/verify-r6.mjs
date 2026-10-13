@@ -3,6 +3,7 @@
 import { spawnSync } from "node:child_process";
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { sourceVersion } from "./browser-tools.mjs";
+import { r6Acceptance } from "./r6-acceptance.mjs";
 const out = "reports/receiver-final-gather-v5",
   fast = process.argv.includes("--fast"),
   historical = [
@@ -74,6 +75,10 @@ const report = {
       reason: "no token supplied; local and mocked error fallback tested",
     },
     { name: "external Sponza assets", reason: "self-authored local geometry" },
+    {
+      name: "simultaneous relight busy-frame GPU",
+      reason: "idle-only GPU timestamps; submission latency is CPU scope",
+    },
     {
       name: "production held-out low-sample rendering",
       reason:
@@ -199,10 +204,14 @@ try {
         expectedExitCode: expected,
       });
     }
+    const candidateStatus = (label) => {
+      const g = gates.find((g) => g.label === label);
+      return g.exitCode === 0 && g.quality === "passed" ? "passed" : "failed";
+    };
     report.quality = {
-      status: gates.find((g) => g.label === "fg16").quality,
-      highQuery: gates.find((g) => g.label === "fg-query-high").quality,
-      production32: gates.find((g) => g.label === "fg32").quality,
+      status: candidateStatus("fg16"),
+      highQuery: candidateStatus("fg-query-high"),
+      production32: candidateStatus("fg32"),
       gateHarness: gates
         .filter((g) => g.expectedExitCode !== null)
         .every((g) => g.exitCode === g.expectedExitCode)
@@ -239,21 +248,15 @@ try {
       }
     }
   report.finished = new Date().toISOString();
-  report.status = fast
-    ? report.regression === "passed"
-      ? "regression-only"
-      : "failed"
-    : report.regression === "passed" &&
-        report.quality.status === "passed" &&
-        report.quality.gateHarness === "passed" &&
-        report.performance.status === "passed"
-      ? "passed"
-      : "failed";
+  const acceptance = r6Acceptance(report, fast);
+  report.quality.overall = acceptance.quality;
+  report.performance.status = acceptance.performance;
+  report.status = acceptance.status;
   await writeFile(out + "/test-suite.json", JSON.stringify(report, null, 2));
   console.log(
     JSON.stringify({
       regression: report.regression,
-      quality: report.quality.status,
+      quality: report.quality.overall,
       highQuery: report.quality.highQuery,
       performance: report.performance.status,
       status: report.status,

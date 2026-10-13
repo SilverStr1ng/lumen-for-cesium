@@ -21,6 +21,11 @@ for (const file of [
   "packages/engine/Source/Scene/LumenWorld.js",
   "packages/engine/Source/Scene/LumenGpuWorld.js",
   "packages/engine/Source/Scene/LumenGpuShaders.js",
+  "packages/engine/Source/Scene/LumenProbeDisplay.js",
+  "packages/engine/Source/Scene/LumenFinalGather.js",
+  "packages/engine/Source/Scene/LumenFinalGatherSnapshot.js",
+  "packages/engine/Source/Scene/LumenReceiverPass.js",
+  "packages/engine/Source/Scene/destroyLumenResource.js",
   "packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
 ]) {
   const old = files.includes(file) ? `.lumen-baseline/${file}` : "NUL";
@@ -34,11 +39,15 @@ for (const file of [
     throw new Error(result.stderr);
   const section = result.stdout
     .replaceAll(old, `a/${file}`)
-    .replaceAll(current, `b/${file}`);
+    .replaceAll(current, `b/${file}`)
+    .replace(
+      `diff --git b/${file} b/${file}`,
+      `diff --git a/${file} b/${file}`,
+    );
   patch += section;
 }
 await mkdir(path.join(root, "artifacts"), { recursive: true });
 await writeFile(path.join(root, "artifacts", "cesium-lumen.patch"), patch);
 console.log(
-  `Wrote ${files.length + 6} file diffs to artifacts/cesium-lumen.patch`,
+  `Wrote ${files.length + 11} file diffs to artifacts/cesium-lumen.patch`,
 );
