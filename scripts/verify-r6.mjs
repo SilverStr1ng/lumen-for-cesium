@@ -109,6 +109,13 @@ function run(script, args = []) {
   };
 }
 try {
+  const lint = run("lint-r6");
+  report.tests.push({
+    ...lint,
+    name: "target ESLint",
+    status: lint.exitCode === 0 ? "passed" : "failed",
+  });
+  console.log(report.tests.at(-1).status.toUpperCase(), "target ESLint");
   for (const name of fast
     ? ["pipeline", "ibl-policy", "final-gather", "receiver", "reconstruction"]
     : tests) {

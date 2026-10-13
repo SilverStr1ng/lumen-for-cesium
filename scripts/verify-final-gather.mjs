@@ -66,6 +66,39 @@ try {
       );
       for (let i = 0; i < raw.length; i++)
         difference = Math.max(difference, Math.abs(raw[i] - fieldFirst[i]));
+      // Fault injection distinguishes missing deep support from known zero E.
+      const savedPrevious = w._read(
+          current.resources[0].fb,
+          current.grid.width,
+          current.grid.height,
+        ),
+        blank = new Float32Array(savedPrevious.length);
+      current.previous.copyFrom({
+        source: {
+          width: current.grid.width,
+          height: current.grid.height,
+          arrayBufferView: blank,
+        },
+      });
+      const missingPrevious = await w.sampleFinalGather(points, {
+        samples: 256,
+      });
+      for (let i = 3; i < blank.length; i += 4) blank[i] = 1;
+      current.previous.copyFrom({
+        source: {
+          width: current.grid.width,
+          height: current.grid.height,
+          arrayBufferView: blank,
+        },
+      });
+      const blackPrevious = await w.sampleFinalGather(points, { samples: 256 });
+      current.previous.copyFrom({
+        source: {
+          width: current.grid.width,
+          height: current.grid.height,
+          arrayBufferView: savedPrevious,
+        },
+      });
       const leasedBytes = w.memoryBytes - initialBytes,
         versions = { first: first.versions, current: current.versions },
         snapshots = w._fgSnapshots.size;
@@ -78,6 +111,26 @@ try {
       const budgetFallback =
         !w.finalGatherSnapshot && w.memoryBytes === initialBytes && w.ready;
       w.maxMemoryBytes = 192 * 1048576;
+      const allocationFailures = [],
+        gl = w.scene.context._gl,
+        checkStatus = gl.checkFramebufferStatus;
+      for (let i = 0; i < 20; i++) {
+        gl.checkFramebufferStatus = function () {
+          return gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+        };
+        try {
+          await w.solve({ bounces: 1 });
+        } finally {
+          gl.checkFramebufferStatus = checkStatus;
+        }
+        allocationFailures.push({
+          bytes: w.memoryBytes,
+          textures: w._textures.length,
+          framebuffers: w._framebuffers.length,
+          snapshot: !!w.finalGatherSnapshot,
+          ready: w.ready,
+        });
+      }
       await w.solve({ bounces: 2 });
       const resources = w.finalGatherSnapshot.resources.map((r) => r.texture);
       w.destroy();
@@ -87,6 +140,10 @@ try {
         currentSamples,
         unknown,
         nsMismatch,
+        missingPrevious,
+        blackPrevious,
+        allocationFailures,
+        initialBytes,
         difference,
         leasedBytes,
         versions,
@@ -113,6 +170,18 @@ try {
   assert.ok(r.versions.current.material > r.versions.first.material);
   assert.ok(r.unknown.every((p) => !p.valid && p.unknown));
   assert.ok(r.nsMismatch.every((p) => !p.valid));
+  assert(r.missingPrevious.some((p) => !p.valid && !p.unknown));
+  assert(r.blackPrevious.every((p) => p.valid && !p.unknown));
+  assert(
+    r.allocationFailures.every(
+      (x) => x.bytes === r.initialBytes && !x.snapshot && x.ready,
+    ),
+  );
+  assert.equal(
+    new Set(r.allocationFailures.map((x) => x.textures + ":" + x.framebuffers))
+      .size,
+    1,
+  );
   assert.ok(r.released && r.budgetFallback && r.destroyed);
   assert.deepEqual(r.errors, []);
   for (const s of r.gl) {

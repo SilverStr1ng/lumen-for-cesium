@@ -343,7 +343,11 @@ vec4 fgRadiance(vec4 h,vec3 d){
   if(shadow.x==-1.0)return vec4(0,0,0,-1);
   if(shadow.x==0.0)L+=rho*u_sunRadiance*cosine/czm_pi;
  }
- if(u_fgPreviousEnabled)L+=rho*lumen_worldIrradiance(y,n).rgb/czm_pi;
+ if(u_fgPreviousEnabled){vec4 field=lumen_worldIrradiance(y,n);
+  // Partial active support retains the R5 normalized gather contract. No support
+  // is missing data, not known black irradiance. Keep it distinct from Unknown.
+  if(field.a<=0.0)return vec4(0);L+=rho*field.rgb/czm_pi;
+ }
  return vec4(L,1);
 }
 vec4 receiverFinalGather(vec3 p,vec3 ng,vec3 ns){
@@ -351,7 +355,7 @@ vec4 receiverFinalGather(vec3 p,vec3 ng,vec3 ns){
  vec3 origin=p+ng*u_fgRayBias,sum=vec3(0);
  for(int i=0;i<1024;i++){if(i>=u_fgSamples)break;vec3 d=fgDirection(ng,i);
   vec4 L=fgRadiance(trace(origin,d,completeDistance(origin),-1,false),d);
-  if(L.a<0.0)return vec4(0,0,0,-1);sum+=L.rgb;
+  if(L.a<=0.0)return vec4(0,0,0,L.a);sum+=L.rgb;
  }
  return vec4(sum*(czm_pi/float(u_fgSamples)),1);
 }`;
@@ -378,9 +382,38 @@ uniform sampler2D u_receiverPosition,u_receiverNormal,u_receiverHits,u_fgAccumul
 void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);
  if(x.a<0.5){out_FragColor=vec4(0);return;}
  vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);
- for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec4 h=texelFetch(u_receiverHits,ivec2(p.x*4+j,p.y),0),L=fgRadiance(h,fgDirection(ng,i));if(L.a<0.0)sum.a=-1.0;sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
+ for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec4 h=texelFetch(u_receiverHits,ivec2(p.x*4+j,p.y),0),L=fgRadiance(h,fgDirection(ng,i));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
  out_FragColor=sum;
 }`;
+// Conservative spatial support: a low-resolution cell cannot borrow light across
+// any non-coplanar world triangle in its reconstruction neighborhood. Triangle
+// AABBs and planes may reject extra cells; they never invent receiver geometry.
+export const receiverNeighborhood = `${common}
+ uniform sampler2D u_receiverPosition,u_receiverNormal,u_fgRaw;uniform ivec2 u_receiverOffset;
+ uniform mat4 u_fgLocalToEye;uniform float u_fgNeighborhoodScale;uniform bool u_fgNeedsNeighborhood;
+ void main(){ivec2 c=ivec2(gl_FragCoord.xy),r=c+u_receiverOffset;vec4 p=texelFetch(u_receiverPosition,r,0),E=texelFetch(u_fgRaw,c,0);
+  if(p.a<0.5||E.a<0.5){out_FragColor=vec4(0);return;}
+  if(!u_fgNeedsNeighborhood){out_FragColor=vec4(1);return;}
+  vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz);
+  float radius=max(0.04,6.0*czm_metersPerPixel(u_fgLocalToEye*vec4(p.xyz,1.0),1.0)*u_fgNeighborhoodScale);
+  int node=0;bool safe=false;
+  for(int visit=0;visit<4096;visit++){
+   if(node>=u_nodesCount){safe=true;break;}if(visit>=u_budget)break;
+   vec4 lo=fetch1(u_nodes,node*2),hi=fetch1(u_nodes,node*2+1);
+   if(any(greaterThan(lo.xyz,p.xyz+radius))||any(lessThan(hi.xyz,p.xyz-radius))){node=int(lo.w);continue;}
+   if(hi.w<0.0){node++;continue;}
+   int packed=int(hi.w),start=packed/16,count=packed%16;
+   for(int j=0;j<8;j++){if(j>=count)break;int t=start+j;
+    vec3 a=fetch1(u_vertices,t*3).xyz,b=fetch1(u_vertices,t*3+1).xyz,d=fetch1(u_vertices,t*3+2).xyz;
+    vec3 crossNormal=cross(b-a,d-a);if(dot(crossNormal,crossNormal)<1e-16){out_FragColor=vec4(0);return;}
+    vec3 n=normalize(crossNormal);
+    if(abs(dot(n,ng))>0.99999&&abs(dot(a-p.xyz,ng))<0.00001)continue;
+    if(abs(dot(p.xyz-a,n))>radius*1.733)continue;
+    if(any(greaterThan(min(a,min(b,d)),p.xyz+radius))||any(lessThan(max(a,max(b,d)),p.xyz-radius)))continue;
+    out_FragColor=vec4(0);return;
+   }node=int(lo.w);
+  }out_FragColor=vec4(safe?1.0:0.0);
+ }`;
 export const displayBlend = `precision highp float;
 uniform sampler2D u_displayHistory,u_displayTarget;
 uniform float u_displayAlpha;
@@ -388,6 +421,7 @@ void main(){ivec2 p=ivec2(gl_FragCoord.xy);vec4 target=texelFetch(u_displayTarge
 export default {
   receiverTrace,
   receiverShade,
+  receiverNeighborhood,
   fgCopy,
   queryFinalGather,
   queryExactProbeVisibility,

@@ -29,8 +29,9 @@ Object.defineProperties(Lumen.prototype, {
       return this._iblPolicy;
     },
     set(value) {
-      if (!["legacy", "enhanced"].includes(value))
+      if (!["legacy", "enhanced"].includes(value)) {
         throw new DeveloperError("IBL policy must be legacy or enhanced");
+      }
       this._iblPolicy = value;
       this._scene.requestRender();
     },
@@ -41,8 +42,9 @@ Object.defineProperties(Lumen.prototype, {
       return this._diffuseResponse;
     },
     set(value) {
-      if (!["lambert", "cesium"].includes(value))
+      if (!["lambert", "cesium"].includes(value)) {
         throw new DeveloperError("diffuseResponse must be lambert or cesium");
+      }
       this._diffuseResponse = value;
       this._scene.requestRender();
     },

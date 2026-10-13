@@ -10,6 +10,16 @@ export function receiverSamples(lab, limit = 48) {
   const index = (fg.samples / 4 - 1) % 2,
     raw = w._read(fg.ping[index].framebuffer, width, height),
     points = [];
+  const neighborhood = w._read(
+    fg.neighborhood.framebuffer,
+    width,
+    height,
+    0,
+    Cesium.PixelDatatype.UNSIGNED_BYTE,
+  );
+  let validNeighborhood = 0;
+  for (let i = 0; i < width * height; i++)
+    if (neighborhood[i * 4] > 127) validNeighborhood++;
   let validReceivers = 0,
     validFg = 0,
     unknown = 0,
@@ -48,6 +58,10 @@ export function receiverSamples(lab, limit = 48) {
   return {
     points: points.slice(0, limit),
     validReceivers,
+    validNeighborhood,
+    geometryFallbackFraction: validReceivers
+      ? 1 - validNeighborhood / validReceivers
+      : 0,
     validFg,
     unknown,
     unknownFraction: validReceivers ? unknown / validReceivers : 0,

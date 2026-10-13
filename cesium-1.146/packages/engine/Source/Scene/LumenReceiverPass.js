@@ -1,4 +1,9 @@
-import { Color, PixelDatatype, BoundingRectangle, defined } from "@cesium/core";
+import {
+  Color,
+  PixelDatatype,
+  BoundingRectangle,
+  destroyObject,
+} from "@cesium/core";
 import FramebufferManager from "../Renderer/FramebufferManager.js";
 import ClearCommand from "../Renderer/ClearCommand.js";
 import DrawCommand from "../Renderer/DrawCommand.js";
@@ -39,7 +44,9 @@ class LumenReceiverPass {
     this.normal = this.manager.getColorTexture(1);
   }
   command(scene, command) {
-    if (!command.shaderProgram || !command.renderState) return;
+    if (!command.shaderProgram || !command.renderState) {
+      return;
+    }
     const source = selectSourceCommand(scene, command),
       context = scene.context,
       cache = context.shaderCache,
@@ -103,8 +110,9 @@ class LumenReceiverPass {
         frustum.far = f.far;
         state.updateFrustum(frustum);
         scene._depthClearCommand.execute(context, passState);
-        if (context.stencilBuffer)
+        if (context.stencilBuffer) {
           scene._stencilClearCommand.execute(context, passState);
+        }
         for (const pass of [Pass.GLOBE, Pass.CESIUM_3D_TILE, Pass.OPAQUE]) {
           state.updatePass(pass);
           for (let j = 0; j < f.indices[pass]; j++) {
@@ -131,8 +139,16 @@ class LumenReceiverPass {
     this.manager.destroy();
     this.position = this.normal = this.framebuffer = undefined;
   }
+  isDestroyed() {
+    return this._destroyed === true;
+  }
   destroy() {
+    if (this.isDestroyed()) {
+      return;
+    }
     this.release();
+    this._destroyed = true;
+    return destroyObject(this);
   }
 }
 export default LumenReceiverPass;

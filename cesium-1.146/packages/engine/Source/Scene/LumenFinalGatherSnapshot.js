@@ -1,4 +1,4 @@
-import { Cartesian3, PixelDatatype } from "@cesium/core";
+import { Cartesian3, PixelDatatype, destroyObject } from "@cesium/core";
 /** Owned immutable E_(k-1), E_k and material copies. Geometry/moments are
  * immutable world-owned resources; leases cannot outlive that world's geometry.
  * @private */
@@ -6,8 +6,9 @@ class LumenFinalGatherSnapshot {
   constructor(world, previous, current) {
     const g = world.packet.grid,
       bytes = 2 * g.width * g.height * 16 + world._materials.sizeInBytes;
-    if (world.memoryBytes + bytes > world.maxMemoryBytes)
+    if (world.memoryBytes + bytes > world.maxMemoryBytes) {
       throw Error("Final Gather snapshot exceeds GPU memory budget");
+    }
     this.world = world;
     this.references = 1;
     this.resources = [];
@@ -16,8 +17,11 @@ class LumenFinalGatherSnapshot {
     this.versions = Object.freeze({ ...world._jobVersions });
     this.options = world._jobOptions;
     this.light = world._light(this.options);
-    for (const value of Object.values(this.light))
-      if (value && typeof value === "object") Object.freeze(value);
+    for (const value of Object.values(this.light)) {
+      if (value && typeof value === "object") {
+        Object.freeze(value);
+      }
+    }
     this.grid = Object.freeze({
       ...g,
       origin: Object.freeze([...g.origin]),
@@ -37,14 +41,18 @@ class LumenFinalGatherSnapshot {
     };
     const copy = (source) => {
       const texture = world._texture(
-          source.width,
-          source.height,
-          PixelDatatype.FLOAT,
-          undefined,
-          source.sampler,
-        ),
-        fb = world._framebuffer([texture]);
-      this.resources.push({ texture, fb });
+        source.width,
+        source.height,
+        PixelDatatype.FLOAT,
+        undefined,
+        source.sampler,
+      );
+      // Register each successful allocation immediately. A failed FBO must not
+      // strand its texture outside this snapshot's rollback list.
+      const resource = { texture, fb: undefined };
+      this.resources.push(resource);
+      const fb = world._framebuffer([texture]);
+      resource.fb = fb;
       world._fgCopySource = source;
       world._draw("fgCopy", fb, 0, 0, texture.width, texture.height);
       return texture;
@@ -56,8 +64,9 @@ class LumenFinalGatherSnapshot {
           !m.complete ||
           m.revision !== this.revision ||
           m.bounce !== this.round - 1
-        )
+        ) {
           throw Error("FG requires same-revision previous complete round");
+        }
       }
       this.previous = copy(world._atlases[previous].E);
       this.current = copy(world._atlases[current].E);
@@ -70,24 +79,38 @@ class LumenFinalGatherSnapshot {
       world._fgCopySource = undefined;
     }
   }
+  isDestroyed() {
+    return this.destroyed === true;
+  }
   retain() {
     this.assertAlive();
     this.references++;
     return this;
   }
   assertAlive() {
-    if (this.destroyed || this.world.isDestroyed())
+    if (this.destroyed || this.world.isDestroyed()) {
       throw Error("Final Gather snapshot is no longer valid");
+    }
   }
   release() {
-    if (!this.destroyed && --this.references === 0) this.destroy();
+    if (!this.destroyed && --this.references === 0) {
+      this.destroy();
+    }
   }
   destroy() {
-    if (this.destroyed) return;
+    if (this.destroyed) {
+      return;
+    }
     this.destroyed = true;
-    for (const r of this.resources) this.world._freeTexture(r.texture, r.fb);
+    for (const r of this.resources) {
+      this.world._freeTexture(r.texture, r.fb);
+    }
     this.resources.length = 0;
     this.world._fgSnapshots.delete(this);
+    destroyObject(this);
+    // Releasing an outstanding lease after its world closes is harmless. All
+    // access/query methods remain guarded by destroyObject.
+    this.release = this.destroy = () => undefined;
   }
 }
 export default LumenFinalGatherSnapshot;

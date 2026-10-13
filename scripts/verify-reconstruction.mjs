@@ -44,7 +44,7 @@ try {
         fb = w._framebuffer([O]);
       let ns = new C.Cartesian3(0, 0, 1);
       const cmd = earthLab.scene.context.createViewportQuadCommand(
-        "#define LUMEN_RECEIVER_COMPOSITE\nprecision highp float;uniform bool u_lumenFgEnabled;uniform float u_lumenWorldGain,u_lumenFgSurfaceId;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgTexture,u_lumenReceiverPosition,u_lumenReceiverNormal;uniform vec3 u_ns;\n" +
+        "#define LUMEN_RECEIVER_COMPOSITE\nprecision highp float;uniform bool u_lumenFgEnabled;uniform float u_lumenWorldGain,u_lumenFgSurfaceId;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenReceiverPosition,u_lumenReceiverNormal;uniform vec3 u_ns;\n" +
           helper +
           "\nvoid main(){vec3 used=lumen_reconstructFg(vec3(gl_FragCoord.xy,-10),u_ns,vec3(.1,.2,.3));out_FragColor=vec4(used,lumen_fgWeight);}",
         {
@@ -58,6 +58,7 @@ try {
             u_lumenFgSize: () => new C.Cartesian2(2, 2),
             u_lumenFgOffset: () => C.Cartesian2.ZERO,
             u_lumenFgTexture: () => E,
+            u_lumenFgNeighborhood: () => E,
             u_lumenReceiverPosition: () => P,
             u_lumenReceiverNormal: () => N,
             u_ns: () => ns,
@@ -139,6 +140,81 @@ try {
       actual: r.actual,
     });
   }
+  report.samePlaneBarrier = await p.evaluate(async () => {
+    const w = earthLab.world,
+      C = Cesium,
+      { receiverNeighborhood } =
+        await import("/cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js");
+    const nodeData = new Float32Array([-1, -1, -11, 1, 1, 1, -9, 1]),
+      vertices = new Float32Array([
+        0.505, 0, -11, 0, 0.505, 1, -11, 0, 0.505, 0, -9, 0,
+      ]);
+    const nodes = w._texture(2, 1, C.PixelDatatype.FLOAT, nodeData),
+      V = w._texture(3, 1, C.PixelDatatype.FLOAT, vertices),
+      P = w._texture(
+        1,
+        1,
+        C.PixelDatatype.FLOAT,
+        new Float32Array([0.5, 0.5, -10, 3]),
+      ),
+      N = w._texture(
+        1,
+        1,
+        C.PixelDatatype.FLOAT,
+        new Float32Array([0, 0, 1, 3]),
+      ),
+      E = w._texture(
+        1,
+        1,
+        C.PixelDatatype.FLOAT,
+        new Float32Array([99, 99, 99, 1]),
+      ),
+      O = w._texture(1, 1),
+      fb = w._framebuffer([O]);
+    const cmd = earthLab.scene.context.createViewportQuadCommand(
+      receiverNeighborhood,
+      {
+        uniformMap: {
+          u_nodes: () => nodes,
+          u_vertices: () => V,
+          u_nodesCount: () => 1,
+          u_budget: () => 256,
+          u_receiverPosition: () => P,
+          u_receiverNormal: () => N,
+          u_fgRaw: () => E,
+          u_receiverOffset: () => C.Cartesian2.ZERO,
+          u_fgLocalToEye: () => C.Matrix4.IDENTITY,
+          u_fgNeighborhoodScale: () => 1,
+          u_fgNeedsNeighborhood: () => true,
+        },
+      },
+    );
+    let blocked, open;
+    try {
+      w._commands.samePlaneGuard = cmd;
+      w._draw("samePlaneGuard", fb, 0, 0, 1, 1);
+      blocked = Array.from(w._read(fb, 1, 1));
+      nodeData[7] = 0;
+      nodes.copyFrom({
+        source: { width: 2, height: 1, arrayBufferView: nodeData },
+      });
+      w._draw("samePlaneGuard", fb, 0, 0, 1, 1);
+      open = Array.from(w._read(fb, 1, 1));
+    } finally {
+      delete w._commands.samePlaneGuard;
+      cmd.shaderProgram.destroy();
+      for (const t of [nodes, V, P, N, E]) w._freeTexture(t);
+      w._freeTexture(O, fb);
+    }
+    return {
+      blocked,
+      open,
+      scope:
+        "same receiver ownership and Ng; nearby wall omitted by coarse sampling still rejects reconstruction through world BVH; raw E=99 retained",
+    };
+  });
+  assert.deepEqual(report.samePlaneBarrier.blocked, [0, 0, 0, 0]);
+  assert.deepEqual(report.samePlaneBarrier.open, [1, 1, 1, 1]);
   report.occlusion = await p.evaluate(async () => {
     const d = earthLab,
       C = Cesium;
@@ -183,8 +259,13 @@ try {
     d.anchor.height = -20;
     const old = d.world;
     await d.reload();
-    while (!d.world?.ready || d.world === old)
-      await new Promise(requestAnimationFrame);
+    const start = performance.now();
+    while (!d.world?.ready || d.world === old) {
+      if (d.errors.length) throw Error(d.errors.join("; "));
+      if (performance.now() - start > 20000) throw Error("reload timeout");
+      d.scene.requestRender();
+      await new Promise((r) => setTimeout(r, 16));
+    }
     await d.world.completed;
     d.camera("overview");
     d.scene.camera.moveUp(50);

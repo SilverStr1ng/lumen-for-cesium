@@ -187,12 +187,14 @@ class LumenGpuWorld {
       !Number.isFinite(o.displayTransitionMilliseconds) ||
       o.displayTransitionMilliseconds < 0 ||
       o.displayTransitionMilliseconds > 250
-    )
+    ) {
       throw new DeveloperError(
         "display transition must be finite in [0,250] ms",
       );
-    if (!["spatial", "legacy"].includes(o.reconstructionMode))
+    }
+    if (!["spatial", "legacy"].includes(o.reconstructionMode)) {
       throw new DeveloperError("reconstructionMode must be spatial or legacy");
+    }
     if (!["sphere", "upper-hemisphere"].includes(o.environmentMode)) {
       throw new DeveloperError(
         "environmentMode must be sphere or upper-hemisphere",
@@ -416,7 +418,8 @@ class LumenGpuWorld {
   }
   _framebuffer(textures) {
     const c = this.scene.context,
-      gl = c._gl;
+      gl = c._gl,
+      binding = c._currentFramebuffer;
     const f = new Framebuffer({
       context: c,
       colorTextures: textures,
@@ -424,24 +427,34 @@ class LumenGpuWorld {
     });
     this._framebuffers.push(f);
     this.metrics.memory.framebuffers = this._framebuffers.length;
-    const binding = c._currentFramebuffer;
-    const status = f.status;
-    if (binding) {
-      binding._bind();
-      gl.drawBuffers(binding._getActiveColorAttachments());
-    } else {
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      gl.drawBuffers([gl.BACK]);
+    try {
+      const status = f.status;
+      if (status !== gl.FRAMEBUFFER_COMPLETE) {
+        throw Error(`GPU framebuffer incomplete: ${status}`);
+      }
+      new ClearCommand({ framebuffer: f, color: Color.TRANSPARENT }).execute(c);
+      return f;
+    } catch (error) {
+      f.destroy();
+      this._framebuffers = this._framebuffers.filter((fb) => fb !== f);
+      this.metrics.memory.framebuffers = this._framebuffers.length;
+      throw error;
+    } finally {
+      if (binding && !binding.isDestroyed()) {
+        binding._bind();
+        gl.drawBuffers(binding._getActiveColorAttachments());
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.drawBuffers([gl.BACK]);
+      }
+      c._currentFramebuffer =
+        binding && !binding.isDestroyed() ? binding : undefined;
     }
-    c._currentFramebuffer = binding;
-    if (status !== gl.FRAMEBUFFER_COMPLETE) {
-      throw new Error(`GPU framebuffer incomplete: ${status}`);
-    }
-    new ClearCommand({ framebuffer: f, color: Color.TRANSPARENT }).execute(c);
-    return f;
   }
   _freeTexture(texture, fb) {
-    if (fb && !fb.isDestroyed()) fb.destroy();
+    if (fb && !fb.isDestroyed()) {
+      fb.destroy();
+    }
     if (!texture.isDestroyed()) {
       this.memoryBytes -= texture.sizeInBytes;
       texture.destroy();
@@ -856,11 +869,12 @@ class LumenGpuWorld {
       !Number.isFinite(milliseconds) ||
       milliseconds < 0 ||
       milliseconds > 250
-    )
+    ) {
       throw new DeveloperError(
         "display transition must be finite in [0,250] ms",
       );
-    if (milliseconds > 0 && this.ready && !this._display)
+    }
+    if (milliseconds > 0 && this.ready && !this._display) {
       this._ensureDisplay().publish(
         this.irradianceTexture,
         this.packet.versions ?? this.versions,
@@ -868,6 +882,7 @@ class LumenGpuWorld {
         this.publishedRevision,
         0,
       );
+    }
     this.displayTransitionMilliseconds = milliseconds;
     if (milliseconds === 0 && this._display) {
       for (const resource of this._display.resources) {
@@ -890,10 +905,14 @@ class LumenGpuWorld {
   _ensureDisplay() {
     if (!this._display) {
       const g = this.packet.grid;
-      if (this.memoryBytes + 3 * g.width * g.height * 16 > this.maxMemoryBytes)
+      if (
+        this.memoryBytes + 3 * g.width * g.height * 16 >
+        this.maxMemoryBytes
+      ) {
         throw new DeveloperError(
           "display transition exceeds GPU memory budget",
         );
+      }
       const resources = Array.from({ length: 3 }, () => {
         const E = this._texture(
           g.width,
@@ -913,7 +932,7 @@ class LumenGpuWorld {
     if (!metadata.complete || metadata.revision < this.publishedRevision) {
       throw new Error("Cannot publish a partial or older DDGI atlas");
     }
-    if (this.displayTransitionMilliseconds > 0)
+    if (this.displayTransitionMilliseconds > 0) {
       this._ensureDisplay().publish(
         this._atlases[this._previous].E,
         this._jobVersions,
@@ -921,6 +940,7 @@ class LumenGpuWorld {
         this._jobRevision,
         this.displayTransitionMilliseconds,
       );
+    }
     this._published = this._previous;
     this.irradianceTexture = this._atlases[this._published].E;
     this.distanceTexture = this._atlases[this._published].M;
@@ -1092,7 +1112,9 @@ class LumenGpuWorld {
     try {
       this._inUpdate = true;
       this._pollTimers();
-      if (this.displayTransitionMilliseconds > 0) this._display?.update();
+      if (this.displayTransitionMilliseconds > 0) {
+        this._display?.update();
+      }
       if (this._prepared) {
         const p = this._prepared;
         this._prepared = undefined;
@@ -1526,7 +1548,9 @@ class LumenGpuWorld {
       fb.destroy();
       inputA.destroy();
       inputB.destroy();
-      if (inputNg !== inputB) inputNg.destroy();
+      if (inputNg !== inputB) {
+        inputNg.destroy();
+      }
       output.destroy();
     }
   }
@@ -1549,16 +1573,19 @@ class LumenGpuWorld {
       budget,
     } = {},
   ) {
-    if (!snapshot)
+    if (!snapshot) {
       throw Error("enable FG capture and solve before querying Final Gather");
+    }
     snapshot.assertAlive();
-    if (!Number.isInteger(samples) || samples < 1 || samples > 1024)
+    if (!Number.isInteger(samples) || samples < 1 || samples > 1024) {
       throw Error("FG samples in [1,1024] required");
+    }
     if (
       budget !== undefined &&
       (!Number.isInteger(budget) || budget < 1 || budget > 4096)
-    )
+    ) {
       throw Error("FG budget in [1,4096] required");
+    }
     this._fgInput = snapshot.retain();
     this._fgSamples = samples;
     this._fgSeed = seed;
@@ -1586,13 +1613,15 @@ class LumenGpuWorld {
     points,
     { snapshot = this.finalGatherSnapshot, budget } = {},
   ) {
-    if (!snapshot)
+    if (!snapshot) {
       throw Error("FG capture required for frozen exact-probe comparison");
+    }
     if (
       budget !== undefined &&
       (!Number.isInteger(budget) || budget < 1 || budget > 4096)
-    )
+    ) {
       throw Error("FG budget in [1,4096] required");
+    }
     this._fgInput = snapshot.retain();
     this._fgBudget = budget;
     this._fgExact = true;
@@ -1706,7 +1735,9 @@ class LumenGpuWorld {
     this.scene.requestRender();
   }
   _release() {
-    for (const snapshot of [...this._fgSnapshots]) snapshot.destroy();
+    for (const snapshot of [...this._fgSnapshots]) {
+      snapshot.destroy();
+    }
     this.finalGatherSnapshot = undefined;
     this._closed = true;
     this.ready = false;

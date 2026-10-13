@@ -77,6 +77,8 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     if(!u_lumenFgEnabled||dot(ngEC,ns)<0.999)return baseline;
     vec3 p=(u_lumenEyeToLocal*vec4(positionEC,1.0)).xyz,ng=normalize(mat3(u_lumenEyeToLocal)*ngEC);
     vec2 q=gl_FragCoord.xy/u_lumenFgSceneSize*u_lumenReceiverSize-u_lumenFgOffset-0.5;
+    // Full-resolution ROI is an exact current-pixel lookup, including at wall edges.
+    if(all(equal(u_lumenReceiverSize,u_lumenFgSceneSize)))q=floor(gl_FragCoord.xy)-u_lumenFgOffset;
     ivec2 base=ivec2(floor(q)),size=ivec2(u_lumenFgSize);vec2 f=fract(q);
     ivec2 nearest=ivec2(floor(q+0.5));
     if(all(greaterThanEqual(nearest,ivec2(0)))&&all(lessThan(nearest,size))) {
@@ -88,7 +90,7 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
         ivec2 c=base+ivec2(x,y);if(any(lessThan(c,ivec2(0)))||any(greaterThanEqual(c,size)))continue;
         vec4 E=texelFetch(u_lumenFgTexture,c,0),r=texelFetch(u_lumenReceiverPosition,c+ivec2(u_lumenFgOffset),0),n=texelFetch(u_lumenReceiverNormal,c+ivec2(u_lumenFgOffset),0);
         // Reject Unknown and other surfaces. Never average foreground/background positions.
-        if(E.a<0.5||abs(r.a-u_lumenFgSurfaceId)>0.1||abs(n.a-r.a)>0.1||dot(ng,n.xyz)<0.995)continue;
+        if(texelFetch(u_lumenFgNeighborhood,c,0).r<0.5||E.a<0.5||abs(r.a-u_lumenFgSurfaceId)>0.1||abs(n.a-r.a)>0.1||dot(ng,n.xyz)<0.995)continue;
         vec3 delta=r.xyz-p;
         if(abs(dot(delta,ng))>0.005||length(delta)>footprint)continue;
         vec2 a=mix(1.0-f,f,vec2(x,y));float w=a.x*a.y;sum+=E.rgb*w;weight+=w;

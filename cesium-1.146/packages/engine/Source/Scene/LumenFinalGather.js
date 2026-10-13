@@ -1,6 +1,8 @@
 import {
+  destroyObject,
   Cartesian2,
   Cartesian3,
+  Matrix4,
   PixelDatatype,
   PixelFormat,
   BoundingRectangle,
@@ -15,7 +17,11 @@ import TextureMinificationFilter from "../Renderer/TextureMinificationFilter.js"
 import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.js";
 import ContextLimits from "../Renderer/ContextLimits.js";
 import LumenReceiverPass from "./LumenReceiverPass.js";
-import { receiverTrace, receiverShade } from "./LumenGpuShaders.js";
+import {
+  receiverTrace,
+  receiverShade,
+  receiverNeighborhood,
+} from "./LumenGpuShaders.js";
 
 // All presets are deterministic, have no history, and leave the 2m DDGI grid unchanged.
 const presets = Object.freeze({
@@ -54,6 +60,7 @@ class LumenFinalGather {
     this.resultSize = new Cartesian2(1, 1);
     this.offset = new Cartesian2();
     this.sceneSize = new Cartesian2(1, 1);
+    this._localToEye = new Matrix4();
     this._timer = this.scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
     );
@@ -76,8 +83,9 @@ class LumenFinalGather {
     quality = this.quality,
     model = this.model,
   } = {}) {
-    if (!["ddgi", "fg", "raw"].includes(mode) || !presets[quality])
+    if (!["ddgi", "fg", "raw"].includes(mode) || !presets[quality]) {
       throw new DeveloperError("Invalid final gather mode or quality");
+    }
     const changed = this.quality !== quality || this.model !== model;
     this.mode = mode;
     this.quality = quality;
@@ -89,7 +97,9 @@ class LumenFinalGather {
       this.release();
       this.metrics.status = "disabled";
     } else {
-      if (changed) this.release();
+      if (changed) {
+        this.release();
+      }
       w?.setFinalGatherCapture?.(true);
       this.metrics.status = "waiting for complete round input";
       // One extra solve is needed when enabling after the original solve has settled.
@@ -148,17 +158,17 @@ class LumenFinalGather {
       ox,
       oy,
       samples: p.samples,
-      bytes: rw * rh * 36 + width * height * 96,
+      bytes: rw * rh * 36 + width * height * 100,
       slots: width * height * p.samples,
     };
   }
-  _texture(width, height) {
+  _texture(width, height, datatype = PixelDatatype.FLOAT) {
     const t = new Texture({
       context: this.scene.context,
       width,
       height,
       pixelFormat: PixelFormat.RGBA,
-      pixelDatatype: PixelDatatype.FLOAT,
+      pixelDatatype: datatype,
       flipY: false,
       sampler: nearest,
     });
@@ -173,12 +183,19 @@ class LumenFinalGather {
   }
   _allocate(l) {
     const key = [l.rw, l.rh, l.width, l.height].join(":");
-    if (this._layoutKey === key) return;
+    if (this._layoutKey === key) {
+      return;
+    }
     this.release();
     try {
       this.receiver = new LumenReceiverPass();
       this.receiver.update(this.scene.context, l.rw, l.rh);
       this.hits = this._texture(l.width * 4, l.height);
+      this.neighborhood = this._texture(
+        l.width,
+        l.height,
+        PixelDatatype.UNSIGNED_BYTE,
+      );
       this.ping = [
         this._texture(l.width, l.height),
         this._texture(l.width, l.height),
@@ -187,9 +204,11 @@ class LumenFinalGather {
         gl = c._gl,
         binding = c._currentFramebuffer;
       try {
-        for (const f of [this.receiver.framebuffer, ...this._framebuffers])
-          if (f.status !== gl.FRAMEBUFFER_COMPLETE)
+        for (const f of [this.receiver.framebuffer, ...this._framebuffers]) {
+          if (f.status !== gl.FRAMEBUFFER_COMPLETE) {
             throw Error("FG framebuffer incomplete");
+          }
+        }
       } finally {
         if (binding) {
           binding._bind();
@@ -214,18 +233,24 @@ class LumenFinalGather {
   _poll() {
     const gl = this.scene.context._gl,
       ext = this._timer;
-    if (!ext) return;
+    if (!ext) {
+      return;
+    }
     const disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
     this._queries = this._queries.filter((q) => {
-      if (!gl.getQueryParameter(q.query, gl.QUERY_RESULT_AVAILABLE))
+      if (!gl.getQueryParameter(q.query, gl.QUERY_RESULT_AVAILABLE)) {
         return true;
-      if (disjoint) this.metrics.disjoint++;
-      else {
+      }
+      if (disjoint) {
+        this.metrics.disjoint++;
+      } else {
         const ms = gl.getQueryParameter(q.query, gl.QUERY_RESULT) / 1e6;
         const a =
           this.metrics.stages[q.stage] ?? (this.metrics.stages[q.stage] = []);
         a.push({ frame: q.frame, milliseconds: ms });
-        if (a.length > 4096) a.shift();
+        if (a.length > 4096) {
+          a.shift();
+        }
       }
       gl.deleteQuery(q.query);
       return false;
@@ -242,7 +267,9 @@ class LumenFinalGather {
     ) {
       query = gl.createQuery();
       gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
-    } else this.metrics.timingUnavailable++;
+    } else {
+      this.metrics.timingUnavailable++;
+    }
     try {
       return draw();
     } finally {
@@ -261,8 +288,9 @@ class LumenFinalGather {
     if (!this._commands[name]) {
       const uniformMap = {};
       // A stable callback map addresses the currently retained immutable snapshot.
-      for (const key of Object.keys(this._inputUniforms))
+      for (const key of Object.keys(this._inputUniforms)) {
         uniformMap[key] = () => this._inputUniforms[key]();
+      }
       Object.assign(uniformMap, {
         u_receiverPosition: () => this.receiver.position,
         u_receiverNormal: () => this.receiver.normal,
@@ -270,13 +298,21 @@ class LumenFinalGather {
         u_fgStart: () => this._start,
         u_receiverHits: () => this.hits.texture,
         u_fgAccumulation: () => this._accumulation,
+        u_fgRaw: () => this.texture,
+        u_fgLocalToEye: () => this._localToEye,
+        u_fgNeighborhoodScale: () => this.resultSize.y / this.receiverSize.y,
+        u_fgNeedsNeighborhood: () => this.quality !== "roi",
         u_fgSamples: () => this.samples,
         u_fgSeed: () => this.seed,
         u_budget: () => this.traversalBudget,
         u_fgPreviousEnabled: () => this._input.round > 1,
       });
       this._commands[name] = c.createViewportQuadCommand(
-        name === "receiverTrace" ? receiverTrace : receiverShade,
+        name === "receiverTrace"
+          ? receiverTrace
+          : name === "receiverShade"
+            ? receiverShade
+            : receiverNeighborhood,
         { uniformMap, owner: this },
       );
     }
@@ -296,7 +332,9 @@ class LumenFinalGather {
       w = this.lumen.world,
       fs = s.frameState;
     this.ready = false;
-    if (this.mode === "ddgi" || !this.lumen.enabled) return;
+    if (this.mode === "ddgi" || !this.lumen.enabled) {
+      return;
+    }
     if (
       !this.model ||
       this.model.isDestroyed() ||
@@ -397,6 +435,15 @@ class LumenFinalGather {
         this._accumulation = this.ping[index].texture;
       }
       this.texture = this._accumulation;
+      Matrix4.inverse(w.eyeToLocal, this._localToEye);
+      this._measure("neighborhood", () =>
+        this._draw(
+          "receiverNeighborhood",
+          this.neighborhood.framebuffer,
+          l.width,
+          l.height,
+        ),
+      );
       this.ready = true;
       Object.assign(this.metrics, {
         status: "active experimental FG",
@@ -416,7 +463,7 @@ class LumenFinalGather {
       });
     } catch (error) {
       this.release();
-      this.metrics.status = "DDGI fallback: " + error.message;
+      this.metrics.status = `DDGI fallback: ${error.message}`;
     } finally {
       snapshot.release();
       this._input = undefined;
@@ -425,25 +472,53 @@ class LumenFinalGather {
   release() {
     this.ready = false;
     this.texture = undefined;
+    this.neighborhood = this.hits = this.ping = undefined;
     this._layoutKey = undefined;
     this.receiver?.destroy();
     this.receiver = undefined;
-    for (const f of this._framebuffers) if (!f.isDestroyed()) f.destroy();
-    for (const t of this._textures) if (!t.isDestroyed()) t.destroy();
+    for (const f of this._framebuffers) {
+      if (!f.isDestroyed()) {
+        f.destroy();
+      }
+    }
+    for (const t of this._textures) {
+      if (!t.isDestroyed()) {
+        t.destroy();
+      }
+    }
     this._textures = [];
     this._framebuffers = [];
-    for (const cmd of Object.values(this._commands))
-      if (!cmd.shaderProgram.isDestroyed()) cmd.shaderProgram.destroy();
+    for (const cmd of Object.values(this._commands)) {
+      if (!cmd.shaderProgram.isDestroyed()) {
+        cmd.shaderProgram.destroy();
+      }
+    }
     this._commands = {};
     const gl = this.scene.context._gl;
-    for (const q of this._queries) gl.deleteQuery(q.query);
+    for (const q of this._queries) {
+      gl.deleteQuery(q.query);
+    }
     this._queries = [];
     this.metrics.memoryBytes = 0;
+    this.metrics.snapshotBytes =
+      this.lumen.world?.finalGatherSnapshot?.resources.reduce(
+        (sum, r) => sum + r.texture.sizeInBytes,
+        0,
+      ) ?? 0;
+    this.metrics.totalAdditionalBytes = this.metrics.snapshotBytes;
+  }
+  isDestroyed() {
+    return this._destroyed === true;
   }
   destroy() {
+    if (this.isDestroyed()) {
+      return;
+    }
     this.release();
+    this._destroyed = true;
     this.model = undefined;
     this.lumen = this.scene = undefined;
+    return destroyObject(this);
   }
 }
 LumenFinalGather.presets = presets;

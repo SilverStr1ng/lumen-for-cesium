@@ -87,7 +87,9 @@ LightingPipelineStage.process = function (
         surfaceOwners.set(model, owners);
       }
       const ownerKey = renderResources.runtimePrimitive ?? primitive;
-      if (!owners.map.has(ownerKey)) owners.map.set(ownerKey, owners.next++);
+      if (!owners.map.has(ownerKey)) {
+        owners.map.set(ownerKey, owners.next++);
+      }
       const id = owners.map.get(ownerKey),
         fg = () => frameState.lumen?.finalGather;
       const uniforms = {
@@ -107,6 +109,11 @@ LightingPipelineStage.process = function (
         u_lumenFgTexture: [
           "sampler2D",
           () => fg()?.texture ?? frameState.context.defaultTexture,
+        ],
+        u_lumenFgNeighborhood: [
+          "sampler2D",
+          () =>
+            fg()?.neighborhood?.texture ?? frameState.context.defaultTexture,
         ],
         u_lumenReceiverPosition: [
           "sampler2D",
