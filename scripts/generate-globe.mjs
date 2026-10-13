@@ -4,7 +4,8 @@ import { deflateSync } from "node:zlib";
 const directory = new URL("../fixtures/", import.meta.url);
 await mkdir(directory, { recursive: true });
 const diffuse = (rgb, emission = [0, 0, 0]) => ({
-  doubleSided: true,
+  doubleSided: false,
+  extras: { giSolid: true },
   pbrMetallicRoughness: {
     baseColorFactor: [...rgb, 1],
     metallicFactor: 0,

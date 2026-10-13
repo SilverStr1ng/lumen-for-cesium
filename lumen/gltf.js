@@ -287,3 +287,11 @@ export function accepts(g, t, u, v) {
   if (m.alphaMode !== "MASK") return true;
   return materialAt(g, t, u, v).alpha >= (m.alphaCutoff ?? 0.5);
 }
+
+/** glTF doubleSided controls shading. GI volume membership may be explicit. */
+export function isSolidMaterial(material) {
+  if (material.extras?.thinSurface === true) return false;
+  if (typeof material.extras?.giSolid === "boolean")
+    return material.extras.giSolid;
+  return !material.doubleSided;
+}

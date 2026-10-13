@@ -1,4 +1,4 @@
-import { loadGeometry, accepts, materialAt } from "./gltf.js";
+import { loadGeometry, accepts, materialAt, isSolidMaterial } from "./gltf.js";
 import { BVH } from "./bvh.js";
 
 // Only static preparation runs here. Runtime intersections and lighting are GPU passes.
@@ -96,7 +96,10 @@ function pack(b, options) {
       ],
       o + 4,
     );
-    materials.set([...(m.emissiveFactor ?? [0, 0, 0]), 0], o + 8);
+    materials.set(
+      [...(m.emissiveFactor ?? [0, 0, 0]), Number(isSolidMaterial(m))],
+      o + 8,
+    );
     [p.baseColorTexture, p.metallicRoughnessTexture, m.emissiveTexture].forEach(
       (info, j) => {
         if (!info) return;

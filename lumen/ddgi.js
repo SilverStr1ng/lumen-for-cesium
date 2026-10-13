@@ -9,7 +9,7 @@ import {
   octDecode,
   fibonacci,
 } from "./math.js";
-import { accepts } from "./gltf.js";
+import { accepts, isSolidMaterial } from "./gltf.js";
 import { SurfaceCache } from "./surface-cache.js";
 import { completeTraceDistance } from "./trace-domain.js";
 
@@ -222,7 +222,9 @@ export class DDGI {
         Math.floor(p / (g.counts[0] * g.counts[1])),
       ];
       const position = coordinates.map((v, i) => g.origin[i] + v * g.spacing);
-      // Relocate probes out of very near solid back faces, in local metres.
+      const logical = [...position];
+      let relocationSafe = true;
+      // Bound cumulative displacement; an unsafe/blocked exit is classified invalid.
       for (let attempt = 0; attempt < 3; attempt++) {
         let nearest;
         for (const d of [
@@ -241,9 +243,11 @@ export class DDGI {
           if (
             h.status === "Hit" &&
             h.backface &&
-            !this.bvh.geometry.materials[
-              this.bvh.geometry.materialIds[h.triangle]
-            ].doubleSided &&
+            isSolidMaterial(
+              this.bvh.geometry.materials[
+                this.bvh.geometry.materialIds[h.triangle]
+              ],
+            ) &&
             (!nearest || h.distance < nearest.distance)
           )
             nearest = h;
@@ -255,8 +259,43 @@ export class DDGI {
             nearest.triangle * 3 + 3,
           ),
         );
-        const shift = mul(n, nearest.distance + 0.08);
-        for (let i = 0; i < 3; i++) position[i] += shift[i];
+        const shift = mul(n, nearest.distance + 0.08),
+          candidate = add(position, shift);
+        if (Math.hypot(...sub(candidate, logical)) > g.spacing * 0.45) {
+          relocationSafe = false;
+          break;
+        }
+        const segment = this.bvh.trace(position, n, {
+          accept,
+          maxDistance: Math.hypot(...shift),
+          budget: this.options.traversalBudget,
+        });
+        if (
+          segment.status !== "Hit" ||
+          !segment.backface ||
+          !isSolidMaterial(
+            this.bvh.geometry.materials[
+              this.bvh.geometry.materialIds[segment.triangle]
+            ],
+          )
+        ) {
+          relocationSafe = false;
+          break;
+        }
+        const exit = add(position, mul(n, segment.distance + 0.0002)),
+          remaining = Math.hypot(...shift) - segment.distance - 0.0002;
+        if (
+          remaining > 0 &&
+          this.bvh.trace(exit, n, {
+            accept,
+            maxDistance: remaining,
+            budget: this.options.traversalBudget,
+          }).status !== "Miss"
+        ) {
+          relocationSafe = false;
+          break;
+        }
+        for (let i = 0; i < 3; i++) position[i] = candidate[i];
       }
       let backfaces = 0,
         known = 0,
@@ -277,14 +316,19 @@ export class DDGI {
             this.bvh.geometry.materials[
               this.bvh.geometry.materialIds[hit.triangle]
             ].doubleSided;
-          if (hit.backface && !doubleSided) {
-            backfaces++;
-            hit.black = true;
-          } else hit.key = this.cache.address(hit);
+          const solid = isSolidMaterial(
+            this.bvh.geometry.materials[
+              this.bvh.geometry.materialIds[hit.triangle]
+            ],
+          );
+          if (hit.backface && solid) backfaces++;
+          if (hit.backface && !doubleSided) hit.black = true;
+          else hit.key = this.cache.address(hit);
         }
         this.hits[p * g.rays + r] = hit;
       }
-      const valid = known === g.rays && backfaces / g.rays < 0.25;
+      const valid =
+        relocationSafe && known === g.rays && backfaces / g.rays < 0.25;
       this.positions.set([...position, valid ? 1 : 0], p * 4);
       if (valid) active++;
       if (p % 16 === 0) {
