@@ -1588,6 +1588,11 @@ class LumenGpuWorld {
   ) {
     if (!snapshot)
       throw Error("FG capture required for frozen exact-probe comparison");
+    if (
+      budget !== undefined &&
+      (!Number.isInteger(budget) || budget < 1 || budget > 4096)
+    )
+      throw Error("FG budget in [1,4096] required");
     this._fgInput = snapshot.retain();
     this._fgBudget = budget;
     this._fgExact = true;

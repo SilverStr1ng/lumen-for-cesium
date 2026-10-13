@@ -20,7 +20,10 @@ const out = "reports/receiver-final-gather-v5",
 const b = await launchBrowser(),
   p = await b.newPage({ viewport: { width: 1280, height: 800 } }),
   report = {
-    version: sourceVersion(),
+    version: sourceVersion([
+      "lumen/path-reference.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSnapshot.js",
+    ]),
     sampling: {
       C: {
         samplesPerSeed: 1024,
@@ -120,6 +123,22 @@ try {
           k,
           snapshot: data.snapshot,
           grid: data.grid,
+          lighting,
+          queryWork: {
+            receivers: points.length,
+            A: { probeCandidatesUpperBound: points.length * 8, worldRays: 0 },
+            B: { worldSegmentsUpperBound: points.length * 8 },
+            C: {
+              seeds: 3,
+              primaryRays: points.length * 1024 * 3,
+              solarRaysUpperBound: points.length * 1024 * 3,
+              traversalBudget: 4096,
+            },
+            D: {
+              samplesPerPoint: 8192,
+              actualPerPointCounts: "lines.*[].D.counts",
+            },
+          },
           lines: {},
           metrics: { A: {}, B: {}, C: {} },
         };

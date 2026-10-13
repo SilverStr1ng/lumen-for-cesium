@@ -52,12 +52,12 @@ try {
   await check(
     "full-resolution ROI production equals fixed point FG",
     async () => {
-      const result = await page.evaluate(() => {
+      const result = await page.evaluate(async () => {
         glObserver.phase("diagnostic");
         earthLab.widget.render();
         const d = diag.receiverSamples(earthLab),
           fg = earthLab.scene.lumen.finalGather,
-          q = earthLab.world.sampleFinalGather(
+          q = await earthLab.world.sampleFinalGather(
             d.points.map((p) => ({ position: p.position, normal: p.normal })),
             {
               samples: fg.samples,
@@ -71,7 +71,7 @@ try {
           for (let c = 0; c < 3; c++)
             maxError = Math.max(
               maxError,
-              Math.abs(q[i].E[c] - d.points[i].E[c]),
+              Math.abs(q[i].irradiance[c] - d.points[i].E[c]),
             );
         return {
           ...d,
@@ -81,6 +81,8 @@ try {
         };
       });
       assert(result.points.length > 10);
+      assert.equal(result.queries.length, result.points.length);
+      assert(result.queries.every((q) => q.valid && !q.unknown));
       assert.equal(result.unknown, 0);
       assert.equal(result.nonfinite, 0);
       assert(result.maxError < 0.00005);

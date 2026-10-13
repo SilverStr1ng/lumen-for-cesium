@@ -30,6 +30,12 @@
     "benchmark:relighting": "node scripts/benchmark-relighting.mjs",
     "test:r5": "node scripts/verify-r5.mjs",
     "test:quality": "node scripts/verify-quality.mjs",
-    "test:ibl-policy": "node scripts/verify-ibl-policy.mjs"
+    "test:ibl-policy": "node scripts/verify-ibl-policy.mjs",
+    "test:final-gather": "node scripts/verify-final-gather.mjs",
+    "test:receiver": "node scripts/verify-receiver.mjs && node scripts/verify-reconstruction.mjs",
+    "test:r6": "node scripts/verify-r6.mjs",
+    "reference:receiver": "node scripts/compare-final-gather.mjs",
+    "capture:receiver": "node scripts/capture-receiver.mjs",
+    "benchmark:receiver": "node scripts/benchmark-receiver.mjs"
   }
 }

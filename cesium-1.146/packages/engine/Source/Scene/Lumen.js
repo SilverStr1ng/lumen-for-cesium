@@ -113,7 +113,11 @@ Lumen.prototype.loadWorld = function (options) {
   this.finalGather.release();
   this.world?.destroy();
   const World = options.backend === "gpu" ? LumenGpuWorld : LumenWorld;
-  this.world = new World(this._scene, options);
+  this.world = new World(this._scene, {
+    ...options,
+    captureFinalGather:
+      options.captureFinalGather ?? this.finalGather.mode !== "ddgi",
+  });
   return this.world;
 };
 Lumen.prototype.update = function () {

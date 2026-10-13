@@ -44,6 +44,8 @@ class LumenFinalGather {
     this.seed = 0;
     this.ready = false;
     this._executingMain = false;
+    this._compositeEnabled = true;
+    this.profileForward = false; // diagnostic timer only, no readback
     this._textures = [];
     this._framebuffers = [];
     this._commands = {};
@@ -66,6 +68,7 @@ class LumenFinalGather {
       disjoint: 0,
       productionReadbacks: 0,
       history: false,
+      unknownFraction: "diagnostic-only; no production readback",
     };
   }
   configure({
@@ -122,7 +125,10 @@ class LumenFinalGather {
   }
   enabledFor(model, frameState) {
     return (
-      this.ready && this._executingMain && this.supported(model, frameState)
+      this.ready &&
+      this._compositeEnabled &&
+      this._executingMain &&
+      this.supported(model, frameState)
     );
   }
   _layout() {
@@ -242,7 +248,11 @@ class LumenFinalGather {
     } finally {
       if (query) {
         gl.endQuery(ext.TIME_ELAPSED_EXT);
-        this._queries.push({ query, stage, frame: this.metrics.frames });
+        this._queries.push({
+          query,
+          stage,
+          frame: this.scene.frameState.frameNumber,
+        });
       }
     }
   }

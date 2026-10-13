@@ -3681,7 +3681,9 @@ function executeCommandsInViewport(firstViewport, scene, passState) {
   // Only the main opaque draw may read this camera's same-frame receiver result.
   fg._executingMain = firstViewport;
   try {
-    executeCommands(scene, passState);
+    if (fg.profileForward)
+      fg._measure("forward", () => executeCommands(scene, passState));
+    else executeCommands(scene, passState);
   } finally {
     fg._executingMain = false;
   }

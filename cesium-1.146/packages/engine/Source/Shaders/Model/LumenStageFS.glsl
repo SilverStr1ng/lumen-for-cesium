@@ -62,7 +62,9 @@ vec3 lumen_rawFg=vec3(0.0),lumen_filteredFg=vec3(0.0);
 float lumen_fgWeight=0.0;
 // The derivative normal is the actual triangle normal. Attribute normals may be smooth.
 vec3 lumen_triangleNormal(vec3 p) {
-    vec3 ng=normalize(cross(dFdx(p),dFdy(p)));
+    vec3 triangle=cross(dFdx(p),dFdy(p));
+    if(!(dot(triangle,triangle)>1e-16))return vec3(0.0);
+    vec3 ng=normalize(triangle);
     if(!gl_FrontFacing)ng=-ng;
     #ifdef HAS_DOUBLE_SIDED_MATERIAL
     if(czm_backFacing())ng=-ng;
