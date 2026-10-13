@@ -1,0 +1,54 @@
+{
+  "input": "reports/ddgi-visual-quality-v4/independent-reference.json",
+  "candidate": "before",
+  "label": "old-threshold-smoke",
+  "regression": "not-run",
+  "quality": "passed",
+  "performance": "not-run",
+  "slowReference": "historical executed R5 paths; fresh R6 slow reference not-run",
+  "checks": [
+    {
+      "name": "boxFloor",
+      "actual": 0.18765071165108677,
+      "threshold": 0.18765071165108677,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "boxFace",
+      "actual": 0.3039858849336796,
+      "threshold": 0.3039858849336796,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "wallFoot",
+      "actual": 0.303540485115132,
+      "threshold": 0.303540485115132,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "pillarFoot",
+      "actual": 0.033018738250725134,
+      "threshold": 0.033018738250725134,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "ceiling",
+      "actual": 0.14987554369618528,
+      "threshold": 0.14987554369618528,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "doorway",
+      "actual": 0.09037324175484689,
+      "threshold": 0.09037324175484689,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    }
+  ],
+  "injected": false
+}

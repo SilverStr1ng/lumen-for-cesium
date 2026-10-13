@@ -1,0 +1,454 @@
+{
+  "version": {
+    "head": "251c2d70cd000b9665a6739e4d4a1dd3d48afc68",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "0bdf3177629153207976b928367f52d7175c41d294042f08676bc706ebc358a1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "98dcc254b84e8d368718ef8c99f6e5a5281ad8896c575474bf4627afae40b3d3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "c364a21cb92efa42ea7c891f1b24ee91cf8e00ae6887da310b02505acbe69a88",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "1700d913f6ca5633fef233d93f1ed111e3fdc2623801bca09d40e1d04784b104",
+    "modifiedSources": []
+  },
+  "checks": [],
+  "result": {
+    "points": [
+      {
+        "position": [
+          0,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.01,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.25,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.75,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.99999,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.00001,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.25,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.75,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          2,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      }
+    ],
+    "actual": [
+      {
+        "irradiance": [
+          2.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5099997520446777,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.75,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.25,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.4999899864196777,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5000100135803223,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.75,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.25,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "legacy": [
+      {
+        "irradiance": [
+          2.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5000014305114746,
+          1.9999998807907104,
+          3.999999761581421
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5357141494750977,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.4642856121063232,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5357141494750977,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.464285850524902,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "low": [
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      }
+    ],
+    "separate": [
+      {
+        "irradiance": [
+          3.2249999046325684,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.2249999046325684,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "composed": [
+      1.0000001192092896,
+      1.0000001192092896,
+      1.0000001192092896,
+      0.8937500715255737
+    ],
+    "fallback": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

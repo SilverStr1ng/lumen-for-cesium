@@ -1,0 +1,191 @@
+{
+  "version": {
+    "head": "251c2d70cd000b9665a6739e4d4a1dd3d48afc68",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "0bdf3177629153207976b928367f52d7175c41d294042f08676bc706ebc358a1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "98dcc254b84e8d368718ef8c99f6e5a5281ad8896c575474bf4627afae40b3d3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "c364a21cb92efa42ea7c891f1b24ee91cf8e00ae6887da310b02505acbe69a88",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "57737c19313ced35ff2e1efd79bfca1635f25092783527595a42e036b94d8c61"
+    },
+    "compiledBundle": "1700d913f6ca5633fef233d93f1ed111e3fdc2623801bca09d40e1d04784b104",
+    "modifiedSources": []
+  },
+  "checks": [
+    {
+      "name": "same-plane",
+      "status": "passed",
+      "expected": [
+        2,
+        2,
+        2,
+        1
+      ],
+      "actual": [
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "different-owner",
+      "status": "passed",
+      "expected": [
+        1.525,
+        1.55,
+        1.575,
+        0.75
+      ],
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "other-depth",
+      "status": "passed",
+      "expected": [
+        1.525,
+        1.55,
+        1.575,
+        0.75
+      ],
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "other-normal",
+      "status": "passed",
+      "expected": [
+        1.525,
+        1.55,
+        1.575,
+        0.75
+      ],
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "unknown",
+      "status": "passed",
+      "expected": [
+        1.525,
+        1.55,
+        1.575,
+        0.75
+      ],
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "Ns-not-Ng",
+      "status": "passed",
+      "expected": [
+        0.1,
+        0.2,
+        0.3,
+        0
+      ],
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    }
+  ],
+  "errors": [],
+  "rows": [
+    {
+      "name": "same-plane",
+      "actual": [
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "different-owner",
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "other-depth",
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "other-normal",
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "unknown",
+      "actual": [
+        1.524999976158142,
+        1.5499999523162842,
+        1.5750000476837158,
+        0.75
+      ]
+    },
+    {
+      "name": "Ns-not-Ng",
+      "actual": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        0
+      ]
+    }
+  ],
+  "samePlaneBarrier": {
+    "blocked": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "open": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "scope": "same receiver ownership and Ng; nearby wall omitted by coarse sampling still rejects reconstruction through world BVH; raw E=99 retained"
+  },
+  "occlusion": {
+    "blockerCenterAlpha": 0,
+    "buriedSupportedPixels": 0
+  },
+  "status": "passed"
+}

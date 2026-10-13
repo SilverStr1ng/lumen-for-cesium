@@ -1,0 +1,209 @@
+{
+  "input": "reports/receiver-final-gather-v5/abcd.json",
+  "candidate": "after",
+  "label": "fg-query-high",
+  "regression": "not-run",
+  "quality": "failed",
+  "performance": "not-run",
+  "slowReference": {
+    "C": {
+      "samplesPerSeed": 1024,
+      "seeds": [
+        1,
+        5,
+        19
+      ],
+      "pdf": "cosine Ng; Ns=Ng only; pi/N"
+    },
+    "D": {
+      "samples": 8192,
+      "seed": 543190,
+      "independent": "no DDGI/SurfaceCache"
+    }
+  },
+  "checks": [
+    {
+      "name": "boxFloor",
+      "actual": 0.018937850729605913,
+      "threshold": 0.18765071165108677,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "boxFace",
+      "actual": 0.0476718653864004,
+      "threshold": 0.3039858849336796,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "wallFoot",
+      "actual": 0.0017112903848019126,
+      "threshold": 0.303540485115132,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "pillarFoot",
+      "actual": 10,
+      "threshold": 0.033018738250725134,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "failed"
+    },
+    {
+      "name": "ceiling",
+      "actual": 0.0023598033032116933,
+      "threshold": 0.14987554369618528,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "doorway",
+      "actual": 0.004155902311441248,
+      "threshold": 0.09037324175484689,
+      "metric": "unchanged original six-line absolute effective E RMSE",
+      "status": "passed"
+    },
+    {
+      "name": "pillarFoot relative 30% improvement",
+      "actual": 10,
+      "threshold": 0.09309472976916375,
+      "metric": "same original v4 RMSE threshold, without rounding",
+      "status": "failed"
+    },
+    {
+      "name": "boxFloor relative 30% improvement",
+      "actual": 0.018937850729605913,
+      "threshold": 0.1261857123524482,
+      "metric": "same original v4 RMSE threshold, without rounding",
+      "status": "passed"
+    },
+    {
+      "name": "original k=1 complete samples and matching revision",
+      "actual": 0,
+      "threshold": 0,
+      "metric": "all six lines, original scored indices, no Unknown or missing rays",
+      "status": "passed"
+    },
+    {
+      "name": "original k=2 complete samples and matching revision",
+      "actual": 0,
+      "threshold": 0,
+      "metric": "all six lines, original scored indices, no Unknown or missing rays",
+      "status": "passed"
+    },
+    {
+      "name": "original k=3 complete samples and matching revision",
+      "actual": 0,
+      "threshold": 0,
+      "metric": "all six lines, original scored indices, no Unknown or missing rays",
+      "status": "passed"
+    },
+    {
+      "name": "original boxFloor no regression vs A",
+      "actual": 0.018937850729605913,
+      "threshold": 0.19294645543466396,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "original boxFace no regression vs A",
+      "actual": 0.0476718653864004,
+      "threshold": 0.10779439702052038,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "original wallFoot no regression vs A",
+      "actual": 0.0017112903848019126,
+      "threshold": 0.010216835349977502,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "original pillarFoot no regression vs A",
+      "actual": 10,
+      "threshold": 0.14183071876929557,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "failed"
+    },
+    {
+      "name": "original ceiling no regression vs A",
+      "actual": 0.0023598033032116933,
+      "threshold": 0.008434187050300444,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "original doorway no regression vs A",
+      "actual": 0.004155902311441248,
+      "threshold": 0.0953558290563863,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out k=1 complete samples and matching revision",
+      "actual": 0,
+      "threshold": 0,
+      "metric": "all six lines, original scored indices, no Unknown or missing rays",
+      "status": "passed"
+    },
+    {
+      "name": "held-out k=2 complete samples and matching revision",
+      "actual": 0,
+      "threshold": 0,
+      "metric": "all six lines, original scored indices, no Unknown or missing rays",
+      "status": "passed"
+    },
+    {
+      "name": "held-out k=3 complete samples and matching revision",
+      "actual": 0,
+      "threshold": 0,
+      "metric": "all six lines, original scored indices, no Unknown or missing rays",
+      "status": "passed"
+    },
+    {
+      "name": "held-out boxFloor no regression vs A",
+      "actual": 0.02109290618633631,
+      "threshold": 0.2992874560198794,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out boxFace no regression vs A",
+      "actual": 0.07128080060684884,
+      "threshold": 0.1335981227150704,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out wallFoot no regression vs A",
+      "actual": 0.04223682422845982,
+      "threshold": 0.2587557855860537,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out pillarFoot no regression vs A",
+      "actual": 0.013257003296546712,
+      "threshold": 0.22821786534777294,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out ceiling no regression vs A",
+      "actual": 0.022088348658252484,
+      "threshold": 0.09458917541393687,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    },
+    {
+      "name": "held-out doorway no regression vs A",
+      "actual": 0.012356139848196546,
+      "threshold": 0.12584354103182618,
+      "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+      "status": "passed"
+    }
+  ],
+  "injected": true
+}

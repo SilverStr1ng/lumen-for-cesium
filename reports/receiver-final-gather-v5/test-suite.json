@@ -1,0 +1,1392 @@
+{
+  "started": "2026-10-13T06:47:12.911Z",
+  "version": {
+    "head": "251c2d70cd000b9665a6739e4d4a1dd3d48afc68",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "0bdf3177629153207976b928367f52d7175c41d294042f08676bc706ebc358a1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "98dcc254b84e8d368718ef8c99f6e5a5281ad8896c575474bf4627afae40b3d3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "c364a21cb92efa42ea7c891f1b24ee91cf8e00ae6887da310b02505acbe69a88",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "57737c19313ced35ff2e1efd79bfca1635f25092783527595a42e036b94d8c61",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "16b571d8baf8ed72e9b911667ecb1d67d3565fa7fba23f257bbeed01af0b50db",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSnapshot.js": "4570391f3a59bfc70f74fce3173dfbce4bb173f583bebd19d9151b09ac7385a0",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "3e3a8e4f09c8d021dc59464b8fabfdd1eec667196c3d084581805df6efb299ce",
+      "cesium-1.146/packages/engine/Source/Scene/Scene.js": "0f794344b8699510ecaddfa40c3675856a29ef87ffc4f25aaff9439ebce9c2fc",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LightingStageFS.glsl": "5c3e66b8f268c9b0fa527d4cab63c69a2ad69be2451b79be6b21589a69367175",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/ImageBasedLightingStageFS.glsl": "ce5d192efa24444b02dd95a6b11a59f0c52b60a94a02103e1cfb27a540f85fdb",
+      "demo/globe.js": "871d2ee1801e3ee3dba52b6867d9d604f9507f3b165d396700072c58e17e14e5"
+    },
+    "compiledBundle": "1700d913f6ca5633fef233d93f1ed111e3fdc2623801bca09d40e1d04784b104",
+    "modifiedSources": []
+  },
+  "tests": [
+    {
+      "script": "lint-r6",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1445.1313,
+      "stdout": "",
+      "stderr": "",
+      "name": "target ESLint",
+      "status": "passed"
+    },
+    {
+      "script": "verify-pipeline",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1326.6329999999998,
+      "stdout": "PASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for specular environment maps\nPASS Scene/Model/ImageBasedLightingPipelineStage updates Lumen uniforms without rebuilding and disables them during picking\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for default image-based lighting\nPASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for spherical harmonics\nPASS Scene/Model/LightingPipelineStage keeps unsupported material paths on the original lighting\nPASS Scene/Model/LightingPipelineStage supports unlit lighting\nPASS Scene/Model/LightingPipelineStage supports light color\nPASS Scene/Model/LightingPipelineStage exports supported opaque and alpha-mask PBR triangles with normals\nPASS Scene/Model/LightingPipelineStage supports PBR lighting\n9 pipeline specs; 0 failed; passed\n",
+      "stderr": "",
+      "name": "pipeline",
+      "status": "passed"
+    },
+    {
+      "script": "verify-transport",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 187.76189999999997,
+      "stdout": "PASS 500 BVH rays agree with independent brute-force plane/barycentric reference\nPASS alpha rejection continues traversal; exhausted traversal is Unknown\nPASS directional DDGI integration yields pi * sky radiance without bounce energy growth\nPASS directional distance moments suppress cross-wall probe leakage by >1000x\n",
+      "stderr": "",
+      "name": "transport",
+      "status": "passed"
+    },
+    {
+      "script": "verify-environment",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 195.57979999999998,
+      "stdout": "{\n  \"tolerance\": 0.025,\n  \"checks\": [\n    {\n      \"name\": \"sphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.005319031076975733,\n      \"passed\": true\n    },\n    {\n      \"name\": \"upper-hemisphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.017878325282171925,\n      \"passed\": true\n    },\n    {\n      \"name\": \"root domain includes 200m blocker and retains historical 100m floor\",\n      \"maximum\": 201.01999900009997,\n      \"full\": {\n        \"status\": \"Hit\",\n        \"triangle\": 0,\n        \"u\": 0.25,\n        \"v\": 0.5,\n        \"distance\": 200,\n        \"backface\": true\n      },\n      \"passed\": true\n    }\n  ],\n  \"status\": \"passed\"\n}\n",
+      "stderr": "",
+      "name": "environment",
+      "status": "passed"
+    },
+    {
+      "script": "verify-globe-controls",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 44.534400000000005,
+      "stdout": "PASS provider identity/generation guards, single fallback, terrain disable, stale status, foundation range, redaction and CSS order\n",
+      "stderr": "",
+      "name": "globe-controls",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1923.5835000000002,
+      "stdout": "[{\"strategy\":\"median\",\"bins\":12,\"stats\":{\"persistentBytes\":7808,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":7,\"triangles\":514,\"nodes\":131,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":60762,\"triangles\":60507,\"accept\":358},\"milliseconds\":23.810699999999997},{\"strategy\":\"sah\",\"bins\":8,\"stats\":{\"persistentBytes\":10208,\"strategy\":\"sah\",\"bins\":8,\"maxDepth\":8,\"triangles\":514,\"nodes\":191,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":65950,\"triangles\":34267,\"accept\":360},\"milliseconds\":18.450900000000047},{\"strategy\":\"sah\",\"bins\":12,\"stats\":{\"persistentBytes\":9968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":8,\"triangles\":514,\"nodes\":185,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63446,\"triangles\":36899,\"accept\":358},\"milliseconds\":15.536299999999983},{\"strategy\":\"sah\",\"bins\":16,\"stats\":{\"persistentBytes\":9888,\"strategy\":\"sah\",\"bins\":16,\"maxDepth\":8,\"triangles\":514,\"nodes\":183,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":63544,\"triangles\":36041,\"accept\":357},\"milliseconds\":8.676400000000058},{\"strategy\":\"sah\",\"bins\":32,\"stats\":{\"persistentBytes\":9488,\"strategy\":\"sah\",\"bins\":32,\"maxDepth\":8,\"triangles\":514,\"nodes\":173,\"queries\":6006,\"unknown\":1,\"alphaRejected\":8},\"counters\":{\"nodes\":61648,\"triangles\":38845,\"accept\":358},\"milliseconds\":9.248199999999997}]\n",
+      "stderr": "",
+      "name": "visibility",
+      "status": "passed"
+    },
+    {
+      "script": "verify-fixtures",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 10267.4686,
+      "stdout": "PASS untextured: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS untextured: finite HDR irradiance and accounted texture memory\nPASS untextured: valid 1x1 material atlas\nPASS sky lighting produces actual receiver irradiance changes\nPASS exhausted GPU traversal is Unknown\nPASS untextured: GL has no framebuffer feedback or errors\nPASS two-rooms: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS two-rooms: finite HDR irradiance and accounted texture memory\nPASS two-rooms: real wall agrees with independent CPU intersection\nPASS two-rooms: wall blocks red emissive transport\nPASS two-rooms: GL has no framebuffer feedback or errors\nPASS alpha-mask: actual WebGL2 GPU world, valid probes and nonempty geometry\nPASS alpha-mask: finite HDR irradiance and accounted texture memory\nPASS alpha mask: transparent texel passes through; opaque texel occludes\nPASS black light preserves valid coverage and zero irradiance\nPASS destroy releases owned resources and reload restores GPU lighting\nPASS alpha-mask: GL has no framebuffer feedback or errors\nPASS no render, worker, browser or GL exceptions\n",
+      "stderr": "",
+      "name": "fixtures",
+      "status": "passed"
+    },
+    {
+      "script": "verify-relighting",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 7274.4551999999985,
+      "stdout": "PASS valid sun cache has no Unknown slots\nPASS skyOnly: zero new probe intersections, sun BVH work and moments\nPASS intensityOnly: zero new probe intersections, sun BVH work and moments\nPASS direction refreshes sun visibility without retracing probe hits\nPASS distance moments remain bit-identical through energy, direction and material changes\nPASS RGB/emission updates have independent material versions and reuse geometry and visibility\nPASS immutable jobs resist caller mutation and unsafe hit-semantic changes are rejected\nPASS distance moments match an independent CPU formula\nPASS Unknown sun visibility is retained as invalid lighting without changing geometry\nPASS actual foreground HDR responds to sky changes\nPASS no GL feedback or errors in dependency and HDR diagnostics\n",
+      "stderr": "",
+      "name": "relighting",
+      "status": "passed"
+    },
+    {
+      "script": "verify-integration",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 6811.5769,
+      "stdout": "PASS arithmetic and LUT produce matching fixed-input E and final HDR\nPASS every octahedral border is an exact mirror without cross-probe reads\nPASS sampling is continuous across octahedral seams\nPASS distance moments remain unchanged across integration variants\nPASS copying uses distinct GL images and bounded owned resources\n",
+      "stderr": "",
+      "name": "integration",
+      "status": "passed"
+    },
+    {
+      "script": "verify-progressive",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 7813.296899999998,
+      "stdout": "PASS first complete round is usable before completed resolves\nPASS forward HDR uses the new first-round texture without old-field warm start\nPASS each completed progressive round is displayed in a distinct frame\nPASS published/read/write ownership refers only to completed reads and separate writes\nPASS same N-bounce progressive and snapshot E/moments/final HDR agree\nPASS rapid requests publish during input and settle the newest revision\nPASS superseded promises reject and obsolete deeper rounds are skipped\nPASS publication versions are monotonic and pending work is bounded\nPASS on-demand rendering stops GI submissions and frames after settling\nPASS actual GL texture/FBO resources remain stable and shader cache does not grow\nPASS destroy rejects both lighting promises and pending worker requests\nPASS initialization failure rejects preview/final and releases resources\nPASS reload restores all rounds without GL feedback, errors or blocking waits\nPASS no unexpected render/worker/browser errors\n",
+      "stderr": "",
+      "name": "progressive",
+      "status": "passed"
+    },
+    {
+      "script": "verify-publication-lifecycle",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 15323.866300000002,
+      "stdout": "PASS non-final publication: destroy-world\nPASS non-final publication: destroy-scene\nPASS non-final publication: replace-world\nPASS non-final publication: solve\nPASS non-final publication: throw\nPASS final publication: destroy-world\nPASS final publication: destroy-scene\nPASS final publication: replace-world\nPASS final publication: solve\nPASS final publication: throw\nPASS progressive: firstPublished.then destruction cancels queued event\nPASS snapshot: firstPublished.then destruction cancels queued event\n",
+      "stderr": "",
+      "name": "publication-lifecycle",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility-gpu",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 14364.458899999998,
+      "stdout": "untextured [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9096,\"p50\":3,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":21324,\"p50\":7,\"p95\":7,\"max\":12},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":696,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":1,\"triangles\":16,\"nodes\":3,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.30000000074505806,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.2999999970197678},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":1188,\"p50\":0,\"p95\":8,\"max\":8},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9096,\"p50\":3,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":21324,\"p50\":7,\"p95\":7,\"max\":12},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":696,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":1,\"triangles\":16,\"nodes\":3,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.30000000074505806,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.600000001490116},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":1188,\"p50\":0,\"p95\":8,\"max\":8},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9186,\"p50\":3,\"p95\":3,\"max\":6},\"triangleTests\":{\"sum\":9286,\"p50\":3,\"p95\":3,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":856,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":3,\"triangles\":16,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.6999999992549419,\"tieRankOffset\":16,\"tieRankBytes\":64,\"rankAndVertexPackMilliseconds\":0.09999999776482582,\"prepareMilliseconds\":4},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":695,\"p50\":0,\"p95\":4,\"max\":4},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":3027,\"sunSummary\":{\"rays\":3042,\"hit\":30,\"miss\":3012,\"unknown\":0,\"nodeVisits\":{\"sum\":9186,\"p50\":3,\"p95\":3,\"max\":6},\"triangleTests\":{\"sum\":9286,\"p50\":3,\"p95\":3,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":856,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":3,\"triangles\":16,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.6000000014901161,\"tieRankOffset\":16,\"tieRankBytes\":64,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":3.599999997764826},\"distribution\":{\"nodeVisits\":{\"sum\":850,\"p50\":1,\"p95\":3,\"max\":3},\"triangleTests\":{\"sum\":695,\"p50\":0,\"p95\":4,\"max\":4},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}}]\nalpha-mask [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.19999999925494194,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":5},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.30000000074505806,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0.09999999776482582,\"prepareMilliseconds\":5.100000001490116},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.29999999701976776,\"tieRankOffset\":6,\"tieRankBytes\":32,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":6.100000001490116},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":0,\"sunSummary\":{\"rays\":999,\"hit\":0,\"miss\":999,\"unknown\":0,\"nodeVisits\":{\"sum\":999,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":4995,\"p50\":5,\"p95\":5,\"max\":5},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":576,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":0,\"triangles\":6,\"nodes\":1,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.29999999701976776,\"tieRankOffset\":6,\"tieRankBytes\":32,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":5.899999998509884},\"distribution\":{\"nodeVisits\":{\"sum\":512,\"p50\":1,\"p95\":1,\"max\":1},\"triangleTests\":{\"sum\":739,\"p50\":0,\"p95\":6,\"max\":6},\"alphaTests\":{\"sum\":13,\"p50\":0,\"p95\":0,\"max\":1}}}]\ntwo-rooms [{\"strategy\":\"median\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":22130,\"p50\":3,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":24213,\"p50\":4,\"p95\":8,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":888,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":2,\"triangles\":24,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.29999999701976776,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.300000000745058},\"distribution\":{\"nodeVisits\":{\"sum\":1317,\"p50\":1,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":1310,\"p50\":0,\"p95\":9,\"max\":18},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"median\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":22130,\"p50\":3,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":24213,\"p50\":4,\"p95\":8,\"max\":9},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":888,\"strategy\":\"median\",\"bins\":12,\"maxDepth\":2,\"triangles\":24,\"nodes\":7,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.3999999985098839,\"tieRankOffset\":-1,\"tieRankBytes\":0,\"rankAndVertexPackMilliseconds\":0,\"prepareMilliseconds\":3.5},\"distribution\":{\"nodeVisits\":{\"sum\":1317,\"p50\":1,\"p95\":7,\"max\":7},\"triangleTests\":{\"sum\":1310,\"p50\":0,\"p95\":9,\"max\":18},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"reference\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":19658,\"p50\":2,\"p95\":8,\"max\":8},\"triangleTests\":{\"sum\":17278,\"p50\":1,\"p95\":10,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":4,\"triangles\":24,\"nodes\":9,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.5999999977648258,\"tieRankOffset\":24,\"tieRankBytes\":96,\"rankAndVertexPackMilliseconds\":0.09999999776482582,\"prepareMilliseconds\":3.7000000029802322},\"distribution\":{\"nodeVisits\":{\"sum\":1633,\"p50\":1,\"p95\":8,\"max\":9},\"triangleTests\":{\"sum\":929,\"p50\":0,\"p95\":9,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}},{\"strategy\":\"sah\",\"mode\":\"optimized\",\"maxE\":0,\"maxVisibility\":0,\"failures\":0,\"budgetUnknown\":4192,\"sunSummary\":{\"rays\":6538,\"hit\":4192,\"miss\":2346,\"unknown\":0,\"nodeVisits\":{\"sum\":19658,\"p50\":2,\"p95\":8,\"max\":8},\"triangleTests\":{\"sum\":17278,\"p50\":1,\"p95\":10,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}},\"bvh\":{\"persistentBytes\":968,\"strategy\":\"sah\",\"bins\":12,\"maxDepth\":4,\"triangles\":24,\"nodes\":9,\"queries\":0,\"unknown\":0,\"alphaRejected\":0,\"buildMilliseconds\":0.6000000014901161,\"tieRankOffset\":24,\"tieRankBytes\":96,\"rankAndVertexPackMilliseconds\":0.10000000149011612,\"prepareMilliseconds\":3.699999999254942},\"distribution\":{\"nodeVisits\":{\"sum\":1633,\"p50\":1,\"p95\":8,\"max\":9},\"triangleTests\":{\"sum\":929,\"p50\":0,\"p95\":9,\"max\":10},\"alphaTests\":{\"sum\":0,\"p50\":0,\"p95\":0,\"max\":0}}}]\n",
+      "stderr": "",
+      "name": "visibility-gpu",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility-domain",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 7189.897599999997,
+      "stdout": "{\n  grid: {\n    origin: [ -1.5, -1.5, -0.5 ],\n    counts: [ 4, 4, 152 ],\n    total: 2432,\n    spacing: 1,\n    normalBias: 0.02,\n    rays: 128,\n    width: 160,\n    height: 1520\n  },\n  checked: 523,\n  leaks: 0,\n  short: [\n    {\n      status: 'Miss',\n      triangle: undefined,\n      gpuTriangle: -2,\n      u: 0,\n      v: 0,\n      distance: 100,\n      backface: false\n    }\n  ],\n  complete: [\n    {\n      status: 'Hit',\n      triangle: 3,\n      gpuTriangle: 3,\n      u: 0.550000011920929,\n      v: 0.050000011920928955,\n      distance: 149.97999572753906,\n      backface: true\n    }\n  ]\n}\n",
+      "stderr": "",
+      "name": "visibility-domain",
+      "status": "passed"
+    },
+    {
+      "script": "verify-visibility-edges",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 7892.728900000002,
+      "stdout": "[\n  {\n    mode: 'reference',\n    rays: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    hits: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    any: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    cpu: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    stats: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ]\n  },\n  {\n    mode: 'optimized',\n    rays: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    hits: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    any: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    cpu: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ],\n    stats: [\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object],\n      [Object], [Object]\n    ]\n  }\n]\n",
+      "stderr": "",
+      "name": "visibility-edges",
+      "status": "passed"
+    },
+    {
+      "script": "verify-globe",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 12666.3269,
+      "stdout": "",
+      "stderr": "",
+      "name": "globe",
+      "status": "passed"
+    },
+    {
+      "script": "verify-solid-probes",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 1643.23520000001,
+      "stdout": "{\"totalInside\":0,\"activeInside\":0,\"probes\":924}\nPASS actual glTF -> BVH -> relocation/classification rejects solid interiors\nPASS explicitly double-sided solid interior rejected\nPASS double-sided thin sheet supports both sides\nPASS doorway room valid dark free space survives classification/integration/material transport\nPASS overlapping slabs / cumulative relocation bound\n",
+      "stderr": "",
+      "name": "solid-probes",
+      "status": "passed"
+    },
+    {
+      "script": "verify-spatial-kernel",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 46.255799999999,
+      "stdout": "{\"x\":0,\"actual\":[0,0,0],\"expected\":[0,0,0],\"weight\":1}\n{\"x\":0.01,\"actual\":[0.01,0.02,0.03],\"expected\":[0.01,0.02,0.03],\"weight\":1}\n{\"x\":0.25,\"actual\":[0.25,0.5,0.75],\"expected\":[0.25,0.5,0.75],\"weight\":1}\n{\"x\":0.5,\"actual\":[0.5,1,1.5],\"expected\":[0.5,1,1.5],\"weight\":1}\n{\"x\":0.75,\"actual\":[0.75,1.5,2.25],\"expected\":[0.75,1.5,2.25],\"weight\":1}\n{\"x\":0.99,\"actual\":[0.99,1.98,2.9699999999999998],\"expected\":[0.99,1.98,2.9699999999999998],\"weight\":1}\n{\"x\":1,\"actual\":[1,2,3],\"expected\":[1,2,3],\"weight\":1}\nPASS independent linear field / normalized trilinear kernel\nPASS constant field, low reliability, Ng/Ns, invalid data versus valid darkness\n",
+      "stderr": "",
+      "name": "spatial-kernel",
+      "status": "passed"
+    },
+    {
+      "script": "verify-spatial-gpu",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 6571.267999999996,
+      "stdout": "passed \n",
+      "stderr": "",
+      "name": "spatial-gpu",
+      "status": "passed"
+    },
+    {
+      "script": "verify-pbr-environment",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8175.076099999991,
+      "stdout": "{\"status\":\"passed\",\"checks\":[\"real cubemap mips, roughness/direction response, manual solar refresh, zero production sync readbacks\",\"90 materials/view angles: white furnace, linear source scaling, coverage conservation, zero metal diffuse, independent specular MS\"],\"errors\":[]}\n",
+      "stderr": "",
+      "name": "pbr-environment",
+      "status": "passed"
+    },
+    {
+      "script": "verify-display-presets",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 15636.972599999994,
+      "stdout": "passed \n",
+      "stderr": "",
+      "name": "display-presets",
+      "status": "passed"
+    },
+    {
+      "script": "verify-probe-display",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 6412.071799999991,
+      "stdout": "passed \n",
+      "stderr": "",
+      "name": "probe-display",
+      "status": "passed"
+    },
+    {
+      "script": "verify-ibl-policy",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 6476.011100000003,
+      "stdout": "passed 0 \n",
+      "stderr": "",
+      "name": "ibl-policy",
+      "status": "passed"
+    },
+    {
+      "script": "verify-final-gather",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 9317.424800000008,
+      "stdout": "passed \n",
+      "stderr": "",
+      "name": "final-gather",
+      "status": "passed"
+    },
+    {
+      "script": "verify-receiver",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 13994.247299999988,
+      "stdout": "PASS full-resolution ROI production equals fixed point FG\nPASS same-frame E replaces complete DDGI; direct and emitter unchanged\nPASS ordinary/log depth and forced multiframe-frustum receiver ownership\nUnknown evidence {\"max\":0.00830078125,\"roiMax\":0,\"locations\":[{\"x\":486,\"y\":217,\"channel\":0,\"a\":0.422607421875,\"b\":0.430908203125}],\"unknown\":65536,\"valid\":65536}\nPASS Unknown does not become sky; invalid FG uses DDGI\nPASS memory and ray budgets reject atomically\nPASS new revision and material do not reuse old FG input\nPASS resize, AA, no history and camera movements retain static BVH\nPASS FG off restores raw solver and releases resources over 20 cycles\nPASS no production readback, feedback or nested timer queries\nPASS static requestRenderMode sleeps; camera requests FG frame\ndestroy evidence {\"restored\":{\"mode\":\"fg\",\"quality\":\"fast\",\"ready\":true},\"active\":true,\"oldDestroyed\":true,\"ownedTextures\":0,\"ownedFramebuffers\":0,\"worldTextures\":0,\"live\":{\"textures\":9,\"framebuffers\":1,\"queries\":0,\"programs\":0,\"syncs\":0}}\nPASS saved view restores FG mode and settings; reload and destroy release\npassed\n",
+      "stderr": "",
+      "name": "receiver",
+      "status": "passed"
+    },
+    {
+      "script": "verify-reconstruction",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 8784.027899999986,
+      "stdout": "passed \n",
+      "stderr": "",
+      "name": "reconstruction",
+      "status": "passed"
+    },
+    {
+      "script": "verify-resource-lifecycle",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 250.9548000000068,
+      "stdout": "passed class resource guards and late lease cleanup\n",
+      "stderr": "",
+      "name": "resource-lifecycle",
+      "status": "passed"
+    },
+    {
+      "script": "compare-final-gather",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 64761.51689999999,
+      "stdout": "PAVILION 1 {\"boxFloor\":{\"rmse\":0.0035605791284130254,\"mae\":0.0028659000123207844,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.003853365910448931,\"mae\":0.0033746993184119753,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.0008331968515834355,\"mae\":0.0005656464827279393,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.004368925010146794,\"mae\":0.0035351724345147714,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.001033002445986161,\"mae\":0.000773910993622576,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.002928659516747567,\"mae\":0.001915005122182757,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nPAVILION 2 {\"boxFloor\":{\"rmse\":0.016253115373910606,\"mae\":0.013068085482228157,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.03761250349283035,\"mae\":0.029528902404996452,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.001539005655137827,\"mae\":0.0012522823383856818,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.007462279729305591,\"mae\":0.006182269760085088,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.002109119227411866,\"mae\":0.0016669491105639827,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.004281206083135575,\"mae\":0.003134071271253036,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nPAVILION 3 {\"boxFloor\":{\"rmse\":0.018937850729605913,\"mae\":0.015531267613165447,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.0476718653864004,\"mae\":0.03742392352859573,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.0017112903848019126,\"mae\":0.001362295439792044,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.011304300930685327,\"mae\":0.009808151203737082,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.0023598033032116933,\"mae\":0.0018670231561347106,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.004155902311441248,\"mae\":0.003653142000966224,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nHELD OUT 1 {\"boxFloor\":{\"rmse\":0.002354503960643546,\"mae\":0.0020137362056771944,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.004097503867311026,\"mae\":0.003447872993900146,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.0014044290960311264,\"mae\":0.001059683570584101,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.004937358797564114,\"mae\":0.0037798694045679472,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.0011306235261407615,\"mae\":0.0009301090444355067,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.0021798248441107495,\"mae\":0.0015735979435149577,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nHELD OUT 2 {\"boxFloor\":{\"rmse\":0.015381260184242069,\"mae\":0.010386624271321008,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.05775069505854574,\"mae\":0.05089729152364532,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.03141241458836106,\"mae\":0.016856900614451557,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.007521618114748073,\"mae\":0.0063722684255577205,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.016891552324716074,\"mae\":0.01365259643325727,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.005285567625703488,\"mae\":0.005016880603709591,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nHELD OUT 3 {\"boxFloor\":{\"rmse\":0.02109290618633631,\"mae\":0.015649865667999186,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.07128080060684884,\"mae\":0.0635499183662696,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.04223682422845982,\"mae\":0.024129844125731124,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.013257003296546712,\"mae\":0.009810757660083916,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.022088348658252484,\"mae\":0.019207398922092753,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.012356139848196546,\"mae\":0.011491984897701212,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\n",
+      "stderr": "",
+      "name": "compare-final-gather",
+      "status": "executed"
+    },
+    {
+      "script": "capture-receiver",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 29857.136500000022,
+      "stdout": "SCREEN fast boxFoot 0.06373164604153148 0.04161827130925023\nSCREEN fast pillarFoot 0.04291850361938567 0.035937452456685254\nSCREEN fast wallFoot 0.011918036892371005 0.0275304081723095\nSCREEN balanced boxFoot 0.06346994629788982 0.04336007976482918\nSCREEN balanced pillarFoot 0.04332760674582913 0.03338786222345494\nSCREEN balanced wallFoot 0.011886468526785033 0.027947600569586787\nSCREEN high boxFoot 0.06346994629788982 0.03728720476008782\nSCREEN high pillarFoot 0.04332760674582913 0.02941279174472003\nSCREEN high wallFoot 0.011886468526785033 0.0184156584987248\nSCREEN roi boxFoot 0.03274339801198992 0.023285334424297963\nSCREEN roi pillarFoot 0.0784357773047373 0.025262270241866534\nSCREEN roi wallFoot 0.06074580507173716 0.013583415989897275\nFIXED 16 {\"boxFloor\":{\"rmse\":0.040688344819235285,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.036660245364462725,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.016166886050646444,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.05421226315856125,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.02356188294517002,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.024229082979469282,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nFIXED 32 {\"boxFloor\":{\"rmse\":0.027192581925869784,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.06530126370383876,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.006266234327923378,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.023986325113491656,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.00873981153539652,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.009269613649265991,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nFIXED 64 {\"boxFloor\":{\"rmse\":0.023962180558211307,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.05046009779702775,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.007811645257121547,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.015688993932622873,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.009830199025329884,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.015129312002066643,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\nFIXED 256 {\"boxFloor\":{\"rmse\":0.01988128080467379,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"boxFace\":{\"rmse\":0.04649737049836356,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"wallFoot\":{\"rmse\":0.004886206047516002,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"pillarFoot\":{\"rmse\":0.011146056288028674,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"ceiling\":{\"rmse\":0.0023536453689239956,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]},\"doorway\":{\"rmse\":0.007791771426909603,\"scoredIndices\":[0,4,8,12,16,20,24,28,32,36,40,44,48]}}\n",
+      "stderr": "",
+      "name": "capture-receiver",
+      "status": "executed"
+    },
+    {
+      "script": "benchmark-receiver",
+      "args": [],
+      "exitCode": 0,
+      "milliseconds": 26293.57209999999,
+      "stdout": "regression ddgi {\"gpu\":{\"mean\":2.6767448073394497,\"p50\":3.061888,\"p95\":3.704416,\"samples\":109},\"stages\":{\"forward\":{\"samples\":69,\"mean\":0.5144301449275361,\"p50\":0.474112,\"p95\":0.902944}},\"bytes\":0}\nregression fast {\"gpu\":{\"mean\":3.5124729541284387,\"p50\":3.509632,\"p95\":4.449184,\"samples\":109},\"stages\":{\"receiver\":{\"samples\":71,\"mean\":0.02599301408450704,\"p50\":0.025344,\"p95\":0.032864},\"trace\":{\"samples\":71,\"mean\":0.5234605070422534,\"p50\":0.429376,\"p95\":0.9940479999999999},\"shade\":{\"samples\":70,\"mean\":0.3698975999999999,\"p50\":0.312032,\"p95\":0.769728},\"neighborhood\":{\"samples\":70,\"mean\":0.016069028571428567,\"p50\":0.016544,\"p95\":0.017152},\"forward\":{\"samples\":68,\"mean\":1.611184470588236,\"p50\":1.65168,\"p95\":2.197056}},\"bytes\":11661760}\nregression balanced {\"gpu\":{\"mean\":4.119646238532112,\"p50\":4.109312,\"p95\":4.661408,\"samples\":109},\"stages\":{\"receiver\":{\"samples\":70,\"mean\":0.05478445714285716,\"p50\":0.054464,\"p95\":0.056512},\"trace\":{\"samples\":70,\"mean\":1.4685590857142854,\"p50\":1.309184,\"p95\":2.368384},\"shade\":{\"samples\":70,\"mean\":0.8633773714285713,\"p50\":0.6546879999999999,\"p95\":1.949728},\"neighborhood\":{\"samples\":70,\"mean\":0.04874925714285713,\"p50\":0.03696,\"p95\":0.038912},\"forward\":{\"samples\":68,\"mean\":0.8342145882352942,\"p50\":0.883392,\"p95\":1.318016}},\"bytes\":37773760}\nregression high {\"gpu\":{\"mean\":4.191071999999999,\"p50\":4.07936,\"p95\":4.66656,\"samples\":104},\"stages\":{\"trace\":{\"samples\":69,\"mean\":2.5827325217391306,\"p50\":2.524576,\"p95\":3.126944},\"shade\":{\"samples\":69,\"mean\":1.0430418550724636,\"p50\":0.951648,\"p95\":1.33808},\"neighborhood\":{\"samples\":68,\"mean\":0.03919294117647058,\"p50\":0.024672,\"p95\":0.025952},\"receiver\":{\"samples\":68,\"mean\":0.06962211764705885,\"p50\":0.051968,\"p95\":0.056448},\"forward\":{\"samples\":63,\"mean\":0.5032766984126983,\"p50\":0.426848,\"p95\":0.861504}},\"bytes\":37773760}\nregression roi {\"gpu\":{\"mean\":4.136585777777777,\"p50\":4.14832,\"p95\":5.16432,\"samples\":108},\"stages\":{\"receiver\":{\"samples\":70,\"mean\":0.20581668571428566,\"p50\":0.180704,\"p95\":0.604512},\"trace\":{\"samples\":70,\"mean\":1.5238212571428575,\"p50\":1.462272,\"p95\":1.9293760000000004},\"shade\":{\"samples\":70,\"mean\":1.4040566857142855,\"p50\":1.412704,\"p95\":2.124736},\"neighborhood\":{\"samples\":70,\"mean\":0.0029229714285714313,\"p50\":0.00208,\"p95\":0.00688},\"forward\":{\"samples\":68,\"mean\":0.5978028235294118,\"p50\":0.516032,\"p95\":0.92688}},\"bytes\":46375360}\npresentation ddgi {\"gpu\":{\"mean\":3.6731443669724784,\"p50\":3.640288,\"p95\":4.171712,\"samples\":109},\"stages\":{\"forward\":{\"samples\":68,\"mean\":0.630821176470588,\"p50\":0.618624,\"p95\":0.628864}},\"bytes\":0}\npresentation fast {\"gpu\":{\"mean\":3.867321541284405,\"p50\":3.868832,\"p95\":4.183648,\"samples\":109},\"stages\":{\"shade\":{\"samples\":70,\"mean\":0.478060342857143,\"p50\":0.416736,\"p95\":0.727328},\"trace\":{\"samples\":70,\"mean\":0.5881874285714286,\"p50\":0.55456,\"p95\":0.751072},\"neighborhood\":{\"samples\":70,\"mean\":0.03836617142857146,\"p50\":0.019712,\"p95\":0.023168},\"receiver\":{\"samples\":69,\"mean\":0.03589936231884058,\"p50\":0.025536,\"p95\":0.027936},\"forward\":{\"samples\":68,\"mean\":1.841686588235294,\"p50\":2.019776,\"p95\":2.358016}},\"bytes\":11662912}\npresentation balanced {\"gpu\":{\"mean\":4.099481481481483,\"p50\":4.00816,\"p95\":4.82272,\"samples\":108},\"stages\":{\"receiver\":{\"samples\":69,\"mean\":0.05852475362318841,\"p50\":0.055392,\"p95\":0.058656},\"trace\":{\"samples\":69,\"mean\":2.04849947826087,\"p50\":2.058528,\"p95\":2.531552},\"shade\":{\"samples\":69,\"mean\":0.875695768115942,\"p50\":0.874976,\"p95\":0.8899520000000001},\"neighborhood\":{\"samples\":69,\"mean\":0.06163246376811594,\"p50\":0.043968,\"p95\":0.051808},\"forward\":{\"samples\":67,\"mean\":0.8952616119402984,\"p50\":0.760032,\"p95\":1.385184}},\"bytes\":37774912}\npresentation high {\"gpu\":{\"mean\":5.0767726153846136,\"p50\":5.131488,\"p95\":5.460384,\"samples\":104},\"stages\":{\"receiver\":{\"samples\":70,\"mean\":0.05863222857142858,\"p50\":0.052864,\"p95\":0.056832},\"trace\":{\"samples\":70,\"mean\":2.8316726857142855,\"p50\":2.7585599999999997,\"p95\":3.480288},\"shade\":{\"samples\":70,\"mean\":1.2135707428571432,\"p50\":1.211424,\"p95\":1.242784},\"neighborhood\":{\"samples\":70,\"mean\":0.028946742857142865,\"p50\":0.029184,\"p95\":0.030112},\"forward\":{\"samples\":64,\"mean\":0.7367400000000001,\"p50\":0.590656,\"p95\":1.06784}},\"bytes\":37774912}\n",
+      "stderr": "",
+      "name": "benchmark-receiver",
+      "status": "executed"
+    }
+  ],
+  "quality": {
+    "status": "failed",
+    "highQuery": "passed",
+    "production32": "failed",
+    "gateHarness": "passed",
+    "gates": [
+      {
+        "label": "ddgi-v4",
+        "script": "verify-quality",
+        "args": [
+          "--label",
+          "ddgi-v4"
+        ],
+        "exitCode": 1,
+        "milliseconds": 45.147300000011455,
+        "stdout": "{\"quality\":\"failed\",\"checks\":[{\"name\":\"boxFloor\",\"actual\":0.18026530336064028,\"threshold\":0.18765071165108677,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"boxFace\",\"actual\":0.09657158737706109,\"threshold\":0.3039858849336796,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"wallFoot\",\"actual\":0.0053592859992488235,\"threshold\":0.303540485115132,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot\",\"actual\":0.13299247109880535,\"threshold\":0.033018738250725134,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"tracked-failure\"},{\"name\":\"ceiling\",\"actual\":0.004242171782233549,\"threshold\":0.14987554369618528,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"doorway\",\"actual\":0.08793406100377725,\"threshold\":0.09037324175484689,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"}]}\n",
+        "stderr": "",
+        "quality": "failed",
+        "checks": [
+          {
+            "name": "boxFloor",
+            "actual": 0.18026530336064028,
+            "threshold": 0.18765071165108677,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "boxFace",
+            "actual": 0.09657158737706109,
+            "threshold": 0.3039858849336796,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "wallFoot",
+            "actual": 0.0053592859992488235,
+            "threshold": 0.303540485115132,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot",
+            "actual": 0.13299247109880535,
+            "threshold": 0.033018738250725134,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "tracked-failure"
+          },
+          {
+            "name": "ceiling",
+            "actual": 0.004242171782233549,
+            "threshold": 0.14987554369618528,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "doorway",
+            "actual": 0.08793406100377725,
+            "threshold": 0.09037324175484689,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          }
+        ],
+        "expectedExitCode": 1
+      },
+      {
+        "label": "old-threshold-smoke",
+        "script": "verify-quality",
+        "args": [
+          "--candidate",
+          "before",
+          "--label",
+          "old-threshold-smoke"
+        ],
+        "exitCode": 0,
+        "milliseconds": 42.31099999998696,
+        "stdout": "{\"quality\":\"passed\",\"checks\":[{\"name\":\"boxFloor\",\"actual\":0.18765071165108677,\"threshold\":0.18765071165108677,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"boxFace\",\"actual\":0.3039858849336796,\"threshold\":0.3039858849336796,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"wallFoot\",\"actual\":0.303540485115132,\"threshold\":0.303540485115132,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot\",\"actual\":0.033018738250725134,\"threshold\":0.033018738250725134,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"ceiling\",\"actual\":0.14987554369618528,\"threshold\":0.14987554369618528,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"doorway\",\"actual\":0.09037324175484689,\"threshold\":0.09037324175484689,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"}]}\n",
+        "stderr": "",
+        "quality": "passed",
+        "checks": [
+          {
+            "name": "boxFloor",
+            "actual": 0.18765071165108677,
+            "threshold": 0.18765071165108677,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "boxFace",
+            "actual": 0.3039858849336796,
+            "threshold": 0.3039858849336796,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "wallFoot",
+            "actual": 0.303540485115132,
+            "threshold": 0.303540485115132,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot",
+            "actual": 0.033018738250725134,
+            "threshold": 0.033018738250725134,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "ceiling",
+            "actual": 0.14987554369618528,
+            "threshold": 0.14987554369618528,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "doorway",
+            "actual": 0.09037324175484689,
+            "threshold": 0.09037324175484689,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          }
+        ],
+        "expectedExitCode": 0
+      },
+      {
+        "label": "fg-query-high",
+        "script": "verify-quality",
+        "args": [
+          "--input",
+          "reports/receiver-final-gather-v5/abcd.json",
+          "--label",
+          "fg-query-high"
+        ],
+        "exitCode": 0,
+        "milliseconds": 52.884799999999814,
+        "stdout": "{\"quality\":\"passed\",\"checks\":[{\"name\":\"boxFloor\",\"actual\":0.018937850729605913,\"threshold\":0.18765071165108677,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"boxFace\",\"actual\":0.0476718653864004,\"threshold\":0.3039858849336796,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"wallFoot\",\"actual\":0.0017112903848019126,\"threshold\":0.303540485115132,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot\",\"actual\":0.011304300930685327,\"threshold\":0.033018738250725134,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"ceiling\",\"actual\":0.0023598033032116933,\"threshold\":0.14987554369618528,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"doorway\",\"actual\":0.004155902311441248,\"threshold\":0.09037324175484689,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot relative 30% improvement\",\"actual\":0.011304300930685327,\"threshold\":0.09309472976916375,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"boxFloor relative 30% improvement\",\"actual\":0.018937850729605913,\"threshold\":0.1261857123524482,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"original k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original boxFloor no regression vs A\",\"actual\":0.018937850729605913,\"threshold\":0.19294645543466396,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original boxFace no regression vs A\",\"actual\":0.0476718653864004,\"threshold\":0.10779439702052038,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original wallFoot no regression vs A\",\"actual\":0.0017112903848019126,\"threshold\":0.010216835349977502,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original pillarFoot no regression vs A\",\"actual\":0.011304300930685327,\"threshold\":0.14183071876929557,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original ceiling no regression vs A\",\"actual\":0.0023598033032116933,\"threshold\":0.008434187050300444,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original doorway no regression vs A\",\"actual\":0.004155902311441248,\"threshold\":0.0953558290563863,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out boxFloor no regression vs A\",\"actual\":0.02109290618633631,\"threshold\":0.2992874560198794,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out boxFace no regression vs A\",\"actual\":0.07128080060684884,\"threshold\":0.1335981227150704,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out wallFoot no regression vs A\",\"actual\":0.04223682422845982,\"threshold\":0.2587557855860537,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out pillarFoot no regression vs A\",\"actual\":0.013257003296546712,\"threshold\":0.22821786534777294,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out ceiling no regression vs A\",\"actual\":0.022088348658252484,\"threshold\":0.09458917541393687,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out doorway no regression vs A\",\"actual\":0.012356139848196546,\"threshold\":0.12584354103182618,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"}]}\n",
+        "stderr": "",
+        "quality": "passed",
+        "checks": [
+          {
+            "name": "boxFloor",
+            "actual": 0.018937850729605913,
+            "threshold": 0.18765071165108677,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "boxFace",
+            "actual": 0.0476718653864004,
+            "threshold": 0.3039858849336796,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "wallFoot",
+            "actual": 0.0017112903848019126,
+            "threshold": 0.303540485115132,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot",
+            "actual": 0.011304300930685327,
+            "threshold": 0.033018738250725134,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "ceiling",
+            "actual": 0.0023598033032116933,
+            "threshold": 0.14987554369618528,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "doorway",
+            "actual": 0.004155902311441248,
+            "threshold": 0.09037324175484689,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot relative 30% improvement",
+            "actual": 0.011304300930685327,
+            "threshold": 0.09309472976916375,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "boxFloor relative 30% improvement",
+            "actual": 0.018937850729605913,
+            "threshold": 0.1261857123524482,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "original k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFloor no regression vs A",
+            "actual": 0.018937850729605913,
+            "threshold": 0.19294645543466396,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFace no regression vs A",
+            "actual": 0.0476718653864004,
+            "threshold": 0.10779439702052038,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original wallFoot no regression vs A",
+            "actual": 0.0017112903848019126,
+            "threshold": 0.010216835349977502,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original pillarFoot no regression vs A",
+            "actual": 0.011304300930685327,
+            "threshold": 0.14183071876929557,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original ceiling no regression vs A",
+            "actual": 0.0023598033032116933,
+            "threshold": 0.008434187050300444,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original doorway no regression vs A",
+            "actual": 0.004155902311441248,
+            "threshold": 0.0953558290563863,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out boxFloor no regression vs A",
+            "actual": 0.02109290618633631,
+            "threshold": 0.2992874560198794,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out boxFace no regression vs A",
+            "actual": 0.07128080060684884,
+            "threshold": 0.1335981227150704,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out wallFoot no regression vs A",
+            "actual": 0.04223682422845982,
+            "threshold": 0.2587557855860537,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out pillarFoot no regression vs A",
+            "actual": 0.013257003296546712,
+            "threshold": 0.22821786534777294,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out ceiling no regression vs A",
+            "actual": 0.022088348658252484,
+            "threshold": 0.09458917541393687,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out doorway no regression vs A",
+            "actual": 0.012356139848196546,
+            "threshold": 0.12584354103182618,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          }
+        ],
+        "expectedExitCode": 0
+      },
+      {
+        "label": "fg16",
+        "script": "verify-quality",
+        "args": [
+          "--input",
+          "reports/receiver-final-gather-v5/images.json",
+          "--samples",
+          "16",
+          "--label",
+          "fg16"
+        ],
+        "exitCode": 1,
+        "milliseconds": 63.992900000012014,
+        "stdout": "{\"quality\":\"failed\",\"checks\":[{\"name\":\"boxFloor\",\"actual\":0.040688344819235285,\"threshold\":0.18765071165108677,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"boxFace\",\"actual\":0.036660245364462725,\"threshold\":0.3039858849336796,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"wallFoot\",\"actual\":0.016166886050646444,\"threshold\":0.303540485115132,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot\",\"actual\":0.05421226315856125,\"threshold\":0.033018738250725134,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"tracked-failure\"},{\"name\":\"ceiling\",\"actual\":0.02356188294517002,\"threshold\":0.14987554369618528,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"doorway\",\"actual\":0.024229082979469282,\"threshold\":0.09037324175484689,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot relative 30% improvement\",\"actual\":0.05421226315856125,\"threshold\":0.09309472976916375,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"boxFloor relative 30% improvement\",\"actual\":0.040688344819235285,\"threshold\":0.1261857123524482,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"original k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original boxFloor no regression vs A\",\"actual\":0.040688344819235285,\"threshold\":0.19294645543466396,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original boxFace no regression vs A\",\"actual\":0.036660245364462725,\"threshold\":0.10779439702052038,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original wallFoot no regression vs A\",\"actual\":0.016166886050646444,\"threshold\":0.010216835349977502,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"failed\"},{\"name\":\"original pillarFoot no regression vs A\",\"actual\":0.05421226315856125,\"threshold\":0.14183071876929557,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original ceiling no regression vs A\",\"actual\":0.02356188294517002,\"threshold\":0.008434187050300444,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"failed\"},{\"name\":\"original doorway no regression vs A\",\"actual\":0.024229082979469282,\"threshold\":0.0953558290563863,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) boxFloor no regression vs A\",\"actual\":0.02109290618633631,\"threshold\":0.2992874560198794,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) boxFace no regression vs A\",\"actual\":0.07128080060684884,\"threshold\":0.1335981227150704,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) wallFoot no regression vs A\",\"actual\":0.04223682422845982,\"threshold\":0.2587557855860537,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) pillarFoot no regression vs A\",\"actual\":0.013257003296546712,\"threshold\":0.22821786534777294,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) ceiling no regression vs A\",\"actual\":0.022088348658252484,\"threshold\":0.09458917541393687,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) doorway no regression vs A\",\"actual\":0.012356139848196546,\"threshold\":0.12584354103182618,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"low-sample production seed validity\",\"actual\":0,\"threshold\":0,\"metric\":\"deterministic seed 0; all 294 points retained\",\"status\":\"passed\"}]}\n",
+        "stderr": "",
+        "quality": "failed",
+        "checks": [
+          {
+            "name": "boxFloor",
+            "actual": 0.040688344819235285,
+            "threshold": 0.18765071165108677,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "boxFace",
+            "actual": 0.036660245364462725,
+            "threshold": 0.3039858849336796,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "wallFoot",
+            "actual": 0.016166886050646444,
+            "threshold": 0.303540485115132,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot",
+            "actual": 0.05421226315856125,
+            "threshold": 0.033018738250725134,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "tracked-failure"
+          },
+          {
+            "name": "ceiling",
+            "actual": 0.02356188294517002,
+            "threshold": 0.14987554369618528,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "doorway",
+            "actual": 0.024229082979469282,
+            "threshold": 0.09037324175484689,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot relative 30% improvement",
+            "actual": 0.05421226315856125,
+            "threshold": 0.09309472976916375,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "boxFloor relative 30% improvement",
+            "actual": 0.040688344819235285,
+            "threshold": 0.1261857123524482,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "original k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFloor no regression vs A",
+            "actual": 0.040688344819235285,
+            "threshold": 0.19294645543466396,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFace no regression vs A",
+            "actual": 0.036660245364462725,
+            "threshold": 0.10779439702052038,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original wallFoot no regression vs A",
+            "actual": 0.016166886050646444,
+            "threshold": 0.010216835349977502,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "failed"
+          },
+          {
+            "name": "original pillarFoot no regression vs A",
+            "actual": 0.05421226315856125,
+            "threshold": 0.14183071876929557,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original ceiling no regression vs A",
+            "actual": 0.02356188294517002,
+            "threshold": 0.008434187050300444,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "failed"
+          },
+          {
+            "name": "original doorway no regression vs A",
+            "actual": 0.024229082979469282,
+            "threshold": 0.0953558290563863,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) boxFloor no regression vs A",
+            "actual": 0.02109290618633631,
+            "threshold": 0.2992874560198794,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) boxFace no regression vs A",
+            "actual": 0.07128080060684884,
+            "threshold": 0.1335981227150704,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) wallFoot no regression vs A",
+            "actual": 0.04223682422845982,
+            "threshold": 0.2587557855860537,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) pillarFoot no regression vs A",
+            "actual": 0.013257003296546712,
+            "threshold": 0.22821786534777294,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) ceiling no regression vs A",
+            "actual": 0.022088348658252484,
+            "threshold": 0.09458917541393687,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) doorway no regression vs A",
+            "actual": 0.012356139848196546,
+            "threshold": 0.12584354103182618,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "low-sample production seed validity",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "deterministic seed 0; all 294 points retained",
+            "status": "passed"
+          }
+        ],
+        "expectedExitCode": null
+      },
+      {
+        "label": "fg32",
+        "script": "verify-quality",
+        "args": [
+          "--input",
+          "reports/receiver-final-gather-v5/images.json",
+          "--samples",
+          "32",
+          "--label",
+          "fg32"
+        ],
+        "exitCode": 1,
+        "milliseconds": 63.118699999991804,
+        "stdout": "{\"quality\":\"failed\",\"checks\":[{\"name\":\"boxFloor\",\"actual\":0.027192581925869784,\"threshold\":0.18765071165108677,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"boxFace\",\"actual\":0.06530126370383876,\"threshold\":0.3039858849336796,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"wallFoot\",\"actual\":0.006266234327923378,\"threshold\":0.303540485115132,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot\",\"actual\":0.023986325113491656,\"threshold\":0.033018738250725134,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"ceiling\",\"actual\":0.00873981153539652,\"threshold\":0.14987554369618528,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"doorway\",\"actual\":0.009269613649265991,\"threshold\":0.09037324175484689,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot relative 30% improvement\",\"actual\":0.023986325113491656,\"threshold\":0.09309472976916375,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"boxFloor relative 30% improvement\",\"actual\":0.027192581925869784,\"threshold\":0.1261857123524482,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"original k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original boxFloor no regression vs A\",\"actual\":0.027192581925869784,\"threshold\":0.19294645543466396,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original boxFace no regression vs A\",\"actual\":0.06530126370383876,\"threshold\":0.10779439702052038,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original wallFoot no regression vs A\",\"actual\":0.006266234327923378,\"threshold\":0.010216835349977502,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original pillarFoot no regression vs A\",\"actual\":0.023986325113491656,\"threshold\":0.14183071876929557,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original ceiling no regression vs A\",\"actual\":0.00873981153539652,\"threshold\":0.008434187050300444,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"failed\"},{\"name\":\"original doorway no regression vs A\",\"actual\":0.009269613649265991,\"threshold\":0.0953558290563863,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) boxFloor no regression vs A\",\"actual\":0.02109290618633631,\"threshold\":0.2992874560198794,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) boxFace no regression vs A\",\"actual\":0.07128080060684884,\"threshold\":0.1335981227150704,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) wallFoot no regression vs A\",\"actual\":0.04223682422845982,\"threshold\":0.2587557855860537,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) pillarFoot no regression vs A\",\"actual\":0.013257003296546712,\"threshold\":0.22821786534777294,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) ceiling no regression vs A\",\"actual\":0.022088348658252484,\"threshold\":0.09458917541393687,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out high-query (low-sample not-run) doorway no regression vs A\",\"actual\":0.012356139848196546,\"threshold\":0.12584354103182618,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"low-sample production seed validity\",\"actual\":0,\"threshold\":0,\"metric\":\"deterministic seed 0; all 294 points retained\",\"status\":\"passed\"}]}\n",
+        "stderr": "",
+        "quality": "failed",
+        "checks": [
+          {
+            "name": "boxFloor",
+            "actual": 0.027192581925869784,
+            "threshold": 0.18765071165108677,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "boxFace",
+            "actual": 0.06530126370383876,
+            "threshold": 0.3039858849336796,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "wallFoot",
+            "actual": 0.006266234327923378,
+            "threshold": 0.303540485115132,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot",
+            "actual": 0.023986325113491656,
+            "threshold": 0.033018738250725134,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "ceiling",
+            "actual": 0.00873981153539652,
+            "threshold": 0.14987554369618528,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "doorway",
+            "actual": 0.009269613649265991,
+            "threshold": 0.09037324175484689,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot relative 30% improvement",
+            "actual": 0.023986325113491656,
+            "threshold": 0.09309472976916375,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "boxFloor relative 30% improvement",
+            "actual": 0.027192581925869784,
+            "threshold": 0.1261857123524482,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "original k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFloor no regression vs A",
+            "actual": 0.027192581925869784,
+            "threshold": 0.19294645543466396,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFace no regression vs A",
+            "actual": 0.06530126370383876,
+            "threshold": 0.10779439702052038,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original wallFoot no regression vs A",
+            "actual": 0.006266234327923378,
+            "threshold": 0.010216835349977502,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original pillarFoot no regression vs A",
+            "actual": 0.023986325113491656,
+            "threshold": 0.14183071876929557,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original ceiling no regression vs A",
+            "actual": 0.00873981153539652,
+            "threshold": 0.008434187050300444,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "failed"
+          },
+          {
+            "name": "original doorway no regression vs A",
+            "actual": 0.009269613649265991,
+            "threshold": 0.0953558290563863,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) boxFloor no regression vs A",
+            "actual": 0.02109290618633631,
+            "threshold": 0.2992874560198794,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) boxFace no regression vs A",
+            "actual": 0.07128080060684884,
+            "threshold": 0.1335981227150704,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) wallFoot no regression vs A",
+            "actual": 0.04223682422845982,
+            "threshold": 0.2587557855860537,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) pillarFoot no regression vs A",
+            "actual": 0.013257003296546712,
+            "threshold": 0.22821786534777294,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) ceiling no regression vs A",
+            "actual": 0.022088348658252484,
+            "threshold": 0.09458917541393687,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out high-query (low-sample not-run) doorway no regression vs A",
+            "actual": 0.012356139848196546,
+            "threshold": 0.12584354103182618,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "low-sample production seed validity",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "deterministic seed 0; all 294 points retained",
+            "status": "passed"
+          }
+        ],
+        "expectedExitCode": null
+      },
+      {
+        "label": "injected",
+        "script": "verify-quality",
+        "args": [
+          "--input",
+          "reports/receiver-final-gather-v5/abcd.json",
+          "--label",
+          "fg-query-high",
+          "--inject-error"
+        ],
+        "exitCode": 1,
+        "milliseconds": 52.47009999997681,
+        "stdout": "{\"quality\":\"failed\",\"checks\":[{\"name\":\"boxFloor\",\"actual\":0.018937850729605913,\"threshold\":0.18765071165108677,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"boxFace\",\"actual\":0.0476718653864004,\"threshold\":0.3039858849336796,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"wallFoot\",\"actual\":0.0017112903848019126,\"threshold\":0.303540485115132,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot\",\"actual\":10,\"threshold\":0.033018738250725134,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"failed\"},{\"name\":\"ceiling\",\"actual\":0.0023598033032116933,\"threshold\":0.14987554369618528,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"doorway\",\"actual\":0.004155902311441248,\"threshold\":0.09037324175484689,\"metric\":\"unchanged original six-line absolute effective E RMSE\",\"status\":\"passed\"},{\"name\":\"pillarFoot relative 30% improvement\",\"actual\":10,\"threshold\":0.09309472976916375,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"failed\"},{\"name\":\"boxFloor relative 30% improvement\",\"actual\":0.018937850729605913,\"threshold\":0.1261857123524482,\"metric\":\"same original v4 RMSE threshold, without rounding\",\"status\":\"passed\"},{\"name\":\"original k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"original boxFloor no regression vs A\",\"actual\":0.018937850729605913,\"threshold\":0.19294645543466396,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original boxFace no regression vs A\",\"actual\":0.0476718653864004,\"threshold\":0.10779439702052038,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original wallFoot no regression vs A\",\"actual\":0.0017112903848019126,\"threshold\":0.010216835349977502,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original pillarFoot no regression vs A\",\"actual\":10,\"threshold\":0.14183071876929557,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"failed\"},{\"name\":\"original ceiling no regression vs A\",\"actual\":0.0023598033032116933,\"threshold\":0.008434187050300444,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"original doorway no regression vs A\",\"actual\":0.004155902311441248,\"threshold\":0.0953558290563863,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out k=1 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=2 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out k=3 complete samples and matching revision\",\"actual\":0,\"threshold\":0,\"metric\":\"all six lines, original scored indices, no Unknown or missing rays\",\"status\":\"passed\"},{\"name\":\"held-out boxFloor no regression vs A\",\"actual\":0.02109290618633631,\"threshold\":0.2992874560198794,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out boxFace no regression vs A\",\"actual\":0.07128080060684884,\"threshold\":0.1335981227150704,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out wallFoot no regression vs A\",\"actual\":0.04223682422845982,\"threshold\":0.2587557855860537,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out pillarFoot no regression vs A\",\"actual\":0.013257003296546712,\"threshold\":0.22821786534777294,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out ceiling no regression vs A\",\"actual\":0.022088348658252484,\"threshold\":0.09458917541393687,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"},{\"name\":\"held-out doorway no regression vs A\",\"actual\":0.012356139848196546,\"threshold\":0.12584354103182618,\"metric\":\"A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate\",\"status\":\"passed\"}]}\n",
+        "stderr": "",
+        "quality": "failed",
+        "checks": [
+          {
+            "name": "boxFloor",
+            "actual": 0.018937850729605913,
+            "threshold": 0.18765071165108677,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "boxFace",
+            "actual": 0.0476718653864004,
+            "threshold": 0.3039858849336796,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "wallFoot",
+            "actual": 0.0017112903848019126,
+            "threshold": 0.303540485115132,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot",
+            "actual": 10,
+            "threshold": 0.033018738250725134,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "failed"
+          },
+          {
+            "name": "ceiling",
+            "actual": 0.0023598033032116933,
+            "threshold": 0.14987554369618528,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "doorway",
+            "actual": 0.004155902311441248,
+            "threshold": 0.09037324175484689,
+            "metric": "unchanged original six-line absolute effective E RMSE",
+            "status": "passed"
+          },
+          {
+            "name": "pillarFoot relative 30% improvement",
+            "actual": 10,
+            "threshold": 0.09309472976916375,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "failed"
+          },
+          {
+            "name": "boxFloor relative 30% improvement",
+            "actual": 0.018937850729605913,
+            "threshold": 0.1261857123524482,
+            "metric": "same original v4 RMSE threshold, without rounding",
+            "status": "passed"
+          },
+          {
+            "name": "original k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFloor no regression vs A",
+            "actual": 0.018937850729605913,
+            "threshold": 0.19294645543466396,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original boxFace no regression vs A",
+            "actual": 0.0476718653864004,
+            "threshold": 0.10779439702052038,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original wallFoot no regression vs A",
+            "actual": 0.0017112903848019126,
+            "threshold": 0.010216835349977502,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original pillarFoot no regression vs A",
+            "actual": 10,
+            "threshold": 0.14183071876929557,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "failed"
+          },
+          {
+            "name": "original ceiling no regression vs A",
+            "actual": 0.0023598033032116933,
+            "threshold": 0.008434187050300444,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "original doorway no regression vs A",
+            "actual": 0.004155902311441248,
+            "threshold": 0.0953558290563863,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=1 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=2 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out k=3 complete samples and matching revision",
+            "actual": 0,
+            "threshold": 0,
+            "metric": "all six lines, original scored indices, no Unknown or missing rays",
+            "status": "passed"
+          },
+          {
+            "name": "held-out boxFloor no regression vs A",
+            "actual": 0.02109290618633631,
+            "threshold": 0.2992874560198794,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out boxFace no regression vs A",
+            "actual": 0.07128080060684884,
+            "threshold": 0.1335981227150704,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out wallFoot no regression vs A",
+            "actual": 0.04223682422845982,
+            "threshold": 0.2587557855860537,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out pillarFoot no regression vs A",
+            "actual": 0.013257003296546712,
+            "threshold": 0.22821786534777294,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out ceiling no regression vs A",
+            "actual": 0.022088348658252484,
+            "threshold": 0.09458917541393687,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          },
+          {
+            "name": "held-out doorway no regression vs A",
+            "actual": 0.012356139848196546,
+            "threshold": 0.12584354103182618,
+            "metric": "A RMSE + 3 × RMS independent D SE; candidate variance never widens the gate",
+            "status": "passed"
+          }
+        ],
+        "expectedExitCode": 1
+      }
+    ],
+    "overall": "failed"
+  },
+  "performance": {
+    "status": "passed",
+    "acceptance": [
+      {
+        "preset": "regression",
+        "quality": "ddgi",
+        "incrementalGpuP95": 0,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "regression",
+        "quality": "fast",
+        "incrementalGpuP95": 0.7447679999999997,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "regression",
+        "quality": "balanced",
+        "incrementalGpuP95": 0.9569919999999996,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "regression",
+        "quality": "high",
+        "incrementalGpuP95": 0.9621439999999994,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "regression",
+        "quality": "roi",
+        "incrementalGpuP95": 1.4599039999999999,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "presentation",
+        "quality": "ddgi",
+        "incrementalGpuP95": 0,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "presentation",
+        "quality": "fast",
+        "incrementalGpuP95": 0.011935999999999503,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "presentation",
+        "quality": "balanced",
+        "incrementalGpuP95": 0.651008,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      },
+      {
+        "preset": "presentation",
+        "quality": "high",
+        "incrementalGpuP95": 1.288672,
+        "gpu": "passed",
+        "memory": "passed",
+        "threshold": {
+          "incrementalGpuP95": 3,
+          "additionalBytes": 67108864
+        }
+      }
+    ]
+  },
+  "notRun": [
+    {
+      "name": "real authenticated ion",
+      "reason": "no token supplied; local and mocked error fallback tested"
+    },
+    {
+      "name": "external Sponza assets",
+      "reason": "self-authored local geometry"
+    },
+    {
+      "name": "simultaneous relight busy-frame GPU",
+      "reason": "idle-only GPU timestamps; submission latency is CPU scope"
+    },
+    {
+      "name": "production held-out low-sample rendering",
+      "reason": "held-out high-sample query validated; low-sample screen data only on original scene"
+    },
+    {
+      "name": "WebGL1 / real missing timer hardware",
+      "reason": "current device is WebGL2 with available GPU timers"
+    }
+  ],
+  "regression": "passed",
+  "finished": "2026-10-13T06:52:06.504Z",
+  "status": "failed"
+}

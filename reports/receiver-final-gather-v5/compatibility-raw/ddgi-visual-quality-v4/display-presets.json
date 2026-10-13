@@ -1,0 +1,322 @@
+{
+  "version": {
+    "head": "251c2d70cd000b9665a6739e4d4a1dd3d48afc68",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "0bdf3177629153207976b928367f52d7175c41d294042f08676bc706ebc358a1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "98dcc254b84e8d368718ef8c99f6e5a5281ad8896c575474bf4627afae40b3d3",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "c364a21cb92efa42ea7c891f1b24ee91cf8e00ae6887da310b02505acbe69a88",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "1700d913f6ca5633fef233d93f1ed111e3fdc2623801bca09d40e1d04784b104",
+    "modifiedSources": []
+  },
+  "states": [
+    {
+      "aa": "off",
+      "requested": 1,
+      "actualHdr": 1,
+      "fxaa": false,
+      "revision": 1
+    },
+    {
+      "aa": "fxaa",
+      "requested": 1,
+      "actualHdr": 1,
+      "fxaa": true,
+      "revision": 1
+    },
+    {
+      "aa": "msaa4",
+      "requested": 4,
+      "actualHdr": 4,
+      "fxaa": false,
+      "revision": 1
+    },
+    {
+      "shadow": {
+        "normalOffset": true,
+        "softShadows": false,
+        "maximumDistance": 150
+      },
+      "bias": {
+        "polygonOffset": true,
+        "polygonOffsetFactor": 1.1,
+        "polygonOffsetUnits": 4,
+        "normalOffset": true,
+        "normalOffsetScale": 0.1,
+        "normalShading": true,
+        "normalShadingSmooth": 0.05,
+        "depthBias": 0.00002
+      },
+      "revision": 1
+    },
+    {
+      "shadow": {
+        "normalOffset": false,
+        "softShadows": true,
+        "maximumDistance": 75
+      },
+      "bias": {
+        "polygonOffset": true,
+        "polygonOffsetFactor": 1.1,
+        "polygonOffsetUnits": 4,
+        "normalOffset": false,
+        "normalOffsetScale": 0.1,
+        "normalShading": true,
+        "normalShadingSmooth": 0.05,
+        "depthBias": 0.00002
+      },
+      "revision": 1
+    }
+  ],
+  "errors": [],
+  "concurrentSave": {
+    "preset": "presentation",
+    "qualityPreset": "original",
+    "diffuseResponse": "cesium",
+    "iblPolicy": "enhanced",
+    "finalGather": {
+      "mode": "ddgi",
+      "quality": "balanced"
+    },
+    "displayTransitionMilliseconds": 50,
+    "publicationMode": "progressive",
+    "neutralMaterials": [],
+    "enabled": true,
+    "debugMode": 6,
+    "camera": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "position": [
+        -2410763.1890494893,
+        5389344.282873931,
+        2405177.3612248995
+      ],
+      "direction": [
+        0.8179133704288417,
+        -0.22459215834231186,
+        0.5296943277824244
+      ],
+      "up": [
+        -0.14068731408108803,
+        0.8146377508069022,
+        0.5626476824949348
+      ],
+      "right": [
+        -0.5578752531976853,
+        -0.5347183346131056,
+        0.6347058409201899
+      ],
+      "fov": 1.0471975511965976,
+      "near": 0.1,
+      "far": 10000000000
+    },
+    "anchor": {
+      "longitude": 114.1,
+      "latitude": 22.3,
+      "height": 1.5,
+      "heading": 0
+    },
+    "lighting": {
+      "sunDirection": [
+        0.766044443118978,
+        0.6427876096865393,
+        0.65
+      ],
+      "sunRadiance": [
+        2,
+        2,
+        2
+      ],
+      "skyRadiance": [
+        0.15,
+        0.18,
+        0.25
+      ],
+      "bounces": 3,
+      "environmentMode": "upper-hemisphere"
+    },
+    "exposure": 1,
+    "toneMapper": "PBR_NEUTRAL",
+    "automaticExposure": false,
+    "resolution": [
+      1280,
+      800
+    ],
+    "msaaSamples": 4,
+    "fxaaEnabled": false,
+    "shadows": {
+      "enabled": true,
+      "size": 2048,
+      "maximumDistance": 75,
+      "normalOffset": false,
+      "softShadows": true
+    },
+    "quality": {
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3,
+      "budget": 3
+    },
+    "assets": {
+      "gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a"
+    },
+    "worldRevision": {
+      "requested": 1,
+      "published": 1,
+      "settled": 1
+    }
+  },
+  "fine": {
+    "probes": 1764,
+    "spacing": 1.5,
+    "rays": 128,
+    "bounces": 3
+  },
+  "restored": {
+    "preset": "presentation",
+    "qualityPreset": "original",
+    "diffuseResponse": "cesium",
+    "iblPolicy": "enhanced",
+    "finalGather": {
+      "mode": "ddgi",
+      "quality": "balanced"
+    },
+    "displayTransitionMilliseconds": 50,
+    "publicationMode": "progressive",
+    "neutralMaterials": [],
+    "enabled": true,
+    "debugMode": 6,
+    "camera": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "position": [
+        -2410763.1890494893,
+        5389344.282873931,
+        2405177.3612248995
+      ],
+      "direction": [
+        0.8179133704288417,
+        -0.22459215834231186,
+        0.5296943277824244
+      ],
+      "up": [
+        -0.14068731408108803,
+        0.8146377508069022,
+        0.5626476824949348
+      ],
+      "right": [
+        -0.5578752531976853,
+        -0.5347183346131056,
+        0.6347058409201899
+      ],
+      "fov": 1.0471975511965976,
+      "near": 0.1,
+      "far": 10000000000
+    },
+    "anchor": {
+      "longitude": 114.1,
+      "latitude": 22.3,
+      "height": 1.5,
+      "heading": 0
+    },
+    "lighting": {
+      "sunDirection": [
+        0.766044443118978,
+        0.6427876096865393,
+        0.65
+      ],
+      "sunRadiance": [
+        2,
+        2,
+        2
+      ],
+      "skyRadiance": [
+        0.15,
+        0.18,
+        0.25
+      ],
+      "bounces": 3,
+      "environmentMode": "upper-hemisphere"
+    },
+    "exposure": 1,
+    "toneMapper": "PBR_NEUTRAL",
+    "automaticExposure": false,
+    "resolution": [
+      1280,
+      800
+    ],
+    "msaaSamples": 4,
+    "fxaaEnabled": false,
+    "shadows": {
+      "enabled": true,
+      "size": 2048,
+      "maximumDistance": 75,
+      "normalOffset": false,
+      "softShadows": true
+    },
+    "quality": {
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3,
+      "budget": 3
+    },
+    "assets": {
+      "gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a"
+    },
+    "worldRevision": {
+      "requested": 2,
+      "published": 2,
+      "settled": 2
+    }
+  },
+  "restoredWorld": {
+    "sunDirection": [
+      0.766044443118978,
+      0.6427876096865393,
+      0.65
+    ],
+    "transition": 50,
+    "alive": true,
+    "completed": true
+  },
+  "status": "passed"
+}

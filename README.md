@@ -28,6 +28,20 @@ npm start
 
 `GI 红幕布去色` 只把 GI 缓存里的材质 16、18 改为等亮度灰色，显示模型和源 glTF 保持原样。它用于因果对照：白色照明下接收表面的红色分量应随幕布去色而下降。原始幕布反照率较低，反弹差异较弱，测试使用 HDR 数值而非截图亮度判断。
 
+## 接收表面 Final Gather（R6）
+
+Earth GI Lab 可选同帧 world-traced FG，默认仍为 DDGI。详见[实际代码、A/B/C/D、失败关卡、截图与成本](reports/receiver-final-gather-v5/README.md)，或打开[可运行验收页](http://localhost:8090/reports/receiver-final-gather-v5/index.html)。
+
+```js
+await scene.lumen.finalGather.configure({
+  mode: "fg", // "ddgi" / "fg" / "raw"
+  quality: "high", // fast(quarter/16), balanced(half/16), high(half/32), roi(full receiver/64)
+  model, // 与已驻留静态 world 对应的同一显示 Model
+});
+```
+
+启用后保留同 revision 的原始 E_(k−1)、材质与照明输入；FG 替换/混合完整 E。Ns!=Ng、不支持视图、预算或数据失败会回退。相机只更新接收/FG，不重建静态 BVH。FG 每个活动绘制帧增加开销，世界重照的3ms调度目标不代表屏幕FG成本上限。16/32r存在独立画质失败与噪声，不能默认开启；总验收 npm run test:r6 因质量失败返回1，回归、质量、性能分别报告。
+
 ## 接口
 
 ```js
@@ -82,7 +96,7 @@ L = shadowVisibility × direct
 → 原有材质后续处理 / 大气与雾 / 透明合成 / 色调映射
 ```
 
-这里的 `coverage` 是用户替换比例乘以局部探针有效覆盖。体积外、无有效探针或加载失败时为零，回退到原有漫射 IBL。太阳阴影仅影响直接项。关闭 Lumen 使用原有 Cesium 光照；GBuffer 捕获独立于世界 GI，世界后端不依赖屏幕纹理。
+这里的材质/环境 `coverage` 是用户替换比例乘以驻留体积覆盖，探针数据支持比例另行诊断。R5 的 E 已按有效可靠支持归一化，不再重复乘支持比例；驻留体积内缺数据不会透出无遮挡天空。体积外或世界尚未就绪时回退原漫射 IBL。太阳阴影仅影响直接项。关闭 Lumen 或 legacy IBL policy 使用指定原 Cesium IBL 公式；原调试 GBuffer 独立于世界 GI。
 
 ### 世界数据与更新
 

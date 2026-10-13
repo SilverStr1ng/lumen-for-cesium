@@ -1,0 +1,266 @@
+{
+  "status": "passed",
+  "sourceSuiteHead": "251c2d70cd000b9665a6739e4d4a1dd3d48afc68",
+  "results": [
+    {
+      "name": "expected negative gates still allow success",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "passed",
+        "status": "passed"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "quality status",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "quality highQuery",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "quality production32",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "quality gateHarness",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "regression failure",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "performance failure",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "failed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "regression exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "regression exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "compare-final-gather exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "compare-final-gather exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "capture-receiver exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "capture-receiver exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "benchmark-receiver exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "failed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "benchmark-receiver exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "passed",
+        "performance": "failed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fg-query-high stale passed report, exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fg-query-high stale passed report, exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fg16 stale passed report, exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fg16 stale passed report, exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fg32 stale passed report, exit 1",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fg32 stale passed report, exit null",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "absent production gate",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "empty run",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "failed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "fast explicitly not-run",
+      "status": "passed",
+      "decision": {
+        "quality": "not-run",
+        "performance": "not-run",
+        "status": "regression-only"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "fast failure",
+      "status": "passed",
+      "decision": {
+        "quality": "not-run",
+        "performance": "not-run",
+        "status": "failed"
+      },
+      "exitCode": 1
+    },
+    {
+      "name": "actual measured suite",
+      "status": "passed",
+      "decision": {
+        "quality": "failed",
+        "performance": "passed",
+        "status": "failed"
+      },
+      "exitCode": 1
+    }
+  ]
+}

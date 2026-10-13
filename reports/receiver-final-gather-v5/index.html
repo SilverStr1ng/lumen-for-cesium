@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width"
+  /><title>R6 接收 Final Gather 验收</title
+  ><style>
+    body {
+      margin: 32px auto;
+      max-width: 1200px;
+      padding: 0 20px;
+      background: #111c27;
+      color: #deebf5;
+      font: 15px/1.65 system-ui;
+    }
+    a {
+      color: #a8d7ff;
+    }
+    h1 {
+      font-size: 28px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font: 13px monospace;
+      margin: 20px 0;
+    }
+    td,
+    th {
+      padding: 8px;
+      border-bottom: 1px solid #405364;
+      text-align: left;
+    }
+    select,
+    button {
+      background: #263b4b;
+      color: white;
+      border: 1px solid #657a8b;
+      padding: 8px;
+      border-radius: 5px;
+    }
+    section {
+      margin: 30px 0;
+    }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    img {
+      width: 100%;
+      background: #18222e;
+    }
+    code {
+      color: #ced6fa;
+    }
+    small {
+      color: #b6c7d7;
+    }
+    .bad {
+      color: #ffd0a0;
+    }
+    .good {
+      color: #abe0c2;
+    }
+    @media (max-width: 750px) {
+      .pair {
+        grid-template-columns: 1fr;
+      }
+      body {
+        margin: 15px auto;
+      }
+    }
+    details {
+      padding: 10px;
+      border: 1px solid #405364;
+    }
+  </style>
+  <h1>R6 · World-traced Receiver Final Gather</h1>
+  <p>
+    默认 DDGI。可选 FG 以同 revision 的 E_(k−1) 为深层光源，从接收表面求世界 BVH
+    第一命中。原质量保持 2m / 128 probe rays / 3
+    bounces；无历史，不读取屏幕颜色。
+  </p>
+  <p>
+    <a href="../../demo/globe.html">Earth GI Lab · DDGI</a> ·
+    <a href="../../demo/globe.html?fg=fg&fgQuality=high">半分辨率 32r FG</a> ·
+    <a href="../../demo/globe.html?fg=fg&fgQuality=roi">全分辨率 ROI</a> ·
+    <a href="../../demo/globe.html?fg=raw&fgQuality=high">Raw FG</a> ·
+    <a href="README.md">完整说明</a>
+  </p>
+  <section>
+    <h2>实际验收</h2>
+    <p id="status">读取真实报告…</p>
+    <small
+      >高采样查询与低采样生产档分别判断。failed
+      保留并返回失败退出码；不能用代码回归替代画质验收。</small
+    >
+  </section>
+  <section>
+    <h2>同条件画面</h2>
+    <select id="camera">
+      <option>boxFoot</option>
+      <option>pillarFoot</option>
+      <option>wallFoot</option>
+      <option>ceiling</option>
+      <option>overview</option>
+      <option>bounce</option>
+    </select>
+    <div class="pair">
+      <figure>
+        <figcaption>DDGI baseline</figcaption>
+        <img id="a" />
+      </figure>
+      <figure>
+        <figcaption>FG · 半分辨率 32r · 原阴影、曝光与 AA</figcaption>
+        <img id="c" />
+      </figure>
+    </div>
+    <p>
+      邻域世界几何保护会在遮挡边界保守回退 DDGI。raw FG、filtered FG、权重和
+      E_used 可在页面及 images 目录中检查；raw 数据没有被过滤或反馈到 solver。
+    </p>
+  </section>
+  <section>
+    <h2>A / B / C / D 独立误差</h2>
+    <p>
+      A：当前 DDGI；B：相同探针 E、精确 segment visibility；C：1024r × 3
+      固定种子 FG；D：8192 路径、不使用 DDGI/SurfaceCache
+      的独立参考。三种深度和原/旋转错位场景均保留全部49点、历史13个计分索引及每点SE。
+    </p>
+    <select id="case"></select>
+    <table id="errors"></table>
+    <details>
+      <summary>查看全部接收点原始数据</summary>
+      <select id="line">
+        <option>boxFloor</option>
+        <option>boxFace</option>
+        <option>wallFoot</option>
+        <option>pillarFoot</option>
+        <option>ceiling</option>
+        <option>doorway</option>
+      </select>
+      <table id="points"></table>
+    </details>
+    <p>
+      <a href="abcd.json">A/B/C/D JSON</a> ·
+      <a href="images.json">生产接收点与16/32/64/256r原始结果</a> ·
+      <a href="quality-fg-query-high.json">高采样关卡</a> ·
+      <a href="quality-fg16.json">16r关卡</a> ·
+      <a href="quality-fg32.json">32r关卡</a>
+    </p>
+  </section>
+  <section>
+    <h2>GPU / 显存</h2>
+    <p id="device"></p>
+    <table id="costs"></table>
+    <small
+      >阶段计时与整帧计时分开采集。重建保护为 neighborhood pass，额外前向采样以
+      composite 开关对照估计。headless rAF 不是可移植 FPS 保证。</small
+    >
+    <p><a href="performance.json">完整阶段、整帧、重照与实际 GL 分配记录</a></p>
+  </section>
+  <section>
+    <h2>短序列与展示预设</h2>
+    <button id="play">播放横移 / 转身 / 室内 / 改灯与停止</button>
+    <p id="step"></p>
+    <img id="sequence" src="sequence/0.png" />
+    <p>改灯期间不匹配的输入回退 DDGI；相机变化不重载静态 BVH。</p>
+    <div class="pair">
+      <img src="images/presentation-materials.png" alt="独立材质展示预设" /><img
+        src="images/presentation-pillarFoot.png"
+        alt="展示预设柱脚"
+      />
+    </div>
+    <p>
+      展示预设使用原有 PBR/IBL/MSAA4 设置，单独计成本；不作为算法同条件对照。
+    </p>
+  </section>
+  <script type="module">
+    const $ = (id) => document.getElementById(id),
+      fmt = (x) => (Number.isFinite(x) ? x.toFixed(6) : "unavailable");
+    const [suite, abcd, perf, images] = await Promise.all(
+      ["test-suite.json", "abcd.json", "performance.json", "images.json"].map(
+        async (x) => (await fetch(x)).json(),
+      ),
+    );
+    $("status").textContent =
+      "总验收 " +
+      suite.status +
+      " / 回归 " +
+      (suite.regression ?? "运行中") +
+      " / 高采样画质 " +
+      suite.quality.highQuery +
+      " / 16r " +
+      suite.quality.status +
+      " / 32r " +
+      suite.quality.production32 +
+      " / 性能 " +
+      suite.performance.status;
+    $("status").className = suite.status === "passed" ? "good" : "bad";
+    $("device").textContent =
+      perf.environment.renderer +
+      " · " +
+      perf.environment.browser +
+      " · " +
+      perf.environment.resolution.join("×");
+    const view = () => {
+      $("a").src = "images/" + $("camera").value + "-ddgi.png";
+      $("c").src = "images/" + $("camera").value + "-fg.png";
+    };
+    $("camera").onchange = view;
+    view();
+    for (let i = 0; i < abcd.cases.length; i++) {
+      const c = abcd.cases[i],
+        o = document.createElement("option");
+      o.value = i;
+      o.textContent = (c.heldOut ? "旋转17° + 错位" : "原展馆") + " / k=" + c.k;
+      $("case").append(o);
+    }
+    $("case").value = 2;
+    const show = () => {
+      const c = abcd.cases[$("case").value];
+      $("errors").innerHTML =
+        "<tr><th>接收线</th><th>A RMSE</th><th>B RMSE</th><th>C RMSE</th></tr>" +
+        Object.keys(c.lines)
+          .map(
+            (n) =>
+              "<tr><td>" +
+              n +
+              "</td>" +
+              ["A", "B", "C"]
+                .map((k) => "<td>" + fmt(c.metrics[k][n].rmse) + "</td>")
+                .join("") +
+              "</tr>",
+          )
+          .join("");
+      showPoints();
+    };
+    const showPoints = () => {
+      const c = abcd.cases[$("case").value],
+        line = c.lines[$("line").value];
+      $("points").innerHTML =
+        "<tr><th>index</th><th>position</th><th>A (G)</th><th>B (G)</th><th>C (G)</th><th>D (G)</th><th>D SE (G)</th></tr>" +
+        line
+          .map(
+            (p) =>
+              "<tr><td>" +
+              p.index +
+              "</td><td>" +
+              p.position.map(fmt).join(", ") +
+              "</td>" +
+              ["A", "B", "C", "D"]
+                .map((k) => "<td>" + fmt(p[k].irradiance[1]) + "</td>")
+                .join("") +
+              "<td>" +
+              fmt(p.D.standardError[1]) +
+              "</td></tr>",
+          )
+          .join("");
+    };
+    $("case").onchange = show;
+    $("line").onchange = showPoints;
+    show();
+    $("costs").innerHTML =
+      "<tr><th>预设 / 档</th><th>整帧 GPU P95 ms</th><th>相对 baseline ms</th><th>新增 MiB</th><th>结果</th></tr>" +
+      perf.acceptance
+        .map((a) => {
+          const c = perf.cases.find(
+            (c) => c.preset === a.preset && c.quality === a.quality,
+          );
+          return (
+            "<tr><td>" +
+            a.preset +
+            " / " +
+            a.quality +
+            "</td><td>" +
+            fmt(c.frame.gpuMilliseconds.p95) +
+            "</td><td>" +
+            fmt(a.incrementalGpuP95) +
+            "</td><td>" +
+            fmt((c.metrics.totalAdditionalBytes ?? 0) / 1048576) +
+            "</td><td>" +
+            a.gpu +
+            " / memory " +
+            a.memory +
+            "</td></tr>"
+          );
+        })
+        .join("");
+    let timer,
+      i = 0;
+    $("play").onclick = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = undefined;
+        return;
+      }
+      timer = setInterval(() => {
+        i = (i + 1) % images.sequence.length;
+        const s = images.sequence[i];
+        $("sequence").src = "sequence/" + i + ".png";
+        $("step").textContent =
+          "step " +
+          i +
+          " · " +
+          s.input.status +
+          " · input revision " +
+          s.input.revision;
+      }, 1000);
+    };
+  </script>
+</html>

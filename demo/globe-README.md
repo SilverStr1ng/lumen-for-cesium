@@ -17,4 +17,10 @@ GI 仅覆盖局部展馆及地基；外围地球、影像和真实地形不参�
 
 页面太阳方位按局部 ENU 中从 +East 向 +North 的角度标注；设置面板可调整太阳高度（1–89度，始终在地平线上方）。默认精确为 atan(0.65)，约33.02度，保留旧 sunDirection 的 z=0.65，不改变默认截图/质量条件。统一 lightingController 同时更新 GI 局部方向和显示用 ECEF 光传播方向；高度变化按当前 snapshot/progressive 模式请求重照明。
 
+## R6 接收 Final Gather
 
+页面保留 DDGI baseline，新增 DDGI + world-traced FG 和 raw FG；质量档分别为 quarter/16、half/16、half/32、full receiver + 256×256 ROI/64。URL参数为 fg=fg 或 fg=raw，fgQuality=fast/balanced/high/roi。
+
+活动输入 revision、E_(k−1)轮数、分辨率、样本、BVH预算与新增显存见诊断；保存视角包含FG与IBL policy并可恢复。FG默认关闭：低采样画质仍failed，高采样查询通过不能代表生产档全部通过。原场景阴影/曝光/2m/128/3不变，展示预设另计成本。世界几何邻域在遮挡边界保守回退，raw不被重建修改。
+
+[完整报告](../reports/receiver-final-gather-v5/README.md)与[交互验收页](../reports/receiver-final-gather-v5/index.html)包含所有点、SE、截图、短序列及GPU阶段记录。npm run test:r6实际执行慢参考并返回真实质量失败退出码；--fast只有回归，画质/性能not-run。
