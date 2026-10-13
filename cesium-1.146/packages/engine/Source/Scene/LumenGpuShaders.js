@@ -407,7 +407,11 @@ export const receiverNeighborhood = `${common}
     vec3 a=fetch1(u_vertices,t*3).xyz,b=fetch1(u_vertices,t*3+1).xyz,d=fetch1(u_vertices,t*3+2).xyz;
     vec3 crossNormal=cross(b-a,d-a);if(dot(crossNormal,crossNormal)<1e-16){out_FragColor=vec4(0);return;}
     vec3 n=normalize(crossNormal);
-    if(abs(dot(n,ng))>0.99999&&abs(dot(a-p.xyz,ng))<0.00001)continue;
+    // Receiver positions have passed through float model/view transforms.
+    // Bound coplanar roundoff below the existing 0.2mm ray bias, rather than
+    // randomly rejecting the very same floor/wall triangle at adjacent pixels.
+    float roundoff=min(0.0002,64.0*1.1920928955078125e-7*max(1.0,max(abs(p.x),max(abs(p.y),abs(p.z)))));
+    if(abs(dot(n,ng))>0.99999&&abs(dot(a-p.xyz,ng))<roundoff)continue;
     if(abs(dot(p.xyz-a,n))>radius*1.733)continue;
     if(any(greaterThan(min(a,min(b,d)),p.xyz+radius))||any(lessThan(max(a,max(b,d)),p.xyz-radius)))continue;
     out_FragColor=vec4(0);return;
