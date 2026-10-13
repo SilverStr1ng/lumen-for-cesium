@@ -1,8 +1,18 @@
 // Compute thresholds from measured numbers; never trust candidate statuses.
-import { readFile, writeFile } from "node:fs/promises";
-const out = "reports/fg-reconstruction-showcase-v6",
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { inflateSync } from "node:zlib";
+import { sourceVersion } from "./browser-tools.mjs";
+import { captureMatches } from "./r7-acceptance.mjs";
+const auto = process.env.LUMEN_FG_AUTO === "1";
+const out =
+    process.env.LUMEN_FG_REPORT ?? "reports/fg-reconstruction-showcase-v6",
   injected = process.argv.includes("--inject-error");
-const report = { checks: [], status: "not-run", injected };
+const report = {
+  version: sourceVersion(["scripts/verify-fg-quality.mjs"]),
+  checks: [],
+  status: "not-run",
+  injected,
+};
 const add = (name, actual, threshold, scope) =>
   report.checks.push({
     name,
@@ -21,11 +31,42 @@ try {
         "utf8",
       ),
     );
+  if (process.env.LUMEN_FG_REPORT) {
+    for (const data of [c, s]) {
+      add(
+        "capture configuration",
+        data.configuration?.auto === auto &&
+          data.configuration.viewport.width ===
+            Number(process.env.LUMEN_FG_WIDTH ?? 1280) &&
+          data.configuration.viewport.height ===
+            Number(process.env.LUMEN_FG_HEIGHT ?? 800)
+          ? 0
+          : 1,
+        0,
+        "actual requested desktop buffer and explicit Auto/fixed policy",
+      );
+      const current = sourceVersion(Object.keys(data.version?.sources ?? {}));
+      add(
+        "current source/build/assets",
+        captureMatches(
+          data.version,
+          current.sources,
+          current.compiledBundle,
+          Object.keys(sourceVersion().sources),
+        ) &&
+          JSON.stringify(data.version.assets) === JSON.stringify(current.assets)
+          ? 0
+          : 1,
+        0,
+        "all required captures match source, bundle and assets",
+      );
+    }
+  }
   if (c.status !== "executed" || s.status !== "executed")
     throw Error("required acquisition did not complete");
   add(
     "all canonical configurations",
-    c.cases.length === 12 ? 0 : 1,
+    c.cases.length === (auto ? 6 : 12) ? 0 : 1,
     0,
     "16/32r; original/held-out; seeds 0/5/19",
   );
@@ -126,12 +167,34 @@ try {
     }
   add(
     "57 required screen configurations",
-    s.cases.length === 57 ? 0 : 1,
+    s.cases.length === (auto ? 33 : 57) ? 0 : 1,
     0,
     "original/held-out 16/32r; Gallery; slanted thin wall; full ROI and quarter resolution",
   );
   report.roi = [];
   for (const item of s.cases) {
+    if (process.argv.includes("--inject-coverage"))
+      item.frameStats.at(-1).coverage.meanWeight = 1;
+    if (process.env.LUMEN_FG_REPORT) {
+      if (!/^[a-zA-Z0-9.-]+\.json\.deflate$/.test(item.data))
+        throw Error("unsafe raw capture path");
+      const raw = JSON.parse(
+        inflateSync(await readFile(out + "/screen/" + item.data)).toString(),
+      );
+      add(
+        item.name + " raw coverage consistency",
+        raw.frames.length === item.frameStats.length &&
+          raw.frames.every(
+            (f, i) =>
+              JSON.stringify(f.coverage) ===
+              JSON.stringify(item.frameStats[i].coverage),
+          )
+          ? 0
+          : 1,
+        0,
+        "summary checked against separately preserved actual pixel measurements",
+      );
+    }
     const first = item.frameStats[0],
       last = item.frameStats.at(-1);
     add(
@@ -160,7 +223,7 @@ try {
         "actual main Scene weight over supported full-resolution receiver pixels",
       );
     if (
-      item.quality === "high" &&
+      ["high", "auto"].includes(item.quality) &&
       ["original", "held-out"].includes(item.scenario)
     )
       add(
@@ -193,8 +256,24 @@ try {
   report.status = "failed";
   report.error = e.stack;
 }
+if (process.env.LUMEN_QUALITY_REPORT)
+  await mkdir(
+    process.env.LUMEN_QUALITY_REPORT.slice(
+      0,
+      process.env.LUMEN_QUALITY_REPORT.lastIndexOf("/"),
+    ),
+    { recursive: true },
+  );
 await writeFile(
-  out + "/quality" + (injected ? "-injected" : "") + ".json",
+  process.env.LUMEN_QUALITY_REPORT ??
+    out +
+      "/quality" +
+      (injected
+        ? "-injected"
+        : process.argv.includes("--inject-coverage")
+          ? "-coverage-injected"
+          : "") +
+      ".json",
   JSON.stringify(report, null, 2),
 );
 console.log(

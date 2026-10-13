@@ -5,22 +5,32 @@ import {
   sourceVersion,
   installGlObserver,
 } from "./browser-tools.mjs";
-const out = "reports/fg-reconstruction-showcase-v6/temporal";
+const base =
+  process.env.LUMEN_FG_REPORT ?? "reports/fg-reconstruction-showcase-v6";
+const auto = process.env.LUMEN_FG_AUTO === "1";
+const viewport = {
+  width: Number(process.env.LUMEN_FG_WIDTH ?? 960),
+  height: Number(process.env.LUMEN_FG_HEIGHT ?? 600),
+};
+const out = base + "/temporal";
 await mkdir(out, { recursive: true });
 const report = {
-  version: sourceVersion(),
+  version: sourceVersion(["scripts/verify-fg-temporal.mjs"]),
+  configuration: { auto, viewport },
   errors: [],
   steps: [],
   checks: [],
   notRun: [],
 };
 const b = await launchBrowser(),
-  p = await b.newPage({ viewport: { width: 960, height: 600 } });
+  p = await b.newPage({ viewport });
 p.on("pageerror", (e) => report.errors.push(String(e)));
 await p.addInitScript(installGlObserver);
 try {
   await p.goto(
-    "http://localhost:8090/demo/globe.html?diagnostic=1&fg=fg&fgQuality=high&fgSampling=reconstructed",
+    "http://localhost:8090/demo/globe.html?diagnostic=1&fg=fg&fgQuality=" +
+      (auto ? "auto" : "high") +
+      "&fgSampling=reconstructed",
   );
   await p.waitForFunction(() => earthLab.world?.status === "ready", null, {
     timeout: 180000,

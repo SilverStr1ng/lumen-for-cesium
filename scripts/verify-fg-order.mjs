@@ -113,7 +113,8 @@ try {
 } finally {
   await browser.close();
   await writeFile(
-    "reports/fg-runtime-budget-v7/order.json",
+    (process.env.LUMEN_REPORT_DIRECTORY ?? "reports/fg-runtime-budget-v7") +
+      "/order.json",
     JSON.stringify(report, null, 2),
   );
 }

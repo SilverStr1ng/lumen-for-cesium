@@ -52,6 +52,7 @@ try {
         uniformMap: {
           u_fgSamples: () => 32,
           u_fgSeed: () => seed,
+          u_fgRayOrder: () => 0,
           u_fgSampling: () => 2,
           u_fgEpoch: () => epoch,
           u_fgPixelOffset: () => C.Cartesian2.ZERO,
@@ -89,6 +90,7 @@ try {
           uniformMap: {
             u_fgSamples: () => 32,
             u_fgSeed: () => seed,
+            u_fgRayOrder: () => 0,
             u_fgSampling: () => 2,
             u_fgEpoch: () => epoch,
             u_fgPixelOffset: () => C.Cartesian2.ZERO,

@@ -7,7 +7,14 @@ import { launchBrowser, sourceVersion, environment } from "./browser-tools.mjs";
 import { loadGeometry } from "../lumen/gltf.js";
 import { BVH } from "../lumen/bvh.js";
 import { referenceIrradiance } from "../lumen/path-reference.js";
-const out = "reports/fg-reconstruction-showcase-v6/screen",
+const base =
+  process.env.LUMEN_FG_REPORT ?? "reports/fg-reconstruction-showcase-v6";
+const auto = process.env.LUMEN_FG_AUTO === "1";
+const viewport = {
+  width: Number(process.env.LUMEN_FG_WIDTH ?? 1280),
+  height: Number(process.env.LUMEN_FG_HEIGHT ?? 800),
+};
+const out = base + "/screen",
   smoke = process.argv.includes("--smoke");
 await mkdir(out, { recursive: true });
 const prior = JSON.parse(
@@ -74,6 +81,14 @@ const scenes = smoke
         qualities: ["roi", "fast"],
       },
     ];
+if (auto) {
+  for (const s of scenes) s.qualities = ["auto"];
+  scenes.splice(
+    scenes.findIndex((s) => s.id === "original-scale"),
+    1,
+  );
+}
+report.configuration = { auto, viewport, scenes };
 if (process.argv.includes("--resume")) {
   const previous = JSON.parse(await readFile(out + "/data.json", "utf8"));
   for (const [file, hash] of Object.entries(previous.version.sources)) {
@@ -84,7 +99,7 @@ if (process.argv.includes("--resume")) {
   report.resume = { cases: previous.cases.length, reason: previous.error };
 }
 const b = await launchBrowser(),
-  p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  p = await b.newPage({ viewport });
 p.on("pageerror", (e) => report.errors.push(String(e)));
 try {
   for (const scenario of scenes) {
@@ -92,7 +107,8 @@ try {
       "http://localhost:8090/demo/" +
         scenario.url +
         (scenario.url.includes("?") ? "&" : "?") +
-        "diagnostic=1",
+        "diagnostic=1" +
+        (auto ? "&nativeBuffer=1" : ""),
     );
     await p.waitForFunction(() => earthLab.world?.status === "ready", null, {
       timeout: 180000,

@@ -2,7 +2,13 @@ import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { launchBrowser, sourceVersion } from "./browser-tools.mjs";
-const out = "reports/fg-reconstruction-showcase-v6";
+const out =
+  process.env.LUMEN_FG_REPORT ?? "reports/fg-reconstruction-showcase-v6";
+const auto = process.env.LUMEN_FG_AUTO === "1";
+const viewport = {
+  width: Number(process.env.LUMEN_FG_WIDTH ?? 1280),
+  height: Number(process.env.LUMEN_FG_HEIGHT ?? 800),
+};
 const smoke = process.argv.includes("--smoke");
 const output = out + (smoke ? "/canonical-smoke.json" : "/canonical.json");
 const referenceFile = "reports/receiver-final-gather-v5/abcd.json";
@@ -15,6 +21,7 @@ const prior = JSON.parse(
 );
 const report = {
   version: sourceVersion(["demo/fg-reconstruction-diagnostics.js"]),
+  configuration: { auto, viewport },
   errors: [],
   cases: [],
   reference: {
@@ -37,7 +44,7 @@ const report = {
 };
 await mkdir(out, { recursive: true });
 const b = await launchBrowser(),
-  p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  p = await b.newPage({ viewport });
 p.on("pageerror", (e) => report.errors.push(String(e)));
 try {
   for (const heldOut of smoke ? [false] : [false, true]) {
@@ -70,7 +77,7 @@ try {
       frozen.lighting,
       "frozen independent D source must match exactly",
     );
-    for (const samples of smoke ? [32] : [16, 32]) {
+    for (const samples of smoke || auto ? [32] : [16, 32]) {
       for (const seed of smoke ? [0] : [0, 5, 19]) {
         const row = {
           heldOut,
@@ -86,12 +93,12 @@ try {
             normal: x.normal,
           }));
           const data = await p.evaluate(
-            async ({ points, camera, heldOut, samples, seed }) => {
+            async ({ points, camera, heldOut, samples, seed, auto }) => {
               const d = earthLab,
                 f = d.scene.lumen.finalGather;
               await f.configure({
                 mode: "fg",
-                quality: samples === 16 ? "balanced" : "high",
+                quality: auto ? "auto" : samples === 16 ? "balanced" : "high",
                 sampling: "reconstructed",
                 seed,
                 model: d.model,
@@ -155,7 +162,14 @@ try {
                 settings: await d.saveView(),
               };
             },
-            { points, camera: report.cameras[name], heldOut, samples, seed },
+            {
+              points,
+              camera: report.cameras[name],
+              heldOut,
+              samples,
+              seed,
+              auto,
+            },
           );
           assert(data.high.flat().every((x) => x.valid && !x.unknown));
           row.lines[name] = {

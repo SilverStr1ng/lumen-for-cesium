@@ -46,10 +46,7 @@ export async function measureFrames(
     if (timestamps) {
       active.queries = [gl.createQuery(), gl.createQuery()];
       ext.queryCounterEXT(active.queries[0], ext.TIMESTAMP_EXT);
-    } else if (
-      scene.lumen.world?.status === "ready" &&
-      !gl.getQuery(ext.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)
-    ) {
+    } else if (!gl.getQuery(ext.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)) {
       active.queries = [gl.createQuery()];
       gl.beginQuery(ext.TIME_ELAPSED_EXT, active.queries[0]);
     }

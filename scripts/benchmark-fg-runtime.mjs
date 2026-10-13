@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import {
   launchBrowser,
   sourceVersion,
@@ -36,8 +36,12 @@ const suffix =
       quality +
       "-" +
       activity;
+const reportDirectory =
+  process.env.LUMEN_REPORT_DIRECTORY ?? "reports/fg-runtime-budget-v7/latest";
+await mkdir(reportDirectory, { recursive: true });
 const reportFile =
-  "reports/fg-runtime-budget-v7/performance-" +
+  reportDirectory +
+  "/performance-" +
   execution +
   (rayOrder === "azimuth" ? "-azimuth" : "") +
   (lazyFallback ? "-lazy" : "-eager") +
@@ -228,7 +232,10 @@ try {
               combinedP95: all[Math.floor(all.length * 0.95)] ?? null,
             },
             completeFrameSamples: complete,
-            metrics: structuredClone(f.metrics),
+            metrics: {
+              ...structuredClone(f.metrics),
+              completedTimings: undefined,
+            },
             settings: await d.saveView(),
             milliseconds: performance.now() - before,
             readbacks: window.glObserver.snapshot(),
