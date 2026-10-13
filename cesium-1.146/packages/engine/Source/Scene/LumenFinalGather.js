@@ -1,4 +1,5 @@
 import destroyLumenResource from "./destroyLumenResource.js";
+import LumenGpuTimer from "./LumenGpuTimer.js";
 import {
   Cartesian2,
   Cartesian3,
@@ -48,6 +49,8 @@ class LumenFinalGather {
     this.maxRayInvocations = 16 * 1048576;
     this.traversalBudget = 256;
     this.seed = 0;
+    this.freezeSampling = false; // explicit image diagnostics only
+    this.fallbackReason = 1;
     this.ready = false;
     this._executingMain = false;
     this._compositeEnabled = true;
@@ -64,6 +67,10 @@ class LumenFinalGather {
     this._timer = this.scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
     );
+    this._unregisterTimer = LumenGpuTimer.register(this.scene.context, () =>
+      this._invalidateTimers(),
+    );
+    this._timerFrames = new Map();
     this.metrics = {
       status: "disabled",
       frames: 0,
@@ -75,6 +82,8 @@ class LumenFinalGather {
       disjoint: 0,
       productionReadbacks: 0,
       history: false,
+      completedTimings: [],
+      incompleteTimerFrames: 0,
       unknownFraction: "diagnostic-only; no production readback",
     };
   }
@@ -230,35 +239,63 @@ class LumenFinalGather {
       throw error;
     }
   }
+  _invalidateTimers() {
+    const gl = this.scene.context._gl;
+    this.metrics.disjoint++;
+    for (const q of this._queries) {gl.deleteQuery(q.query);}
+    this._queries.length = 0;
+    this.metrics.incompleteTimerFrames += this._timerFrames.size;
+    this._timerFrames.clear();
+  }
   _poll() {
     const gl = this.scene.context._gl,
       ext = this._timer;
-    if (!ext) {
-      return;
-    }
-    const disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
+    if (!ext) {return;}
+    if (LumenGpuTimer.poll(this.scene.context, ext)) {return;}
     this._queries = this._queries.filter((q) => {
-      if (!gl.getQueryParameter(q.query, gl.QUERY_RESULT_AVAILABLE)) {
-        return true;
-      }
-      if (disjoint) {
-        this.metrics.disjoint++;
-      } else {
-        const ms = gl.getQueryParameter(q.query, gl.QUERY_RESULT) / 1e6;
-        const a =
-          this.metrics.stages[q.stage] ?? (this.metrics.stages[q.stage] = []);
-        a.push({ frame: q.frame, milliseconds: ms });
-        if (a.length > 4096) {
-          a.shift();
-        }
+      if (!gl.getQueryParameter(q.query, gl.QUERY_RESULT_AVAILABLE))
+        {return true;}
+      const ms = gl.getQueryParameter(q.query, gl.QUERY_RESULT) / 1e6;
+      const a =
+        this.metrics.stages[q.stage] ?? (this.metrics.stages[q.stage] = []);
+      a.push({ frame: q.frame, milliseconds: ms });
+      if (a.length > 4096) {a.shift();}
+      const frame = this._timerFrames.get(q.frame);
+      if (frame) {
+        frame.received++;
+        frame.stages[q.stage] = (frame.stages[q.stage] ?? 0) + ms;
       }
       gl.deleteQuery(q.query);
       return false;
     });
+    for (const [id, frame] of this._timerFrames) {
+      if (frame.closed && frame.received === frame.submitted) {
+        if (!frame.missing && frame.submitted) {
+          this.metrics.completedTimings.push(frame);
+          if (this.metrics.completedTimings.length > 2048)
+            {this.metrics.completedTimings.shift();}
+        } else {this.metrics.incompleteTimerFrames++;}
+        this._timerFrames.delete(id);
+      }
+    }
   }
   _measure(stage, draw) {
     const gl = this.scene.context._gl,
       ext = this._timer;
+    const id = this.scene.frameState.frameNumber;
+    let frame = this._timerFrames.get(id);
+    if (!frame) {
+      frame = {
+        frame: id,
+        submitted: 0,
+        received: 0,
+        missing: 0,
+        stages: {},
+        closed: false,
+        fgExecuted: false,
+      };
+      this._timerFrames.set(id, frame);
+    }
     let query;
     if (
       ext &&
@@ -267,12 +304,15 @@ class LumenFinalGather {
     ) {
       query = gl.createQuery();
       gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+      frame.submitted++;
     } else {
       this.metrics.timingUnavailable++;
+      frame.missing++;
     }
     try {
       return draw();
     } finally {
+      if (stage === "forward") {frame.closed = true;}
       if (query) {
         gl.endQuery(ext.TIME_ELAPSED_EXT);
         this._queries.push({
@@ -347,6 +387,7 @@ class LumenFinalGather {
       return;
     }
     if (w.finalGatherSnapshot.revision !== w.requestedRevision) {
+      this.fallbackReason = 2;
       this.metrics.status = "DDGI fallback: waiting for matching revision";
       return;
     }
@@ -391,7 +432,24 @@ class LumenFinalGather {
       this.traversalBudget > 4096
     ) {
       this.release();
+      this.fallbackReason = 10;
       this.metrics.status = "DDGI fallback: capability or resource budget";
+      return;
+    }
+    const cameraKey = [
+      ...Matrix4.toArray(s.camera.viewMatrix),
+      s.camera.frustum.fov,
+      s.drawingBufferWidth,
+      s.drawingBufferHeight,
+      this.quality,
+    ].map((value) => typeof value === "number" ? value.toPrecision(10) : value).join(":");
+    if (
+      this.freezeSampling &&
+      this.texture &&
+      this._sampleWorld === w &&
+      this._sampleCameraKey === cameraKey
+    ) {
+      this.ready = true;
       return;
     }
     snapshot.retain();
@@ -408,7 +466,6 @@ class LumenFinalGather {
         s.drawingBufferHeight,
         this.sceneSize,
       );
-      this.metrics.frames++;
       this.metrics.receiverDraws = this._measure("receiver", () =>
         this.receiver.execute(s, passState, list, l.rw, l.rh),
       );
@@ -445,6 +502,15 @@ class LumenFinalGather {
         ),
       );
       this.ready = true;
+      this.fallbackReason = 0;
+      this._sampleWorld = w;
+      this._sampleCameraKey = cameraKey;
+      this.metrics.frames++;
+      const timerFrame = this._timerFrames.get(fs.frameNumber);
+      if (timerFrame) {
+        timerFrame.fgExecuted = true;
+        timerFrame.closed = !this.profileForward;
+      }
       Object.assign(this.metrics, {
         status: "active experimental FG",
         revision: snapshot.revision,
@@ -499,6 +565,7 @@ class LumenFinalGather {
       gl.deleteQuery(q.query);
     }
     this._queries = [];
+    this._timerFrames.clear();
     this.metrics.memoryBytes = 0;
     this.metrics.snapshotBytes =
       this.lumen.world?.finalGatherSnapshot?.resources.reduce(
@@ -515,6 +582,7 @@ class LumenFinalGather {
       return;
     }
     this.release();
+    this._unregisterTimer();
     this._destroyed = true;
     this.model = undefined;
     this.lumen = this.scene = undefined;

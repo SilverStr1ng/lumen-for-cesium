@@ -340,7 +340,7 @@ vec4 fgRadiance(vec4 h,vec3 d){
  vec3 L=emission;float cosine=max(0.0,dot(n,u_sunDirection));
  if(cosine>0.0&&any(greaterThan(u_sunRadiance,vec3(0)))){
   vec3 p=y+n*0.015;vec4 shadow=occluded(p,u_sunDirection,completeDistance(p),t);
-  if(shadow.x==-1.0)return vec4(0,0,0,-1);
+  if(shadow.x==-1.0)return vec4(0,0,0,-2);
   if(shadow.x==0.0)L+=rho*u_sunRadiance*cosine/czm_pi;
  }
  if(u_fgPreviousEnabled){vec4 field=lumen_worldIrradiance(y,n);

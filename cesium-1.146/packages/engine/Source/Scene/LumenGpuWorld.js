@@ -21,6 +21,7 @@ import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.j
 import ContextLimits from "../Renderer/ContextLimits.js";
 import * as shaders from "./LumenGpuShaders.js";
 import LumenProbeDisplay from "./LumenProbeDisplay.js";
+import LumenGpuTimer from "./LumenGpuTimer.js";
 import LumenFinalGatherSnapshot from "./LumenFinalGatherSnapshot.js";
 
 const defaultGatherControl = new Cartesian4(0, 0, -1, -1);
@@ -149,6 +150,9 @@ class LumenGpuWorld {
     };
     this._timer = scene.context._gl.getExtension(
       "EXT_disjoint_timer_query_webgl2",
+    );
+    this._unregisterTimer = LumenGpuTimer.register(scene.context, () =>
+      this._invalidateTimers(),
     );
     this._promise();
     this.worker = new Worker(options.workerUrl, { type: "module" });
@@ -718,25 +722,23 @@ class LumenGpuWorld {
     ps.viewport = new BoundingRectangle(x, y, width, height);
     command.execute(c, ps);
   }
+  _invalidateTimers() {
+    this.metrics.disjoint++;
+    const gl = this.scene.context._gl;
+    for (const q of this._queries) {
+      if (q.stage) {q.stage.timerMissing++;}
+      this.metrics.timerMissing++;
+      gl.deleteQuery(q.query);
+    }
+    this._queries.length = 0;
+  }
   _pollTimers() {
     const gl = this.scene.context._gl,
       ext = this._timer;
     if (!ext) {
       return;
     }
-    const disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
-    if (disjoint) {
-      this.metrics.disjoint++;
-      for (const q of this._queries) {
-        if (q.stage) {
-          q.stage.timerMissing++;
-        }
-        this.metrics.timerMissing++;
-        gl.deleteQuery(q.query);
-      }
-      this._queries.length = 0;
-      return;
-    }
+    if (LumenGpuTimer.poll(this.scene.context, ext)) {return;}
     while (
       this._queries.length &&
       gl.getQueryParameter(this._queries[0].query, gl.QUERY_RESULT_AVAILABLE)
@@ -1735,6 +1737,7 @@ class LumenGpuWorld {
     this.scene.requestRender();
   }
   _release() {
+    this._unregisterTimer?.();
     for (const snapshot of [...this._fgSnapshots]) {
       snapshot.destroy();
     }

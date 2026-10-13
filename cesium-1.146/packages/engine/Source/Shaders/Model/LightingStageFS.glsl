@@ -125,6 +125,8 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         if(u_lumenDebugMode==13||u_lumenFgRawMode)color=lumen_rawFg;
         if(u_lumenDebugMode==14)color=lumen_filteredFg;
         if(u_lumenDebugMode==15)color=vec3(lumen_fgWeight);
+        if(u_lumenDebugMode==16){ivec2 c=ivec2(gl_FragCoord.xy/u_lumenFgSceneSize*u_lumenReceiverSize-u_lumenFgOffset);color=(all(greaterThanEqual(c,ivec2(0)))&&all(lessThan(c,ivec2(u_lumenFgSize))))?texelFetch(u_lumenFgNeighborhood,c,0).rrr:vec3(0);}
+        if(u_lumenDebugMode==17)color=vec3(lumen_fgFallbackReason);
         #endif
     }
     #endif

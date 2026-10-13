@@ -59,7 +59,7 @@ vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) { return lumen_worldI
 #endif
 #ifdef LUMEN_RECEIVER_COMPOSITE
 vec3 lumen_rawFg=vec3(0.0),lumen_filteredFg=vec3(0.0);
-float lumen_fgWeight=0.0;
+float lumen_fgWeight=0.0,lumen_fgFallbackReason=1.0;
 // The derivative normal is the actual triangle normal. Attribute normals may be smooth.
 vec3 lumen_triangleNormal(vec3 p) {
     vec3 triangle=cross(dFdx(p),dFdy(p));
@@ -73,6 +73,10 @@ vec3 lumen_triangleNormal(vec3 p) {
 }
 vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     lumen_rawFg=vec3(0.0);lumen_filteredFg=vec3(0.0);lumen_fgWeight=0.0;
+    lumen_fgFallbackReason=1.0;
+    #ifdef LUMEN_FG_REASONS
+    if(!u_lumenFgEnabled)lumen_fgFallbackReason=u_lumenFgFallbackCode;
+    #endif
     vec3 ngEC=lumen_triangleNormal(positionEC);
     if(!u_lumenFgEnabled||dot(ngEC,ns)<0.999)return baseline;
     vec3 p=(u_lumenEyeToLocal*vec4(positionEC,1.0)).xyz,ng=normalize(mat3(u_lumenEyeToLocal)*ngEC);
@@ -82,8 +86,9 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     ivec2 base=ivec2(floor(q)),size=ivec2(u_lumenFgSize);vec2 f=fract(q);
     ivec2 nearest=ivec2(floor(q+0.5));
     if(all(greaterThanEqual(nearest,ivec2(0)))&&all(lessThan(nearest,size))) {
-        vec4 raw=texelFetch(u_lumenFgTexture,nearest,0);if(raw.a>0.5)lumen_rawFg=raw.rgb;
+        vec4 raw=texelFetch(u_lumenFgTexture,nearest,0);if(raw.a>0.5){lumen_rawFg=raw.rgb;lumen_fgFallbackReason=6.0;}else lumen_fgFallbackReason=raw.a==-2.0?4.0:raw.a<0.0?3.0:5.0;
     }
+    else lumen_fgFallbackReason=9.0;
     float footprint=max(0.02,3.0*czm_metersPerPixel(vec4(positionEC,1.0),1.0)*u_lumenFgSceneSize.y/u_lumenReceiverSize.y);
     vec3 sum=vec3(0.0);float weight=0.0;
     for(int y=0;y<2;y++)for(int x=0;x<2;x++) {
@@ -95,7 +100,7 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
         if(abs(dot(delta,ng))>0.005||length(delta)>footprint)continue;
         vec2 a=mix(1.0-f,f,vec2(x,y));float w=a.x*a.y;sum+=E.rgb*w;weight+=w;
     }
-    if(weight>0.0001){lumen_filteredFg=sum/weight;lumen_fgWeight=clamp(weight,0.0,1.0);}
+    if(weight>0.0001){lumen_filteredFg=sum/weight;lumen_fgWeight=clamp(weight,0.0,1.0);if(weight>0.999)lumen_fgFallbackReason=0.0;}
     // Both sides are complete irradiance E. Receiver rho/pi is applied once by PBR.
     return mix(baseline,lumen_filteredFg*u_lumenWorldGain,lumen_fgWeight);
 }

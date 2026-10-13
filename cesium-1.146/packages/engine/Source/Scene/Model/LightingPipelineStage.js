@@ -81,6 +81,11 @@ LightingPipelineStage.process = function (
         undefined,
         ShaderDestination.FRAGMENT,
       );
+      shaderBuilder.addDefine(
+        "LUMEN_FG_REASONS",
+        undefined,
+        ShaderDestination.FRAGMENT,
+      );
       let owners = surfaceOwners.get(model);
       if (!owners) {
         owners = { next: 1, map: new WeakMap() };
@@ -94,6 +99,7 @@ LightingPipelineStage.process = function (
         fg = () => frameState.lumen?.finalGather;
       const uniforms = {
         u_lumenFgSurfaceId: ["float", () => id],
+        u_lumenFgFallbackCode: ["float", () => fg()?.fallbackReason ?? 1],
         u_lumenReceiverSupported: [
           "bool",
           () => fg()?.supported(model, frameState) ?? false,

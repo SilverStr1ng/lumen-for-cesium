@@ -28,10 +28,18 @@ export async function measureFrames(scene, frames = 150) {
     if (!active) return;
     if (timestamps) ext.queryCounterEXT(active[1], ext.TIMESTAMP_EXT);
     else gl.endQuery(ext.TIME_ELAPSED_EXT);
-    pending.push(active);
+    if (active.invalid) remove(active);
+    else pending.push(active);
     active = undefined;
   };
   const remove = (queries) => queries.forEach((q) => gl.deleteQuery(q));
+  const unregister = Cesium.LumenGpuTimer.register(scene.context, () => {
+    disjoint++;
+    pending.forEach(remove);
+    pending.length = 0;
+    gpu.length = 0;
+    if (active) active.invalid = true;
+  });
   scene.preRender.addEventListener(before);
   scene.postRender.addEventListener(after);
   try {
@@ -39,12 +47,7 @@ export async function measureFrames(scene, frames = 150) {
       const t = await new Promise(requestAnimationFrame);
       if (previous !== undefined && i > 20) intervals.push(t - previous);
       previous = t;
-      if (ext && gl.getParameter(ext.GPU_DISJOINT_EXT)) {
-        disjoint++;
-        pending.forEach(remove);
-        pending.length = 0;
-        gpu.length = 0;
-      } else
+      if (!Cesium.LumenGpuTimer.poll(scene.context, ext))
         while (
           pending.length &&
           gl.getQueryParameter(pending[0].at(-1), gl.QUERY_RESULT_AVAILABLE)
@@ -60,6 +63,7 @@ export async function measureFrames(scene, frames = 150) {
         }
     }
   } finally {
+    unregister();
     scene.preRender.removeEventListener(before);
     scene.postRender.removeEventListener(after);
     pending.forEach(remove);
