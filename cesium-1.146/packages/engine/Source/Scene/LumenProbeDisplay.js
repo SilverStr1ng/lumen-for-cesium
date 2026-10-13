@@ -47,10 +47,14 @@ class LumenProbeDisplay {
               Math.abs(v - old.energy[i]) >
               0.5 * Math.max(v, old.energy[i], 0.01),
           ));
-      this.duration = large ? Math.min(50, milliseconds) : milliseconds;
+      this.largeChange = !!large;
       this.lighting = { sunDirection: [...sun], energy };
       this.revision = revision;
     }
+    // Controls may change between progressive rounds of the same revision.
+    this.duration = this.largeChange
+      ? Math.min(50, milliseconds)
+      : milliseconds;
     if (compatible) this.copy(this.shown.E, this.history);
     this.copy(raw, this.goal);
     this.started = performance.now();

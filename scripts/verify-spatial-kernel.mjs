@@ -66,6 +66,14 @@ for (const reliability of [1, 0.1, 0.001])
     );
     assert.equal(a.coverage, 1);
   }
+const low = f.sample([0.5, 0.5, 0.5], [0, 0, 1], {
+  fixedFacing: 0.0001,
+  fixedIrradiance: [2, 3, 4],
+  diagnostics: true,
+});
+assert.ok(low.totalWeight < 1e-10);
+assert.deepEqual(low.irradiance, [0, 0, 0]);
+assert.equal(low.coverage, 1, "safe zero E must retain valid data coverage");
 const ng = [0, 0, 1],
   p = [0.5, 0.5, 0.5];
 g.normalBias = 0.075;

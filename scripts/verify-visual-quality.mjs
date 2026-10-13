@@ -269,6 +269,12 @@ try {
       grid: snapshot.grid,
     };
   });
+  report.probePositions = await page.evaluate(() => {
+    earthLab.camera("overview");
+    return earthLab.showProbePositions();
+  });
+  await page.screenshot({ path: out + "/probe-positions.png" });
+  await page.evaluate(() => earthLab.showProbePositions(false));
   report.static60 = await page.evaluate(async () => {
     const result = [];
     for (let frame = 0; frame < 60; frame++) {

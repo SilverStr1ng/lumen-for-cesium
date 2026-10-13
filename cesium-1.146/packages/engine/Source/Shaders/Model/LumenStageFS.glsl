@@ -1,6 +1,7 @@
 // Directional irradiance E and distance moments use bordered 8x8 octahedral tiles.
 // All world positions are local metres; eye->local is formed in CPU double precision.
 float lumen_materialCoverage = 0.0;
+float lumen_dataCoverage = 0.0;
 float lumen_environmentCoverage = 0.0;
 float lumen_volumeCoverage = 0.0;
 
@@ -52,17 +53,22 @@ vec4 lumen_worldIrradianceWithNormals(vec3 positionEC, vec3 geometricNormalEC, v
         if(u_lumenGatherControl.z>=0.0) e.rgb=vec3(u_lumenGatherControl.z);
         weight+=w;irradiance+=e.rgb*w;
     }
-    return weight>1e-10 ? vec4(irradiance/weight,clamp(available,0.0,1.0)) : vec4(0.0);
+    return vec4(weight>1e-10 ? irradiance/weight : vec3(0.0),clamp(available,0.0,1.0));
 }
 vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) { return lumen_worldIrradianceWithNormals(positionEC,normalEC,normalEC); }
 #endif
 vec3 lumen_irradiance(vec3 positionEC,vec3 normalEC,vec3 geometricNormalEC) {
     lumen_materialCoverage=u_lumenCoverage;
     lumen_environmentCoverage=u_lumenCoverage;
+    lumen_dataCoverage=u_lumenCoverage;
     #if defined(LUMEN_WORLD_SUPPORTED) && !defined(LUMEN_GBUFFER)
     if(u_lumenWorldEnabled) {
         vec4 field=lumen_worldIrradianceWithNormals(positionEC,geometricNormalEC,normalEC);
-        lumen_materialCoverage*=field.a;
+        lumen_dataCoverage*=field.a;
+        // E is already normalized over reliable, valid support. Availability
+        // diagnoses missing samples; multiplying it again invents dark energy.
+        // Resident volume coverage controls ownership of diffuse lighting.
+        lumen_materialCoverage*=lumen_volumeCoverage;
         // Missing/interior support cannot reveal an unoccluded diffuse sky inside the volume.
         // Raw data support remains field.a, independently observable from energy/visibility.
         lumen_environmentCoverage*=lumen_volumeCoverage;

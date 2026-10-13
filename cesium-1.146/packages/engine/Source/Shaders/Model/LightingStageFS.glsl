@@ -113,7 +113,7 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         if (u_lumenDebugMode == 2) color = indirectDiffuse;
         if (u_lumenDebugMode == 3) color = material.emissive;
         if (u_lumenDebugMode == 4) color = queriedE;
-        if (u_lumenDebugMode == 5) color = vec3(lumen_materialCoverage);
+        if (u_lumenDebugMode == 5) color = vec3(lumen_dataCoverage);
         if (u_lumenDebugMode == 6) color = vec3(lumen_shadowVisibility);
         if (u_lumenDebugMode == 7) color = lightColorHdr * directDiffuse * lumen_shadowVisibility;
         if (u_lumenDebugMode == 8) color = lightColorHdr * directSpecular * lumen_shadowVisibility;
@@ -141,7 +141,9 @@ void lightingStage(inout czm_modelMaterial material, ProcessedAttributes attribu
         #ifdef HAS_NORMALS
             // Attribute normal is the macro normal before normal mapping. Align for double-sided faces.
             vec3 geometricNormal = normalize(attributes.normalEC);
-            if (dot(geometricNormal, material.normalEC) < 0.0) geometricNormal = -geometricNormal;
+            #if defined(HAS_DOUBLE_SIDED_MATERIAL)
+                if (czm_backFacing()) geometricNormal = -geometricNormal;
+            #endif
             vec3 color = computePbrLighting(material, attributes.positionEC, geometricNormal);
         #else
             vec3 color = material.diffuse * material.occlusion + material.emissive;

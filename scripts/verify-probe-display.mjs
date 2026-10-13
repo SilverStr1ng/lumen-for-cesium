@@ -1,5 +1,24 @@
 import assert from "node:assert/strict";
 import { writeFile } from "node:fs/promises";
+import LumenProbeDisplay from "../cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js";
+// Same revision: enabling between rounds must use the new finite duration.
+const display = new LumenProbeDisplay(
+  { packet: { grid: { width: 1, height: 1 } }, _draw() {} },
+  [{ E: {} }, { E: {} }, { E: {} }],
+);
+const versions = { geometry: 1, rayLayout: 1, material: 1 },
+  light = {
+    sunDirection: [1, 0, 1],
+    sunRadiance: [2, 2, 2],
+    skyRadiance: [0.15, 0.18, 0.25],
+  };
+display.publish({}, versions, light, 1, 0);
+display.publish({}, versions, light, 1, 150);
+assert.equal(display.duration, 150);
+assert.ok(display.active);
+display.publish({}, versions, light, 1, 25);
+assert.equal(display.duration, 25);
+assert.ok(display.active);
 import {
   launchBrowser,
   installGlObserver,

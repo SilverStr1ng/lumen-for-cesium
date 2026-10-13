@@ -1,5 +1,9 @@
 # Change Log
 
+## Local Lumen adaptations
+
+- Added `DynamicEnvironmentMapManager.generateSphericalHarmonics` (default `true`). Set it to `false` for specular-only dynamic IBL to skip the CPU spherical-harmonic readback. The local `demo/globe.js` demonstrates this through `Model.fromGltfAsync({ environmentMapOptions: { generateSphericalHarmonics: false } })` and `imageBasedLighting.imageBasedLightingFactor = new Cartesian2(0, 1)`. Existing applications retain the original diffuse + specular behavior.
+
 ## 1.146 - 2026-10-01
 
 ### Major Announcements :loudspeaker:

@@ -77,7 +77,33 @@ try {
       })),
     );
   }
+  await p.evaluate(() => earthLab.world.setDisplayTransition(50));
   const saved = await p.evaluate(() => earthLab.saveView());
+  report.concurrentSave = await p.evaluate(async () => {
+    const originalFetch = window.fetch;
+    let release;
+    window.fetch = (url, ...args) =>
+      String(url).endsWith(".gltf")
+        ? new Promise((resolve) => {
+            release = () => resolve(originalFetch(url, ...args));
+          })
+        : originalFetch(url, ...args);
+    try {
+      const pending = earthLab.saveView();
+      earthLab.camera("overview");
+      earthLab.scene.postProcessStages.exposure = 1.7;
+      release();
+      return await pending;
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+  assert.deepEqual(report.concurrentSave.camera, saved.camera);
+  assert.equal(report.concurrentSave.exposure, saved.exposure);
+  await p.evaluate(() => {
+    earthLab.anchor.longitude += 0.001;
+    earthLab.anchor.heading = 22;
+  });
   await p.selectOption("#quality", "fine");
   await p.dispatchEvent("#quality", "change");
   await p.waitForFunction(
@@ -94,6 +120,10 @@ try {
     bounces: earthLab.world.options.bounces,
   }));
   assert.equal(report.fine.probes, 1764);
+  await p.selectOption("#publication", "progressive");
+  await p.locator("#sun").evaluate((el) => (el.value = "135"));
+  await p.dispatchEvent("#sun", "change");
+  await p.evaluate(() => earthLab.world.completed);
   await p.evaluate((saved) => earthLab.restoreView(saved), saved);
   await p.waitForFunction(() => earthLab.world.status === "ready", null, {
     timeout: 180000,
@@ -103,6 +133,22 @@ try {
   assert.deepEqual(report.restored.quality, saved.quality);
   assert.equal(report.restored.msaaSamples, saved.msaaSamples);
   assert.equal(report.restored.preset, saved.preset);
+  assert.deepEqual(report.restored.anchor, saved.anchor);
+  assert.deepEqual(report.restored.lighting, saved.lighting);
+  assert.equal(report.restored.publicationMode, saved.publicationMode);
+  assert.equal(report.restored.displayTransitionMilliseconds, 50);
+  report.restoredWorld = await p.evaluate(() => ({
+    sunDirection: earthLab.world.options.sunDirection,
+    transition: earthLab.world.displayTransitionMilliseconds,
+    alive: !earthLab.world.isDestroyed(),
+    completed:
+      earthLab.world.settledRevision === earthLab.world.requestedRevision,
+  }));
+  assert.deepEqual(
+    report.restoredWorld.sunDirection,
+    saved.lighting.sunDirection,
+  );
+  assert.ok(report.restoredWorld.alive && report.restoredWorld.completed);
   assert.ok(report.states.every((s) => s.revision === 1));
   assert.deepEqual(report.errors, []);
   report.status = "passed";

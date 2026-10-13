@@ -291,6 +291,10 @@ async function enhance() {
 async function reload() {
   if (!metadata) return;
   const own = ++generation;
+  if (probePoints) {
+    scene.primitives.remove(probePoints);
+    probePoints = undefined;
+  }
   const old = scene.lumen.world;
   if (old) old.destroy();
   if (model) {
@@ -450,6 +454,7 @@ scene.postRender.addEventListener(() => {
   const current = !!w && w.requestedRevision === w.settledRevision;
   const grid = w?.packet?.grid;
   $("transition").disabled = typeof w?.setDisplayTransition !== "function";
+  $("saveView").disabled = !w?.ready || w.isDestroyed();
   $("status").textContent =
     `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing ${grid?.spacing ?? "…"}m\n${grid?.rays ?? "…"} rays · ${w?.options.bounces ?? "…"} bounces · ${w?.options.targetGpuMilliseconds ?? "…"}ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n显示 ${(w?.displaySettled ?? true) ? "已稳定" : "过渡中"}\n发布时间为 CPU 提交，不等于 GPU 完成`;
 });
@@ -457,25 +462,22 @@ scene.postRender.addEventListener(() => {
 async function saveView() {
   const cam = scene.camera,
     w = scene.lumen.world;
-  const hashes = {};
-  for (const ext of ["gltf", "bin", "json"]) {
-    const assetName =
-      currentPreset === "presentation"
-        ? "earth-pavilion-presentation"
-        : "earth-pavilion";
-    const data = await (
-      await fetch("../fixtures/" + assetName + "." + ext)
-    ).arrayBuffer();
-    hashes[ext] = Array.from(
-      new Uint8Array(await crypto.subtle.digest("SHA-256", data)),
-      (b) => b.toString(16).padStart(2, "0"),
-    ).join("");
-  }
-  return {
+  if (!w?.ready || w.isDestroyed())
+    throw Error("wait for the GI world before saving");
+  const assetName =
+    currentPreset === "presentation"
+      ? "earth-pavilion-presentation"
+      : "earth-pavilion";
+  // Capture every mutable scene value before the first asynchronous hash operation.
+  const saved = {
     preset: currentPreset,
     qualityPreset: currentQuality,
     diffuseResponse: scene.lumen.diffuseResponse,
     displayTransitionMilliseconds: w.displayTransitionMilliseconds,
+    publicationMode: $("publication").value,
+    neutralMaterials: $("neutral").checked ? [1, 2] : [],
+    enabled: scene.lumen.enabled,
+    debugMode: scene.lumen.debugMode,
     camera: {
       transform: C.Matrix4.toArray(cam.transform),
       position: [cam.position.x, cam.position.y, cam.position.z],
@@ -507,45 +509,68 @@ async function saveView() {
       bounces: w.options.bounces,
       budget: w.options.targetGpuMilliseconds,
     },
-    assets: hashes,
+    assets: {},
     worldRevision: {
       requested: w.requestedRevision,
       published: w.publishedRevision,
       settled: w.settledRevision,
     },
   };
+  for (const ext of ["gltf", "bin", "json"]) {
+    const data = await (
+      await fetch("../fixtures/" + assetName + "." + ext)
+    ).arrayBuffer();
+    saved.assets[ext] = Array.from(
+      new Uint8Array(await crypto.subtle.digest("SHA-256", data)),
+      (b) => b.toString(16).padStart(2, "0"),
+    ).join("");
+  }
+  return saved;
 }
 async function restoreView(saved) {
-  if (
+  const reloadNeeded =
     (saved.preset && saved.preset !== currentPreset) ||
-    (saved.qualityPreset && saved.qualityPreset !== currentQuality)
+    (saved.qualityPreset && saved.qualityPreset !== currentQuality) ||
+    Object.keys(saved.anchor).some((k) => saved.anchor[k] !== anchor[k]);
+  const previous = scene.lumen.world;
+  currentPreset = saved.preset ?? currentPreset;
+  currentQuality = saved.qualityPreset ?? currentQuality;
+  Object.assign(anchor, saved.anchor);
+  $("preset").value = currentPreset;
+  $("quality").value = currentQuality;
+  $("publication").value = saved.publicationMode ?? $("publication").value;
+  $("neutral").checked = (saved.neutralMaterials ?? []).length > 0;
+  $("transition").checked = (saved.displayTransitionMilliseconds ?? 0) > 0;
+  const loading = reloadNeeded ? reload() : undefined;
+  const own = generation,
+    started = performance.now();
+  await loading;
+  if (own !== generation)
+    throw Error("saved view superseded by a newer reload");
+  while (
+    !scene.lumen.world?.ready ||
+    scene.lumen.world.isDestroyed() ||
+    (reloadNeeded && scene.lumen.world === previous)
   ) {
-    currentPreset = saved.preset ?? currentPreset;
-    currentQuality = saved.qualityPreset ?? currentQuality;
-    $("preset").value = currentPreset;
-    $("quality").value = currentQuality;
-    await reload();
-    const started = performance.now();
-    while (!scene.lumen.world?.ready || scene.lumen.world.isDestroyed()) {
-      if (performance.now() - started > 180000)
-        throw Error("saved view world timeout");
-      await new Promise(requestAnimationFrame);
-    }
-    await scene.lumen.world.completed;
+    if (own !== generation)
+      throw Error("saved view superseded by a newer reload");
+    if (performance.now() - started > 180000)
+      throw Error("saved view world timeout");
+    scene.requestRender();
+    await new Promise(requestAnimationFrame);
   }
+  const w = scene.lumen.world;
+  await w.completed;
+  if (own !== generation)
+    throw Error("saved view superseded by a newer reload");
   if (saved.diffuseResponse)
     scene.lumen.diffuseResponse = saved.diffuseResponse;
-  if (saved.displayTransitionMilliseconds !== undefined)
-    scene.lumen.world.setDisplayTransition?.(
-      saved.displayTransitionMilliseconds,
-    );
+  w.setDisplayTransition(saved.displayTransitionMilliseconds ?? 0);
+  if (saved.enabled !== undefined) scene.lumen.enabled = saved.enabled;
+  if (saved.debugMode !== undefined) scene.lumen.debugMode = saved.debugMode;
   if (saved.msaaSamples) scene.msaaSamples = saved.msaaSamples;
   if (saved.fxaaEnabled !== undefined)
     scene.postProcessStages.fxaa.enabled = saved.fxaaEnabled;
-  if (Object.keys(saved.anchor).some((k) => saved.anchor[k] !== anchor[k])) {
-    Object.assign(anchor, saved.anchor);
-    await reload();
-  }
   scene.camera.cancelFlight();
   scene.camera.lookAtTransform(C.Matrix4.fromArray(saved.camera.transform));
   for (const key of ["position", "direction", "up", "right"])
@@ -574,20 +599,108 @@ async function restoreView(saved) {
       lightingEnvironment.sun.intensity;
     model.environmentMapManager.reset();
   }
+  $("sun").value = String(
+    C.Math.toDegrees(
+      Math.atan2(lighting.sunDirection[1], lighting.sunDirection[0]),
+    ),
+  );
+  $("sunHeight").value = String(
+    C.Math.toDegrees(
+      Math.atan2(
+        lighting.sunDirection[2],
+        Math.hypot(...lighting.sunDirection.slice(0, 2)),
+      ),
+    ),
+  );
   $("exposure").value = String(saved.exposure);
   $("tonemapper").value = saved.toneMapper;
   $("response").value = scene.lumen.diffuseResponse;
-  const w = scene.lumen.world;
+  $("enabled").checked = scene.lumen.enabled;
+  $("mode").value = String(scene.lumen.debugMode);
+  $("aa").value =
+    scene.msaaSamples > 1
+      ? "msaa4"
+      : scene.postProcessStages.fxaa.enabled
+        ? "fxaa"
+        : "off";
+  $("shadow").value = scene.shadowMap.normalOffset ? "original" : "contact";
+  const target = {
+    ...options(),
+    ...lighting,
+    displayTransitionMilliseconds: w.displayTransitionMilliseconds,
+  };
   if (
-    JSON.stringify(w.options.sunDirection) !==
-      JSON.stringify(lighting.sunDirection) ||
-    JSON.stringify(w.options.sunRadiance) !==
-      JSON.stringify(lighting.sunRadiance) ||
-    JSON.stringify(w.options.skyRadiance) !==
-      JSON.stringify(lighting.skyRadiance)
+    [
+      "sunDirection",
+      "sunRadiance",
+      "skyRadiance",
+      "bounces",
+      "environmentMode",
+      "publicationMode",
+      "neutralMaterials",
+    ].some((k) => JSON.stringify(w.options[k]) !== JSON.stringify(target[k]))
   )
-    await w.solve({ ...options(), ...lighting });
+    await w.solve(target);
   scene.requestRender();
+}
+let probePoints;
+function showProbePositions(show = true) {
+  if (!params.has("diagnostic"))
+    throw Error("probe positions require diagnostic=1");
+  if (probePoints) {
+    scene.primitives.remove(probePoints);
+    probePoints = undefined;
+  }
+  if (!show) {
+    scene.requestRender();
+    return;
+  }
+  const packet = scene.lumen.world.snapshot();
+  probePoints = scene.primitives.add(new C.PointPrimitiveCollection());
+  // Strict interior tests for the original closed foundation, problem box and columns.
+  const solids = [
+    [
+      [-12, -9, -1.5],
+      [12, 9, 0],
+    ],
+    [
+      [-10.6, -3, 0.15],
+      [-9, -1, 1.1],
+    ],
+  ];
+  for (const x of [-7, 7])
+    for (const y of [-7, -2, 3])
+      solids.push([
+        [x - 0.18, y - 0.18, 0.15],
+        [x + 0.18, y + 0.18, 5.2],
+      ]);
+  const counts = { active: 0, invalid: 0, inside: 0, activeInside: 0 };
+  for (let id = 0; id < packet.grid.total; id++) {
+    const p = Array.from(packet.positions.slice(id * 4, id * 4 + 3)),
+      active = packet.positions[id * 4 + 3] >= 0.5;
+    const inside = solids.some(([a, b]) =>
+      p.every((v, i) => v > a[i] && v < b[i]),
+    );
+    counts[active ? "active" : "invalid"]++;
+    if (inside) {
+      counts.inside++;
+      if (active) counts.activeInside++;
+    }
+    probePoints.add({
+      position: C.Matrix4.multiplyByPoint(
+        frame,
+        C.Cartesian3.fromArray(p),
+        new C.Cartesian3(),
+      ),
+      color: inside ? C.Color.ORANGE : active ? C.Color.LIME : C.Color.RED,
+      pixelSize: inside ? 7 : 4,
+      outlineColor: C.Color.BLACK,
+      outlineWidth: 1,
+      disableDepthTestDistance: Number.POSITIVE_INFINITY,
+    });
+  }
+  scene.requestRender();
+  return counts;
 }
 window.earthLab = {
   widget,
@@ -605,6 +718,7 @@ window.earthLab = {
   },
   saveView,
   restoreView,
+  showProbePositions,
   camera,
   reload,
   enhance,
@@ -672,7 +786,12 @@ $("tonemapper").onchange = () => {
 };
 let savedView;
 $("saveView").onclick = async () => {
-  savedView = await saveView();
+  try {
+    savedView = await saveView();
+  } catch (error) {
+    fail(error);
+    return;
+  }
   $("restoreView").disabled = false;
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(savedView, null, 2)], {

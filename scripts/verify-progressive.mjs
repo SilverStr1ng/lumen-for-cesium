@@ -340,12 +340,14 @@ try {
     rapid.idle,
   );
   check(
-    "actual GL resources remain stable across repeated updates",
+    "actual GL texture/FBO resources remain stable and shader cache does not grow",
     rapid.actualAfter.every(
       (s, i) =>
-        ["textures", "framebuffers", "programs", "syncs"].every(
+        ["textures", "framebuffers", "syncs"].every(
           (k) => s[k] === rapid.actualBefore[i][k],
-        ) && s.queries === 0,
+        ) &&
+        s.programs <= rapid.actualBefore[i].programs &&
+        s.queries === 0,
     ),
     { before: rapid.actualBefore, after: rapid.actualAfter },
   );

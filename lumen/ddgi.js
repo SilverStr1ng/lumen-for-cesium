@@ -148,7 +148,7 @@ export class ProbeField {
         }
     const result = {
       irradiance: weights > 1e-10 ? sum.map((v) => v / weights) : [0, 0, 0],
-      coverage: weights > 1e-10 ? clamp(available, 0, 1) : 0,
+      coverage: clamp(available, 0, 1),
     };
     if (candidates)
       Object.assign(result, {

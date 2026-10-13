@@ -67,7 +67,7 @@ try {
   }
   report.status = "passed";
   report.decision =
-    "No statistical denoiser. Static 60-frame E is deterministic. Intentional light changes/finite-bounce publications are separately recorded; optional display transition remains not implemented.";
+    "No statistical denoiser. Static 60-frame E is deterministic. Intentional light changes/finite-bounce publications are separately recorded; optional default-off finite probe display transition implemented and independently verified in probe-display.json.";
 } catch (e) {
   report.status = "failed";
   report.error = e.stack;

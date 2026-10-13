@@ -177,7 +177,65 @@ try {
       s = w.snapshot(),
       g = s.grid,
       h = w._read(w._hitFB, g.rays, g.total),
-      directions = fibonacci(g.rays);
+      analyticDirections = fibonacci(g.rays);
+    // Read only the actual float32 ray/atlas directions in this diagnostic.
+    // CPU integrates the recorded hits independently, without the moment shader,
+    // cache validity, DDGI gather or GPU integration weights.
+    const C = Cesium,
+      { weights } =
+        await import("/cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js"),
+      texture = new C.Texture({
+        context: lumenTest.scene.context,
+        width: g.rays + 64,
+        height: 1,
+        pixelFormat: C.PixelFormat.RGBA,
+        pixelDatatype: C.PixelDatatype.FLOAT,
+      }),
+      fb = new C.Framebuffer({
+        context: lumenTest.scene.context,
+        colorTextures: [texture],
+        destroyAttachments: false,
+      });
+    const cmd = lumenTest.scene.context.createViewportQuadCommand(
+      weights.slice(0, weights.indexOf("void main()")) +
+        "void main(){int i=int(gl_FragCoord.x);vec3 d=i<u_rays?rayDirection(i):integrationDirection(ivec2((i-u_rays)%8+1,(i-u_rays)/8+1));out_FragColor=vec4(d,1.0);}",
+      { uniformMap: { u_rays: () => g.rays } },
+    );
+    w._commands.oracleDirections = cmd;
+    let measured;
+    try {
+      w._draw("oracleDirections", fb, 0, 0, g.rays + 64, 1);
+      measured = w._read(fb, g.rays + 64, 1);
+    } finally {
+      delete w._commands.oracleDirections;
+      cmd.shaderProgram.destroy();
+      fb.destroy();
+      texture.destroy();
+    }
+    const directions = Array.from({ length: g.rays }, (_, i) =>
+        Array.from(measured.slice(i * 4, i * 4 + 3)),
+      ),
+      octDirections = Array.from({ length: 64 }, (_, i) =>
+        Array.from(measured.slice((g.rays + i) * 4, (g.rays + i) * 4 + 3)),
+      ),
+      maximumRayDirectionError = Math.max(
+        ...directions.flatMap((d, i) =>
+          d.map((v, k) => Math.abs(v - analyticDirections[i][k])),
+        ),
+      ),
+      maximumOctDirectionError = Math.max(
+        ...octDirections.flatMap((d, i) =>
+          d.map((v, k) =>
+            Math.abs(
+              v -
+                octDecode(
+                  (((i % 8) + 0.5) / 8) * 2 - 1,
+                  ((Math.floor(i / 8) + 0.5) / 8) * 2 - 1,
+                )[k],
+            ),
+          ),
+        ),
+      );
     let maximum = 0,
       maximumNormalizedError = 0,
       alphaError = 0,
@@ -186,10 +244,7 @@ try {
       if (s.positions[p * 4 + 3] > 0.5)
         for (let y = 1; y <= 8; y++)
           for (let x = 1; x <= 8; x++) {
-            const direction = octDecode(
-              ((x - 0.5) / 8) * 2 - 1,
-              ((y - 0.5) / 8) * 2 - 1,
-            );
+            const direction = octDirections[(y - 1) * 8 + x - 1];
             let mean = 0,
               second = 0,
               weight = 0,
@@ -261,6 +316,8 @@ try {
     return {
       maximum,
       maximumNormalizedError,
+      maximumRayDirectionError,
+      maximumOctDirectionError,
       alphaError,
       checked,
       unknown,
@@ -272,6 +329,8 @@ try {
     "distance moments match an independent CPU formula",
     geometry.checked > 0 &&
       geometry.maximumNormalizedError <= 1 &&
+      geometry.maximumRayDirectionError < 0.0001 &&
+      geometry.maximumOctDirectionError < 0.000001 &&
       geometry.alphaError === 0,
     geometry,
   );

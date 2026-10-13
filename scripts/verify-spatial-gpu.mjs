@@ -49,7 +49,8 @@ try {
           0, 0.01, 0.25, 0.5, 0.75, 0.99999, 1, 1.00001, 1.25, 1.75, 2,
         ].map((x) => ({ position: [x, 0.5, 0.5], normal: [0, 0, 1] })),
         actual = await w.sample(points, { fixedFacing: 1 }),
-        legacy = await w.sample(points, { fixedFacing: 1, legacyKernel: true });
+        legacy = await w.sample(points, { fixedFacing: 1, legacyKernel: true }),
+        low = await w.sample(points, { fixedFacing: 0.0001 });
       w.normalBias = 0.075;
       const normals = [
           {
@@ -64,7 +65,14 @@ try {
           },
         ],
         separate = await w.sample(normals, { fixedFacing: 1 });
-      return { points, actual, legacy, separate, errors: lumenTest.errors };
+      return {
+        points,
+        actual,
+        legacy,
+        low,
+        separate,
+        errors: lumenTest.errors,
+      };
     } finally {
       a.E = old.E;
       a.M = old.M;
@@ -93,6 +101,10 @@ try {
     "detail Ns must not shift geometric query",
   );
   assert.ok(Math.abs(report.result.separate[0].irradiance[0] - 3.225) < 1e-5);
+  for (const sample of report.result.low) {
+    assert.deepEqual(sample.irradiance, [0, 0, 0]);
+    assert.equal(sample.coverage, 1);
+  }
   assert.deepEqual(report.result.errors, []);
   report.status = "passed";
 } catch (e) {
