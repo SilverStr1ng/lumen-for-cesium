@@ -325,11 +325,50 @@ void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 a=texelFetch(u_queryOrigin,c,0)
 export const querySample = `${gather}
 uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
+export const fgCopy = `precision highp sampler2D;uniform sampler2D u_fgCopySource;void main(){out_FragColor=texelFetch(u_fgCopySource,ivec2(gl_FragCoord.xy),0);}`;
+const finalGather = `uniform int u_fgSamples,u_fgSeed;uniform bool u_fgPreviousEnabled;uniform float u_fgRayBias;
+float reverseBits(int i){uint b=uint(i);b=(b<<16u)|(b>>16u);b=((b&0x55555555u)<<1u)|((b&0xAAAAAAAAu)>>1u);b=((b&0x33333333u)<<2u)|((b&0xCCCCCCCCu)>>2u);b=((b&0x0F0F0F0Fu)<<4u)|((b&0xF0F0F0F0u)>>4u);b=((b&0x00FF00FFu)<<8u)|((b&0xFF00FF00u)>>8u);return float(b)*2.3283064365386963e-10;}
+vec4 receiverFinalGather(vec3 p,vec3 ng,vec3 ns){
+ if(dot(ng,ns)<0.999)return vec4(0.0);
+ vec3 tangent=normalize(cross(abs(ng.z)<0.9?vec3(0,0,1):vec3(0,1,0),ng)),bitangent=cross(ng,tangent),sum=vec3(0.0);
+ vec3 origin=p+ng*u_fgRayBias;
+ for(int i=0;i<1024;i++){if(i>=u_fgSamples)break;
+  float u=(float(i)+0.5)/float(u_fgSamples),phi=czm_twoPi*fract(reverseBits(i)+float(u_fgSeed)*0.61803398875);
+  vec3 d=tangent*sqrt(u)*cos(phi)+bitangent*sqrt(u)*sin(phi)+ng*sqrt(1.0-u);
+  vec4 h=trace(origin,d,completeDistance(origin),-1,false);
+  if(h.x==-1.0)return vec4(0,0,0,-1);
+  if(h.x==0.0){if(u_upperHemisphere==0||d.z>=0.0)sum+=u_skyRadiance;continue;}
+  vec3 y,n,rho,emission;int t;bool black;surface(h,y,n,rho,emission,t,black);if(black)continue;
+  vec3 L=emission;float cosine=max(0.0,dot(n,u_sunDirection));
+  if(cosine>0.0&&any(greaterThan(u_sunRadiance,vec3(0)))){
+   vec3 sunOrigin=y+n*0.015;vec4 shadow=occluded(sunOrigin,u_sunDirection,completeDistance(sunOrigin),t);
+   if(shadow.x==-1.0)return vec4(0,0,0,-1);
+   if(shadow.x==0.0)L+=rho*u_sunRadiance*cosine/czm_pi;
+  }
+  if(u_fgPreviousEnabled)L+=rho*lumen_worldIrradiance(y,n).rgb/czm_pi;
+  sum+=L;
+ }
+ return vec4(sum*(czm_pi/float(u_fgSamples)),1);
+}`;
+export const queryFinalGather = `${common + gather + finalGather}
+uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
+void main(){ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=receiverFinalGather(texelFetch(u_queryOrigin,c,0).xyz,normalize(texelFetch(u_queryGeometricNormal,c,0).xyz),normalize(texelFetch(u_queryDirection,c,0).xyz));}`;
+const exactGather = LumenStageFS.replace(
+  "if(u_lumenGatherControl.x<0.5 && distance>m.x) {float variance=max(0.0001,m.y-m.x*m.x);float visibility=variance/(variance+(distance-m.x)*(distance-m.x));reliability*=max(0.000001,visibility*visibility*visibility);}",
+  "if(distance>0.0004){vec4 segment=occluded(biased,(probe.xyz-biased)/distance,distance-0.0002,-1);if(segment.x==-1.0)return vec4(0,0,0,-1);if(segment.x!=0.0)continue;}",
+);
+export const queryExactProbeVisibility = `#define LUMEN_WORLD_SUPPORTED
+${common + worldUniforms + exactGather}
+uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
+void main(){ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
 export const displayBlend = `precision highp float;
 uniform sampler2D u_displayHistory,u_displayTarget;
 uniform float u_displayAlpha;
 void main(){ivec2 p=ivec2(gl_FragCoord.xy);vec4 target=texelFetch(u_displayTarget,p,0);out_FragColor=vec4(mix(texelFetch(u_displayHistory,p,0).rgb,target.rgb,u_displayAlpha),target.a);}`;
 export default {
+  fgCopy,
+  queryFinalGather,
+  queryExactProbeVisibility,
   displayBlend,
   relocate,
   intersect,

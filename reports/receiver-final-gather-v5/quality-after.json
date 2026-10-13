@@ -1,0 +1,80 @@
+{
+  "input": "reports/receiver-final-gather-v5/abcd.json",
+  "candidate": "after",
+  "regression": "not-run",
+  "quality": "passed",
+  "performance": "not-run",
+  "slowReference": {
+    "C": {
+      "samplesPerSeed": 1024,
+      "seeds": [
+        1,
+        5,
+        19
+      ],
+      "pdf": "cosine Ng; Ns=Ng only; pi/N"
+    },
+    "D": {
+      "samples": 8192,
+      "seed": 543190,
+      "independent": "no DDGI/SurfaceCache"
+    }
+  },
+  "checks": [
+    {
+      "name": "boxFloor",
+      "actual": 0.018937850729605913,
+      "threshold": 0.18765071165108677,
+      "status": "passed",
+      "metric": "original six-line absolute effective E RMSE"
+    },
+    {
+      "name": "boxFace",
+      "actual": 0.0476718653864004,
+      "threshold": 0.3039858849336796,
+      "status": "passed",
+      "metric": "original six-line absolute effective E RMSE"
+    },
+    {
+      "name": "wallFoot",
+      "actual": 0.0017112903848019126,
+      "threshold": 0.303540485115132,
+      "status": "passed",
+      "metric": "original six-line absolute effective E RMSE"
+    },
+    {
+      "name": "pillarFoot",
+      "actual": 0.011304300930685327,
+      "threshold": 0.033018738250725134,
+      "status": "passed",
+      "metric": "original six-line absolute effective E RMSE"
+    },
+    {
+      "name": "ceiling",
+      "actual": 0.0023598033032116933,
+      "threshold": 0.14987554369618528,
+      "status": "passed",
+      "metric": "original six-line absolute effective E RMSE"
+    },
+    {
+      "name": "doorway",
+      "actual": 0.004155902311441248,
+      "threshold": 0.09037324175484689,
+      "status": "passed",
+      "metric": "original six-line absolute effective E RMSE"
+    },
+    {
+      "name": "pillarFoot relative 30% improvement",
+      "actual": 0.011304300930685327,
+      "threshold": 0.09309472976916375,
+      "status": "passed"
+    },
+    {
+      "name": "boxFloor relative 30% improvement",
+      "actual": 0.018937850729605913,
+      "threshold": 0.1261857123524482,
+      "status": "passed"
+    }
+  ],
+  "injected": false
+}

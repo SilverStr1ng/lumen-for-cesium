@@ -1,0 +1,167 @@
+{
+  "version": {
+    "head": "95bc74ba727967276744b7c90b44d92a527bd28d",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "28148141a38a88746456461574776451fb2ffaa9898d0f7e0a79960d823f822a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2eaac13a657b13b5d4cf1f8bf3e4a81d4c19a04ec1386688e54a1defd0abbd41",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "3bf7190ddac4ba983bf756a534ec275380306813f3bded935c9bbc4085d486f1",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f"
+    },
+    "compiledBundle": "162f92a7da891c961741d5fee690d8d5ab6b3c05e6dfb7930f4a759ca94a0df6",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js"
+    ]
+  },
+  "checks": [],
+  "result": {
+    "rows": [
+      {
+        "k": 1,
+        "fg": [
+          {
+            "irradiance": [
+              0.9942498803138733,
+              0.452303946018219,
+              0.6149230599403381
+            ],
+            "valid": true,
+            "unknown": false,
+            "revision": 2,
+            "round": 1,
+            "samples": 256
+          }
+        ],
+        "exact": [
+          {
+            "irradiance": [
+              0.9051720499992371,
+              0.47348475456237793,
+              0.6467943787574768
+            ],
+            "coverage": 1,
+            "valid": true,
+            "unknown": false,
+            "revision": 2,
+            "round": 1
+          }
+        ]
+      }
+    ],
+    "retained": [
+      {
+        "irradiance": [
+          0.9942498803138733,
+          0.452303946018219,
+          0.6149230599403381
+        ],
+        "valid": true,
+        "unknown": false,
+        "revision": 2,
+        "round": 1,
+        "samples": 256
+      }
+    ],
+    "currentSamples": [
+      {
+        "irradiance": [
+          0.9212191700935364,
+          0.44482603669166565,
+          0.6120359897613525
+        ],
+        "valid": true,
+        "unknown": false,
+        "revision": 3,
+        "round": 3,
+        "samples": 256
+      }
+    ],
+    "unknown": [
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "valid": false,
+        "unknown": true,
+        "revision": 3,
+        "round": 3,
+        "samples": 32
+      }
+    ],
+    "nsMismatch": [
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "valid": false,
+        "unknown": false,
+        "revision": 3,
+        "round": 3,
+        "samples": 32
+      }
+    ],
+    "difference": 0,
+    "leasedBytes": 1152768,
+    "versions": {
+      "first": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 1,
+        "sunVisibility": 1,
+        "lighting": 2
+      },
+      "current": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 2,
+        "sunVisibility": 1,
+        "lighting": 3
+      }
+    },
+    "snapshots": 2,
+    "released": true,
+    "budgetFallback": true,
+    "destroyed": true,
+    "gl": [
+      {
+        "phase": "fg-diagnostic",
+        "phases": {
+          "initialization": {
+            "draws": 1060
+          },
+          "fg-production": {
+            "draws": 483
+          },
+          "fg-diagnostic": {
+            "draws": 324,
+            "readPixels": 8
+          }
+        },
+        "feedback": [],
+        "errors": [],
+        "live": {
+          "textures": 17,
+          "framebuffers": 9,
+          "queries": 0,
+          "programs": 23,
+          "syncs": 0
+        },
+        "peak": {
+          "textures": 44,
+          "framebuffers": 28,
+          "queries": 16,
+          "programs": 23,
+          "syncs": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

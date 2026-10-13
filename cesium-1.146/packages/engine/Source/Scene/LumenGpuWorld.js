@@ -21,6 +21,7 @@ import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.j
 import ContextLimits from "../Renderer/ContextLimits.js";
 import * as shaders from "./LumenGpuShaders.js";
 import LumenProbeDisplay from "./LumenProbeDisplay.js";
+import LumenFinalGatherSnapshot from "./LumenFinalGatherSnapshot.js";
 
 const defaultGatherControl = new Cartesian4(0, 0, -1, -1);
 const nearest = new Sampler({
@@ -113,6 +114,8 @@ class LumenGpuWorld {
     this._textures = [];
     this._framebuffers = [];
     this._commands = {};
+    this._fgSnapshots = new Set();
+    this._captureFinalGather = !!options.captureFinalGather;
     this._requests = new Map();
     this._requestId = 0;
     this._queries = [];
@@ -437,6 +440,62 @@ class LumenGpuWorld {
     new ClearCommand({ framebuffer: f, color: Color.TRANSPARENT }).execute(c);
     return f;
   }
+  _freeTexture(texture, fb) {
+    if (fb && !fb.isDestroyed()) fb.destroy();
+    if (!texture.isDestroyed()) {
+      this.memoryBytes -= texture.sizeInBytes;
+      texture.destroy();
+    }
+    this._textures = this._textures.filter((t) => t !== texture);
+    this._framebuffers = this._framebuffers.filter((f) => f !== fb);
+    Object.assign(this.metrics.memory, {
+      currentBytes: this.memoryBytes,
+      textures: this._textures.length,
+      framebuffers: this._framebuffers.length,
+    });
+  }
+  setFinalGatherCapture(enabled) {
+    this._captureFinalGather = !!enabled;
+    if (!enabled) {
+      this.finalGatherSnapshot?.release();
+      this.finalGatherSnapshot = undefined;
+    }
+    this.scene.requestRender();
+  }
+  finalGatherUniforms(snapshot) {
+    snapshot.assertAlive();
+    const base = this._uniforms(),
+      g = snapshot.geometry;
+    return {
+      ...base,
+      u_nodes: () => g.nodes,
+      u_vertices: () => g.vertices,
+      u_uv: () => g.uv,
+      u_atlas: () => g.atlas,
+      u_materials: () => snapshot.materials,
+      u_sunDirection: () => snapshot.light.sunDirection,
+      u_sunRadiance: () => snapshot.light.sunRadiance,
+      u_skyRadiance: () => snapshot.light.skyRadiance,
+      u_upperHemisphere: () => snapshot.light.upperHemisphere,
+      u_neutral: () => snapshot.light.neutral,
+      u_lumenProbeIrradiance: () =>
+        this._fgExact ? snapshot.current : snapshot.previous,
+      u_lumenProbeDistances: () => snapshot.moments,
+      u_lumenProbePositions: () => snapshot.positions,
+      u_lumenProbeOrigin: () => snapshot.origin,
+      u_lumenProbeCounts: () => snapshot.counts,
+      u_lumenProbeSpacing: () => snapshot.spacing,
+      u_lumenNormalBias: () => snapshot.normalBias,
+      u_lumenLegacyKernel: () =>
+        snapshot.options.reconstructionMode === "legacy",
+      u_lumenGatherControl: () => defaultGatherControl,
+      u_budget: () => this._fgBudget ?? snapshot.options.traversalBudget,
+      u_fgPreviousEnabled: () => snapshot.round > 1,
+      u_fgSamples: () => this._fgSamples ?? 32,
+      u_fgSeed: () => this._fgSeed ?? 0,
+      u_fgRayBias: () => 0.0002,
+    };
+  }
   _initialize(p) {
     const g = p.grid;
     this._order = p.order;
@@ -547,6 +606,7 @@ class LumenGpuWorld {
   _uniforms() {
     const c = this.scene.context;
     return {
+      u_fgCopySource: () => this._fgCopySource ?? c.defaultTexture,
       u_nodes: () => this._nodes,
       u_vertices: () => this._vertices,
       u_uv: () => this._uv,
@@ -627,7 +687,10 @@ class LumenGpuWorld {
       command = this._commands[key] = c.createViewportQuadCommand(
         `${variant && mode === "lut" ? "#define LUMEN_USE_LUT\n" : ""}${shaders[name]}`,
         {
-          uniformMap: this._uniforms(),
+          uniformMap:
+            name === "queryFinalGather" || name === "queryExactProbeVisibility"
+              ? this._finalGatherQueryUniforms()
+              : this._uniforms(),
           renderState: RenderState.fromCache({
             depthTest: { enabled: false },
             depthMask: false,
@@ -939,6 +1002,26 @@ class LumenGpuWorld {
   }
   _completeRound() {
     this._atlasMetadata[this._target].complete = true;
+    if (
+      this._captureFinalGather &&
+      (this._jobOptions.publicationMode === "progressive" ||
+        this._bounce === this._jobOptions.bounces)
+    ) {
+      try {
+        const next = new LumenFinalGatherSnapshot(
+          this,
+          this._previous,
+          this._target,
+        );
+        this.finalGatherSnapshot?.release();
+        this.finalGatherSnapshot = next;
+        this.finalGatherStatus = "ready";
+      } catch (e) {
+        this.finalGatherStatus = String(e);
+        this.finalGatherSnapshot?.release();
+        this.finalGatherSnapshot = undefined;
+      }
+    }
     this._previous = this._target;
     this._target = undefined;
     this._history.push({
@@ -1447,6 +1530,86 @@ class LumenGpuWorld {
       output.destroy();
     }
   }
+  _finalGatherQueryUniforms() {
+    // A command persists, but each uniform reads the currently leased snapshot.
+    const keys = Object.keys(this.finalGatherUniforms(this._fgInput));
+    return Object.fromEntries(
+      keys.map((key) => [
+        key,
+        () => this.finalGatherUniforms(this._fgInput)[key](),
+      ]),
+    );
+  }
+  sampleFinalGather(
+    points,
+    {
+      snapshot = this.finalGatherSnapshot,
+      samples = 256,
+      seed = 0,
+      budget,
+    } = {},
+  ) {
+    if (!snapshot)
+      throw Error("enable FG capture and solve before querying Final Gather");
+    snapshot.assertAlive();
+    if (!Number.isInteger(samples) || samples < 1 || samples > 1024)
+      throw Error("FG samples in [1,1024] required");
+    if (
+      budget !== undefined &&
+      (!Number.isInteger(budget) || budget < 1 || budget > 4096)
+    )
+      throw Error("FG budget in [1,4096] required");
+    this._fgInput = snapshot.retain();
+    this._fgSamples = samples;
+    this._fgSeed = seed;
+    this._fgBudget = budget;
+    this._fgExact = false;
+    try {
+      const rows = this._query("queryFinalGather", points);
+      return Promise.resolve(
+        rows.map((v) => ({
+          irradiance: v.slice(0, 3),
+          valid: v[3] > 0.5,
+          unknown: v[3] < 0,
+          revision: snapshot.revision,
+          round: snapshot.round,
+          samples,
+        })),
+      );
+    } finally {
+      this._fgInput.release();
+      this._fgInput = undefined;
+      this._fgBudget = undefined;
+    }
+  }
+  sampleExactProbeVisibility(
+    points,
+    { snapshot = this.finalGatherSnapshot, budget } = {},
+  ) {
+    if (!snapshot)
+      throw Error("FG capture required for frozen exact-probe comparison");
+    this._fgInput = snapshot.retain();
+    this._fgBudget = budget;
+    this._fgExact = true;
+    try {
+      const rows = this._query("queryExactProbeVisibility", points);
+      return Promise.resolve(
+        rows.map((v) => ({
+          irradiance: v.slice(0, 3),
+          coverage: Math.max(0, v[3]),
+          valid: v[3] >= 0,
+          unknown: v[3] < 0,
+          revision: snapshot.revision,
+          round: snapshot.round,
+        })),
+      );
+    } finally {
+      this._fgInput.release();
+      this._fgInput = undefined;
+      this._fgBudget = undefined;
+      this._fgExact = false;
+    }
+  }
   sample(points, diagnostic = {}) {
     const old = this._sampleGatherControl,
       oldDisplay = this._sampleDisplay,
@@ -1538,6 +1701,8 @@ class LumenGpuWorld {
     this.scene.requestRender();
   }
   _release() {
+    for (const snapshot of [...this._fgSnapshots]) snapshot.destroy();
+    this.finalGatherSnapshot = undefined;
     this._closed = true;
     this.ready = false;
     this.worker?.terminate();

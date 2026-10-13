@@ -309,7 +309,9 @@ async function reload() {
     const assetName =
       currentPreset === "presentation"
         ? "earth-pavilion-presentation"
-        : "earth-pavilion";
+        : params.has("heldOut")
+          ? "earth-pavilion-held-out"
+          : "earth-pavilion";
     const selectedMetadata = await (
       await fetch("../fixtures/" + assetName + ".json")
     ).json();
@@ -467,7 +469,9 @@ async function saveView() {
   const assetName =
     currentPreset === "presentation"
       ? "earth-pavilion-presentation"
-      : "earth-pavilion";
+      : params.has("heldOut")
+        ? "earth-pavilion-held-out"
+        : "earth-pavilion";
   // Capture every mutable scene value before the first asynchronous hash operation.
   const saved = {
     preset: currentPreset,
