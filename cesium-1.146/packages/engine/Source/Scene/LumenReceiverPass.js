@@ -11,6 +11,7 @@ import {
   selectSourceCommand,
   restoreFramebufferState,
 } from "./GBuffer.js";
+const samplerRequirements = new WeakMap();
 const output =
   /layout\s*\(location\s*=\s*\d+\)\s*out\s+vec4\s+out_Frag(?:Color|Data_\d+)\s*;|\bout\s+vec4\s+out_Frag(?:Color|Data_\d+)\s*;/g;
 /** Two float attachments: local surface P+ownership, true triangle Ng+ownership.
@@ -147,4 +148,13 @@ class LumenReceiverPass {
     return destroyLumenResource(this);
   }
 }
+LumenReceiverPass.noteSamplers = function (model, count) {
+  samplerRequirements.set(
+    model,
+    Math.min(samplerRequirements.get(model) ?? Infinity, count),
+  );
+};
+LumenReceiverPass.requiredSamplers = function (model) {
+  return samplerRequirements.get(model) ?? 13;
+};
 export default LumenReceiverPass;

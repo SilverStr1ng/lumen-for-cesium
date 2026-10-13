@@ -3,6 +3,7 @@ const surfaceOwners = new WeakMap();
 import ContextLimits from "../../Renderer/ContextLimits.js";
 import ShaderDestination from "../../Renderer/ShaderDestination.js";
 import { functions as fgGeometry } from "../LumenFinalGatherGeometry.js";
+import LumenReceiverPass from "../LumenReceiverPass.js";
 import LightingStageFS from "../../Shaders/Model/LightingStageFS.js";
 import LightingModel from "./LightingModel.js";
 
@@ -84,6 +85,7 @@ LightingPipelineStage.process = function (
       shaderBuilder._fragmentShaderParts.uniformLines.filter((line) =>
         /uniform\s+sampler/.test(line),
       ).length;
+    LumenReceiverPass.noteSamplers(model, 10 + existingSamplers);
     if (
       frameState?.context?.webgl2 &&
       ContextLimits.maximumTextureImageUnits >= 10 + existingSamplers
@@ -120,6 +122,13 @@ LightingPipelineStage.process = function (
           return world?.ready && !world.isDestroyed() ? world : undefined;
         };
       const uniforms = {
+        u_lumenFgLazyFallback: [
+          "bool",
+          () =>
+            !!fg()?.lazyFallback &&
+            fg().mode !== "raw" &&
+            fg().sampling !== "fixed-reference",
+        ],
         u_lumenFgSurfaceId: ["float", () => id],
         u_lumenFgFallbackCode: ["float", () => fg()?.fallbackReason ?? 1],
         u_lumenReceiverSupported: [

@@ -18,15 +18,18 @@ import TextureMinificationFilter from "../Renderer/TextureMinificationFilter.js"
 import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.js";
 import ContextLimits from "../Renderer/ContextLimits.js";
 import LumenReceiverPass from "./LumenReceiverPass.js";
+import planFinalGather from "./LumenFinalGatherPlan.js";
 import LumenFinalGatherReconstruction from "./LumenFinalGatherReconstruction.js";
 import {
   receiverTrace,
+  receiverFused,
   receiverShade,
   receiverNeighborhood,
 } from "./LumenGpuShaders.js";
 
 // Quality sets resolution/sample count; the sampling policy controls history.
 const presets = Object.freeze({
+  auto: Object.freeze({ scale: 0.5, samples: 32, auto: true }),
   balanced: Object.freeze({ scale: 0.5, samples: 16 }),
   high: Object.freeze({ scale: 0.5, samples: 32 }),
   fast: Object.freeze({ scale: 0.25, samples: 16 }),
@@ -52,6 +55,9 @@ class LumenFinalGather {
     this.seed = 0;
     this.sampling = "fixed-reference";
     this.reconstructionEnabled = true;
+    this.execution = "split";
+    this.rayOrder = "azimuth";
+    this.lazyFallback = true;
     this.sequenceEpoch = undefined;
     this._sampleEpoch = 0;
     this.freezeSampling = false; // explicit image diagnostics only
@@ -71,6 +77,8 @@ class LumenFinalGather {
     this.sceneSize = new Cartesian2(1, 1);
     this._currentVP = new Matrix4();
     this._stableFrames = 0;
+    this._plan = undefined;
+    this._planKey = undefined;
     this.continuousSampling = false;
     this._localToEye = new Matrix4();
     this._timer = this.scene.context._gl.getExtension(
@@ -102,6 +110,8 @@ class LumenFinalGather {
     model = this.model,
     sampling = this.sampling,
     reconstruction = this.reconstructionEnabled,
+    execution = this.execution,
+    rayOrder = this.rayOrder,
     seed = this.seed,
     sequenceEpoch = this.sequenceEpoch,
   } = {}) {
@@ -131,8 +141,18 @@ class LumenFinalGather {
       this.model !== model ||
       this.sampling !== sampling ||
       this.reconstructionEnabled !== reconstruction ||
+      this.execution !== execution ||
+      this.rayOrder !== rayOrder ||
       this.seed !== seed ||
       this.sequenceEpoch !== sequenceEpoch;
+    if (!["split", "fused4", "fused8"].includes(execution)) {
+      throw new DeveloperError("Invalid FG execution backend");
+    }
+    if (!["original", "azimuth"].includes(rayOrder)) {
+      throw new DeveloperError("Invalid FG ray ordering");
+    }
+    this.rayOrder = rayOrder;
+    this.execution = execution;
     if (typeof reconstruction !== "boolean") {
       throw new DeveloperError("FG reconstruction must be boolean");
     }
@@ -203,35 +223,34 @@ class LumenFinalGather {
       this.lumen.world.requestedRevision === this.metrics.revision
     );
   }
-  _layout() {
+  _layout(snapshotBytes = 0) {
     const s = this.scene,
-      p = presets[this.quality],
-      rw = Math.max(1, Math.ceil(s.drawingBufferWidth * p.scale)),
-      rh = Math.max(1, Math.ceil(s.drawingBufferHeight * p.scale));
-    const width = p.roi ? Math.min(rw, p.roi) : rw,
-      height = p.roi ? Math.min(rh, p.roi) : rh,
-      ox = Math.floor((rw - width) / 2),
-      oy = Math.floor((rh - height) / 2);
-    return {
-      rw,
-      rh,
-      width,
-      height,
-      ox,
-      oy,
-      samples: p.samples,
-      bytes:
-        rw * rh * 36 +
-        width * height * 100 +
-        (this.sampling === "reconstructed" && this.reconstructionEnabled
-          ? LumenFinalGatherReconstruction.estimate(width, height)
-          : 0),
-      slots: width * height * p.samples,
-      geometrySlots:
-        this.sampling === "reconstructed" && this.reconstructionEnabled
-          ? width * height * 8 + s.drawingBufferWidth * s.drawingBufferHeight
-          : 0,
+      c = s.context;
+    const input = {
+      width: s.drawingBufferWidth,
+      height: s.drawingBufferHeight,
+      quality: this.quality,
+      execution: this.execution,
+      rayOrder: this.rayOrder,
+      reconstruction:
+        this.sampling === "reconstructed" && this.reconstructionEnabled,
+      snapshotBytes,
+      memoryBudget: this.maxMemoryBytes,
+      invocationBudget: this.maxRayInvocations,
+      maximumTextureSize: ContextLimits.maximumTextureSize,
+      maximumRenderbufferSize: ContextLimits.maximumRenderbufferSize,
+      samplerUnits: ContextLimits.maximumTextureImageUnits,
+      requiredSamplers: LumenReceiverPass.requiredSamplers(this.model),
+      colorAttachments: ContextLimits.maximumColorAttachments,
+      floatRenderable: !!c?.webgl2 && !!c.colorBufferFloat,
     };
+    const key = JSON.stringify(input);
+    if (this._planKey !== key) {
+      this._plan = planFinalGather(input);
+      this._planKey = key;
+      this.metrics.planChanges = (this.metrics.planChanges ?? 0) + 1;
+    }
+    return this._plan;
   }
   _texture(width, height, datatype = PixelDatatype.FLOAT) {
     const t = new Texture({
@@ -258,6 +277,7 @@ class LumenFinalGather {
       l.rh,
       l.width,
       l.height,
+      this.execution,
       this.sampling === "reconstructed" && this.reconstructionEnabled,
     ].join(":");
     if (this._layoutKey === key) {
@@ -267,7 +287,9 @@ class LumenFinalGather {
     try {
       this.receiver = new LumenReceiverPass();
       this.receiver.update(this.scene.context, l.rw, l.rh);
-      this.hits = this._texture(l.width * 4, l.height);
+      if (this.execution === "split") {
+        this.hits = this._texture(l.width * 4, l.height);
+      }
       this.neighborhood = this._texture(
         l.width,
         l.height,
@@ -426,7 +448,7 @@ class LumenFinalGather {
         u_receiverNormal: () => this.receiver.normal,
         u_receiverOffset: () => this.offset,
         u_fgStart: () => this._start,
-        u_receiverHits: () => this.hits.texture,
+        u_receiverHits: () => this.hits?.texture ?? c.defaultTexture,
         u_fgAccumulation: () => this._accumulation,
         u_fgRaw: () => this.texture,
         u_fgLocalToEye: () => this._localToEye,
@@ -434,6 +456,7 @@ class LumenFinalGather {
         u_fgNeedsNeighborhood: () => this.quality !== "roi",
         u_fgSamples: () => this.samples,
         u_fgSeed: () => this.seed,
+        u_fgRayOrder: () => (this.rayOrder === "azimuth" ? 1 : 0),
         u_fgSampling: () =>
           this.sampling === "fixed-reference"
             ? 0
@@ -446,11 +469,13 @@ class LumenFinalGather {
         u_fgPreviousEnabled: () => this._input.round > 1,
       });
       this._commands[name] = c.createViewportQuadCommand(
-        name === "receiverTrace"
-          ? receiverTrace
-          : name === "receiverShade"
-            ? receiverShade
-            : receiverNeighborhood,
+        name.startsWith("receiverFused")
+          ? receiverFused(Number(name.slice(-1)))
+          : name === "receiverTrace"
+            ? receiverTrace
+            : name === "receiverShade"
+              ? receiverShade
+              : receiverNeighborhood,
         { uniformMap, owner: this },
       );
     }
@@ -470,6 +495,7 @@ class LumenFinalGather {
       w = this.lumen.world,
       fs = s.frameState;
     this.ready = false;
+    this.metrics.effectiveMode = "ddgi";
     this.fallbackReason = 1;
     if (this.mode === "ddgi" || !this.lumen.enabled) {
       return;
@@ -515,17 +541,22 @@ class LumenFinalGather {
       this.metrics.status = "DDGI fallback: outside local view";
       return;
     }
-    const l = this._layout(),
-      snapshot = w.finalGatherSnapshot;
+    const snapshot = w.finalGatherSnapshot;
     // Budget checks precede every allocation and include the owned round copies.
     const snapshotBytes =
       (snapshot.previous?.sizeInBytes ?? 0) +
       (snapshot.current?.sizeInBytes ?? 0) +
       (snapshot.materials?.sizeInBytes ?? 0);
+    const l = this._layout(snapshotBytes);
+    this.metrics.requestedMode = this.mode;
+    this.metrics.requestedQuality = this.quality;
+    this.metrics.plan = l;
     if (
+      !l.supported ||
       !s.context.webgl2 ||
       !s.context.colorBufferFloat ||
-      l.width * 4 > ContextLimits.maximumTextureSize ||
+      l.width * (this.execution === "split" ? 4 : 1) >
+        ContextLimits.maximumTextureSize ||
       l.rw > ContextLimits.maximumTextureSize ||
       l.rh > ContextLimits.maximumTextureSize ||
       l.bytes + snapshotBytes > this.maxMemoryBytes ||
@@ -536,7 +567,12 @@ class LumenFinalGather {
     ) {
       this.release();
       this.fallbackReason = 10;
-      this.metrics.status = "DDGI fallback: capability or resource budget";
+      this.metrics.effectiveMode = "ddgi";
+      const reason = !l.supported
+        ? l.reason
+        : "invalid traversal budget or device capability";
+      this.metrics.fallbackReason = reason;
+      this.metrics.status = `DDGI fallback: ${reason}`;
       return;
     }
     const cameraKey = [
@@ -561,6 +597,7 @@ class LumenFinalGather {
       this._sampleCameraKey === cameraKey
     ) {
       this.ready = true;
+      this.metrics.effectiveMode = "fg";
       this.fallbackReason = 0;
       return;
     }
@@ -589,6 +626,7 @@ class LumenFinalGather {
     ) {
       this.ready = true;
       this.fallbackReason = 0;
+      this.metrics.effectiveMode = "fg";
       this.metrics.status = "experimental FG: accumulation paused";
       return;
     }
@@ -619,25 +657,37 @@ class LumenFinalGather {
       );
       this._epochForFrame = this.sequenceEpoch ?? this._sampleEpoch;
       this._accumulation = this.ping[1].texture;
-      for (let start = 0; start < l.samples; start += 4) {
+      const chunk = this.execution === "fused8" ? 8 : 4;
+      for (let start = 0; start < l.samples; start += chunk) {
         this._start = start;
-        const index = (start / 4) % 2;
-        this._measure("trace", () =>
-          this._draw(
-            "receiverTrace",
-            this.hits.framebuffer,
-            l.width * 4,
-            l.height,
-          ),
-        );
-        this._measure("shade", () =>
-          this._draw(
-            "receiverShade",
-            this.ping[index].framebuffer,
-            l.width,
-            l.height,
-          ),
-        );
+        const index = (start / chunk) % 2;
+        if (this.execution === "split") {
+          this._measure("trace", () =>
+            this._draw(
+              "receiverTrace",
+              this.hits.framebuffer,
+              l.width * 4,
+              l.height,
+            ),
+          );
+          this._measure("shade", () =>
+            this._draw(
+              "receiverShade",
+              this.ping[index].framebuffer,
+              l.width,
+              l.height,
+            ),
+          );
+        } else {
+          this._measure("traceShade", () =>
+            this._draw(
+              `receiverFused${chunk}`,
+              this.ping[index].framebuffer,
+              l.width,
+              l.height,
+            ),
+          );
+        }
         this._accumulation = this.ping[index].texture;
       }
       this.texture = this._accumulation;
@@ -724,6 +774,13 @@ class LumenFinalGather {
         quality: this.quality,
         resolution: [l.width, l.height],
         receiverResolution: [l.rw, l.rh],
+        effectiveMode: "fg",
+        fallbackReason: "none",
+        effectiveQuality: l.effectiveQuality,
+        execution: this.execution,
+        rayOrder: this.rayOrder,
+        reconstructionEnabled: this.reconstructionEnabled,
+        lazyFallback: this.lazyFallback,
         samples: l.samples,
         raySlots: l.slots,
         primaryRayUpperBound: l.slots,
@@ -732,6 +789,10 @@ class LumenFinalGather {
         geometryRayUpperBound: l.geometrySlots,
         snapshotBytes,
         totalAdditionalBytes: l.bytes + snapshotBytes,
+        peakAdditionalBytes: Math.max(
+          this.metrics.peakAdditionalBytes ?? 0,
+          l.bytes + snapshotBytes,
+        ),
       });
     } catch (error) {
       this.release();

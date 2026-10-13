@@ -142,6 +142,28 @@ vec3 lumen_irradiance(vec3 positionEC,vec3 normalEC,vec3 geometricNormalEC) {
     lumen_dataCoverage=u_lumenCoverage;
     #if defined(LUMEN_WORLD_SUPPORTED) && !defined(LUMEN_GBUFFER)
     if(u_lumenWorldEnabled) {
+        #ifdef LUMEN_RECEIVER_COMPOSITE
+        // This branch is uniform for the draw. Ng derivatives run before any
+        // per-fragment volume/validity branch. Debug coverage stays eager.
+        if(u_lumenFgLazyFallback && u_lumenDebugMode==0) {
+            vec3 p=(u_lumenEyeToLocal*vec4(positionEC,1.0)).xyz;
+            vec3 ng=normalize(mat3(u_lumenEyeToLocal)*geometricNormalEC);
+            vec3 q=((u_lumenLegacyKernel?p:p+ng*u_lumenNormalBias)-u_lumenProbeOrigin)/u_lumenProbeSpacing;
+            bool inside=all(greaterThanEqual(q,vec3(0.0)))&&all(lessThanEqual(q,u_lumenProbeCounts-1.0));
+            vec3 candidate=lumen_reconstructFg(positionEC,normalEC,vec3(0.0));
+            if(inside&&lumen_fgWeight==1.0) {
+                lumen_volumeCoverage=1.0;
+                // Selected complete FG E has valid support. Explicit DDGI
+                // support diagnostics take the eager branch below.
+                return candidate;
+            }
+            vec4 fallback=lumen_worldIrradianceWithNormals(positionEC,geometricNormalEC,normalEC);
+            lumen_dataCoverage*=fallback.a;
+            lumen_materialCoverage*=lumen_volumeCoverage;
+            lumen_environmentCoverage*=lumen_volumeCoverage;
+            return candidate + fallback.rgb*u_lumenWorldGain*(1.0-lumen_fgWeight);
+        }
+        #endif
         vec4 field=lumen_worldIrradianceWithNormals(positionEC,geometricNormalEC,normalEC);
         lumen_dataCoverage*=field.a;
         // E is already normalized over reliable, valid support. Availability

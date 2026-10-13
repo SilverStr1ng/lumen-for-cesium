@@ -5,17 +5,67 @@ import {
   sourceVersion,
   installGlObserver,
 } from "./browser-tools.mjs";
+const execution =
+  process.argv.find((a) => a.startsWith("--execution="))?.split("=")[1] ??
+  "split";
+const rayOrder = process.argv.includes("--azimuth") ? "azimuth" : "original";
+const lazyFallback = process.argv.includes("--lazy");
+const arg = (name, fallback) =>
+  process.argv.find((a) => a.startsWith("--" + name + "="))?.split("=")[1] ??
+  fallback;
+const sceneName = arg("scene", "original"),
+  quality = arg("quality", "high"),
+  activity = arg("activity", "static");
+const viewport = {
+  width: Number(arg("width", 1280)),
+  height: Number(arg("height", 800)),
+};
+const suffix =
+  sceneName === "original" &&
+  quality === "high" &&
+  activity === "static" &&
+  viewport.width === 1280
+    ? ""
+    : "-" +
+      sceneName +
+      "-" +
+      viewport.width +
+      "x" +
+      viewport.height +
+      "-" +
+      quality +
+      "-" +
+      activity;
+const reportFile =
+  "reports/fg-runtime-budget-v7/performance-" +
+  execution +
+  (rayOrder === "azimuth" ? "-azimuth" : "") +
+  (lazyFallback ? "-lazy" : "-eager") +
+  suffix +
+  ".json";
 const report = {
   version: sourceVersion(["scripts/benchmark-fg-runtime.mjs"]),
+  configuration: {
+    execution,
+    rayOrder,
+    lazyFallback,
+    sceneName,
+    quality,
+    activity,
+    viewport,
+  },
   rounds: [],
   errors: [],
 };
 const b = await launchBrowser(),
-  p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  p = await b.newPage({ viewport });
 p.on("pageerror", (e) => report.errors.push(String(e)));
 await p.addInitScript(installGlObserver);
 try {
-  await p.goto("http://localhost:8090/demo/globe.html");
+  await p.goto(
+    "http://localhost:8090/demo/" +
+      (sceneName === "gallery" ? "gallery.html?nativeBuffer=1" : "globe.html"),
+  );
   await p.waitForFunction(() => earthLab.world?.status === "ready", null, {
     timeout: 180000,
   });
@@ -38,34 +88,71 @@ try {
         : ["ddgi", "fixed-raw", "decorrelated-raw", "reconstructed"];
     for (const mode of order) {
       const row = await p.evaluate(
-        async ({ round, mode }) => {
+        async ({
+          round,
+          mode,
+          execution,
+          lazyFallback,
+          rayOrder,
+          sceneName,
+          quality,
+          activity,
+        }) => {
           const d = earthLab,
             s = d.scene,
             f = s.lumen.finalGather,
             { measureFrames } = await import("./benchmark.js");
-          d.camera("boxFoot");
+          d.camera(sceneName === "gallery" ? "courtyard" : "boxFoot");
           d.world.setDisplayTransition(0);
           s.requestRenderMode = false;
           window.glObserver.phase("performance");
           await f.configure({
             mode: mode === "ddgi" ? "ddgi" : "fg",
-            quality: "high",
+            quality,
             sampling:
               mode === "fixed-raw" || mode === "ddgi"
                 ? "fixed-reference"
                 : "reconstructed",
             reconstruction: mode === "reconstructed",
+            execution:
+              mode === "fixed-raw" || mode === "ddgi" ? "split" : execution,
+            rayOrder:
+              mode === "fixed-raw" || mode === "ddgi" ? "original" : rayOrder,
             model: d.model,
           });
           await d.world.completed;
-          f.continuousSampling = true;
+          f.lazyFallback =
+            mode === "fixed-raw" || mode === "ddgi" ? false : lazyFallback;
+          f.continuousSampling = activity !== "pause";
           f.profileForward = false;
           for (let i = 0; i < 30; i++) await new Promise(requestAnimationFrame);
-          let epoch = 0;
+          if (activity === "pause")
+            for (let i = 0; i < 70; i++)
+              await new Promise(requestAnimationFrame);
+          const origin = Cesium.Cartesian3.clone(s.camera.position),
+            right = Cesium.Cartesian3.clone(s.camera.right),
+            initialIntensity = d.world.options.sunIntensity;
+          let epoch = 0,
+            activityFrame = 0;
           const epochs = [],
             beforeDraws = f.metrics.draws;
           const removeSequence = s.preRender.addEventListener(() => {
             f._sampleEpoch = epoch++;
+            const index = activityFrame++;
+            if (activity === "moving")
+              Cesium.Cartesian3.add(
+                origin,
+                Cesium.Cartesian3.multiplyByScalar(
+                  right,
+                  0.3 * Math.sin(index * 0.04),
+                  new Cesium.Cartesian3(),
+                ),
+                s.camera.position,
+              );
+            if (activity === "relight" && [30, 60].includes(index))
+              d.world.solve({
+                sunIntensity: initialIntensity * (index === 30 ? 1.05 : 1),
+              });
           });
           const removeEpochLog = s.postRender.addEventListener(() => {
             if (f.ready) epochs.push(f.metrics.sampleEpoch);
@@ -73,17 +160,21 @@ try {
           const before = performance.now(),
             whole = await measureFrames(s, 100, {
               warmup: 20,
-              requireFG: mode !== "ddgi",
+              requireFG:
+                activity === "static" || activity === "moving"
+                  ? mode !== "ddgi"
+                  : false,
             });
           removeSequence();
           removeEpochLog();
+          const wholeDraws = f.metrics.draws - beforeDraws;
           const fgBefore = f.metrics.frames,
             sceneBefore = s.frameState.frameNumber;
           f.metrics.completedTimings.length = 0;
-          f.profileForward = mode !== "ddgi";
+          f.profileForward = mode !== "ddgi" && activity !== "pause";
           const minFrame = s.frameState.frameNumber + 1,
             start = performance.now();
-          if (mode !== "ddgi")
+          if (mode !== "ddgi" && activity !== "pause")
             while (
               f.metrics.completedTimings.filter(
                 (x) => x.frame >= minFrame && x.fgExecuted,
@@ -123,6 +214,9 @@ try {
             mode,
             epochs,
             draws: f.metrics.draws - beforeDraws,
+            wholeDraws,
+            componentDraws: f.metrics.draws - beforeDraws - wholeDraws,
+            fallbackFrames: whole.renderedFrames - whole.actualFGFrames,
             whole,
             components: {
               window: "separate from whole-frame timer",
@@ -140,13 +234,19 @@ try {
             readbacks: window.glObserver.snapshot(),
           };
         },
-        { round, mode },
+        {
+          round,
+          mode,
+          execution,
+          lazyFallback,
+          rayOrder,
+          sceneName,
+          quality,
+          activity,
+        },
       );
       report.rounds.push(row);
-      await writeFile(
-        "reports/fg-runtime-budget-v7/performance.json",
-        JSON.stringify(report, null, 2),
-      );
+      await writeFile(reportFile, JSON.stringify(report, null, 2));
       console.log(
         JSON.stringify({
           round,
@@ -208,7 +308,12 @@ try {
       .filter((x) => x.mode !== "ddgi")
       .every(
         (x) =>
-          x.whole.actualFGFrames === x.whole.renderedFrames &&
+          (activity === "relight"
+            ? x.whole.actualFGFrames > 0
+            : activity === "pause"
+              ? x.whole.actualFGFrames ===
+                (x.mode === "reconstructed" ? 0 : x.whole.renderedFrames)
+              : x.whole.actualFGFrames === x.whole.renderedFrames) &&
           x.whole.excludedFallbackFrames === 0,
       ),
     resourceBudget: report.targets.memory.value <= report.targets.memory.limit,
@@ -226,8 +331,11 @@ try {
             o.errors.length === 0,
         ),
     ),
-    targetReconstruction: report.targets.additionalReconstructionP95.value <= 1,
-    targetCompleteFG: report.targets.completeFGP95.value <= 3,
+    targetReconstruction:
+      activity === "pause" ||
+      report.targets.additionalReconstructionP95.value <= 1,
+    targetCompleteFG:
+      activity === "pause" || report.targets.completeFGP95.value <= 3,
   };
   assert.deepEqual(report.errors, []);
   assert(
@@ -241,10 +349,7 @@ try {
   process.exitCode = 1;
 } finally {
   await b.close();
-  await writeFile(
-    "reports/fg-runtime-budget-v7/performance.json",
-    JSON.stringify(report, null, 2),
-  );
+  await writeFile(reportFile, JSON.stringify(report, null, 2));
 }
 console.log(
   JSON.stringify({

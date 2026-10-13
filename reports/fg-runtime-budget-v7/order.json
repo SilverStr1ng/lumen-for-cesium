@@ -1,0 +1,74 @@
+{
+  "version": {
+    "head": "ca474f4be8cd9c57aee44fdb9713673160b8202e",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4cedbcd4929d3db78927db08d1899ef873cdf5785761624c44f8523eadf5b837",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "27877e0dd5617f8d565ad63105e86c26b47a7f85f9d8af4c15feb8f5f8281c08",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "0fc728a42ef6e8df9edaa069abaf06a21e935c415436c6a713d83bb473ee27d0",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "174b37e9e540ca0dac9eb26d0493947d43e74f5f04fd777e677ddfff8765dd5f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "df0f679d79f823a46f953a7f7316382ee813378cc228ef75894db9e85f9c7c02",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "0f920763e3f60ed386452f61a5d7c1d0f4b7f1d4ab82c7f406e8893380bace0b",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "c718c114a7d9b90d9616ac714517ba999d187f51eab98c59257fdab1cc4f9a6c",
+      "demo/globe.js": "4eb22a7281119ac81451d174ee5611d12a0bf0bd6cbefa7cef4af69b36dfdd8f",
+      "demo/benchmark.js": "b21e32abd85a748ec18acfaca4b0ed503597b4e7a0d444c6c3f6a7117815c583",
+      "scripts/browser-tools.mjs": "247736b0a5e33f1f3d0f7ef29157f56a38c15c4186b5c922a33f1931edce1863",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "ddf91ea3b24613340721d51f899a4a5a851f98459deae62f018932dab7ad062a",
+      "scripts/capture-fg-reconstruction.mjs": "7c9970b1ef058e185bef305e67609da904e929305f4573dc9a6997de9a9cf283",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "scripts/verify-fg-order.mjs": "cae6b4c2758756690d865694970e0e3a4b0dfddd39aa5663e68b22e067d0008c",
+      "lumen/fg-sampling.js": "44ce89c085b15d50cb61a86efa74e7e8c0507ba83ff0255b43bc2f12d50688a0"
+    },
+    "compiledBundle": "fc2375825e991eff1c1ecdedd347073094ae70d655c593f9df882d774c271655",
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
+      "demo/globe.js",
+      "scripts/browser-tools.mjs"
+    ]
+  },
+  "checks": [
+    {
+      "status": "passed",
+      "groups": 36,
+      "pixelsPerGroup": 16,
+      "samples": [
+        16,
+        32,
+        64
+      ],
+      "seeds": [
+        0,
+        5,
+        19
+      ],
+      "epochs": [
+        0,
+        1,
+        31,
+        65537
+      ],
+      "scope": "actual compiled GPU directions; identical per-pixel sets, only order differs"
+    }
+  ],
+  "errors": [],
+  "maximumDirectionDelta": 0,
+  "status": "passed"
+}

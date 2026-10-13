@@ -516,6 +516,7 @@ class LumenGpuWorld {
       u_fgPreviousEnabled: () => snapshot.round > 1,
       u_fgSamples: () => this._fgSamples ?? 32,
       u_fgSeed: () => this._fgSeed ?? 0,
+      u_fgRayOrder: () => 0,
       u_fgSampling: () => this._fgSampling ?? 0,
       u_fgEpoch: () => this._fgEpoch ?? 0,
       u_fgPixelOffset: () => this._fgPixelOffset ?? Cartesian2.ZERO,

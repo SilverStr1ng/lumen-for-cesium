@@ -48,12 +48,16 @@ function planFinalGather({
     !["split", "fused4", "fused8"].includes(execution) ||
     !(quality === "auto" || presets[quality]) ||
     typeof reconstruction !== "boolean";
-  if (invalid)
+  if (invalid) {
     return {
       supported: false,
       reason: "invalid planning input",
       rejections: [],
     };
+  }
+  // Auto keeps one receiver choice across A/B/C/D: raw ablations reserve
+  // reconstruction capacity without allocating history, preserving same-size inputs.
+  const planReconstruction = reconstruction || quality === "auto";
   const p = quality === "auto" ? presets.high : presets[quality],
     rejected = [];
   for (const scale of quality === "auto" ? autoScales : [p.scale]) {
@@ -67,23 +71,33 @@ function planFinalGather({
       historyBytes = reconstruction ? w * h * 100 : 0,
       bytes = receiverBytes + hitBytes + workBytes + historyBytes,
       slots = w * h * p.samples,
-      geometrySlots = reconstruction ? w * h * 8 + width * height : 0;
+      geometrySlots = reconstruction ? w * h * 8 + width * height : 0,
+      reservedHistoryBytes =
+        !reconstruction && planReconstruction ? w * h * 100 : 0,
+      reservedGeometrySlots =
+        !reconstruction && planReconstruction ? w * h * 8 + width * height : 0;
     const reasons = [];
-    if (!floatRenderable || colorAttachments < (reconstruction ? 4 : 2))
+    if (!floatRenderable || colorAttachments < (planReconstruction ? 4 : 2)) {
       reasons.push("float/MRT capability");
-    if (samplerUnits < requiredSamplers) reasons.push("fragment sampler limit");
+    }
+    if (samplerUnits < requiredSamplers) {
+      reasons.push("fragment sampler limit");
+    }
     if (
       rw > maximumTextureSize ||
       rh > maximumTextureSize ||
       (execution === "split" ? w * 4 : w) > maximumTextureSize ||
       rw > maximumRenderbufferSize ||
       rh > maximumRenderbufferSize
-    )
+    ) {
       reasons.push("texture/renderbuffer dimensions");
-    if (bytes + snapshotBytes > memoryBudget)
+    }
+    if (bytes + reservedHistoryBytes + snapshotBytes > memoryBudget) {
       reasons.push("additional memory budget");
-    if (slots + geometrySlots > invocationBudget)
+    }
+    if (slots + geometrySlots + reservedGeometrySlots > invocationBudget) {
       reasons.push("primary slots plus geometry query budget");
+    }
     const plan = {
       supported: reasons.length === 0,
       reason:
@@ -92,7 +106,7 @@ function planFinalGather({
           ? "Auto reduced receiver to fit budgets"
           : "requested receiver fits"),
       requestedQuality: quality,
-      effectiveQuality: quality === "auto" ? "auto@" + scale : quality,
+      effectiveQuality: quality === "auto" ? `auto@${scale}` : quality,
       scale,
       samples: p.samples,
       targetFrames: 32,
@@ -107,13 +121,18 @@ function planFinalGather({
       bytes,
       snapshotBytes,
       totalBytes: bytes + snapshotBytes,
+      reservedHistoryBytes,
+      reservedGeometrySlots,
+      planningBytes: bytes + snapshotBytes + reservedHistoryBytes,
       slots,
       geometrySlots,
       checkedInvocations: slots + geometrySlots,
       requiredSamplers,
       attachments: { receiverBytes, hitBytes, workBytes, historyBytes },
     };
-    if (plan.supported) return { ...plan, rejections: rejected };
+    if (plan.supported) {
+      return { ...plan, rejections: rejected };
+    }
     rejected.push({
       scale,
       receiver: [rw, rh],
@@ -121,11 +140,13 @@ function planFinalGather({
       checkedInvocations: plan.checkedInvocations,
       reasons,
     });
-    if (quality !== "auto") return { ...plan, rejections: rejected };
+    if (quality !== "auto") {
+      return { ...plan, rejections: rejected };
+    }
   }
   return {
     supported: false,
-    reason: "no Auto receiver fits: " + rejected.at(-1).reasons.join("; "),
+    reason: `no Auto receiver fits: ${rejected.at(-1).reasons.join("; ")}`,
     requestedQuality: quality,
     rejections: rejected,
   };

@@ -380,6 +380,19 @@ void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetc
  for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec4 h=texelFetch(u_receiverHits,ivec2(p.x*4+j,p.y),0),L=fgRadiance(h,fgDirection(ng,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
  out_FragColor=sum;
 }`;
+export function receiverFused(batch) {
+  if (batch !== 4 && batch !== 8) {
+    throw new Error("FG fused batch must be 4 or 8");
+  }
+  return (
+    `${
+      common + gather + finalGather
+    }uniform sampler2D u_receiverPosition,u_receiverNormal,u_fgAccumulation;uniform ivec2 u_receiverOffset;uniform int u_fgStart;\n` +
+    `void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);if(x.a<0.5){out_FragColor=vec4(0);return;}vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz),o=x.xyz+ng*u_fgRayBias;float distance=completeDistance(o);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);for(int j=0;j<${
+      batch
+    };j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec3 d=fgDirection(ng,i,r+u_fgPixelOffset);vec4 h=trace(o,d,distance,-1,false),L=fgRadiance(h,d);if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}out_FragColor=sum;}`
+  );
+}
 // Conservative spatial support: a low-resolution cell cannot borrow light across
 // any non-coplanar world triangle in its reconstruction neighborhood. Triangle
 // AABBs and planes may reject extra cells; they never invent receiver geometry.
