@@ -7,6 +7,11 @@ import {
   performancePassed,
   qualityPassed,
   aggregate,
+  performanceConfigurations,
+  performanceFile,
+  requiredCaptureFiles,
+  requiredInputsPresent,
+  childGroupState,
 } from "./r8-acceptance.mjs";
 const v = {
   sources: { core: "current" },
@@ -35,6 +40,15 @@ assert(
 );
 for (const exitCode of [1, null, undefined]) assert(!childPassed({ exitCode }));
 assert(childPassed({ exitCode: 0 }));
+for (const exitCode of [1, null, undefined])
+  assert.equal(
+    childGroupState(
+      [{ name: "regression", args: [], exitCode }],
+      ["regression"],
+    ),
+    "failed",
+  );
+assert.equal(childGroupState([], ["regression"]), "failed");
 assert(
   !performancePassed(
     {
@@ -67,6 +81,76 @@ assert.deepEqual(aggregate({ regression: "passed", quality: "not-run" }), {
   exitCode: 1,
 });
 assert.equal(aggregate({ performance: "failed" }).exitCode, 1);
+const good = {
+  status: "passed",
+  configuration: { activity: "static" },
+  checks: {
+    sameSequence: true,
+    completeQueries: true,
+    activeFG: true,
+    resourceBudget: true,
+    productionReadback: true,
+  },
+  rounds: [0, 1, 2].flatMap((round) =>
+    ["ddgi", "fixed-raw", "decorrelated-raw", "reconstructed"].map((mode) => ({
+      round,
+      mode,
+      epochs: Array.from({ length: 100 }, (_, i) => i),
+      metrics: {
+        plan: { rw: 640, rh: 400 },
+        samples: 32,
+        totalAdditionalBytes: 63373760,
+      },
+      whole: {
+        renderedFrames: 100,
+        actualFGFrames: mode === "ddgi" ? 0 : 100,
+        gpuMilliseconds: {
+          samples: 80,
+          mean: mode === "ddgi" ? 1 : 2,
+          p50: mode === "ddgi" ? 1 : 2,
+          p95: mode === "ddgi" ? 1 : 2,
+        },
+        disjoint: 0,
+        incompleteQueries: 0,
+        excludedFallbackFrames: 0,
+        missingQueries: 0,
+      },
+    })),
+  ),
+};
+assert(performancePassed(good, { exitCode: 0 }));
+for (const field of [
+  "samples",
+  "disjoint",
+  "incompleteQueries",
+  "excludedFallbackFrames",
+  "missingQueries",
+])
+  for (const value of [undefined, null, NaN, -1]) {
+    const broken = structuredClone(good);
+    const where =
+      field === "samples"
+        ? broken.rounds[0].whole.gpuMilliseconds
+        : broken.rounds[0].whole;
+    where[field] = value;
+    assert(!performancePassed(broken, { exitCode: 0 }), field + " " + value);
+  }
+const pause = structuredClone(good);
+pause.configuration.activity = "pause";
+pause.rounds
+  .filter((r) => r.mode === "reconstructed")
+  .forEach((r) => (r.whole.actualFGFrames = 0));
+assert(performancePassed(pause, { exitCode: 0 }));
+assert(!performancePassed(pause, { exitCode: 1 }));
+const mandatory = requiredCaptureFiles("reports/fg-runtime-budget-v7"),
+  hashes = Object.fromEntries(mandatory.map((p) => [p, "a".repeat(64)]));
+assert(requiredInputsPresent(hashes, "reports/fg-runtime-budget-v7"));
+delete hashes[mandatory[0]];
+assert(!requiredInputsPresent(hashes, "reports/fg-runtime-budget-v7"));
+assert.equal(
+  new Set(performanceConfigurations().map(performanceFile)).size,
+  20,
+);
 await mkdir("reports/fg-runtime-budget-v7/compatibility-raw", {
   recursive: true,
 });

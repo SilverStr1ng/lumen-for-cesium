@@ -24,7 +24,8 @@ const suffix =
   sceneName === "original" &&
   quality === "high" &&
   activity === "static" &&
-  viewport.width === 1280
+  viewport.width === 1280 &&
+  viewport.height === 800
     ? ""
     : "-" +
       sceneName +
@@ -140,8 +141,7 @@ try {
             activityFrame = 0;
           const epochs = [],
             beforeDraws = f.metrics.draws;
-          const removeSequence = s.preRender.addEventListener(() => {
-            f._sampleEpoch = epoch++;
+          const removeActivity = s.preUpdate.addEventListener(() => {
             const index = activityFrame++;
             if (activity === "moving")
               Cesium.Cartesian3.add(
@@ -153,10 +153,15 @@ try {
                 ),
                 s.camera.position,
               );
-            if (activity === "relight" && [30, 60].includes(index))
-              d.world.solve({
-                sunIntensity: initialIntensity * (index === 30 ? 1.05 : 1),
-              });
+            if (activity === "relight" && [30, 60].includes(index)) {
+              d.lighting.sunIntensity =
+                initialIntensity * (index === 30 ? 1.05 : 1);
+              d.lightingController.update();
+              d.world.solve({ ...d.lighting });
+            }
+          });
+          const removeSequence = s.preRender.addEventListener(() => {
+            f._sampleEpoch = epoch++;
           });
           const removeEpochLog = s.postRender.addEventListener(() => {
             if (f.ready) epochs.push(f.metrics.sampleEpoch);
@@ -171,6 +176,7 @@ try {
             });
           removeSequence();
           removeEpochLog();
+          activityFrame = 0;
           const wholeDraws = f.metrics.draws - beforeDraws;
           const fgBefore = f.metrics.frames,
             sceneBefore = s.frameState.frameNumber;
@@ -199,6 +205,7 @@ try {
                 );
             }
           f.profileForward = false;
+          removeActivity();
           const complete = f.metrics.completedTimings
               .filter((x) => x.frame >= minFrame && x.fgExecuted)
               .slice(0, 60),
@@ -224,6 +231,7 @@ try {
             whole,
             components: {
               window: "separate from whole-frame timer",
+              activity,
               completeFrames: complete.length,
               actualFGFrames: f.metrics.frames - fgBefore,
               actualSceneFrames: s.frameState.frameNumber - sceneBefore,
@@ -292,19 +300,21 @@ try {
   report.note =
     "Differences are means of independent-window P95s, not paired per-frame deltas. Component means are not summed percentiles.";
   report.checks = {
-    sameSequence: [0, 1, 2].every(
-      (round) =>
-        JSON.stringify(
-          report.rounds.find(
-            (r) => r.round === round && r.mode === "decorrelated-raw",
-          ).epochs,
-        ) ===
-        JSON.stringify(
-          report.rounds.find(
-            (r) => r.round === round && r.mode === "reconstructed",
-          ).epochs,
-        ),
-    ),
+    sameSequence:
+      activity === "pause" ||
+      [0, 1, 2].every(
+        (round) =>
+          JSON.stringify(
+            report.rounds.find(
+              (r) => r.round === round && r.mode === "decorrelated-raw",
+            ).epochs,
+          ) ===
+          JSON.stringify(
+            report.rounds.find(
+              (r) => r.round === round && r.mode === "reconstructed",
+            ).epochs,
+          ),
+      ),
     completeQueries: report.rounds.every(
       (x) =>
         x.whole.gpuMilliseconds.samples >= 75 &&

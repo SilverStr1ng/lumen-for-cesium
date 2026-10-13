@@ -1,3 +1,4 @@
+import { DeveloperError } from "@cesium/core";
 import finalGatherSampling from "./LumenFinalGatherSampling.js";
 import LumenStageFS from "../Shaders/Model/LumenStageFS.js";
 
@@ -382,7 +383,7 @@ void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetc
 }`;
 export function receiverFused(batch) {
   if (batch !== 4 && batch !== 8) {
-    throw new Error("FG fused batch must be 4 or 8");
+    throw new DeveloperError("FG fused batch must be 4 or 8");
   }
   return (
     `${

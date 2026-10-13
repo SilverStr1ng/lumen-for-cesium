@@ -9,15 +9,17 @@ import {
   performancePassed,
   qualityPassed,
   aggregate,
+  configurations,
+  performanceConfigurations,
+  performanceFile,
+  performanceArguments,
+  requiredInputsPresent,
+  childGroupState,
 } from "./r8-acceptance.mjs";
 const out = "reports/fg-runtime-budget-v7",
   cached = process.argv.includes("--cached"),
   onlyQuality = process.argv.includes("--quality-only");
-const configs = [
-  { id: "fixed", auto: false, viewport: { width: 1280, height: 800 } },
-  { id: "auto-1920", auto: true, viewport: { width: 1920, height: 1080 } },
-  { id: "auto-2560", auto: true, viewport: { width: 2560, height: 1440 } },
-];
+const configs = configurations;
 const regressions = [
   "pipeline",
   "transport",
@@ -168,6 +170,33 @@ const readMeasured = async (file, configuration) => {
     throw Error("capture source/build/assets/config mismatch: " + file);
   return data;
 };
+const requiredProducersPresent = (tests) => {
+  const exact = (name, args = [], cfg) =>
+    tests.filter(
+      (r) =>
+        r.name === name &&
+        JSON.stringify(r.args) === JSON.stringify(args) &&
+        (!cfg || r.environment?.LUMEN_FG_REPORT === out + "/" + cfg.id),
+    ).length === 1;
+  return (
+    [
+      "lint-r6",
+      ...regressions.map((n) => "verify-" + n),
+      "verify-export-patch",
+    ].every((n) => exact(n)) &&
+    configs.every((c) =>
+      [
+        "measure-fg-canonical",
+        "capture-fg-reconstruction",
+        "verify-fg-temporal",
+        "measure-fg-milliseconds",
+      ].every((n) => exact(n, [], c)),
+    ) &&
+    performanceConfigurations().every((c) =>
+      exact("benchmark-fg-runtime", performanceArguments(c)),
+    )
+  );
+};
 try {
   if (cached) {
     priorManifest = await json(out + "/manifest.json");
@@ -175,13 +204,24 @@ try {
       !versionMatches(priorManifest.version, current) ||
       JSON.stringify(priorManifest.configuration) !==
         JSON.stringify(report.configuration) ||
-      !(await hasInputs(Object.keys(priorManifest.inputs)))
+      !requiredInputsPresent(priorManifest.inputs, out) ||
+      !(await hasInputs(Object.keys(priorManifest.inputs))) ||
+      !requiredProducersPresent(priorManifest.tests)
     )
       throw Error("cached required inputs changed or incomplete");
     report.tests = priorManifest.tests;
-    report.states.regression = priorManifest.states.regression;
-    report.states.resource = priorManifest.states.resource;
-    report.states.showcase = priorManifest.states.showcase;
+    report.states.regression = childGroupState(report.tests, [
+      "lint-r6",
+      ...regressions.map((n) => "verify-" + n),
+      "verify-export-patch",
+    ]);
+    report.states.resource = childGroupState(report.tests, [
+      "verify-fg-budget",
+      "verify-fg-desktop",
+      "verify-fg-lifecycle",
+      "verify-resource-lifecycle",
+    ]);
+    report.states.showcase = childGroupState(report.tests, ["verify-gallery"]);
     report.cache = {
       status: "verified",
       inputs: Object.keys(priorManifest.inputs).length,
@@ -221,41 +261,16 @@ try {
       run("measure-fg-milliseconds", [], envFor(c));
     }
     if (!onlyQuality) {
-      for (const scene of ["original", "gallery"])
-        for (const c of configs)
-          for (const activity of ["static", "moving", "relight"]) {
-            run(
-              "benchmark-fg-runtime",
-              [
-                "--execution=split",
-                "--azimuth",
-                "--lazy",
-                "--scene=" + scene,
-                "--width=" + c.viewport.width,
-                "--height=" + c.viewport.height,
-                "--quality=" + (c.auto ? "auto" : "high"),
-                "--activity=" + activity,
-              ],
-              { LUMEN_REPORT_DIRECTORY: out + "/active" },
-            );
-          }
-      for (const scene of ["original", "gallery"])
-        run(
-          "benchmark-fg-runtime",
-          [
-            "--execution=split",
-            "--azimuth",
-            "--lazy",
-            "--scene=" + scene,
-            "--activity=pause",
-          ],
-          { LUMEN_REPORT_DIRECTORY: out + "/active" },
-        );
+      for (const c of performanceConfigurations())
+        run("benchmark-fg-runtime", performanceArguments(c), {
+          LUMEN_REPORT_DIRECTORY: out + "/active",
+        });
       if (run("verify-export-patch").exitCode !== 0)
         report.states.regression = "failed";
     }
   }
-  report.states.temporal = "passed";
+  report.states.temporal = "not-run";
+  let temporalPassed = true;
   for (const c of configs) {
     const qFile = cached
       ? out + "/validation/" + c.id + "-quality.json"
@@ -280,7 +295,10 @@ try {
         ) && r.environment?.LUMEN_FG_REPORT === out + "/" + c.id,
     );
     const passed =
-      qualityPassed(quality, q) && producers.every((r) => r.exitCode === 0);
+      qualityPassed(quality, q) &&
+      producers.length === 2 &&
+      new Set(producers.map((r) => r.name)).size === 2 &&
+      producers.every((r) => r.exitCode === 0);
     report.states[c.auto ? "auto-quality" : "fixed-quality"] =
       report.states[c.auto ? "auto-quality" : "fixed-quality"] === "failed" ||
       !passed
@@ -292,8 +310,15 @@ try {
       { auto: c.auto, viewport: c.viewport },
     );
     if (milliseconds.status !== "passed" || milliseconds.rows.length !== 36)
-      report.states.temporal = "failed";
+      temporalPassed = false;
+    const temporalProducers = report.tests.filter(
+      (r) =>
+        ["verify-fg-temporal", "measure-fg-milliseconds"].includes(r.name) &&
+        r.environment?.LUMEN_FG_REPORT === out + "/" + c.id,
+    );
     if (
+      temporalProducers.length !== 2 ||
+      new Set(temporalProducers.map((r) => r.name)).size !== 2 ||
       temporal.status !== "passed" ||
       !artifactMatches(
         temporal,
@@ -310,56 +335,59 @@ try {
         )
         .some((r) => r.exitCode !== 0)
     )
-      report.states.temporal = "failed";
+      temporalPassed = false;
   }
+  report.states.temporal = temporalPassed ? "passed" : "failed";
   const injected = run("verify-fg-quality", ["--inject-error"], {
     ...envFor(configs[0]),
     LUMEN_QUALITY_REPORT: out + "/validation/fixed-injected.json",
+  });
+  const missingLine = run("verify-fg-quality", ["--inject-missing-line"], {
+    ...envFor(configs[0]),
+    LUMEN_QUALITY_REPORT: out + "/validation/fixed-line-injected.json",
   });
   const fakeCoverage = run("verify-fg-quality", ["--inject-coverage"], {
     ...envFor(configs[0]),
     LUMEN_QUALITY_REPORT: out + "/validation/fixed-coverage-injected.json",
   });
-  if (injected.exitCode !== 1 || fakeCoverage.exitCode !== 1)
+  if (
+    injected.exitCode !== 1 ||
+    fakeCoverage.exitCode !== 1 ||
+    missingLine.exitCode !== 1
+  )
     report.states.regression = "failed";
   if (onlyQuality) report.states.performance = "not-run";
   else {
     report.states.performance = "passed";
     report.performance = [];
-    const files = (await readdir(out + "/active")).filter((f) =>
-      f.endsWith(".json"),
-    );
-    if (files.length !== 20)
-      throw Error("required active+pause performance captures missing");
-    for (const f of files) {
-      const data = await json(out + "/active/" + f);
-      if (
-        !artifactMatches(
-          data,
-          current,
-          undefined,
-          Object.keys(sourceVersion().sources),
-        )
-      )
-        throw Error("performance capture fingerprint mismatch: " + f);
-      const child = report.tests.find(
+    const expected = performanceConfigurations(),
+      files = (await readdir(out + "/active")).filter((f) =>
+        f.endsWith(".json"),
+      );
+    if (
+      files.length !== expected.length ||
+      !expected.every((c) => files.includes(performanceFile(c)))
+    )
+      throw Error("required unique active+pause matrix missing");
+    for (const config of expected) {
+      const f = performanceFile(config),
+        data = await readMeasured(out + "/active/" + f, config),
+        args = performanceArguments(config);
+      const producers = report.tests.filter(
         (r) =>
           r.name === "benchmark-fg-runtime" &&
-          r.args.includes("--scene=" + data.configuration.sceneName) &&
-          r.args.includes("--activity=" + data.configuration.activity) &&
-          (data.configuration.activity === "pause" ||
-            r.args.includes("--width=" + data.configuration.viewport.width)),
+          JSON.stringify(r.args) === JSON.stringify(args),
       );
-      const passed = performancePassed(data, child, cached);
+      const passed =
+        producers.length === 1 && performancePassed(data, producers[0]);
       report.performance.push({
         file: f,
-        configuration: data.configuration,
+        configuration: config,
         targets: data.targets,
         checks: data.checks,
         status: passed ? "passed" : "failed",
       });
-      if (!passed && data.configuration.activity !== "pause")
-        report.states.performance = "failed";
+      if (!passed) report.states.performance = "failed";
     }
   }
 } catch (e) {
@@ -416,7 +444,7 @@ try {
   await writeFile(out + "/test-suite.json", JSON.stringify(report, null, 2));
   if (!cached && !onlyQuality) {
     const requiredFiles = (await readdir(out, { recursive: true }))
-      .map((f) => out + "/" + f)
+      .map((f) => out + "/" + f.replaceAll("\\", "/"))
       .filter(
         (f) =>
           /\.(json|deflate|png)$/.test(f) &&

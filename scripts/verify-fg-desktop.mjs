@@ -155,6 +155,54 @@ try {
           path: out + "/auto-" + scene + "-" + width + ".png",
         });
     }
+    for (const frozen of [true, false]) {
+      const row = await p.evaluate(async (frozen) => {
+        const d = earthLab,
+          f = d.scene.lumen.finalGather;
+        f.freezeSampling = false;
+        f.continuousSampling = true;
+        f.maxMemoryBytes = 64 * 1048576;
+        d.widget.render();
+        const old = [...f._textures, ...f.reconstruction._textures],
+          beforeSize = [f.resultSize.x, f.resultSize.y];
+        f.continuousSampling = false;
+        f._stableFrames = 32;
+        f.freezeSampling = frozen;
+        f.maxMemoryBytes = 40 * 1048576;
+        d.scene.requestRender();
+        d.widget.render();
+        const result = {
+          frozen,
+          ready: f.ready,
+          beforeSize,
+          size: [f.resultSize.x, f.resultSize.y],
+          bytes: f.metrics.totalAdditionalBytes,
+          history: f.reconstruction.frames,
+          oldDestroyed: old.every((t) => t.isDestroyed()),
+        };
+        await f.configure({ lazyFallback: false });
+        const eager = f.lazyFallback;
+        await f.configure({ lazyFallback: true });
+        result.lazyRestored = eager === false && f.lazyFallback === true;
+        f.freezeSampling = false;
+        f.continuousSampling = true;
+        f.maxMemoryBytes = 64 * 1048576;
+        return result;
+      }, frozen);
+      report.rows.push({
+        scene,
+        contract: "shrink cached/frozen budget",
+        ...row,
+      });
+      assert(
+        row.ready &&
+          row.bytes <= 40 * 1048576 &&
+          row.history === 1 &&
+          row.oldDestroyed &&
+          row.lazyRestored,
+      );
+      assert.notDeepEqual(row.beforeSize, row.size);
+    }
     await p.close();
   }
   // Browser DPR and Cesium scale produce actual buffers; planning never reads CSS dimensions.

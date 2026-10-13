@@ -35,6 +35,18 @@ export function sourceVersion(extraFiles = []) {
     "scripts/measure-fg-canonical.mjs",
     "scripts/capture-fg-reconstruction.mjs",
     "scripts/benchmark-fg-reconstruction.mjs",
+    "cesium-1.146/packages/engine/Source/Scene/Scene.js",
+    "cesium-1.146/packages/engine/Source/Scene/GBuffer.js",
+    "scripts/r8-acceptance.mjs",
+    ...readdirSync("lumen")
+      .filter((f) => f.endsWith(".js"))
+      .map((f) => "lumen/" + f),
+    ...readdirSync("demo", { recursive: true })
+      .filter((f) => /\.(js|html|css)$/.test(f))
+      .map((f) => "demo/" + f.replaceAll("\\", "/")),
+    ...readdirSync("cesium-1.146/packages/engine/Source/Scene")
+      .filter((f) => /^Lumen.*\.js$/.test(f))
+      .map((f) => "cesium-1.146/packages/engine/Source/Scene/" + f),
     ...extraFiles,
   ];
   const sha256 = (file) =>
@@ -48,15 +60,18 @@ export function sourceVersion(extraFiles = []) {
     sources: Object.fromEntries(files.map((file) => [file, sha256(file)])),
     compiledBundle: sha256("cesium-1.146/Build/CesiumUnminified/Cesium.js"),
     assets: Object.fromEntries(
-      readdirSync("fixtures", { recursive: true })
-        .map((f) => f.replaceAll("\\", "/"))
-        .filter((f) => /\.(gltf|bin|png|jpg|json)$/.test(f))
+      ["fixtures", "cesium-1.146/Build/CesiumUnminified/Assets"]
+        .flatMap((dir) =>
+          existsSync(dir)
+            ? readdirSync(dir, { recursive: true })
+                .map((f) => dir + "/" + f.replaceAll("\\", "/"))
+                .filter((f) => /\.(gltf|bin|png|jpe?g|ktx2|json)$/.test(f))
+            : [],
+        )
         .sort()
         .map((f) => [
-          "fixtures/" + f,
-          createHash("sha256")
-            .update(readFileSync("fixtures/" + f))
-            .digest("hex"),
+          f,
+          createHash("sha256").update(readFileSync(f)).digest("hex"),
         ]),
     ),
     modifiedSources: execFileSync(

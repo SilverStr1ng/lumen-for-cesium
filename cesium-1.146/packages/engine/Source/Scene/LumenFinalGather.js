@@ -29,11 +29,8 @@ import {
 
 // Quality sets resolution/sample count; the sampling policy controls history.
 const presets = Object.freeze({
-  auto: Object.freeze({ scale: 0.5, samples: 32, auto: true }),
-  balanced: Object.freeze({ scale: 0.5, samples: 16 }),
-  high: Object.freeze({ scale: 0.5, samples: 32 }),
-  fast: Object.freeze({ scale: 0.25, samples: 16 }),
-  roi: Object.freeze({ scale: 1, samples: 64, roi: 256 }),
+  ...planFinalGather.presets,
+  auto: Object.freeze({ auto: true }),
 });
 const nearest = new Sampler({
   minificationFilter: TextureMinificationFilter.NEAREST,
@@ -112,6 +109,7 @@ class LumenFinalGather {
     reconstruction = this.reconstructionEnabled,
     execution = this.execution,
     rayOrder = this.rayOrder,
+    lazyFallback = this.lazyFallback,
     seed = this.seed,
     sequenceEpoch = this.sequenceEpoch,
   } = {}) {
@@ -151,9 +149,15 @@ class LumenFinalGather {
     if (!["original", "azimuth"].includes(rayOrder)) {
       throw new DeveloperError("Invalid FG ray ordering");
     }
-    if (typeof reconstruction !== "boolean") {
-      throw new DeveloperError("FG reconstruction must be boolean");
+    if (
+      typeof reconstruction !== "boolean" ||
+      typeof lazyFallback !== "boolean"
+    ) {
+      throw new DeveloperError(
+        "FG reconstruction and lazy fallback must be boolean",
+      );
     }
+    this.lazyFallback = lazyFallback;
     this.rayOrder = rayOrder;
     this.execution = execution;
     this.reconstructionEnabled = reconstruction;
@@ -271,8 +275,8 @@ class LumenFinalGather {
     this._framebuffers.push(f);
     return { texture: t, framebuffer: f };
   }
-  _allocate(l) {
-    const key = [
+  _allocationKey(l) {
+    return [
       l.rw,
       l.rh,
       l.width,
@@ -280,6 +284,9 @@ class LumenFinalGather {
       this.execution,
       this.sampling === "reconstructed" && this.reconstructionEnabled,
     ].join(":");
+  }
+  _allocate(l) {
+    const key = this._allocationKey(l);
     if (this._layoutKey === key) {
       return;
     }
@@ -575,6 +582,8 @@ class LumenFinalGather {
       this.metrics.status = `DDGI fallback: ${reason}`;
       return;
     }
+    const allocationKey = this._allocationKey(l),
+      allocationMatches = this._layoutKey === allocationKey;
     const cameraKey = [
       ...Matrix4.toArray(s.camera.viewMatrix),
       ...Matrix4.toArray(s.camera.frustum.projectionMatrix),
@@ -589,6 +598,7 @@ class LumenFinalGather {
       )
       .join(":");
     if (
+      allocationMatches &&
       this.freezeSampling &&
       this.texture &&
       this._sampleWorld === w &&
@@ -610,12 +620,14 @@ class LumenFinalGather {
       this.seed,
       this.sampling,
       this.sequenceEpoch,
+      allocationKey,
     ]);
     const cameraChanged = this._historyCameraKey !== cameraKey;
     if (
       this.sampling === "reconstructed" &&
       this.reconstructionEnabled &&
       this.reconstruction &&
+      allocationMatches &&
       this._historyWorld === w &&
       this._historyKey === reconstructionKey &&
       !cameraChanged &&

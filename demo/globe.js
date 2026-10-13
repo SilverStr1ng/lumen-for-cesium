@@ -518,6 +518,18 @@ scene.postRender.addEventListener(() => {
     `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing ${grid?.spacing ?? "…"}m\n${grid?.rays ?? "…"} rays · ${w?.options.bounces ?? "…"} bounces · ${w?.options.targetGpuMilliseconds ?? "…"}ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n显示 ${(w?.displaySettled ?? true) ? "已稳定" : "过渡中"}\n发布时间为 CPU 提交，不等于 GPU 完成`;
   const fg = scene.lumen.finalGather,
     m = fg.metrics;
+  $("fgMode").value = fg.mode;
+  $("fgQuality").value = fg.quality;
+  $("fgSampling").value = fg.sampling;
+  if (gallery)
+    $("galleryCompare").value =
+      scene.lumen.debugMode === 11
+        ? "without"
+        : fg.mode === "raw"
+          ? "raw"
+          : fg.mode === "fg"
+            ? "reconstructed"
+            : "ddgi";
   if (gallery)
     $("gallerySummary").textContent =
       `${w?.status === "ready" ? "光照已完成" : "正在更新光照"} · ${fg.ready ? "FG：" + fg.quality + "/" + fg.sampling : "DDGI · " + m.status}\n${fg.mode === "ddgi" ? "" : `来源采样 ${m.accumulationPasses ?? 0} · 静止 ${Math.min(m.stablePasses ?? 0, 32)}/32 · `}${scene.drawingBufferWidth}×${scene.drawingBufferHeight}\n发光壁 ${galleryEmitter ? "开启" : "关闭"} · 曝光 ${scene.postProcessStages.exposure}`;

@@ -83,10 +83,8 @@ const scenes = smoke
     ];
 if (auto) {
   for (const s of scenes) s.qualities = ["auto"];
-  scenes.splice(
-    scenes.findIndex((s) => s.id === "original-scale"),
-    1,
-  );
+  const index = scenes.findIndex((s) => s.id === "original-scale");
+  if (index >= 0) scenes.splice(index, 1);
 }
 report.configuration = { auto, viewport, scenes };
 if (process.argv.includes("--resume")) {

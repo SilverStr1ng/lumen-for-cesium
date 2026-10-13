@@ -1,0 +1,6239 @@
+{
+  "version": {
+    "head": "0f035390d118e1021c42b9fd8844c6564aae3123",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4cedbcd4929d3db78927db08d1899ef873cdf5785761624c44f8523eadf5b837",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "5af53f40f705f536633a867c31322769e93dc968e53db3ed97cce52a8182aff8",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "0fc728a42ef6e8df9edaa069abaf06a21e935c415436c6a713d83bb473ee27d0",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "72ce6cc83f811426f8a5ed43639e0f82138342982336e4993f0e977a206ee3e7",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "df0f679d79f823a46f953a7f7316382ee813378cc228ef75894db9e85f9c7c02",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "26b9435ee9b44830a7701cfa5d8d903a30bab507d9190dcfe855ee21518ea00a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "6e5cd4257607c427793c76a0b61026e98a31a5054769fb37b36cdd10b63124da",
+      "demo/globe.js": "f45f07e6be8df466ec53b9dc7874f4da076b350a500bd364b2228292f7f86c07",
+      "demo/benchmark.js": "df74768e374181839acf71cabf67d113e3eca99b0530faf40500707ab4128f89",
+      "scripts/browser-tools.mjs": "3c6249622d5b048234d9a1eae4791ca8f8112d62e5063a4d07360f5ee7a1072d",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "248328dd3aa76359572f49d229f3be5aea67d4592faf1120bb6ddaa3b2813794",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "cesium-1.146/packages/engine/Source/Scene/Scene.js": "0f794344b8699510ecaddfa40c3675856a29ef87ffc4f25aaff9439ebce9c2fc",
+      "cesium-1.146/packages/engine/Source/Scene/GBuffer.js": "d2bf883b7bd5229d0771324da06536b32f25492cf039894a5beba93fc77a4453",
+      "scripts/r8-acceptance.mjs": "fd536c171ed7a7576c87e4b64cc47b3e533e9eec84da4dd25aa92b5d9ee5ea52",
+      "lumen/bvh.js": "a505d6b19b964115ebc4294a0318fef45bd66d80c3af64daac5d31a912818b53",
+      "lumen/ddgi.js": "b90701c431aedb3124852a690dcfe9d30e6d43d5d56c369d6ccc8aa1786009c6",
+      "lumen/fg-sampling.js": "44ce89c085b15d50cb61a86efa74e7e8c0507ba83ff0255b43bc2f12d50688a0",
+      "lumen/surface-cache.js": "f29b468eec48611f9891985a22a31db0184cd5c582c419288d342609abff4dfb",
+      "lumen/trace-domain.js": "2c71e5fa34862770e46371bfc2795c2968994fea983916be06d78a89b3a579d5",
+      "lumen/worker.js": "bfa0bb17475adfba88490151d0b6e004218774f1a3d741bd3f7e228c0ff6e629",
+      "demo/gallery.css": "381e05c01ebe059bc5481f80f8fdbdfd4fadef2fe0e6d91a8ded3bab75bae3a2",
+      "demo/gallery.html": "6ee214288521000be37dfccde1b59af7218ede3a2d996e6fd22f9374cb023210",
+      "demo/globe.css": "1fd71e3cf90a9f29deb3cd1dec9b58ba32aaa3e98e2328dde19f0b0074f9f3b2",
+      "demo/globe.html": "16d89ab640f2aa525380bc6696459bb827f1587b041f368de757ed44a3b7b941",
+      "demo/index.html": "ecd7ea1d2ff093ba6b9ef9925ea090c645a4a34f2f02a59e81e1cd3b86483a88",
+      "demo/lighting-environment.js": "ebece9c8ee7d2dd6abc80ac647afc92ecb9527ff6694781c4bea1001841f76e8",
+      "demo/main.js": "4a88afd279448579ebf1abfff1df1cd52a39219ed95e91dc1e25564ce589141c",
+      "demo/regression.html": "e9f112cc511e95be1819f4673fe27682cf8abcbc96ed456057a847483b4df4d6",
+      "demo/regression.js": "7a0c48abd9d6ea9ee434740dc7f4d11290018bf408ae5ae8ffd56fda593d2548",
+      "cesium-1.146/packages/engine/Source/Scene/Lumen.js": "37da720a6099169a9af3926560389f5d6b2c609ce4a95863ac3efbcef1ea141a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSnapshot.js": "4570391f3a59bfc70f74fce3173dfbce4bb173f583bebd19d9151b09ac7385a0",
+      "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": "f5d66883dc3bf9a9d67c7c8208721d03eb95558c9547a20245cb1266e1b4526b",
+      "cesium-1.146/packages/engine/Source/Scene/LumenWorld.js": "f79f3b718584fd50ada9bc45c8694a3f534c5e0002e113bccb9d394f4704e579",
+      "scripts/verify-fg-desktop.mjs": "d156821a327145a054f4c54f71e54098bb51c8a91348e30c60d0134b10347549"
+    },
+    "compiledBundle": "4cc076d571dd78e55c4eead341013c20a0e66cafc66be648b0d82002f249da47",
+    "assets": {
+      "fixtures/alpha-mask.bin": "f9c9cee34b6407e5842d4f4fdebea2802b3b98f36de8ff0789ec6d8ad623a807",
+      "fixtures/alpha-mask.gltf": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "fixtures/alpha-mask.json": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "fixtures/alpha-mask.png": "5a173415420a42b3b032ef3729c61268b04ac67b01cbe2fd7b241b87dcee3de4",
+      "fixtures/earth-gi-gallery-off.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery-off.gltf": "ac88919b7c261d998d7c82a0691e4c04eca422b423248c38c40a43a459c2230d",
+      "fixtures/earth-gi-gallery-off.json": "04c4a3576e1ca7546cda3ebcc17264c6a485e7942ac504156f64db31416351b3",
+      "fixtures/earth-gi-gallery.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery.gltf": "60fb80a3cc64244c5e3a0c34e370f9869435ce5f14293ffd116680bb088f18b5",
+      "fixtures/earth-gi-gallery.json": "feef0fd8d9a23a6e121fcbb48cce8ae188394674107aac24be99d0dbad26b297",
+      "fixtures/earth-pavilion-held-out.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion-held-out.gltf": "6bf0fd7ab3a5bb28a4a7daee047c9a7a8903b5203a8a3e0a2cbdd8de5e5c6f4a",
+      "fixtures/earth-pavilion-held-out.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/earth-pavilion-presentation.bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "fixtures/earth-pavilion-presentation.gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "fixtures/earth-pavilion-presentation.json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "fixtures/earth-pavilion.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion.gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/far-blocker.gltf": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "fixtures/far-blocker.json": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "fixtures/fg-slanted-barrier.bin": "8b07bba2e4c8c7aaa0b0e6cd20c44091cf4d0723ca3305fa8e9ed6d311ad64af",
+      "fixtures/fg-slanted-barrier.gltf": "82e17c00914c35bdd35ca5364635a6a311f50b39932c22386398e3bfac366074",
+      "fixtures/fg-slanted-barrier.json": "1cb69fdeb7abae75d67a9db5b79f8ecb745834a05a243e213536532b2ef7cc2b",
+      "fixtures/gallery-mineral.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/pavilion-detail.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/two-rooms.bin": "679eca85743630fa20c6e458c33e6b507ab386d1a66c39aa759c6ff0d75cbd19",
+      "fixtures/two-rooms.gltf": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "fixtures/two-rooms.json": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "fixtures/untextured.bin": "4f25e6c38fe7ccf71da9835afcf488a1f33ea7a3d94c45aaae7f2e03b0a81679",
+      "fixtures/untextured.gltf": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "fixtures/untextured.json": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa"
+    },
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "scripts/browser-tools.mjs",
+      "scripts/capture-fg-reconstruction.mjs",
+      "scripts/r8-acceptance.mjs",
+      "scripts/verify-fg-desktop.mjs"
+    ]
+  },
+  "rows": [
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 63373760,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 28,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 60416000,
+        "draws": 588,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 136,
+              "milliseconds": 270.765024
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.04016
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040224
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.040416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.041184
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.237408
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.04352
+            }
+          ],
+          "trace": [
+            {
+              "frame": 136,
+              "milliseconds": 2.39248
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.410432
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.355392
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.29168
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.829888
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.34544
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.351328
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.540672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.490624
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.406528
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.359008
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.29248
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.704288
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.336864
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.542368
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.524416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.500896
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.410592
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.356448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.91296
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.406336
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.341056
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.351776
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.532704
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.501952
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.414048
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.816768
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.296736
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.41712
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.336544
+            },
+            {
+              "frame": 140,
+              "milliseconds": 1.841536
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.540768
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.49456
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.777152
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.04672
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.297792
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.638496
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.340384
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.253632
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.358272
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.341632
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.281792
+            },
+            {
+              "frame": 146,
+              "milliseconds": 1.096
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.19728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.274432
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.22992
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.23888
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.74384
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.340448
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.730976
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.203168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.283584
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.236672
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.239872
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.35648
+            }
+          ],
+          "shade": [
+            {
+              "frame": 136,
+              "milliseconds": 1161.565024
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.13952
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.271072
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.316096
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.345536
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.324704
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.28272
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.290176
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.195872
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.262464
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.309184
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.344448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.313504
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.274752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.291872
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.199584
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.31312
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.3536
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.320192
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.280416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.309888
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.206816
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.141472
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.276352
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.306976
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.359744
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.312192
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.29296
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.30512
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.217248
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.152896
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.278528
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.310208
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.353344
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.3136
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.275648
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.303616
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.150208
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.13984
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.194368
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.204352
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.236032
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.20976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.189728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.21904
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.15072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.129792
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.18752
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.220128
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.21232
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.202176
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.224832
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 136,
+              "milliseconds": 147.076672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.038496
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040064
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.04048
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.039072
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.027264
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.026912
+            }
+          ],
+          "connections": [
+            {
+              "frame": 136,
+              "milliseconds": 216.165408
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.106144
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.103264
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.10416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.10704
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.077952
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.079616
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 136,
+              "milliseconds": 250.01376
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.083072
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.081344
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.083296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.599872
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.612416
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.063328
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 136,
+              "milliseconds": 1.336384
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014848
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.015008
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.0168
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.032032
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.017184
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 136,
+              "milliseconds": 0.658752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014944
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.014752
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015328
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.014976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.015104
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.013952
+            }
+          ]
+        },
+        "timingUnavailable": 374,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 63373760,
+        "planChanges": 2,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 79,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 27,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 63373760
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 5895
+            },
+            "production": {
+              "draws": 1386
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 76,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 76,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 720,
+          "rh": 450,
+          "width": 720,
+          "height": 450,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 76464000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 79421760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 79421760,
+          "slots": 10368000,
+          "geometrySlots": 3888000,
+          "checkedInvocations": 14256000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 11664000,
+            "hitBytes": 20736000,
+            "workBytes": 11664000,
+            "historyBytes": 32400000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 79421760,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.45",
+        "scale": 0.45,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 648,
+        "rh": 405,
+        "width": 648,
+        "height": 405,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 61935840,
+        "snapshotBytes": 2957760,
+        "totalBytes": 64893600,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 64893600,
+        "slots": 8398080,
+        "geometrySlots": 3395520,
+        "checkedInvocations": 11793600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9447840,
+          "hitBytes": 16796160,
+          "workBytes": 9447840,
+          "historyBytes": 26244000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              720,
+              450
+            ],
+            "totalBytes": 79421760,
+            "checkedInvocations": 14256000,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 61935840,
+      "total": 64893600,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 35,
+        "memoryBytes": 61935840,
+        "peakMemoryBytes": 61935840,
+        "draws": 735,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 136,
+              "milliseconds": 270.765024
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.04016
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040224
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.040416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.041184
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.237408
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.04352
+            }
+          ],
+          "trace": [
+            {
+              "frame": 136,
+              "milliseconds": 2.39248
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.410432
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.355392
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.29168
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.829888
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.34544
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.351328
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.540672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.490624
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.406528
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.359008
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.29248
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.704288
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.336864
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.542368
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.524416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.500896
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.410592
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.356448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.91296
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.406336
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.341056
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.351776
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.532704
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.501952
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.414048
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.816768
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.296736
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.41712
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.336544
+            },
+            {
+              "frame": 140,
+              "milliseconds": 1.841536
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.540768
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.49456
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.777152
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.04672
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.297792
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.638496
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.340384
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.253632
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.358272
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.341632
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.281792
+            },
+            {
+              "frame": 146,
+              "milliseconds": 1.096
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.19728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.274432
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.22992
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.23888
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.74384
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.340448
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.730976
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.203168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.283584
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.236672
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.239872
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.35648
+            }
+          ],
+          "shade": [
+            {
+              "frame": 136,
+              "milliseconds": 1161.565024
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.13952
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.271072
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.316096
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.345536
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.324704
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.28272
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.290176
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.195872
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.262464
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.309184
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.344448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.313504
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.274752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.291872
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.199584
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.31312
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.3536
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.320192
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.280416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.309888
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.206816
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.141472
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.276352
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.306976
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.359744
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.312192
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.29296
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.30512
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.217248
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.152896
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.278528
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.310208
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.353344
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.3136
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.275648
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.303616
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.150208
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.13984
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.194368
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.204352
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.236032
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.20976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.189728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.21904
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.15072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.129792
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.18752
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.220128
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.21232
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.202176
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.224832
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 136,
+              "milliseconds": 147.076672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.038496
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040064
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.04048
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.039072
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.027264
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.026912
+            }
+          ],
+          "connections": [
+            {
+              "frame": 136,
+              "milliseconds": 216.165408
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.106144
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.103264
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.10416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.10704
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.077952
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.079616
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 136,
+              "milliseconds": 250.01376
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.083072
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.081344
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.083296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.599872
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.612416
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.063328
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 136,
+              "milliseconds": 1.336384
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014848
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.015008
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.0168
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.032032
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.017184
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 136,
+              "milliseconds": 0.658752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014944
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.014752
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015328
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.014976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.015104
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.013952
+            }
+          ]
+        },
+        "timingUnavailable": 484,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 64893600,
+        "planChanges": 4,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.45",
+          "scale": 0.45,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 648,
+          "rh": 405,
+          "width": 648,
+          "height": 405,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 61935840,
+          "snapshotBytes": 2957760,
+          "totalBytes": 64893600,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 64893600,
+          "slots": 8398080,
+          "geometrySlots": 3395520,
+          "checkedInvocations": 11793600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9447840,
+            "hitBytes": 16796160,
+            "workBytes": 9447840,
+            "historyBytes": 26244000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 79421760,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 79,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 34,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          648,
+          405
+        ],
+        "receiverResolution": [
+          648,
+          405
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.45",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8398080,
+        "primaryRayUpperBound": 8398080,
+        "solarRayUpperBound": 8398080,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3395520,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 5895
+            },
+            "production": {
+              "draws": 2870
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 76,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1920,
+        1080
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 960,
+          "rh": 540,
+          "width": 960,
+          "height": 540,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 122342400,
+          "snapshotBytes": 2957760,
+          "totalBytes": 125300160,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 125300160,
+          "slots": 16588800,
+          "geometrySlots": 6220800,
+          "checkedInvocations": 22809600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 18662400,
+            "hitBytes": 33177600,
+            "workBytes": 18662400,
+            "historyBytes": 51840000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 125300160,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 2957760,
+        "totalBytes": 57332160,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 57332160,
+        "slots": 7372800,
+        "geometrySlots": 3916800,
+        "checkedInvocations": 11289600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              540
+            ],
+            "totalBytes": 125300160,
+            "checkedInvocations": 22809600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              486
+            ],
+            "totalBytes": 102055104,
+            "checkedInvocations": 18869760,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 81256896,
+            "checkedInvocations": 15344640,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 57332160,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 42,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 61935840,
+        "draws": 882,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 136,
+              "milliseconds": 270.765024
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.04016
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040224
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.040416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.041184
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.237408
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.04352
+            }
+          ],
+          "trace": [
+            {
+              "frame": 136,
+              "milliseconds": 2.39248
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.410432
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.355392
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.29168
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.829888
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.34544
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.351328
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.540672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.490624
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.406528
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.359008
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.29248
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.704288
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.336864
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.542368
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.524416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.500896
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.410592
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.356448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.91296
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.406336
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.341056
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.351776
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.532704
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.501952
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.414048
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.816768
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.296736
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.41712
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.336544
+            },
+            {
+              "frame": 140,
+              "milliseconds": 1.841536
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.540768
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.49456
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.777152
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.04672
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.297792
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.638496
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.340384
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.253632
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.358272
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.341632
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.281792
+            },
+            {
+              "frame": 146,
+              "milliseconds": 1.096
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.19728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.274432
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.22992
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.23888
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.74384
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.340448
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.730976
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.203168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.283584
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.236672
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.239872
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.35648
+            }
+          ],
+          "shade": [
+            {
+              "frame": 136,
+              "milliseconds": 1161.565024
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.13952
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.271072
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.316096
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.345536
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.324704
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.28272
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.290176
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.195872
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.262464
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.309184
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.344448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.313504
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.274752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.291872
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.199584
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.31312
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.3536
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.320192
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.280416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.309888
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.206816
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.141472
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.276352
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.306976
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.359744
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.312192
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.29296
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.30512
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.217248
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.152896
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.278528
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.310208
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.353344
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.3136
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.275648
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.303616
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.150208
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.13984
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.194368
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.204352
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.236032
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.20976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.189728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.21904
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.15072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.129792
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.18752
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.220128
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.21232
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.202176
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.224832
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 136,
+              "milliseconds": 147.076672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.038496
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040064
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.04048
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.039072
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.027264
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.026912
+            }
+          ],
+          "connections": [
+            {
+              "frame": 136,
+              "milliseconds": 216.165408
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.106144
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.103264
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.10416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.10704
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.077952
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.079616
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 136,
+              "milliseconds": 250.01376
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.083072
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.081344
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.083296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.599872
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.612416
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.063328
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 136,
+              "milliseconds": 1.336384
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014848
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.015008
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.0168
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.032032
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.017184
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 136,
+              "milliseconds": 0.658752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014944
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.014752
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015328
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.014976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.015104
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.013952
+            }
+          ]
+        },
+        "timingUnavailable": 594,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 57332160,
+        "planChanges": 6,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.3333333333333333",
+          "scale": 0.3333333333333333,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 2957760,
+          "totalBytes": 57332160,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 57332160,
+          "slots": 7372800,
+          "geometrySlots": 3916800,
+          "checkedInvocations": 11289600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 125300160,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                864,
+                486
+              ],
+              "totalBytes": 102055104,
+              "checkedInvocations": 18869760,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 81256896,
+              "checkedInvocations": 15344640,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 88,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 41,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3916800,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 5895
+            },
+            "production": {
+              "draws": 4478
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 76,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        2560,
+        1440
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 1280,
+          "rh": 720,
+          "width": 1280,
+          "height": 720,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 217497600,
+          "snapshotBytes": 2957760,
+          "totalBytes": 220455360,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 220455360,
+          "slots": 29491200,
+          "geometrySlots": 11059200,
+          "checkedInvocations": 40550400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 33177600,
+            "hitBytes": 58982400,
+            "workBytes": 33177600,
+            "historyBytes": 92160000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 220455360,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.25",
+        "scale": 0.25,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 2957760,
+        "totalBytes": 57332160,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 57332160,
+        "slots": 7372800,
+        "geometrySlots": 5529600,
+        "checkedInvocations": 12902400,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              1280,
+              720
+            ],
+            "totalBytes": 220455360,
+            "checkedInvocations": 40550400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              1152,
+              648
+            ],
+            "totalBytes": 179130816,
+            "checkedInvocations": 33546240,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              1024,
+              576
+            ],
+            "totalBytes": 142156224,
+            "checkedInvocations": 27279360,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3333333333333333,
+            "receiver": [
+              854,
+              480
+            ],
+            "totalBytes": 99698880,
+            "checkedInvocations": 20083200,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 81256896,
+            "checkedInvocations": 16957440,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 57332160,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 49,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 61935840,
+        "draws": 1029,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 136,
+              "milliseconds": 270.765024
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.04016
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040224
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.040416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.041184
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.237408
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.04352
+            }
+          ],
+          "trace": [
+            {
+              "frame": 136,
+              "milliseconds": 2.39248
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.410432
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.355392
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.29168
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.829888
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.34544
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.351328
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.540672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.490624
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.406528
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.359008
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.29248
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.704288
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.336864
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.542368
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.524416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.500896
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.410592
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.356448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.91296
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.406336
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.341056
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.351776
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.532704
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.501952
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.414048
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.816768
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.296736
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.41712
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.336544
+            },
+            {
+              "frame": 140,
+              "milliseconds": 1.841536
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.540768
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.49456
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.777152
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.04672
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.297792
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.638496
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.340384
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.253632
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.358272
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.341632
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.281792
+            },
+            {
+              "frame": 146,
+              "milliseconds": 1.096
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.19728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.274432
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.22992
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.23888
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.74384
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.340448
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.730976
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.203168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.283584
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.236672
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.239872
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.35648
+            }
+          ],
+          "shade": [
+            {
+              "frame": 136,
+              "milliseconds": 1161.565024
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.13952
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.271072
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.316096
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.345536
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.324704
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.28272
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.290176
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.195872
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.262464
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.309184
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.344448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.313504
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.274752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.291872
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.199584
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.31312
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.3536
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.320192
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.280416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.309888
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.206816
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.141472
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.276352
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.306976
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.359744
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.312192
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.29296
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.30512
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.217248
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.152896
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.278528
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.310208
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.353344
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.3136
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.275648
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.303616
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.150208
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.13984
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.194368
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.204352
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.236032
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.20976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.189728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.21904
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.15072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.129792
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.18752
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.220128
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.21232
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.202176
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.224832
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 136,
+              "milliseconds": 147.076672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.038496
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040064
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.04048
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.039072
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.027264
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.026912
+            }
+          ],
+          "connections": [
+            {
+              "frame": 136,
+              "milliseconds": 216.165408
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.106144
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.103264
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.10416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.10704
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.077952
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.079616
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 136,
+              "milliseconds": 250.01376
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.083072
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.081344
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.083296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.599872
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.612416
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.063328
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 136,
+              "milliseconds": 1.336384
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014848
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.015008
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.0168
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.032032
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.017184
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 136,
+              "milliseconds": 0.658752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014944
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.014752
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015328
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.014976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.015104
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.013952
+            }
+          ]
+        },
+        "timingUnavailable": 704,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 57332160,
+        "planChanges": 8,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.25",
+          "scale": 0.25,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 2957760,
+          "totalBytes": 57332160,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 57332160,
+          "slots": 7372800,
+          "geometrySlots": 5529600,
+          "checkedInvocations": 12902400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 220455360,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                1152,
+                648
+              ],
+              "totalBytes": 179130816,
+              "checkedInvocations": 33546240,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                1024,
+                576
+              ],
+              "totalBytes": 142156224,
+              "checkedInvocations": 27279360,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3333333333333333,
+              "receiver": [
+                854,
+                480
+              ],
+              "totalBytes": 99698880,
+              "checkedInvocations": 20083200,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 81256896,
+              "checkedInvocations": 16957440,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 91,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 48,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.25",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 5529600,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 5895
+            },
+            "production": {
+              "draws": 6139
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 76,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 63373760,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 2957760,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 57,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 61935840,
+        "draws": 1197,
+        "stages": {
+          "receiver": [
+            {
+              "frame": 136,
+              "milliseconds": 270.765024
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.04016
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040224
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.040416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.041184
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.237408
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.04352
+            }
+          ],
+          "trace": [
+            {
+              "frame": 136,
+              "milliseconds": 2.39248
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.410432
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.355392
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.29168
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.829888
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.34544
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.351328
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.540672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.490624
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.406528
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.359008
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.29248
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.704288
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.336864
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.542368
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.524416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.500896
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.410592
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.356448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.91296
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.406336
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.341056
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.351776
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.532704
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.501952
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.414048
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.816768
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.296736
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.41712
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.336544
+            },
+            {
+              "frame": 140,
+              "milliseconds": 1.841536
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.540768
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.49456
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.777152
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.04672
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.297792
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.638496
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.340384
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.253632
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.358272
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.341632
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.281792
+            },
+            {
+              "frame": 146,
+              "milliseconds": 1.096
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.19728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.274432
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.22992
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.23888
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.74384
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.340448
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.730976
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.203168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.283584
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.236672
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.239872
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.35648
+            }
+          ],
+          "shade": [
+            {
+              "frame": 136,
+              "milliseconds": 1161.565024
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.13952
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.271072
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.316096
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.345536
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.324704
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.28272
+            },
+            {
+              "frame": 136,
+              "milliseconds": 0.290176
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.195872
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.262464
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.309184
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.344448
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.313504
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.274752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.291872
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.199584
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.140448
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.264544
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.31312
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.3536
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.320192
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.280416
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.309888
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.206816
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.141472
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.276352
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.306976
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.359744
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.312192
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.29296
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.30512
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.217248
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.152896
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.278528
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.310208
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.353344
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.3136
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.275648
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.303616
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.150208
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.13984
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.194368
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.204352
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.236032
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.20976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.189728
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.21904
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.15072
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.129792
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.18752
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.220128
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.247168
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.21232
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.202176
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.224832
+            }
+          ],
+          "neighborhood": [
+            {
+              "frame": 136,
+              "milliseconds": 147.076672
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.038496
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.040064
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.04048
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.039072
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.027264
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.026912
+            }
+          ],
+          "connections": [
+            {
+              "frame": 136,
+              "milliseconds": 216.165408
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.106144
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.103264
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.10416
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.10704
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.077952
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.079616
+            }
+          ],
+          "temporal": [
+            {
+              "frame": 136,
+              "milliseconds": 250.01376
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.083072
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.081344
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.083296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 1.599872
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.612416
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.063328
+            }
+          ],
+          "filter1": [
+            {
+              "frame": 136,
+              "milliseconds": 1.336384
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014848
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.015008
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015296
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.0168
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.032032
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.017184
+            }
+          ],
+          "filter2": [
+            {
+              "frame": 136,
+              "milliseconds": 0.658752
+            },
+            {
+              "frame": 137,
+              "milliseconds": 0.014944
+            },
+            {
+              "frame": 138,
+              "milliseconds": 0.014752
+            },
+            {
+              "frame": 140,
+              "milliseconds": 0.015328
+            },
+            {
+              "frame": 142,
+              "milliseconds": 0.014976
+            },
+            {
+              "frame": 146,
+              "milliseconds": 0.015104
+            },
+            {
+              "frame": 148,
+              "milliseconds": 0.013952
+            }
+          ]
+        },
+        "timingUnavailable": 814,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 2957760,
+        "totalAdditionalBytes": 63373760,
+        "planChanges": 10,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 2957760,
+          "totalBytes": 63373760,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 63373760,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 90,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 56,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 64893600
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 5895
+            },
+            "production": {
+              "draws": 7899
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 64,
+            "framebuffers": 34,
+            "queries": 44,
+            "programs": 34,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 67,
+            "framebuffers": 37,
+            "queries": 76,
+            "programs": 34,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "original"
+    },
+    {
+      "scene": "original",
+      "contract": "shrink cached/frozen budget",
+      "frozen": true,
+      "ready": true,
+      "beforeSize": [
+        640,
+        400
+      ],
+      "size": [
+        512,
+        320
+      ],
+      "bytes": 41624000,
+      "history": 1,
+      "oldDestroyed": true,
+      "lazyRestored": true
+    },
+    {
+      "scene": "original",
+      "contract": "shrink cached/frozen budget",
+      "frozen": false,
+      "ready": true,
+      "beforeSize": [
+        640,
+        400
+      ],
+      "size": [
+        512,
+        320
+      ],
+      "bytes": 41624000,
+      "history": 1,
+      "oldDestroyed": true,
+      "lazyRestored": true
+    },
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 5645952,
+        "totalBytes": 66061952,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 66061952,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 66061952,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 9,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 60416000,
+        "draws": 189,
+        "stages": {},
+        "timingUnavailable": 110,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 66061952,
+        "planChanges": 2,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 130,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 8,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 12951
+            },
+            "production": {
+              "draws": 2163
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 46,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 46,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 720,
+          "rh": 450,
+          "width": 720,
+          "height": 450,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 76464000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 82109952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 82109952,
+          "slots": 10368000,
+          "geometrySlots": 3888000,
+          "checkedInvocations": 14256000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 11664000,
+            "hitBytes": 20736000,
+            "workBytes": 11664000,
+            "historyBytes": 32400000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 82109952,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.4",
+        "scale": 0.4,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 576,
+        "rh": 360,
+        "width": 576,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 48936960,
+        "snapshotBytes": 5645952,
+        "totalBytes": 54582912,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 54582912,
+        "slots": 6635520,
+        "geometrySlots": 2954880,
+        "checkedInvocations": 9590400,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 7464960,
+          "hitBytes": 13271040,
+          "workBytes": 7464960,
+          "historyBytes": 20736000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              720,
+              450
+            ],
+            "totalBytes": 82109952,
+            "checkedInvocations": 14256000,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              648,
+              405
+            ],
+            "totalBytes": 67581792,
+            "checkedInvocations": 11793600,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 48936960,
+      "total": 54582912,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 16,
+        "memoryBytes": 48936960,
+        "peakMemoryBytes": 60416000,
+        "draws": 336,
+        "stages": {},
+        "timingUnavailable": 220,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 54582912,
+        "planChanges": 4,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.4",
+          "scale": 0.4,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 576,
+          "rh": 360,
+          "width": 576,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 48936960,
+          "snapshotBytes": 5645952,
+          "totalBytes": 54582912,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 54582912,
+          "slots": 6635520,
+          "geometrySlots": 2954880,
+          "checkedInvocations": 9590400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 7464960,
+            "hitBytes": 13271040,
+            "workBytes": 7464960,
+            "historyBytes": 20736000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                720,
+                450
+              ],
+              "totalBytes": 82109952,
+              "checkedInvocations": 14256000,
+              "reasons": [
+                "additional memory budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                648,
+                405
+              ],
+              "totalBytes": 67581792,
+              "checkedInvocations": 11793600,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 130,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 15,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          576,
+          360
+        ],
+        "receiverResolution": [
+          576,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.4",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 6635520,
+        "primaryRayUpperBound": 6635520,
+        "solarRayUpperBound": 6635520,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 2954880,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 12951
+            },
+            "production": {
+              "draws": 4484
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 46,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        1920,
+        1080
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 960,
+          "rh": 540,
+          "width": 960,
+          "height": 540,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 122342400,
+          "snapshotBytes": 5645952,
+          "totalBytes": 127988352,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 127988352,
+          "slots": 16588800,
+          "geometrySlots": 6220800,
+          "checkedInvocations": 22809600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 18662400,
+            "hitBytes": 33177600,
+            "workBytes": 18662400,
+            "historyBytes": 51840000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 127988352,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 5645952,
+        "totalBytes": 60020352,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 60020352,
+        "slots": 7372800,
+        "geometrySlots": 3916800,
+        "checkedInvocations": 11289600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              540
+            ],
+            "totalBytes": 127988352,
+            "checkedInvocations": 22809600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              486
+            ],
+            "totalBytes": 104743296,
+            "checkedInvocations": 18869760,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 83945088,
+            "checkedInvocations": 15344640,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 60020352,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 23,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 60416000,
+        "draws": 483,
+        "stages": {},
+        "timingUnavailable": 330,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 60020352,
+        "planChanges": 6,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.3333333333333333",
+          "scale": 0.3333333333333333,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 5645952,
+          "totalBytes": 60020352,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 60020352,
+          "slots": 7372800,
+          "geometrySlots": 3916800,
+          "checkedInvocations": 11289600,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                960,
+                540
+              ],
+              "totalBytes": 127988352,
+              "checkedInvocations": 22809600,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                864,
+                486
+              ],
+              "totalBytes": 104743296,
+              "checkedInvocations": 18869760,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 83945088,
+              "checkedInvocations": 15344640,
+              "reasons": [
+                "additional memory budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 158,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 22,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3916800,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 12951
+            },
+            "production": {
+              "draws": 7195
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 46,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        2560,
+        1440
+      ],
+      "fixed": {
+        "ready": false,
+        "status": "DDGI fallback: additional memory budget; primary slots plus geometry query budget",
+        "plan": {
+          "supported": false,
+          "reason": "additional memory budget; primary slots plus geometry query budget",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 1280,
+          "rh": 720,
+          "width": 1280,
+          "height": 720,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 217497600,
+          "snapshotBytes": 5645952,
+          "totalBytes": 223143552,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 223143552,
+          "slots": 29491200,
+          "geometrySlots": 11059200,
+          "checkedInvocations": 40550400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 33177600,
+            "hitBytes": 58982400,
+            "workBytes": 33177600,
+            "historyBytes": 92160000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 223143552,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "memory": 0,
+        "textures": 0
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.25",
+        "scale": 0.25,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 360,
+        "width": 640,
+        "height": 360,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 54374400,
+        "snapshotBytes": 5645952,
+        "totalBytes": 60020352,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 60020352,
+        "slots": 7372800,
+        "geometrySlots": 5529600,
+        "checkedInvocations": 12902400,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 8294400,
+          "hitBytes": 14745600,
+          "workBytes": 8294400,
+          "historyBytes": 23040000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              1280,
+              720
+            ],
+            "totalBytes": 223143552,
+            "checkedInvocations": 40550400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              1152,
+              648
+            ],
+            "totalBytes": 181819008,
+            "checkedInvocations": 33546240,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              1024,
+              576
+            ],
+            "totalBytes": 144844416,
+            "checkedInvocations": 27279360,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3333333333333333,
+            "receiver": [
+              854,
+              480
+            ],
+            "totalBytes": 102387072,
+            "checkedInvocations": 20083200,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.3,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 83945088,
+            "checkedInvocations": 16957440,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "bytes": 54374400,
+      "total": 60020352,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 30,
+        "memoryBytes": 54374400,
+        "peakMemoryBytes": 60416000,
+        "draws": 630,
+        "stages": {},
+        "timingUnavailable": 440,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 60020352,
+        "planChanges": 8,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "Auto reduced receiver to fit budgets",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.25",
+          "scale": 0.25,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 360,
+          "width": 640,
+          "height": 360,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 54374400,
+          "snapshotBytes": 5645952,
+          "totalBytes": 60020352,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 60020352,
+          "slots": 7372800,
+          "geometrySlots": 5529600,
+          "checkedInvocations": 12902400,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 8294400,
+            "hitBytes": 14745600,
+            "workBytes": 8294400,
+            "historyBytes": 23040000
+          },
+          "rejections": [
+            {
+              "scale": 0.5,
+              "receiver": [
+                1280,
+                720
+              ],
+              "totalBytes": 223143552,
+              "checkedInvocations": 40550400,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.45,
+              "receiver": [
+                1152,
+                648
+              ],
+              "totalBytes": 181819008,
+              "checkedInvocations": 33546240,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.4,
+              "receiver": [
+                1024,
+                576
+              ],
+              "totalBytes": 144844416,
+              "checkedInvocations": 27279360,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3333333333333333,
+              "receiver": [
+                854,
+                480
+              ],
+              "totalBytes": 102387072,
+              "checkedInvocations": 20083200,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            },
+            {
+              "scale": 0.3,
+              "receiver": [
+                768,
+                432
+              ],
+              "totalBytes": 83945088,
+              "checkedInvocations": 16957440,
+              "reasons": [
+                "additional memory budget",
+                "primary slots plus geometry query budget"
+              ]
+            }
+          ]
+        },
+        "receiverDraws": 157,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 29,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          360
+        ],
+        "receiverResolution": [
+          640,
+          360
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.25",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 7372800,
+        "primaryRayUpperBound": 7372800,
+        "solarRayUpperBound": 7372800,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 5529600,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 12951
+            },
+            "production": {
+              "draws": 9921
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 46,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "drawingBuffer": [
+        1280,
+        800
+      ],
+      "fixed": {
+        "ready": true,
+        "status": "active experimental FG",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "high",
+          "effectiveQuality": "high",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "memory": 60416000,
+        "textures": 4
+      },
+      "ready": true,
+      "actualFG": 7,
+      "history": 5,
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 5645952,
+        "totalBytes": 66061952,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 66061952,
+        "slots": 8192000,
+        "geometrySlots": 3072000,
+        "checkedInvocations": 11264000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": []
+      },
+      "bytes": 60416000,
+      "total": 66061952,
+      "stablePlanning": true,
+      "oldDestroyed": true,
+      "snapshotBytes": 5645952,
+      "metrics": {
+        "status": "active experimental FG",
+        "frames": 38,
+        "memoryBytes": 60416000,
+        "peakMemoryBytes": 60416000,
+        "draws": 798,
+        "stages": {},
+        "timingUnavailable": 550,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": true,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "fg",
+        "accumulationPasses": 7,
+        "snapshotBytes": 5645952,
+        "totalAdditionalBytes": 66061952,
+        "planChanges": 10,
+        "requestedMode": "fg",
+        "requestedQuality": "auto",
+        "plan": {
+          "supported": true,
+          "reason": "requested receiver fits",
+          "requestedQuality": "auto",
+          "effectiveQuality": "auto@0.5",
+          "scale": 0.5,
+          "samples": 32,
+          "targetFrames": 32,
+          "execution": "split",
+          "reconstruction": true,
+          "rw": 640,
+          "rh": 400,
+          "width": 640,
+          "height": 400,
+          "ox": 0,
+          "oy": 0,
+          "bytes": 60416000,
+          "snapshotBytes": 5645952,
+          "totalBytes": 66061952,
+          "reservedHistoryBytes": 0,
+          "reservedGeometrySlots": 0,
+          "planningBytes": 66061952,
+          "slots": 8192000,
+          "geometrySlots": 3072000,
+          "checkedInvocations": 11264000,
+          "requiredSamplers": 13,
+          "attachments": {
+            "receiverBytes": 9216000,
+            "hitBytes": 16384000,
+            "workBytes": 9216000,
+            "historyBytes": 25600000
+          },
+          "rejections": []
+        },
+        "receiverDraws": 160,
+        "stablePasses": 7,
+        "historyReset": "source/round/sampling epoch",
+        "sampleEpoch": 37,
+        "sampling": "reconstructed",
+        "revision": 2,
+        "round": 3,
+        "versions": {
+          "geometry": 1,
+          "rayLayout": 1,
+          "material": 1,
+          "sunVisibility": 1,
+          "lighting": 2
+        },
+        "quality": "auto",
+        "resolution": [
+          640,
+          400
+        ],
+        "receiverResolution": [
+          640,
+          400
+        ],
+        "fallbackReason": "none",
+        "effectiveQuality": "auto@0.5",
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "reconstructionEnabled": true,
+        "lazyFallback": true,
+        "samples": 32,
+        "raySlots": 8192000,
+        "primaryRayUpperBound": 8192000,
+        "solarRayUpperBound": 8192000,
+        "traversalBudget": 256,
+        "geometryRayUpperBound": 3072000,
+        "peakAdditionalBytes": 66061952
+      },
+      "readbacks": [
+        {
+          "phase": "production",
+          "phases": {
+            "initialization": {
+              "draws": 12951
+            },
+            "production": {
+              "draws": 12873
+            }
+          },
+          "feedback": [],
+          "errors": [],
+          "live": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 44,
+            "programs": 35,
+            "syncs": 0
+          },
+          "peak": {
+            "textures": 63,
+            "framebuffers": 36,
+            "queries": 46,
+            "programs": 35,
+            "syncs": 0
+          }
+        }
+      ],
+      "scene": "gallery"
+    },
+    {
+      "scene": "gallery",
+      "contract": "shrink cached/frozen budget",
+      "frozen": true,
+      "ready": true,
+      "beforeSize": [
+        640,
+        400
+      ],
+      "size": [
+        427,
+        267
+      ],
+      "bytes": 32552076,
+      "history": 1,
+      "oldDestroyed": true,
+      "lazyRestored": true
+    },
+    {
+      "scene": "gallery",
+      "contract": "shrink cached/frozen budget",
+      "frozen": false,
+      "ready": true,
+      "beforeSize": [
+        640,
+        400
+      ],
+      "size": [
+        427,
+        267
+      ],
+      "bytes": 32552076,
+      "history": 1,
+      "oldDestroyed": true,
+      "lazyRestored": true
+    },
+    {
+      "scene": "DPR",
+      "scale": 1,
+      "dpr": 2,
+      "buffer": [
+        1920,
+        1200
+      ],
+      "ready": true,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 4352000,
+        "checkedInvocations": 12544000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              600
+            ],
+            "totalBytes": 138893760,
+            "checkedInvocations": 25344000,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              540
+            ],
+            "totalBytes": 113065920,
+            "checkedInvocations": 20966400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              480
+            ],
+            "totalBytes": 89956800,
+            "checkedInvocations": 17049600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "total": 63373760,
+      "history": 2
+    },
+    {
+      "scene": "DPR",
+      "scale": 0.75,
+      "dpr": 2,
+      "buffer": [
+        1440,
+        900
+      ],
+      "ready": true,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.45",
+        "scale": 0.45,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 648,
+        "rh": 405,
+        "width": 648,
+        "height": 405,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 61935840,
+        "snapshotBytes": 2957760,
+        "totalBytes": 64893600,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 64893600,
+        "slots": 8398080,
+        "geometrySlots": 3395520,
+        "checkedInvocations": 11793600,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9447840,
+          "hitBytes": 16796160,
+          "workBytes": 9447840,
+          "historyBytes": 26244000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              720,
+              450
+            ],
+            "totalBytes": 79421760,
+            "checkedInvocations": 14256000,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "total": 64893600,
+      "history": 1
+    },
+    {
+      "scene": "DPR",
+      "scale": 1,
+      "dpr": 2,
+      "buffer": [
+        1920,
+        1200
+      ],
+      "ready": true,
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.3333333333333333",
+        "scale": 0.3333333333333333,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 640,
+        "rh": 400,
+        "width": 640,
+        "height": 400,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 60416000,
+        "snapshotBytes": 2957760,
+        "totalBytes": 63373760,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 63373760,
+        "slots": 8192000,
+        "geometrySlots": 4352000,
+        "checkedInvocations": 12544000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 9216000,
+          "hitBytes": 16384000,
+          "workBytes": 9216000,
+          "historyBytes": 25600000
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              600
+            ],
+            "totalBytes": 138893760,
+            "checkedInvocations": 25344000,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              540
+            ],
+            "totalBytes": 113065920,
+            "checkedInvocations": 20966400,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              480
+            ],
+            "totalBytes": 89956800,
+            "checkedInvocations": 17049600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          }
+        ]
+      },
+      "total": 63373760,
+      "history": 1
+    }
+  ],
+  "errors": [],
+  "checks": [],
+  "status": "passed"
+}

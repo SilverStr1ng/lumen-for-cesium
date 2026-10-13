@@ -1,7 +1,9 @@
 // Compute thresholds from measured numbers; never trust candidate statuses.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { inflateSync } from "node:zlib";
 import { sourceVersion } from "./browser-tools.mjs";
+import { screenNames } from "./r8-acceptance.mjs";
 import { captureMatches } from "./r7-acceptance.mjs";
 const auto = process.env.LUMEN_FG_AUTO === "1";
 const out =
@@ -72,6 +74,94 @@ try {
   );
   const rmse = (diff) =>
     Math.sqrt(diff.reduce((a, b) => a + b * b, 0) / diff.length);
+  if (process.env.LUMEN_FG_REPORT) {
+    const expected = [false, true].flatMap((heldOut) =>
+      (auto ? [32] : [16, 32]).flatMap((samples) =>
+        [0, 5, 19].map((seed) => [heldOut, samples, seed].join(":")),
+      ),
+    );
+    const actual = c.cases.map((x) => [x.heldOut, x.samples, x.seed].join(":"));
+    add(
+      "unique complete canonical matrix",
+      actual.length === expected.length &&
+        new Set(actual).size === expected.length &&
+        expected.every((k) => actual.includes(k))
+        ? 0
+        : 1,
+      0,
+      "original/held-out × required samples × three seeds",
+    );
+    const names = s.cases.map((x) => x.name),
+      required = screenNames(auto);
+    add(
+      "unique complete screen matrix",
+      names.length === required.length &&
+        new Set(names).size === required.length &&
+        required.every((k) => names.includes(k))
+        ? 0
+        : 1,
+      0,
+      "all required original/held-out/Gallery/barrier/scale cases, without duplicates",
+    );
+  }
+  const frozenBytes = await readFile(
+      "reports/receiver-final-gather-v5/abcd.json",
+    ),
+    frozenReference = JSON.parse(frozenBytes);
+  if (process.env.LUMEN_FG_REPORT)
+    add(
+      "frozen independent reference",
+      c.reference?.sha256 ===
+        createHash("sha256").update(frozenBytes).digest("hex")
+        ? 0
+        : 1,
+      0,
+      "independent D and its SE unchanged",
+    );
+  if (process.argv.includes("--inject-missing-line"))
+    delete c.cases[0].lines.boxFloor;
+  const requiredLines = [
+    "boxFloor",
+    "boxFace",
+    "wallFoot",
+    "pillarFoot",
+    "ceiling",
+    "doorway",
+  ];
+  for (const item of c.cases) {
+    const names = Object.keys(item.lines ?? {});
+    add(
+      "complete six canonical lines " +
+        item.heldOut +
+        "/" +
+        item.samples +
+        "/" +
+        item.seed,
+      names.length === 6 && requiredLines.every((n) => names.includes(n))
+        ? 0
+        : 1,
+      0,
+      "all six exact original/held-out scanlines required",
+    );
+    for (const [name, line] of Object.entries(item.lines)) {
+      const frozen = frozenReference.cases.find(
+        (c) => c.heldOut === item.heldOut && c.k === 3,
+      );
+      add(
+        "unchanged scoring and D/SE " + name,
+        JSON.stringify(line.scoredIndices) ===
+          JSON.stringify(frozen.metrics.C[name].scoredIndices) &&
+          JSON.stringify(line.reference) ===
+            JSON.stringify(
+              frozen.lines[name].map((x) => ({ D: x.D, A: x.A, C: x.C })),
+            )
+          ? 0
+          : 1,
+        0,
+        "original fixed point set and frozen independent D/SE; never candidate-selected",
+      );
+    }
+  }
   report.lines = [];
   for (const item of c.cases)
     for (const [name, line] of Object.entries(item.lines)) {
@@ -87,7 +177,10 @@ try {
         name;
       add(
         tag + " all49",
-        final.composite.length === 49 &&
+        line.reference.length === 49 &&
+          final.composite.length === 49 &&
+          line.high.length === 3 &&
+          line.high.every((run) => run.length === 49) &&
           line.high
             .flat()
             .every(
