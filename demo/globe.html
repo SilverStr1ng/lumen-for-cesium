@@ -101,6 +101,18 @@
       <small>本地展馆 · Cesium 1.146 · WebGL2</small>
       <p>同一份建筑几何，同时用于显示和间接光传输。</p>
       <label
+        >场景<select id="preset">
+          <option value="regression">原展馆回归</option>
+          <option value="presentation">材质展示</option>
+        </select></label
+      >
+      <label
+        >GI 质量<select id="quality">
+          <option value="original">原质量 · 2m / 128r / 3b</option>
+          <option value="fine">加密 · 1.5m / 128r / 3b</option>
+        </select></label
+      >
+      <label
         >产品 A/B · Lumen<input id="enabled" type="checkbox" checked /></label
       ><small>关闭时使用原有 IBL 回退；相机、曝光、直射不变。</small>
       <label
@@ -108,6 +120,11 @@
           <option value="0">最终光照</option>
           <option value="1">仅直接光</option>
           <option value="2">纯间接光</option>
+          <option value="4">查询辐照度 E</option>
+          <option value="5">数据覆盖率</option>
+          <option value="6">太阳阴影可见性</option>
+          <option value="9">环境镜面</option>
+          <option value="11">仅移除局部 GI</option>
         </select></label
       >
       <label
@@ -131,11 +148,45 @@
         ><button data-camera="corridor">回廊</button
         ><button data-camera="inside">室内</button
         ><button data-camera="bounce">颜色反弹</button>
+        <button data-camera="boxFoot">箱体脚部</button
+        ><button data-camera="wallFoot">墙脚</button
+        ><button data-camera="pillarFoot">柱脚</button
+        ><button data-camera="materials">材质球</button>
       </div>
       <button id="cancel">停止飞行</button
       ><button id="reload">重载局部场景</button>
       <details>
         <summary>设置 / 可选 ion 增强</summary>
+        <label
+          >发布显示过渡 · 150ms<input id="transition" type="checkbox"
+        /></label>
+        <label
+          >漫反射响应<select id="response">
+            <option value="lambert">Lambert 传输验证</option>
+            <option value="cesium">Cesium PBR 能量分配</option>
+          </select></label
+        >
+        <label
+          >抗锯齿<select id="aa">
+            <option value="off">关闭 · 1x</option>
+            <option value="msaa4">MSAA 4x</option>
+            <option value="fxaa">FXAA</option>
+          </select></label
+        >
+        <label
+          >显示阴影<select id="shadow">
+            <option value="original">原配置 · normal offset</option>
+            <option value="contact">接触 · 无 normal offset / PCF</option>
+          </select></label
+        >
+        <label
+          >色调映射<select id="tonemapper">
+            <option value="PBR_NEUTRAL">PBR Neutral</option>
+            <option value="ACES">ACES</option>
+          </select></label
+        >
+        <button id="saveView">保存视角与设置</button
+        ><button id="restoreView" disabled>恢复已保存视角</button>
         <label
           >太阳高度（°）<input
             id="sunHeight"
@@ -175,7 +226,7 @@
           URLs。启用地形会先采样并重建共享锚点；起伏超过地基净空时回退。</small
         ><button id="place">采样地形并重建</button>
       </details>
-      <details open>
+      <details>
         <summary>诊断</summary>
         <div id="status">地球加载中…</div>
       </details>

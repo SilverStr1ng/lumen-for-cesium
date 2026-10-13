@@ -22,6 +22,8 @@ await page.addInitScript(() => {
   const glp = WebGL2RenderingContext.prototype,
     T = new Map(),
     R = new Map(),
+    B = new Map(),
+    bufferBindings = new Map(),
     bindings = new Map();
   let unit = 0,
     rb = null;
@@ -111,23 +113,36 @@ await page.addInitScript(() => {
     R.set(rb, a[1] * a[3] * a[4] * size(a[2])),
   );
   wrap("deleteRenderbuffer", (g, a) => R.delete(a[0]));
+  wrap("bindBuffer", (g, a) => bufferBindings.set(a[0], a[1]));
+  wrap("bufferData", (g, a) => {
+    const buffer = bufferBindings.get(a[0]);
+    if (buffer)
+      B.set(buffer, typeof a[1] === "number" ? a[1] : (a[1]?.byteLength ?? 0));
+  });
+  wrap("deleteBuffer", (g, a) => B.delete(a[0]));
   window.gpuAllocationEstimate = () => ({
     textureBytes: [...T.values()].reduce(
       (s, m) => s + [...m.values()].reduce((a, b) => a + b, 0),
       0,
     ),
     renderbufferBytes: [...R.values()].reduce((a, b) => a + b, 0),
+    bufferBytes: [...B.values()].reduce((a, b) => a + b, 0),
+    buffers: B.size,
     textures: T.size,
     renderbuffers: R.size,
     scope:
-      "tracked GL texture/renderbuffer allocation estimate including Globe, HDR, shadows, IBL, MSAA and GI; excludes driver padding, browser canvas swapchain and geometry buffers",
+      "tracked GL texture/renderbuffer allocation estimate including Globe, HDR, shadows, IBL, MSAA and GI; excludes driver padding, browser canvas swapchain ; tracks geometry/other GL buffers when allocated through bufferData",
   });
 });
 page.on("pageerror", (e) => report.errors.push(String(e)));
 try {
   await page.goto(
     "http://localhost:8090/demo/globe.html" +
-      (label === "presentation" ? "?preset=presentation" : ""),
+      (label === "presentation"
+        ? "?preset=presentation"
+        : label === "fine"
+          ? "?quality=fine"
+          : ""),
   );
   await page.waitForFunction(
     () =>
@@ -159,7 +174,10 @@ try {
     };
     const started = performance.now();
     const completed = w.solve(updateOptions);
-    let first;
+    let first, final;
+    const trackedCompletion = completed.then(() => {
+      final = performance.now() - started;
+    });
     w.firstPublished.then(() => (first = performance.now() - started));
     const times = [];
     let previous;
@@ -168,8 +186,7 @@ try {
       if (previous !== undefined && i > 20) times.push(t - previous);
       previous = t;
     }
-    await completed;
-    const final = performance.now() - started;
+    await trackedCompletion;
     await drain();
     const sorted = [...times].sort((a, b) => a - b);
     return {
@@ -197,12 +214,15 @@ try {
       allocation: gpuAllocationEstimate(),
       ibl: {
         ready: !!d.model.environmentMapManager.radianceCubeMap,
-        mips: d.model.environmentMapManager.radianceCubeMap?.mipLevels,
+        mipMaximum: d.model.environmentMapManager.maximumMipmapLevel,
+        width: d.model.environmentMapManager.radianceCubeMap?.width,
       },
       gl: glObserver.snapshot(),
       preserveDrawingBuffer:
         d.scene.context._gl.getContextAttributes().preserveDrawingBuffer,
       gBuffer: d.scene.gBuffer.enabled,
+      actualHdrMsaaSamples:
+        d.scene._view.sceneFramebuffer._colorFramebuffer.numSamples,
     };
   });
   for (const s of report.result.gl) {

@@ -72,6 +72,7 @@ import ConvolveSpecularMapVS from "../Shaders/ConvolveSpecularMapVS.js";
 function DynamicEnvironmentMapManager(options) {
   this._position = undefined;
   this._specularMapReady = false;
+  this._specularShaderDirty = false;
 
   this._radianceMapDirty = false;
   this._radianceCommandsDirty = false;
@@ -644,6 +645,7 @@ function updateSpecularMaps(manager, frameState) {
     const length = manager._specularMapTextures.length;
     if (facesCopied >= length) {
       manager._specularMapReady = true;
+      manager._specularShaderDirty = true;
       manager._irradianceCommandDirty = manager.generateSphericalHarmonics;
 
       if (mipmapLevels > 1) {
@@ -917,6 +919,14 @@ DynamicEnvironmentMapManager.prototype.update = function (frameState) {
 
   if (this._irradianceTextureDirty) {
     this._shouldRegenerateShaders = false;
+    return;
+  }
+
+  // Compute callbacks run after the owner update. Notify on the next update,
+  // including specular-only mode which has no SH readback to trigger rebuilding.
+  if (this._specularShaderDirty) {
+    this._specularShaderDirty = false;
+    this._shouldRegenerateShaders = true;
     return;
   }
 

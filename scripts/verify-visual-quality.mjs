@@ -37,7 +37,11 @@ await page.route("**/*", (route) => {
 try {
   await page.goto(
     "http://localhost:8090/demo/globe.html?diagnostic=1" +
-      (label === "presentation" ? "&preset=presentation" : ""),
+      (label === "presentation"
+        ? "&preset=presentation"
+        : label === "fine"
+          ? "&quality=fine"
+          : ""),
   );
   await page.waitForFunction(
     () =>
@@ -62,7 +66,7 @@ try {
     { polling: "raf", timeout: 60000 },
   );
   report.settings = await page.evaluate(() => earthLab.saveView());
-  if (label !== "before") {
+  if (!["before", "presentation", "fine"].includes(label)) {
     try {
       const { readFile } = await import("node:fs/promises");
       const prior = JSON.parse(
@@ -90,6 +94,7 @@ try {
     "ceiling",
     "overview",
     "bounce",
+    ...(label === "presentation" ? ["materials"] : []),
   ]) {
     await page.evaluate((name) => {
       earthLab.camera(name);
@@ -124,7 +129,8 @@ try {
       const width = d.scene.drawingBufferWidth,
         height = d.scene.drawingBufferHeight,
         hdr = w._read(
-          d.scene._view.sceneFramebuffer._colorFramebuffer.framebuffer,
+          d.scene._view.sceneFramebuffer._colorFramebuffer._multisampleFramebuffer?.getColorFramebuffer() ??
+            d.scene._view.sceneFramebuffer._colorFramebuffer.framebuffer,
           width,
           height,
         ),

@@ -84,7 +84,7 @@ vec3 textureIBL(vec3 viewDirectionEC, vec3 normalEC, czm_modelMaterial material)
     #ifdef LUMEN_MODEL_LIGHTING
         lumen_iblDiffuseResponse = dielectricScattering;
         // Coverage replaces diffuse energy only; it never suppresses specular multiple scattering.
-        if (u_lumenEnabled) diffuseContribution *= 1.0 - lumen_materialCoverage;
+        if (u_lumenEnabled) diffuseContribution *= 1.0 - lumen_environmentCoverage;
     #endif
     #ifdef SPECULAR_IBL
         // Broad prefiltered environment supplies the existing multiscatter approximation,

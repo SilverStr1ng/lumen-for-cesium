@@ -1,6 +1,8 @@
 // Directional irradiance E and distance moments use bordered 8x8 octahedral tiles.
 // All world positions are local metres; eye->local is formed in CPU double precision.
 float lumen_materialCoverage = 0.0;
+float lumen_environmentCoverage = 0.0;
+float lumen_volumeCoverage = 0.0;
 
 #ifdef LUMEN_WORLD_SUPPORTED
 vec2 lumen_octEncode(vec3 v) {
@@ -16,6 +18,7 @@ vec4 lumen_atlas(sampler2D atlas, ivec2 tile, vec3 direction) {
     return mix(mix(texelFetch(atlas,i,0),texelFetch(atlas,i+ivec2(1,0),0),f.x),mix(texelFetch(atlas,i+ivec2(0,1),0),texelFetch(atlas,i+ivec2(1,1),0),f.x),f.y);
 }
 vec4 lumen_worldIrradianceWithNormals(vec3 positionEC, vec3 geometricNormalEC, vec3 shadingNormalEC) {
+    lumen_volumeCoverage = 0.0;
     vec3 p = (u_lumenEyeToLocal * vec4(positionEC,1.0)).xyz;
     vec3 n = normalize(mat3(u_lumenEyeToLocal) * shadingNormalEC);
     vec3 ng = normalize(mat3(u_lumenEyeToLocal) * geometricNormalEC);
@@ -24,6 +27,7 @@ vec4 lumen_worldIrradianceWithNormals(vec3 positionEC, vec3 geometricNormalEC, v
     vec3 kernelPosition=u_lumenLegacyKernel?p:biased;
     vec3 q = (kernelPosition-u_lumenProbeOrigin)/u_lumenProbeSpacing;
     if (any(lessThan(q,vec3(0.0))) || any(greaterThan(q,u_lumenProbeCounts-1.0))) return vec4(0.0);
+    lumen_volumeCoverage = 1.0;
     ivec3 counts = ivec3(u_lumenProbeCounts);
     ivec3 base = clamp(ivec3(floor(q)),ivec3(0),counts-2);
     vec3 f = q-vec3(base);
@@ -54,10 +58,14 @@ vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) { return lumen_worldI
 #endif
 vec3 lumen_irradiance(vec3 positionEC,vec3 normalEC,vec3 geometricNormalEC) {
     lumen_materialCoverage=u_lumenCoverage;
+    lumen_environmentCoverage=u_lumenCoverage;
     #if defined(LUMEN_WORLD_SUPPORTED) && !defined(LUMEN_GBUFFER)
     if(u_lumenWorldEnabled) {
         vec4 field=lumen_worldIrradianceWithNormals(positionEC,geometricNormalEC,normalEC);
         lumen_materialCoverage*=field.a;
+        // Missing/interior support cannot reveal an unoccluded diffuse sky inside the volume.
+        // Raw data support remains field.a, independently observable from energy/visibility.
+        lumen_environmentCoverage*=lumen_volumeCoverage;
         return field.rgb*u_lumenWorldGain;
     }
     #endif

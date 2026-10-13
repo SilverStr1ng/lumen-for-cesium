@@ -1,4 +1,8 @@
 import { LightingEnvironment } from "./lighting-environment.js";
+const params = new URLSearchParams(location.search);
+let currentPreset =
+  params.get("preset") === "presentation" ? "presentation" : "regression";
+let currentQuality = params.get("quality") === "fine" ? "fine" : "original";
 const C = Cesium,
   $ = (id) => document.getElementById(id);
 // No Viewer default imagery/geocoder: only explicitly supplied local resources.
@@ -6,7 +10,7 @@ C.Ion.defaultAccessToken = "";
 const widget = new C.CesiumWidget("view", {
   baseLayer: false,
   terrainProvider: new C.EllipsoidTerrainProvider(),
-  msaaSamples: 1,
+  msaaSamples: currentPreset === "presentation" ? 4 : 1,
   contextOptions: {
     webgl: {
       preserveDrawingBuffer: new URLSearchParams(location.search).has(
@@ -16,9 +20,9 @@ const widget = new C.CesiumWidget("view", {
   },
 });
 const scene = widget.scene;
-const environmentEnabled =
-  new URLSearchParams(location.search).get("ibl") === "dynamic";
-const lightingEnvironment = new LightingEnvironment(environmentEnabled);
+const wantsEnvironment = () =>
+  currentPreset === "presentation" || params.get("ibl") === "dynamic";
+const lightingEnvironment = new LightingEnvironment(wantsEnvironment());
 scene.atmosphere.dynamicLighting = C.DynamicAtmosphereLightingType.SCENE_LIGHT;
 scene.highDynamicRange = true;
 scene.gBuffer.enabled = false;
@@ -114,6 +118,7 @@ function options() {
   return {
     ...lighting,
     publicationMode: $("publication").value,
+    displayTransitionMilliseconds: $("transition").checked ? 150 : 0,
     neutralMaterials: $("neutral").checked ? [1, 2] : [],
   };
 }
@@ -293,10 +298,20 @@ async function reload() {
     model = undefined;
   }
   setFrame();
+  lightingEnvironment.specular.enabled = wantsEnvironment();
   lightingController.update();
   $("error").textContent = "";
   try {
-    const asset = new URL("../fixtures/earth-pavilion.gltf", import.meta.url)
+    const assetName =
+      currentPreset === "presentation"
+        ? "earth-pavilion-presentation"
+        : "earth-pavilion";
+    const selectedMetadata = await (
+      await fetch("../fixtures/" + assetName + ".json")
+    ).json();
+    if (own !== generation) return;
+    metadata = selectedMetadata;
+    const asset = new URL("../fixtures/" + assetName + ".gltf", import.meta.url)
       .href;
     const fresh = await C.Model.fromGltfAsync({
       url: asset,
@@ -306,7 +321,7 @@ async function reload() {
       shadows: C.ShadowMode.ENABLED,
       incrementallyLoadTextures: false,
       environmentMapOptions: {
-        enabled: environmentEnabled,
+        enabled: wantsEnvironment(),
         generateSphericalHarmonics: false,
         mipmapLevels: 7,
         gamma: 1,
@@ -319,8 +334,8 @@ async function reload() {
       return;
     }
     model = fresh;
-    fresh.environmentMapManager.enabled = environmentEnabled;
-    if (environmentEnabled)
+    fresh.environmentMapManager.enabled = wantsEnvironment();
+    if (wantsEnvironment())
       fresh.imageBasedLighting.imageBasedLightingFactor = new C.Cartesian2(
         0,
         1,
@@ -334,7 +349,7 @@ async function reload() {
         workerUrl: new URL("../lumen/gpu-worker.js", import.meta.url).href,
         modelMatrix: frame,
         axisMatrix: C.Matrix4.toArray(fresh._sceneGraph.axisCorrectionMatrix),
-        spacing: metadata.spacing,
+        spacing: currentQuality === "fine" ? 1.5 : metadata.spacing,
         rays: metadata.rays,
         targetGpuMilliseconds: 3,
         maxBatch: 128,
@@ -434,8 +449,9 @@ scene.postRender.addEventListener(() => {
       lightingEnvironment.versions.specularRequested;
   const current = !!w && w.requestedRevision === w.settledRevision;
   const grid = w?.packet?.grid;
+  $("transition").disabled = typeof w?.setDisplayTransition !== "function";
   $("status").textContent =
-    `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing 2m\n128 rays · 3 bounces · 3ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n发布时间为 CPU 提交，不等于 GPU 完成`;
+    `${model?.ready ? "建筑已显示" : "建筑加载中"} · ${w?.status ?? "GI 准备中"}\n${current ? "光照已完成" : "光照更新中（可能显示旧 GI）"}\n请求 ${w?.requestedRevision ?? 0} / 活动 ${w?.activeRevision ?? 0}\n发布 ${w?.publishedRevision ?? 0} / 完成 ${w?.settledRevision ?? 0}\n轮次 ${w?.publishedBounce ?? 0} / 阶段 ${w?.progress?.phase ?? w?.status ?? "loading"}\n探针 ${grid?.total ?? "…"} / 4096 · spacing ${grid?.spacing ?? "…"}m\n${grid?.rays ?? "…"} rays · ${w?.options.bounces ?? "…"} bounces · ${w?.options.targetGpuMilliseconds ?? "…"}ms预算\n自有纹理 ${((w?.memoryBytes ?? 0) / 1048576).toFixed(2)} MiB\nGPU query ${w?._timer ? "available" : "检查 metrics / 不可用"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} · gain 1\n锚点 ${anchor.longitude}, ${anchor.latitude}, ${anchor.height.toFixed(2)}m\n显示 ${(w?.displaySettled ?? true) ? "已稳定" : "过渡中"}\n发布时间为 CPU 提交，不等于 GPU 完成`;
 });
 // Reproducible diagnostics deliberately omit ion credentials and URLs.
 async function saveView() {
@@ -443,8 +459,12 @@ async function saveView() {
     w = scene.lumen.world;
   const hashes = {};
   for (const ext of ["gltf", "bin", "json"]) {
+    const assetName =
+      currentPreset === "presentation"
+        ? "earth-pavilion-presentation"
+        : "earth-pavilion";
     const data = await (
-      await fetch("../fixtures/earth-pavilion." + ext)
+      await fetch("../fixtures/" + assetName + "." + ext)
     ).arrayBuffer();
     hashes[ext] = Array.from(
       new Uint8Array(await crypto.subtle.digest("SHA-256", data)),
@@ -452,6 +472,10 @@ async function saveView() {
     ).join("");
   }
   return {
+    preset: currentPreset,
+    qualityPreset: currentQuality,
+    diffuseResponse: scene.lumen.diffuseResponse,
+    displayTransitionMilliseconds: w.displayTransitionMilliseconds,
     camera: {
       transform: C.Matrix4.toArray(cam.transform),
       position: [cam.position.x, cam.position.y, cam.position.z],
@@ -469,6 +493,7 @@ async function saveView() {
     automaticExposure: false,
     resolution: [scene.drawingBufferWidth, scene.drawingBufferHeight],
     msaaSamples: scene.msaaSamples,
+    fxaaEnabled: scene.postProcessStages.fxaa.enabled,
     shadows: {
       enabled: scene.shadowMap.enabled,
       size: scene.shadowMap.size,
@@ -491,6 +516,32 @@ async function saveView() {
   };
 }
 async function restoreView(saved) {
+  if (
+    (saved.preset && saved.preset !== currentPreset) ||
+    (saved.qualityPreset && saved.qualityPreset !== currentQuality)
+  ) {
+    currentPreset = saved.preset ?? currentPreset;
+    currentQuality = saved.qualityPreset ?? currentQuality;
+    $("preset").value = currentPreset;
+    $("quality").value = currentQuality;
+    await reload();
+    const started = performance.now();
+    while (!scene.lumen.world?.ready || scene.lumen.world.isDestroyed()) {
+      if (performance.now() - started > 180000)
+        throw Error("saved view world timeout");
+      await new Promise(requestAnimationFrame);
+    }
+    await scene.lumen.world.completed;
+  }
+  if (saved.diffuseResponse)
+    scene.lumen.diffuseResponse = saved.diffuseResponse;
+  if (saved.displayTransitionMilliseconds !== undefined)
+    scene.lumen.world.setDisplayTransition?.(
+      saved.displayTransitionMilliseconds,
+    );
+  if (saved.msaaSamples) scene.msaaSamples = saved.msaaSamples;
+  if (saved.fxaaEnabled !== undefined)
+    scene.postProcessStages.fxaa.enabled = saved.fxaaEnabled;
   if (Object.keys(saved.anchor).some((k) => saved.anchor[k] !== anchor[k])) {
     Object.assign(anchor, saved.anchor);
     await reload();
@@ -517,6 +568,15 @@ async function restoreView(saved) {
     color: new C.Color(...lighting.sunRadiance),
     intensity: 1,
   });
+  const environmentChanged = lightingEnvironment.update(lighting);
+  if (environmentChanged && model?.environmentMapManager.enabled) {
+    model.environmentMapManager.atmosphereScatteringIntensity =
+      lightingEnvironment.sun.intensity;
+    model.environmentMapManager.reset();
+  }
+  $("exposure").value = String(saved.exposure);
+  $("tonemapper").value = saved.toneMapper;
+  $("response").value = scene.lumen.diffuseResponse;
   const w = scene.lumen.world;
   if (
     JSON.stringify(w.options.sunDirection) !==
@@ -537,6 +597,12 @@ window.earthLab = {
   lighting,
   lightingController,
   lightingEnvironment,
+  get preset() {
+    return currentPreset;
+  },
+  get quality() {
+    return currentQuality;
+  },
   saveView,
   restoreView,
   camera,
@@ -557,6 +623,70 @@ window.earthLab = {
     return metadata;
   },
 };
+function applyDisplayPreset() {
+  const presentation = currentPreset === "presentation";
+  scene.lumen.diffuseResponse = presentation ? "cesium" : "lambert";
+  scene.msaaSamples = presentation ? 4 : 1;
+  scene.postProcessStages.fxaa.enabled = false;
+  scene.shadowMap.normalOffset = !presentation;
+  scene.shadowMap.softShadows = presentation;
+  scene.shadowMap.maximumDistance = presentation ? 75 : 150;
+  $("preset").value = currentPreset;
+  $("quality").value = currentQuality;
+  $("response").value = scene.lumen.diffuseResponse;
+  $("aa").value = presentation ? "msaa4" : "off";
+  $("shadow").value = presentation ? "contact" : "original";
+}
+$("preset").onchange = () => {
+  currentPreset = $("preset").value;
+  applyDisplayPreset();
+  reload();
+};
+$("quality").onchange = () => {
+  currentQuality = $("quality").value;
+  reload();
+};
+$("transition").onchange = () => {
+  scene.lumen.world?.setDisplayTransition?.($("transition").checked ? 150 : 0);
+  scene.requestRender();
+};
+$("response").onchange = () => {
+  scene.lumen.diffuseResponse = $("response").value;
+  scene.requestRender();
+};
+$("aa").onchange = () => {
+  scene.msaaSamples = $("aa").value === "msaa4" ? 4 : 1;
+  scene.postProcessStages.fxaa.enabled = $("aa").value === "fxaa";
+  scene.requestRender();
+};
+$("shadow").onchange = () => {
+  const contact = $("shadow").value === "contact";
+  scene.shadowMap.normalOffset = !contact;
+  scene.shadowMap.softShadows = contact;
+  scene.shadowMap.maximumDistance = contact ? 75 : 150;
+  scene.requestRender();
+};
+$("tonemapper").onchange = () => {
+  scene.postProcessStages.tonemapper = $("tonemapper").value;
+  scene.requestRender();
+};
+let savedView;
+$("saveView").onclick = async () => {
+  savedView = await saveView();
+  $("restoreView").disabled = false;
+  const url = URL.createObjectURL(
+    new Blob([JSON.stringify(savedView, null, 2)], {
+      type: "application/json",
+    }),
+  );
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "earth-gi-view.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+$("restoreView").onclick = () => restoreView(savedView).catch(fail);
+applyDisplayPreset();
 lightingController.update();
 camera("earth");
 localLayers().catch(fail);
