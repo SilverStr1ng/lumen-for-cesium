@@ -192,7 +192,9 @@ export class DDGI {
       total,
       width: BORDERED * counts[0] * counts[1],
       height: BORDERED * counts[2],
-      normalBias: spacing * 0.075,
+      // Metres: cap the geometry query offset so a coarse grid does not move
+      // wall-foot/floor samples fifteen centimetres away from the receiver.
+      normalBias: Math.min(spacing * 0.075, 0.02),
       reconstructionMode: options.reconstructionMode ?? "spatial",
       rays,
     };
@@ -229,6 +231,16 @@ export class DDGI {
       ];
       const position = coordinates.map((v, i) => g.origin[i] + v * g.spacing);
       const logical = [...position];
+      const preferSolidExit = (a, b) => {
+        const solidExit = (h) =>
+          h.backface &&
+          isSolidMaterial(
+            this.bvh.geometry.materials[
+              this.bvh.geometry.materialIds[h.triangle]
+            ],
+          );
+        return solidExit(a) && !solidExit(b);
+      };
       let relocationSafe = true;
       // Bound cumulative displacement; an unsafe/blocked exit is classified invalid.
       for (let attempt = 0; attempt < 3; attempt++) {
@@ -241,9 +253,12 @@ export class DDGI {
           [0, 0, 1],
           [0, 0, -1],
         ]) {
+          // Monotonic escape from touching/overlapping solids avoids relocation cycles.
+          if (dot(d, sub(position, logical)) < -0.000001) continue;
           const h = this.bvh.trace(position, d, {
             accept,
             maxDistance: g.spacing * 0.3,
+            tieBreak: preferSolidExit,
             budget: this.options.traversalBudget,
           });
           if (
@@ -274,6 +289,7 @@ export class DDGI {
         const segment = this.bvh.trace(position, n, {
           accept,
           maxDistance: Math.hypot(...shift),
+          tieBreak: preferSolidExit,
           budget: this.options.traversalBudget,
         });
         if (

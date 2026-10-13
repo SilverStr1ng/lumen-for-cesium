@@ -115,10 +115,7 @@ export class BVH {
         } else {
           const sorted = order
             .slice(start, end)
-            .sort(
-              (a, b) =>
-                centroids[a * 3 + axis] - centroids[b * 3 + axis],
-            );
+            .sort((a, b) => centroids[a * 3 + axis] - centroids[b * 3 + axis]);
           for (let i = 0; i < sorted.length; i++) order[start + i] = sorted[i];
           mid = (start + end) >> 1;
         }
@@ -167,6 +164,7 @@ export class BVH {
       accept,
       anyHit = false,
       counters,
+      tieBreak,
     } = {},
   ) {
     this.stats.queries++;
@@ -242,7 +240,14 @@ export class BVH {
           (direction[0] * qx + direction[1] * qy + direction[2] * qz) * invDet;
         if (v < 0 || u + v > 1) continue;
         const distance = (bx * qx + by * qy + bz * qz) * invDet;
-        if (distance < 0.0001 || distance >= best) continue;
+        if (
+          distance < 0.0001 ||
+          distance > best ||
+          (distance === best &&
+            (!result ||
+              !tieBreak?.({ triangle: t, backface: det < 0 }, result)))
+        )
+          continue;
         if (counters && accept) counters.accept = (counters.accept ?? 0) + 1;
         if (accept && !accept(t, u, v)) {
           this.stats.alphaRejected++;

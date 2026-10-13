@@ -239,6 +239,20 @@ try {
         cpu: f.sample(p.position, p.normal, { diagnostics: true }),
       }));
     }
+    let maxRelocation = 0;
+    for (let id = 0; id < snapshot.grid.total; id++) {
+      const g = snapshot.grid,
+        c = [
+          id % g.counts[0],
+          Math.floor(id / g.counts[0]) % g.counts[1],
+          Math.floor(id / (g.counts[0] * g.counts[1])),
+        ];
+      const displacement = c.map(
+        (v, k) =>
+          snapshot.positions[id * 4 + k] - (g.origin[k] + v * g.spacing),
+      );
+      maxRelocation = Math.max(maxRelocation, Math.hypot(...displacement));
+    }
     const interior = [];
     for (let id = 0; id < snapshot.grid.total; id++) {
       const p = Array.from(snapshot.positions.slice(id * 4, id * 4 + 4));
@@ -263,6 +277,7 @@ try {
     return {
       scans,
       foundationInterior: interior,
+      maxRelocation,
       active: Array.from(snapshot.positions).filter(
         (v, i) => i % 4 === 3 && v >= 0.5,
       ).length,
@@ -302,8 +317,12 @@ try {
   });
   if (label !== "before")
     report.checks.push({
-      name: "foundation interior contains no active probes",
-      passed: report.receivers.foundationInterior.every((p) => p.state < 0.5),
+      name: "solid interiors rejected and cumulative relocation stays bounded",
+      passed:
+        report.probePositions.activeInside === 0 &&
+        report.receivers.foundationInterior.every((p) => p.state < 0.5) &&
+        report.receivers.maxRelocation <=
+          report.receivers.grid.spacing * 0.45 + 1e-5,
     });
   report.status =
     report.checks.every((c) => c.passed) && report.errors.length === 0

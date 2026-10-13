@@ -5,7 +5,7 @@ import { BVH } from "../lumen/bvh.js";
 import { completeTraceDistance } from "../lumen/trace-domain.js";
 import { normalize, cross, dot, add, mul } from "../lumen/math.js";
 const directory = "reports/ddgi-visual-quality-v4",
-  labels = ["before", "solid-only", "spatial"];
+  labels = ["before", "solid-only", "spatial", "after", "fine"];
 const inputs = Object.fromEntries(
   await Promise.all(
     labels.map(async (label) => [
@@ -136,13 +136,30 @@ for (const [name, line] of Object.entries(inputs.before.receivers.scans)) {
   }
   console.log("REFERENCE", name);
 }
-const error = {};
+const error = {},
+  composedError = {};
 for (const label of labels) {
   error[label] = {};
+  composedError[label] = {};
   for (const [name, points] of Object.entries(scans)) {
     const differences = points.flatMap((p) =>
       p.E.map((v, k) => p.ddgi[label].irradiance[k] - v),
     );
+    const composed = points.flatMap((p) =>
+      p.E.map(
+        (v, k) =>
+          p.ddgi[label].irradiance[k] *
+            (["after", "fine"].includes(label) ? 1 : p.ddgi[label].coverage) -
+          v,
+      ),
+    );
+    composedError[label][name] = {
+      mae: composed.reduce((s, v) => s + Math.abs(v), 0) / composed.length,
+      rmse: Math.sqrt(
+        composed.reduce((s, v) => s + v * v, 0) / composed.length,
+      ),
+      maximum: Math.max(...composed.map(Math.abs)),
+    };
     error[label][name] = {
       mae:
         differences.reduce((s, v) => s + Math.abs(v), 0) / differences.length,
@@ -164,6 +181,18 @@ await writeFile(
       lighting: light,
       scans,
       error,
+      composedError,
+      compositionContract:
+        "before/solid-only/spatial applied data availability to normalized E; after/fine use resident-volume ownership, with data availability independently reported. All listed receivers are inside the resident volume. Errors are effective diffuse E, before rho/pi and display processing.",
+      acceptance: Object.keys(scans).map((name) => ({
+        name,
+        status:
+          composedError.after[name].rmse <= composedError.before[name].rmse
+            ? "passed"
+            : "failed",
+        metric:
+          "original-quality effective diffuse E RMSE no regression against independent paths",
+      })),
     },
     null,
     2,

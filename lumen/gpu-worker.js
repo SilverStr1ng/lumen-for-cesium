@@ -138,7 +138,7 @@ function pack(b, options) {
       counts,
       total,
       spacing,
-      normalBias: spacing * 0.075,
+      normalBias: Math.min(spacing * 0.075, 0.02),
       rays: options.rays,
       width: counts[0] * counts[1] * 10,
       height: counts[2] * 10,

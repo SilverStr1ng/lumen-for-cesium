@@ -67,7 +67,7 @@ float traversalRank(int t) {
     return fetch1(u_uv,u_tieRankOffset+t/4)[t%4];
 }
 // Stackless pre-order traversal. An exhausted budget is Unknown (-1), never sky.
-vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
+vec4 traceWithExitTies(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit,bool preferSolidExit) {
     int node=0;vec4 best=vec4(0.0,0.0,0.0,maximum);
     for(int visit=0;visit<4096;visit++) {
         if(node>=u_nodesCount) return best;
@@ -93,7 +93,14 @@ vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
             vec3 q=cross(s,e1);float v=dot(direction,q)/det;
             if(v<0.0||u+v>1.0) continue;
             float d=dot(e2,q)/det;if(d<0.00001||d>best.w) continue;
-            if(d==best.w && (best.x==0.0 || traversalRank(t)>=traversalRank(int(abs(best.x))-2))) continue;
+            if(d==best.w) {
+                if(best.x==0.0) continue;
+                bool candidateExit=det<0.0 && mat(material,2).w>0.5;
+                int previousMaterial=int(fetch1(u_vertices,(int(abs(best.x))-2)*3).w);
+                bool previousExit=best.x < -1.0 && mat(previousMaterial,2).w>0.5;
+                if(preferSolidExit && candidateExit!=previousExit) {if(!candidateExit) continue;}
+                else if(traversalRank(t)>=traversalRank(int(abs(best.x))-2)) continue;
+            }
             vec4 params=mat(material,1);
             if(params.w>0.5) {countAlpha();}
             if(params.w>0.5 && image(material,0,hitUV(uv0,uv12,vec2(u,v))).a*mat(material,0).a<params.y) continue;
@@ -103,6 +110,10 @@ vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
         node=int(lo.w);
     }
     return node>=u_nodesCount?best:vec4(-1.0,0.0,0.0,maximum);
+}
+// Ordinary transport and shadow rays retain the original exact-tie ordering.
+vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
+    return traceWithExitTies(origin,direction,maximum,ignore,anyHit,false);
 }
 // Farthest root-box corner is a conservative complete local trace domain.
 // This includes blockers beyond 100 metres and does not infer sky at a cutoff.
@@ -174,7 +185,9 @@ void main() {
         float closest=1e20;vec3 shift=vec3(0.0);
         for(int j=0;j<6;j++) {
             vec3 d=vec3(0.0);d[j/2]=(j%2==0?1.0:-1.0);
-            vec4 h=trace(p,d,u_lumenProbeSpacing*0.3,-1,false);
+            // Do not oscillate back into an already exited touching solid.
+            if(dot(d,p-logical)<-0.000001) continue;
+            vec4 h=traceWithExitTies(p,d,u_lumenProbeSpacing*0.3,-1,false,true);
             if(h.x < -1.0 && h.w<closest) {
                 vec3 a,b,cc;int m;vec2 uv0;vec4 uv12;triangle(int(-h.x)-2,a,b,cc,m,uv0,uv12);
                 if(mat(m,2).w>0.5) {closest=h.w;shift=normalize(cross(b-a,cc-a))*(h.w+0.08);}
@@ -183,7 +196,7 @@ void main() {
         if(closest==1e20) break;
         vec3 candidate=p+shift,n=normalize(shift);float distance=length(shift);
         if(length(candidate-logical)>u_lumenProbeSpacing*0.45) {safe=false;break;}
-        vec4 h=trace(p,n,distance,-1,false);
+        vec4 h=traceWithExitTies(p,n,distance,-1,false,true);
         if(h.x>=-1.0) {safe=false;break;}
         int m=int(fetch1(u_vertices,(int(-h.x)-2)*3).w);
         if(mat(m,2).w<0.5) {safe=false;break;}

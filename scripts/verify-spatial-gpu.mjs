@@ -65,12 +65,59 @@ try {
           },
         ],
         separate = await w.sample(normals, { fixedFacing: 1 });
+      // Real material gather: partial data must not dim normalized constant E.
+      P[3] = 0;
+      w.positionTexture.copyFrom({
+        source: { width: 6, height: 2, arrayBufferView: P },
+      });
+      const { querySample } =
+        await import("/cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js");
+      const tex = new C.Texture({
+        context: w.scene.context,
+        width: 1,
+        height: 1,
+        pixelFormat: C.PixelFormat.RGBA,
+        pixelDatatype: C.PixelDatatype.FLOAT,
+      });
+      const fb = new C.Framebuffer({
+        context: w.scene.context,
+        colorTextures: [tex],
+        destroyAttachments: false,
+      });
+      let mode = 0;
+      const cmd = w.scene.context.createViewportQuadCommand(
+        querySample.slice(0, querySample.indexOf("void main()")) +
+          "uniform int u_mode;void main(){vec3 E=lumen_irradiance(vec3(0.5),vec3(0,0,1),vec3(0,0,1));out_FragColor=u_mode==0?vec4(E*lumen_materialCoverage,lumen_dataCoverage):vec4(lumen_environmentCoverage);}",
+        {
+          uniformMap: {
+            ...w._uniforms(),
+            u_lumenGatherControl: () => new C.Cartesian4(0, 0, 1, 1),
+            u_mode: () => mode,
+          },
+        },
+      );
+      w._commands.coverageComposition = cmd;
+      let composed, fallback;
+      try {
+        w._draw("coverageComposition", fb, 0, 0, 1, 1);
+        composed = Array.from(w._read(fb, 1, 1));
+        mode = 1;
+        w._draw("coverageComposition", fb, 0, 0, 1, 1);
+        fallback = Array.from(w._read(fb, 1, 1));
+      } finally {
+        delete w._commands.coverageComposition;
+        cmd.shaderProgram.destroy();
+        fb.destroy();
+        tex.destroy();
+      }
       return {
         points,
         actual,
         legacy,
         low,
         separate,
+        composed,
+        fallback,
         errors: lumenTest.errors,
       };
     } finally {
@@ -105,6 +152,14 @@ try {
     assert.deepEqual(sample.irradiance, [0, 0, 0]);
     assert.equal(sample.coverage, 1);
   }
+  for (const v of report.result.composed.slice(0, 3))
+    assert.ok(Math.abs(v - 1) < 1e-6);
+  assert.ok(report.result.composed[3] > 0 && report.result.composed[3] < 1);
+  assert.deepEqual(
+    report.result.fallback,
+    [1, 1, 1, 1],
+    "resident missing support must still suppress unoccluded sky",
+  );
   assert.deepEqual(report.result.errors, []);
   report.status = "passed";
 } catch (e) {

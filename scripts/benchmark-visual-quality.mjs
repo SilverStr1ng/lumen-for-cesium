@@ -183,7 +183,8 @@ try {
     let previous;
     for (let i = 0; i < 100; i++) {
       const t = await new Promise(requestAnimationFrame);
-      if (previous !== undefined && i > 20) times.push(t - previous);
+      if (previous !== undefined && w.requestedRevision !== w.settledRevision)
+        times.push(t - previous);
       previous = t;
     }
     await trackedCompletion;
@@ -200,11 +201,14 @@ try {
       disabled,
       idle,
       updating: {
-        fps: 1000 / (times.reduce((a, b) => a + b, 0) / times.length),
+        fps: times.length
+          ? 1000 / (times.reduce((a, b) => a + b, 0) / times.length)
+          : null,
+        samples: times.length,
         p50: sorted[Math.floor(sorted.length * 0.5)],
         p95: sorted[Math.floor(sorted.length * 0.95)],
         scope:
-          "CPU rAF, includes settled frames; stage GPU times listed separately",
+          "CPU rAF intervals while requested revision is unsettled; stage GPU totals separately, not GPU completion",
       },
       firstPublishedSubmissionMilliseconds: first,
       finalSubmissionMilliseconds: final,
@@ -223,6 +227,7 @@ try {
       gBuffer: d.scene.gBuffer.enabled,
       actualHdrMsaaSamples:
         d.scene._view.sceneFramebuffer._colorFramebuffer.numSamples,
+      settings: await d.saveView(),
     };
   });
   for (const s of report.result.gl) {

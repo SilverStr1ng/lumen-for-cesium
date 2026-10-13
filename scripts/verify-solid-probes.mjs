@@ -35,6 +35,16 @@ assert.equal(
 console.log(
   "PASS actual glTF -> BVH -> relocation/classification rejects solid interiors",
 );
+assert.equal(
+  totalInside,
+  0,
+  "touching foundation/floor must escape without cycling",
+);
+assert.equal(
+  solver.positions[213 * 4 + 3],
+  1,
+  "foundation/floor/column junction has a bounded safe exit",
+);
 
 // Real intersections/classification/integration, including an explicitly double-sided solid.
 function geometryFor(
