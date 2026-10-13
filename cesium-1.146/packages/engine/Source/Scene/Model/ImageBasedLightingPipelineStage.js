@@ -54,6 +54,11 @@ ImageBasedLightingPipelineStage.process = function (
     "u_lumenDebugMode",
     ShaderDestination.FRAGMENT,
   );
+  shaderBuilder.addUniform(
+    "bool",
+    "u_lumenPbrDiffuseResponse",
+    ShaderDestination.FRAGMENT,
+  );
   const lumen = frameState.lumen;
   const lumenUniformMap = renderResources.uniformMap;
   lumenUniformMap.u_lumenEnabled = () =>
@@ -65,6 +70,8 @@ ImageBasedLightingPipelineStage.process = function (
   lumenUniformMap.u_lumenCoverage = () =>
     lumen?.world && !lumen.world.ready ? 0 : (lumen?.coverage ?? 0);
   lumenUniformMap.u_lumenDebugMode = () => lumen?.debugMode ?? 0;
+  lumenUniformMap.u_lumenPbrDiffuseResponse = () =>
+    lumen?.diffuseResponse === "cesium";
   if (frameState.context?.webgl2) {
     shaderBuilder.addDefine(
       "LUMEN_WORLD_SUPPORTED",

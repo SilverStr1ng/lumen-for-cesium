@@ -15,10 +15,23 @@ function Lumen(scene) {
   this._irradiance = new Cartesian3(0.5, 0.5, 0.5);
   this._coverage = 1.0;
   this._debugMode = 0;
+  this._diffuseResponse = "lambert";
   this.world = undefined;
 }
 
 Object.defineProperties(Lumen.prototype, {
+  /** lambert: controlled rho E/pi; cesium: reuse IBL Fresnel/multiscatter energy allocation. */
+  diffuseResponse: {
+    get() {
+      return this._diffuseResponse;
+    },
+    set(value) {
+      if (!["lambert", "cesium"].includes(value))
+        throw new DeveloperError("diffuseResponse must be lambert or cesium");
+      this._diffuseResponse = value;
+      this._scene.requestRender();
+    },
+  },
   /** Enable the controlled diffuse irradiance and component-aware shadows. */
   enabled: {
     get() {

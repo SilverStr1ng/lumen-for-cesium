@@ -41,6 +41,9 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     };
     ImageBasedLightingPipelineStage.process(resources, model, frameState);
     const uniforms = resources.uniformMap;
+    expect(uniforms.u_lumenPbrDiffuseResponse()).toBe(false);
+    lumen.diffuseResponse = "cesium";
+    expect(uniforms.u_lumenPbrDiffuseResponse()).toBe(true);
     expect(uniforms.u_lumenEnabled()).toBe(false);
     lumen.enabled = true;
     expect(uniforms.u_lumenEnabled()).toBe(true);
@@ -80,6 +83,9 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
+      "uniform bool u_lumenPbrDiffuseResponse;",
+      "uniform bool u_lumenLegacyKernel;",
+      "uniform vec4 u_lumenGatherControl;",
       "uniform vec3 u_lumenIrradiance;",
       "uniform float u_lumenCoverage;",
       "uniform int u_lumenDebugMode;",
@@ -163,6 +169,9 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
+      "uniform bool u_lumenPbrDiffuseResponse;",
+      "uniform bool u_lumenLegacyKernel;",
+      "uniform vec4 u_lumenGatherControl;",
       "uniform vec3 u_lumenIrradiance;",
       "uniform float u_lumenCoverage;",
       "uniform int u_lumenDebugMode;",
@@ -241,6 +250,9 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
+      "uniform bool u_lumenPbrDiffuseResponse;",
+      "uniform bool u_lumenLegacyKernel;",
+      "uniform vec4 u_lumenGatherControl;",
       "uniform vec3 u_lumenIrradiance;",
       "uniform float u_lumenCoverage;",
       "uniform int u_lumenDebugMode;",

@@ -1,3 +1,4 @@
+import { LightingEnvironment } from "./lighting-environment.js";
 const C = Cesium,
   $ = (id) => document.getElementById(id);
 // No Viewer default imagery/geocoder: only explicitly supplied local resources.
@@ -15,6 +16,10 @@ const widget = new C.CesiumWidget("view", {
   },
 });
 const scene = widget.scene;
+const environmentEnabled =
+  new URLSearchParams(location.search).get("ibl") === "dynamic";
+const lightingEnvironment = new LightingEnvironment(environmentEnabled);
+scene.atmosphere.dynamicLighting = C.DynamicAtmosphereLightingType.SCENE_LIGHT;
 scene.highDynamicRange = true;
 scene.gBuffer.enabled = false;
 scene.lumen.enabled = true;
@@ -94,8 +99,15 @@ const lightingController = {
     C.Cartesian3.negate(d, d);
     scene.light = new C.DirectionalLight({
       direction: C.Matrix3.multiplyByVector(rotation, d, new C.Cartesian3()),
-      intensity: 2,
+      color: new C.Color(...lighting.sunRadiance),
+      intensity: 1,
     });
+    const environmentChanged = lightingEnvironment.update(lighting);
+    if (environmentChanged && model?.environmentMapManager.enabled) {
+      model.environmentMapManager.atmosphereScatteringIntensity =
+        lightingEnvironment.sun.intensity;
+      model.environmentMapManager.reset();
+    }
   },
 };
 function options() {
@@ -293,13 +305,26 @@ async function reload() {
       forwardAxis: C.Axis.X,
       shadows: C.ShadowMode.ENABLED,
       incrementallyLoadTextures: false,
+      environmentMapOptions: {
+        enabled: environmentEnabled,
+        generateSphericalHarmonics: false,
+        mipmapLevels: 7,
+        gamma: 1,
+        brightness: 1,
+        atmosphereScatteringIntensity: lightingEnvironment.sun.intensity,
+      },
     });
     if (own !== generation) {
       fresh.destroy();
       return;
     }
     model = fresh;
-    fresh.environmentMapManager.enabled = false;
+    fresh.environmentMapManager.enabled = environmentEnabled;
+    if (environmentEnabled)
+      fresh.imageBasedLighting.imageBasedLightingFactor = new C.Cartesian2(
+        0,
+        1,
+      );
     scene.primitives.add(fresh);
     fresh.readyEvent.addEventListener(() => {
       if (own !== generation) return;
@@ -404,6 +429,9 @@ $("place").onclick = place;
 scene.postRender.addEventListener(() => {
   const w = scene.lumen.world;
   if (pendingLighting && w?.packet && !w.isDestroyed()) relight();
+  if (model?.environmentMapManager._specularMapReady)
+    lightingEnvironment.versions.specularPublished =
+      lightingEnvironment.versions.specularRequested;
   const current = !!w && w.requestedRevision === w.settledRevision;
   const grid = w?.packet?.grid;
   $("status").textContent =
@@ -508,6 +536,7 @@ window.earthLab = {
   anchor,
   lighting,
   lightingController,
+  lightingEnvironment,
   saveView,
   restoreView,
   camera,

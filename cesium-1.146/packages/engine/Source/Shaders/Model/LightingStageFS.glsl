@@ -84,10 +84,16 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         directColor *= lumen_shadowVisibility;
         vec3 irradiance = lumen_irradiance(position, normal, geometricNormal);
         queriedE = irradiance;
-        indirectDiffuse = material.diffuse * irradiance * (lumen_materialCoverage / czm_pi);
+        // Applied after computeIBL has derived the current material energy allocation.
     }
     #endif
 
+    #ifdef LUMEN_MODEL_LIGHTING
+    lumen_iblDiffuseResponse = material.diffuse;
+    lumen_environmentDiffuse = vec3(0.0);
+    lumen_environmentSpecular = vec3(0.0);
+    lumen_environmentMultiple = vec3(0.0);
+    #endif
     // Accumulate colors from base layer
     vec3 color = directColor + material.emissive;
     #ifdef USE_IBL_LIGHTING
@@ -100,6 +106,8 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
 
     #ifdef LUMEN_MODEL_LIGHTING
     if (u_lumenEnabled) {
+        vec3 response = u_lumenPbrDiffuseResponse ? lumen_iblDiffuseResponse : material.diffuse;
+        indirectDiffuse = response * queriedE * (lumen_materialCoverage / czm_pi);
         color += indirectDiffuse;
         if (u_lumenDebugMode == 1) color = directColor;
         if (u_lumenDebugMode == 2) color = indirectDiffuse;

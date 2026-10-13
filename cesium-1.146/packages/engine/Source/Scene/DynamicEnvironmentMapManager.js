@@ -34,6 +34,7 @@ import ConvolveSpecularMapVS from "../Shaders/ConvolveSpecularMapVS.js";
 /**
  * @typedef {object} DynamicEnvironmentMapManager.ConstructorOptions
  * Options for the DynamicEnvironmentMapManager constructor
+ * @property {boolean} [generateSphericalHarmonics=true] Generate diffuse SH using a synchronous readback. Disable for specular-only/local-GI rendering.
  * @property {boolean} [enabled=true] If true, the environment map and related properties will continue to update.
  * @property {number} [mipmapLevels=7] The maximum desired number of mipmap levels to generate for specular maps. More mipmap levels will produce a higher resolution specular reflection. The actual number of mipmaps used will be bounded by the cubemap texture size supported on the client machine. The number of mipmaps must be at least one for the environment map to be generated.
  * @property {number} [maximumSecondsDifference=3600] The maximum amount of elapsed seconds before a new environment map is created.
@@ -70,6 +71,7 @@ import ConvolveSpecularMapVS from "../Shaders/ConvolveSpecularMapVS.js";
  */
 function DynamicEnvironmentMapManager(options) {
   this._position = undefined;
+  this._specularMapReady = false;
 
   this._radianceMapDirty = false;
   this._radianceCommandsDirty = false;
@@ -131,6 +133,12 @@ function DynamicEnvironmentMapManager(options) {
    * @default true
    */
   this.enabled = options.enabled ?? true;
+
+  /** Generate/read back diffuse SH. Disable for specular-only rendering with CPU supplied SH or local GI.
+   * @type {boolean}
+   * @default true
+   */
+  this.generateSphericalHarmonics = options.generateSphericalHarmonics ?? true;
 
   /**
    * Disables updates. For internal use.
@@ -278,7 +286,7 @@ Object.defineProperties(DynamicEnvironmentMapManager.prototype, {
    */
   maximumMipmapLevel: {
     get: function () {
-      return this._mipmapLevels;
+      return Math.max(this._mipmapLevels - 1, 0);
     },
   },
 
@@ -399,6 +407,7 @@ DynamicEnvironmentMapManager.setOwner = function (
  * @private
  */
 DynamicEnvironmentMapManager.prototype.reset = function () {
+  this._specularMapReady = false;
   let length = this._radianceMapComputeCommands.length;
   for (let i = 0; i < length; ++i) {
     if (defined(this._radianceMapComputeCommands[i])) {
@@ -634,7 +643,8 @@ function updateSpecularMaps(manager, frameState) {
     // All faces for each mipmap level have been copied
     const length = manager._specularMapTextures.length;
     if (facesCopied >= length) {
-      manager._irradianceCommandDirty = true;
+      manager._specularMapReady = true;
+      manager._irradianceCommandDirty = manager.generateSphericalHarmonics;
 
       if (mipmapLevels > 1) {
         radianceCubeMap.sampler = new Sampler({

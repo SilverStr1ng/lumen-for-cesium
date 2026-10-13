@@ -2,6 +2,7 @@
 vec3 lumen_environmentDiffuse = vec3(0.0);
 vec3 lumen_environmentSpecular = vec3(0.0);
 vec3 lumen_environmentMultiple = vec3(0.0);
+vec3 lumen_iblDiffuseResponse = vec3(0.0);
 #endif
 #ifdef DIFFUSE_IBL
 vec3 sampleDiffuseEnvironment(vec3 cubeDir)
@@ -67,23 +68,32 @@ vec3 textureIBL(vec3 viewDirectionEC, vec3 normalEC, czm_modelMaterial material)
     vec2 brdfLut = texture(czm_brdfLut, vec2(NdotV, roughness)).rg;
     vec3 FssEss = specularWeight * (singleScatterFresnel * brdfLut.x + brdfLut.y);
 
+    vec3 averageFresnel = f0 + (1.0 - f0) / 21.0;
+    float Ems = specularWeight * (1.0 - brdfLut.x - brdfLut.y);
+    vec3 FmsEms = FssEss * averageFresnel * Ems / (1.0 - averageFresnel * Ems);
+    // material.diffuse already contains the metallic attenuation. No second (1-metallic).
+    vec3 dielectricScattering = max(vec3(0.0), 1.0 - FssEss - FmsEms) * material.diffuse;
+    vec3 normalMC = normalize(model_iblReferenceFrameMatrix * normalEC);
     #ifdef DIFFUSE_IBL
-        vec3 normalMC = normalize(model_iblReferenceFrameMatrix * normalEC);
+        // Cesium SH is a diffuse radiance response (E/pi), unlike the DDGI linear E atlas.
         vec3 irradiance = sampleDiffuseEnvironment(normalMC);
-
-        vec3 averageFresnel = f0 + (1.0 - f0) / 21.0;
-        float Ems = specularWeight * (1.0 - brdfLut.x - brdfLut.y);
-        vec3 FmsEms = FssEss * averageFresnel * Ems / (1.0 - averageFresnel * Ems);
-        vec3 dielectricScattering = (1.0 - FssEss - FmsEms) * material.diffuse;
-        vec3 diffuseContribution = irradiance * (FmsEms + dielectricScattering) * model_iblFactor.x;
+        vec3 diffuseContribution = irradiance * dielectricScattering * model_iblFactor.x;
     #else
         vec3 diffuseContribution = vec3(0.0);
     #endif
-
     #ifdef LUMEN_MODEL_LIGHTING
-    if (u_lumenEnabled) {
-        diffuseContribution *= 1.0 - lumen_materialCoverage;
-    }
+        lumen_iblDiffuseResponse = dielectricScattering;
+        // Coverage replaces diffuse energy only; it never suppresses specular multiple scattering.
+        if (u_lumenEnabled) diffuseContribution *= 1.0 - lumen_materialCoverage;
+    #endif
+    #ifdef SPECULAR_IBL
+        // Broad prefiltered environment supplies the existing multiscatter approximation,
+        // including when diffuse IBL factor is zero. It is not directional DDGI radiance.
+        vec3 multipleContribution = sampleSpecularEnvironment(normalMC, 1.0) * FmsEms * model_iblFactor.y;
+    #elif defined(DIFFUSE_IBL)
+        vec3 multipleContribution = irradiance * FmsEms * model_iblFactor.x;
+    #else
+        vec3 multipleContribution = vec3(0.0);
     #endif
 
     #ifdef USE_ANISOTROPY
@@ -110,7 +120,8 @@ vec3 textureIBL(vec3 viewDirectionEC, vec3 normalEC, czm_modelMaterial material)
     #ifdef LUMEN_MODEL_LIGHTING
     lumen_environmentDiffuse = diffuseContribution;
     lumen_environmentSpecular = specularContribution;
+    lumen_environmentMultiple = multipleContribution;
     #endif
-    return diffuseContribution + specularContribution;
+    return diffuseContribution + specularContribution + multipleContribution;
 }
 #endif
