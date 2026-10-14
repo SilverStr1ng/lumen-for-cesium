@@ -662,6 +662,7 @@ class LumenGpuWorld {
         (this._jobOptions ?? this.options).visibilityMode === "optimized",
       u_queryAnyHit: () => this._diagnosticAnyHit ?? false,
       u_queryStats: () => this._diagnosticStats ?? false,
+      u_transportPart: () => this._transportPart ?? 0,
       u_neutral: () => this._lighting.neutral,
       u_lumenProbeIrradiance: () =>
         this._phase === "query" && this._sampleDisplay
@@ -715,7 +716,9 @@ class LumenGpuWorld {
         `${variant && mode === "lut" ? "#define LUMEN_USE_LUT\n" : ""}${shaders[name]}`,
         {
           uniformMap:
-            name === "queryFinalGather" || name === "queryExactProbeVisibility"
+            name === "queryFinalGather" ||
+            name === "queryExactProbeVisibility" ||
+            name === "queryTransport"
               ? this._finalGatherQueryUniforms()
               : this._uniforms(),
           renderState: RenderState.fromCache({
@@ -1583,6 +1586,40 @@ class LumenGpuWorld {
         () => this.finalGatherUniforms(this._fgInput)[key](),
       ]),
     );
+  }
+  diagnoseTransport(rays, { snapshot = this.finalGatherSnapshot } = {}) {
+    if (!snapshot) throw Error("FG snapshot required for transport diagnostic");
+    snapshot.assertAlive();
+    this._fgInput = snapshot.retain();
+    try {
+      const names = [
+        "hit",
+        "sky",
+        "emission",
+        "sun",
+        "ddgi",
+        "position",
+        "normal",
+        "solarOrigin",
+        "solarHit",
+      ];
+      return Object.fromEntries(
+        names.map((name, part) => {
+          this._transportPart = part;
+          const values = this._query("queryTransport", rays);
+          if (name === "hit" || name === "solarHit")
+            for (const h of values) {
+              if (Math.abs(h[0]) > 1)
+                h[0] = Math.sign(h[0]) * (this._order[Math.abs(h[0]) - 2] + 2);
+            }
+          return [name, values];
+        }),
+      );
+    } finally {
+      this._transportPart = undefined;
+      this._fgInput.release();
+      this._fgInput = undefined;
+    }
   }
   sampleFinalGather(
     points,

@@ -165,6 +165,7 @@ export class BVH {
       anyHit = false,
       counters,
       tieBreak,
+      tMin = 0.0001,
     } = {},
   ) {
     this.stats.queries++;
@@ -241,7 +242,7 @@ export class BVH {
         if (v < 0 || u + v > 1) continue;
         const distance = (bx * qx + by * qy + bz * qz) * invDet;
         if (
-          distance < 0.0001 ||
+          distance < tMin ||
           distance > best ||
           (distance === best &&
             (!result ||

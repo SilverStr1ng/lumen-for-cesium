@@ -329,6 +329,25 @@ export const querySample = `${gather}
 uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
 export const fgCopy = `precision highp sampler2D;uniform sampler2D u_fgCopySource;void main(){out_FragColor=texelFetch(u_fgCopySource,ivec2(gl_FragCoord.xy),0);}`;
+// Explicit diagnostic rays; no readback or source ablation in production.
+export const queryTransport = `${common + gather}
+uniform sampler2D u_queryOrigin,u_queryDirection;
+uniform int u_transportPart;
+void main(){ivec2 c=ivec2(gl_FragCoord.xy);vec3 o=texelFetch(u_queryOrigin,c,0).xyz,d=texelFetch(u_queryDirection,c,0).xyz;
+ vec4 h=trace(o,d,completeDistance(o),-1,false);if(u_transportPart==0){out_FragColor=h;return;}
+ if(h.x==-1.0){out_FragColor=vec4(0,0,0,-1);return;}
+ if(h.x==0.0){out_FragColor=vec4(u_transportPart==1&&(u_upperHemisphere==0||d.z>=0.0)?u_skyRadiance:vec3(0),1);return;}
+ vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
+ if(u_transportPart==5){out_FragColor=vec4(p,black?0.0:1.0);return;}
+ if(u_transportPart==6){out_FragColor=vec4(n,1);return;}
+ if(black){out_FragColor=vec4(0,0,0,1);return;}
+ if(u_transportPart==2){out_FragColor=vec4(emission,1);return;}
+ if(u_transportPart==4){vec4 e=lumen_worldIrradiance(p,n);out_FragColor=vec4(rho*e.rgb/czm_pi,e.a);return;}
+ vec3 origin=p+n*0.015;vec4 s=trace(origin,u_sunDirection,completeDistance(origin),t,false);
+ if(u_transportPart==7){out_FragColor=vec4(origin,length(origin-p));return;}
+ if(u_transportPart==8){out_FragColor=s;return;}
+ out_FragColor=vec4(s.x==0.0?rho*u_sunRadiance*max(0.0,dot(n,u_sunDirection))/czm_pi:vec3(0),s.x==-1.0?-1.0:1.0);
+}`;
 const finalGather = `${finalGatherSampling}
 vec4 fgRadiance(vec4 h,vec3 d){
  if(h.x==-1.0)return vec4(0,0,0,-1);
@@ -404,7 +423,11 @@ export function receiverFused(batch) {
   }
   return (
     `${
-      common + gather + finalGather + receiverNormals.declarations + receiverNormals.functions
+      common +
+      gather +
+      finalGather +
+      receiverNormals.declarations +
+      receiverNormals.functions
     }uniform sampler2D u_receiverPosition,u_receiverNormal,u_fgAccumulation;uniform ivec2 u_receiverOffset;uniform int u_fgStart;\n` +
     `void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);if(x.a<0.5){out_FragColor=vec4(0);return;}vec4 n=texelFetch(u_receiverNormal,r,0);vec3 ng=lumen_fgNg(n),ns=lumen_fgNs(n),o=x.xyz+ng*u_fgRayBias;float distance=completeDistance(o);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);for(int j=0;j<${
       batch
