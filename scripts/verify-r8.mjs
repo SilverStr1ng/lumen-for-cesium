@@ -107,7 +107,10 @@ const listed = (args) =>
   execFileSync("git", args, { encoding: "utf8" })
     .trim()
     .split(/\r?\n/)
-    .filter((p) => p && !p.startsWith(out + "/"));
+    .filter(
+      (p) =>
+        p && !p.startsWith(out + "/") && p !== process.env.LUMEN_PARENT_RUN_LOG,
+    );
 const tracked = listed(["ls-files", "reports"]),
   untracked = () =>
     listed(["ls-files", "--others", "--exclude-standard", "reports"]);

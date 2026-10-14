@@ -112,7 +112,11 @@ if (cached) {
         [`scripts/${name}.mjs`, ...parameters],
         {
           windowsHide: true,
-          env: { ...process.env, LUMEN_REPORT_DIRECTORY: directory },
+          env: {
+            ...process.env,
+            LUMEN_REPORT_DIRECTORY: directory,
+            LUMEN_PARENT_RUN_LOG: log,
+          },
         },
       );
       child.stdout.on("data", (b) => appendFileSync(log, b));
