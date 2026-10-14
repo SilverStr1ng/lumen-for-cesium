@@ -183,7 +183,10 @@ function resourceMetrics() {
   };
 }
 Object.defineProperty(fg, "additionalSceneBytes", {
-  get: () => resourceMetrics().sceneBytes,
+  get: () => {
+    const r = resourceMetrics();
+    return r.sceneBytes - r.surfaceCacheBytes;
+  },
   configurable: true,
 });
 function invalidate() {
@@ -455,7 +458,8 @@ async function rebuild(captured, own) {
       return { cancelled: true };
     }
     while (own === generation && !disposed && scene.lumen.world === w) {
-      await prepareRadianceSource(w, own);
+      const source = await prepareRadianceSource(w, own);
+      if (source !== sourceRequest) continue;
       if (lightingKey(w.options) === lightingKey(lighting)) break;
       await w.solve({ ...lighting });
     }
@@ -609,12 +613,13 @@ async function relight(changes = {}) {
     key === lightingKey(lighting) &&
     revision === w.settledRevision
   ) {
-    await prepareRadianceSource(w, own);
+    const source = await prepareRadianceSource(w, own);
     if (
       own !== generation ||
       disposed ||
       scene.lumen.world !== w ||
-      revision !== w.settledRevision
+      revision !== w.settledRevision ||
+      source !== sourceRequest
     )
       return { cancelled: true };
     scene.lumen.enabled = true;
@@ -631,12 +636,12 @@ async function prepareRadianceSource(w, own) {
       } else w.surfaceCache.enabled = false;
     }
     sourceStatus = "即时 fgRadiance · 参考后端";
-    return;
+    return request;
   }
   if (w.surfaceCache?.matches(w.finalGatherSnapshot)) {
     w.surfaceCache.enabled = true;
     sourceStatus = "实验表面缓存就绪";
-    return;
+    return request;
   }
   setPhase("building-surface-cache", own);
   sourceStatus = "实验缓存构建中；旧缓存不参与";
@@ -649,7 +654,9 @@ async function prepareRadianceSource(w, own) {
       request !== sourceRequest ||
       own !== generation ||
       disposed ||
-      radianceSource !== "cache"
+      radianceSource !== "cache" ||
+      cache.destroyed ||
+      w.finalGatherSnapshot !== cache.snapshot
     )
       cache.enabled = false;
     else
@@ -658,6 +665,7 @@ async function prepareRadianceSource(w, own) {
     if (request === sourceRequest && own === generation && !disposed)
       sourceStatus = `即时回退：${e.message}`;
   }
+  return request;
 }
 async function setRadianceSource(value) {
   if (!["immediate", "cache"].includes(value))
@@ -670,8 +678,15 @@ async function setRadianceSource(value) {
     w = scene.lumen.world;
   if (dirty || playing || !w?.ready) return;
   scene.lumen.enabled = false;
-  await prepareRadianceSource(w, own);
-  if (own === generation && !disposed && scene.lumen.world === w) {
+  const revision = w.settledRevision,
+    source = await prepareRadianceSource(w, own);
+  if (
+    own === generation &&
+    !disposed &&
+    scene.lumen.world === w &&
+    source === sourceRequest &&
+    revision === w.settledRevision
+  ) {
     scene.lumen.enabled = true;
     setPhase("converging", own);
   }

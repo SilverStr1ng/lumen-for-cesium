@@ -41,6 +41,13 @@ const nearest = new Sampler({
  * output textures; raw round snapshots remain owned by the static GPU world.
  * Unsupported views/surfaces and resource failures use the existing DDGI. @private */
 class LumenFinalGather {
+  get additionalOwnedBytes() {
+    let bytes = this.additionalSceneBytes;
+    for (const cache of this.lumen.world?._surfaceCaches ?? []) {
+      bytes += cache.additionalBytes;
+    }
+    return bytes;
+  }
   constructor(lumen) {
     this.lumen = lumen;
     this.scene = lumen._scene;
@@ -253,7 +260,7 @@ class LumenFinalGather {
       reconstruction:
         this.sampling === "reconstructed" && this.reconstructionEnabled,
       snapshotBytes,
-      additionalSceneBytes: this.additionalSceneBytes,
+      additionalSceneBytes: this.additionalOwnedBytes,
       memoryBudget: this.maxMemoryBytes,
       invocationBudget: this.maxRayInvocations,
       maximumTextureSize: ContextLimits.maximumTextureSize,
@@ -822,7 +829,7 @@ class LumenFinalGather {
         traversalBudget: this.traversalBudget,
         geometryRayUpperBound: l.geometrySlots,
         snapshotBytes,
-        additionalSceneBytes: this.additionalSceneBytes,
+        additionalSceneBytes: this.additionalOwnedBytes,
         totalAdditionalBytes: l.totalBytes,
         peakAdditionalBytes: Math.max(
           this.metrics.peakAdditionalBytes ?? 0,
@@ -880,7 +887,8 @@ class LumenFinalGather {
     this.metrics.accumulationPasses = 0;
     this.metrics.memoryBytes = 0;
     this.metrics.snapshotBytes = finalGatherSnapshotBytes(this.lumen.world);
-    this.metrics.totalAdditionalBytes = this.metrics.snapshotBytes + this.additionalSceneBytes;
+    this.metrics.totalAdditionalBytes =
+      this.metrics.snapshotBytes + this.additionalOwnedBytes;
   }
   isDestroyed() {
     return this._destroyed === true;

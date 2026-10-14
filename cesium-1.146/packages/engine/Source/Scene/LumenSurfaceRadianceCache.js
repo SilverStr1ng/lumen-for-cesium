@@ -97,7 +97,7 @@ class LumenSurfaceRadianceCache {
     }
     // Account the temporary transferred buffers and both generation images.
     if (
-      (fg.additionalSceneBytes ?? 0) +
+      (fg.additionalOwnedBytes ?? 0) +
         (fg.metrics.snapshotBytes ?? 0) +
         layout.gpuBytes +
         8192 >
@@ -120,7 +120,7 @@ class LumenSurfaceRadianceCache {
         this.additionalBytes,
       );
       const total =
-        (fg.additionalSceneBytes ?? 0) +
+        (fg.additionalOwnedBytes ?? 0) +
         (fg.metrics.snapshotBytes ?? 0) +
         (fg.metrics.memoryBytes ?? 0);
       fg.metrics.peakAdditionalBytes = Math.max(
@@ -205,10 +205,14 @@ class LumenSurfaceRadianceCache {
           }
         }
         await new Promise((resolve) => setTimeout(resolve, 0));
+        if (this.destroyed || w.finalGatherSnapshot !== s)
+          throw Error("Superseded surface source after submission");
       }
       this.metrics.round = this.round;
       this.texture = output.texture;
     }
+    if (this.destroyed || w.finalGatherSnapshot !== s)
+      throw Error("Superseded surface source before publication");
     this.ready = true;
     this.enabled = true;
     this.metrics.status = "ready";

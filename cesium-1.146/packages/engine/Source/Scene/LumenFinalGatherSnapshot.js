@@ -31,12 +31,20 @@ class LumenFinalGatherSnapshot {
       // A smaller budget or retained diagnostic lease may require dropping
       // receiver/history caches before cloning. The next frame replans them.
       if (
-        fg.metrics.memoryBytes + finalGatherSnapshotBytes(world) + bytes + (fg.additionalSceneBytes ?? 0) >
+        fg.metrics.memoryBytes +
+          finalGatherSnapshotBytes(world) +
+          bytes +
+          (fg.additionalOwnedBytes ?? fg.additionalSceneBytes ?? 0) >
         fg.maxMemoryBytes
       ) {
         fg.release();
       }
-      if (finalGatherSnapshotBytes(world) + bytes + (fg.additionalSceneBytes ?? 0) > fg.maxMemoryBytes) {
+      if (
+        finalGatherSnapshotBytes(world) +
+          bytes +
+          (fg.additionalOwnedBytes ?? fg.additionalSceneBytes ?? 0) >
+        fg.maxMemoryBytes
+      ) {
         throw Error("FG snapshots exceed additional memory budget");
       }
     }
@@ -120,7 +128,10 @@ class LumenFinalGatherSnapshot {
       return;
     }
     const snapshotBytes = finalGatherSnapshotBytes(this.world, this),
-      total = fg.metrics.memoryBytes + snapshotBytes + (fg.additionalSceneBytes ?? 0);
+      total =
+        fg.metrics.memoryBytes +
+        snapshotBytes +
+        (fg.additionalOwnedBytes ?? fg.additionalSceneBytes ?? 0);
     fg.metrics.snapshotBytes = snapshotBytes;
     fg.metrics.totalAdditionalBytes = total;
     fg.metrics.peakAdditionalBytes = Math.max(
