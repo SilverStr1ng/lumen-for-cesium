@@ -7,6 +7,8 @@ import { referenceIrradiance } from "../lumen/path-reference.js";
 const out =
   process.env.LUMEN_REPORT_DIRECTORY ??
   "reports/ballpool-curved-receivers-v8/curved-first";
+const contact = process.env.LUMEN_CONTACT_TRANSPORT === "1",
+  quick = process.env.LUMEN_CURVE_QUICK === "1";
 await mkdir(out, { recursive: true });
 const browser = await launchBrowser(),
   report = {
@@ -19,6 +21,13 @@ const browser = await launchBrowser(),
       backendDelta: 0.00001,
     },
     rows: [],
+    configuration: {
+      contact,
+      quick,
+      source: process.env.LUMEN_RADIANCE_SOURCE ?? "immediate",
+      referencePolicy: contact ? "physical" : "legacy-15mm",
+      legacyComparison: contact,
+    },
     failures: [],
     errors: [],
     renderErrors: [],
@@ -35,7 +44,7 @@ const nrmse = (actual, reference) =>
       ),
   );
 try {
-  for (const count of [1, 2]) {
+  for (const count of quick ? [1] : [1, 2]) {
     const page = await browser.newPage({
       viewport: { width: 960, height: 600 },
     });
@@ -44,7 +53,7 @@ try {
       if (m.type() === "error") report.renderErrors.push(m.text());
     });
     await page.goto(
-      `http://localhost:8090/demo/ballpool.html?diagnostic=1&count=${count}&camera=close`,
+      `http://localhost:8090/demo/ballpool.html?diagnostic=1&count=${count}&camera=close&radianceSource=${process.env.LUMEN_RADIANCE_SOURCE ?? "immediate"}`,
     );
     await page.waitForFunction(
       () => ballPool.snapshot().phase === "static-ready",
@@ -59,13 +68,9 @@ try {
         `data:model/gltf+json;base64,${Buffer.from(JSON.stringify(gltf)).toString("base64")}`,
       ),
       bvh = new BVH(geometry, { strategy: "sah" });
-    for (const scenario of [
-      "day",
-      "black",
-      "white-sky",
-      "sun-turned",
-      "colored-bounce",
-    ]) {
+    for (const scenario of quick
+      ? ["day"]
+      : ["day", "black", "white-sky", "sun-turned", "colored-bounce"]) {
       const light =
         scenario === "black"
           ? { sunRadiance: [0, 0, 0], skyRadiance: [0, 0, 0] }
@@ -88,8 +93,8 @@ try {
         ballPool.widget.useDefaultRenderLoop = true;
         return ballPool.relight(changes);
       }, light);
-      for (const seed of [0, 5, 19]) {
-        for (const view of ["close", "contact"]) {
+      for (const seed of quick ? [0] : [0, 5, 19]) {
+        for (const view of quick ? ["contact"] : ["close", "contact"]) {
           const capture = await page.evaluate(
               async ({ seed, view }) => {
                 const f = ballPool.scene.lumen.finalGather;
@@ -144,6 +149,9 @@ try {
               { seed, view },
             ),
             c = capture.capture;
+          capture.lighting.rayOriginPolicy = contact
+            ? "physical"
+            : "legacy-15mm";
           assert(c.points.length >= 6, "must sample actual curved receivers");
           const reference = c.points.map((p, i) =>
               referenceIrradiance(
@@ -197,6 +205,22 @@ try {
                       status: points.length ? "measured" : "not-run",
                       points,
                       reference,
+                      legacyReference: contact
+                        ? points.map((p, i) =>
+                            referenceIrradiance(
+                              bvh,
+                              p.position,
+                              p.normal,
+                              {
+                                ...capture.lighting,
+                                rayOriginPolicy: "legacy-15mm",
+                              },
+                              8192,
+                              5019 + i,
+                              p.geometricNormal,
+                            ),
+                          )
+                        : undefined,
                       linearNRMSE: points.length
                         ? nrmse(
                             points.map((p) => p.E),
@@ -234,6 +258,27 @@ try {
               lighting: capture.lighting,
               resource: capture.state.resources,
             };
+          if (contact) {
+            row.legacyReference = c.points.map((p, i) =>
+              referenceIrradiance(
+                bvh,
+                p.position,
+                p.normal,
+                { ...capture.lighting, rayOriginPolicy: "legacy-15mm" },
+                8192,
+                3019 + i,
+                p.geometricNormal,
+              ),
+            );
+            row.source = await page.evaluate(() => ({
+              requested: document.getElementById("radianceSource").value,
+              actual: ballPool.world.surfaceCache?.enabled
+                ? "cache"
+                : "immediate",
+              cache: ballPool.world.surfaceCache?.metrics,
+              resource: ballPool.snapshot().resources,
+            }));
+          }
           report.rows.push(row);
           await writeFile(
             out + "/curved.json",
@@ -248,11 +293,18 @@ try {
               c.maxHistoryNormalDegrees <= report.limits.historyNormalDegrees,
             );
             for (const [name, region] of Object.entries(row.regionErrors)) {
-              if (region.points.length)
+              if (region.points.length) {
                 assert(
                   region.linearNRMSE <= report.limits.linearNRMSE,
                   `${name} independent E NRMSE ${region.linearNRMSE}`,
                 );
+                if (contact) {
+                  assert(
+                    region.queryNRMSE <= report.limits.queryNRMSE,
+                    `${name} independent query NRMSE ${region.queryNRMSE}`,
+                  );
+                }
+              }
             }
             if (view === "contact")
               assert(

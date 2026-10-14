@@ -64,6 +64,13 @@
         </select></label
       >
       <label
+        >命中光照来源<select id="radianceSource">
+          <option value="immediate">即时 fgRadiance · 参考</option>
+          <option value="cache">静态表面缓存 · 实验候选</option>
+        </select></label
+      >
+      <div id="sourceState" role="status">即时命中着色</div>
+      <label
         >太阳方位<input id="sun" type="range" min="0" max="360" value="140"
       /></label>
       <label

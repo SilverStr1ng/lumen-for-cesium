@@ -23,6 +23,7 @@ import * as shaders from "./LumenGpuShaders.js";
 import LumenProbeDisplay from "./LumenProbeDisplay.js";
 import LumenGpuTimer from "./LumenGpuTimer.js";
 import LumenFinalGatherSnapshot from "./LumenFinalGatherSnapshot.js";
+import LumenSurfaceRadianceCache from "./LumenSurfaceRadianceCache.js";
 
 const defaultGatherControl = new Cartesian4(0, 0, -1, -1);
 const nearest = new Sampler({
@@ -118,6 +119,7 @@ class LumenGpuWorld {
     this._fgSnapshots = new Set();
     this._captureFinalGather = !!options.captureFinalGather;
     this._requests = new Map();
+    this._surfaceCaches = new Set();
     this._requestId = 0;
     this._queries = [];
     this._batches = {};
@@ -164,7 +166,13 @@ class LumenGpuWorld {
         this.status = data.phase;
       }
       if (data.type === "error") {
-        this._fail(new Error(data.message));
+        const request = this._requests.get(data.id);
+        if (request) {
+          request.reject(new Error(data.message));
+          this._requests.delete(data.id);
+        } else {
+          this._fail(new Error(data.message));
+        }
       }
       if (data.type === "response") {
         this._requests.get(data.id)?.resolve(data.result);
@@ -522,6 +530,13 @@ class LumenGpuWorld {
       u_fgEpoch: () => this._fgEpoch ?? 0,
       u_fgPixelOffset: () => this._fgPixelOffset ?? Cartesian2.ZERO,
       u_fgRayBias: () => 0.0002,
+      u_surfaceEnabled: () =>
+        this.surfaceCache?.enabled === true &&
+        this.surfaceCache.matches(snapshot),
+      u_surfaceMetadata: () =>
+        this.surfaceCache?.metadata ?? this.scene.context.defaultTexture,
+      u_surfaceRadiance: () =>
+        this.surfaceCache?.texture ?? this.scene.context.defaultTexture,
     };
   }
   _initialize(p) {
@@ -721,7 +736,8 @@ class LumenGpuWorld {
           uniformMap:
             name === "queryFinalGather" ||
             name === "queryExactProbeVisibility" ||
-            name === "queryTransport"
+            name === "queryTransport" ||
+            name === "querySurfaceStatus"
               ? this._finalGatherQueryUniforms()
               : this._uniforms(),
           renderState: RenderState.fromCache({
@@ -1377,6 +1393,10 @@ class LumenGpuWorld {
     }
     const next = { ...this.options, ...options };
     this._validate(next);
+    for (const cache of [...this._surfaceCaches]) {
+      cache.destroy();
+    }
+    this.surfaceCache = undefined;
     this._reject?.(new Error("GPU lighting generation superseded"));
     this._rejectFirst?.(new Error("GPU lighting generation superseded"));
     this._promise();
@@ -1416,6 +1436,25 @@ class LumenGpuWorld {
   }
   surfaces(materials) {
     return this._request("surfaces", { materials });
+  }
+  async buildSurfaceRadiance(options) {
+    const s = this.finalGatherSnapshot;
+    if (!this.ready || !s) {
+      throw Error("Complete static snapshot required");
+    }
+    this.surfaceCache?.destroy();
+    this.scene.lumen.finalGather.release();
+    const cache = (this.surfaceCache = new LumenSurfaceRadianceCache(this, s));
+    try {
+      await cache.build(options);
+      return cache;
+    } catch (e) {
+      cache.destroy();
+      if (this.surfaceCache === cache) {
+        this.surfaceCache = undefined;
+      }
+      throw e;
+    }
   }
   // Diagnostics only. Normal rendering never calls readPixels or waits for GPU completion.
   _read(fb, width, height, attachment = 0, datatype = PixelDatatype.FLOAT) {
@@ -1607,11 +1646,15 @@ class LumenGpuWorld {
         "normal",
         "solarOrigin",
         "solarHit",
+        "cacheStatus",
       ];
       return Object.fromEntries(
         names.map((name, part) => {
           this._transportPart = part;
-          const values = this._query("queryTransport", rays);
+          const values = this._query(
+            part === 9 ? "querySurfaceStatus" : "queryTransport",
+            rays,
+          );
           if (name === "hit" || name === "solarHit") {
             for (const h of values) {
               if (Math.abs(h[0]) > 1) {
@@ -1825,6 +1868,10 @@ class LumenGpuWorld {
     this.scene.requestRender();
   }
   _release() {
+    for (const cache of [...this._surfaceCaches]) {
+      cache.destroy();
+    }
+    this.surfaceCache = undefined;
     this._unregisterTimer?.();
     for (const snapshot of [...this._fgSnapshots]) {
       snapshot.destroy();

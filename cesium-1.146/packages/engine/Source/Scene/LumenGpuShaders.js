@@ -404,6 +404,14 @@ void main(){vec4 address=texelFetch(u_surfaceSamples,ivec2(gl_FragCoord.xy),0);
  vec3 value=direct+rho*incoming/czm_pi;
  out_FragColor=vec4(value,any(greaterThan(value,vec3(65504)))?0.0:1.0);
 }`;
+export const querySurfaceStatus=`${common+surfaceRadiance}
+uniform sampler2D u_queryOrigin,u_queryDirection;
+void main(){ivec2 c=ivec2(gl_FragCoord.xy);vec3 o=texelFetch(u_queryOrigin,c,0).xyz,d=texelFetch(u_queryDirection,c,0).xyz;vec4 h=trace(o,d,completeDistance(o),-1,false);
+ if(h.x==-1.0){out_FragColor=vec4(0,0,1,1);return;}if(h.x==0.0){out_FragColor=vec4(0,1,0,0);return;}
+ vec3 p,n,r,e;int t;bool black;surface(h,p,n,r,e,t,black);if(black){out_FragColor=vec4(0,1,0,0);return;}
+ if(!u_surfaceEnabled){out_FragColor=vec4(0,0,0,1);return;}
+ vec4 meta=fetch1(u_surfaceMetadata,t),L=surfaceCached(h);out_FragColor=vec4(meta.y>0.0?1.0:0.0,L.a>.5?1.0:0.0,L.a<0.0?1.0:0.0,L.a>.5?0.0:1.0);
+}`;
 const finalGather = `${finalGatherSampling + surfaceRadiance}
 vec4 fgRadiance(vec4 h,vec3 d){
  if(h.x==-1.0)return vec4(0,0,0,-1);

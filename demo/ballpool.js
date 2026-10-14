@@ -63,6 +63,11 @@ let descriptor = createBallPool({
   worldBuilds = 0,
   tossId = 0,
   failNext = false;
+let radianceSource =
+    params.get("radianceSource") === "cache" ? "cache" : "immediate",
+  sourceStatus = "即时命中着色",
+  sourceRequest = 0;
+$("radianceSource").value = radianceSource;
 const pendingModels = new Set(),
   loadingCancels = new Set(),
   urls = new Set(),
@@ -80,6 +85,7 @@ const labels = {
   "frozen-pending": "姿态已暂停；需要定格并更新 GI",
   "building-world": "定格姿态：正在构建新几何快照",
   lighting: "定格姿态：正在求解间接光",
+  "building-surface-cache": "定格姿态：正在构建实验表面缓存",
   converging: "定格姿态：FG 正在收敛",
   failed: "更新失败：基础照明预览",
   cancelled: "旧请求已取消",
@@ -134,6 +140,7 @@ function resourceMetrics() {
     mainWorldCpuBytes =
       (w?._order?.byteLength ?? 0) + (w?._baseMaterials?.byteLength ?? 0),
     physicsWasmReservedBytes = BallPoolPhysics.memoryBytes,
+    surfaceCacheBytes = w?.surfaceCache?.additionalBytes ?? 0,
     sceneBytes =
       modelGpuBytes +
       worldGeometryBytes +
@@ -141,7 +148,8 @@ function resourceMetrics() {
       assetCpuBytes +
       workerCpuBytes +
       mainWorldCpuBytes +
-      physicsWasmReservedBytes,
+      physicsWasmReservedBytes +
+      surfaceCacheBytes,
     total =
       sceneBytes +
       (fg.metrics.memoryBytes ?? 0) +
@@ -159,6 +167,8 @@ function resourceMetrics() {
     workerCpuBytes,
     mainWorldCpuBytes,
     physicsWasmReservedBytes,
+    surfaceCacheBytes,
+    surfaceCache: w?.surfaceCache ? { ...w.surfaceCache.metrics } : null,
     sceneBytes,
     fgBytes: fg.metrics.memoryBytes ?? 0,
     snapshots: fg.metrics.snapshotBytes ?? 0,
@@ -444,6 +454,13 @@ async function rebuild(captured, own) {
     if (own !== generation || disposed || scene.lumen.world !== w) {
       return { cancelled: true };
     }
+    while (own === generation && !disposed && scene.lumen.world === w) {
+      await prepareRadianceSource(w, own);
+      if (lightingKey(w.options) === lightingKey(lighting)) break;
+      await w.solve({ ...lighting });
+    }
+    if (own !== generation || disposed || scene.lumen.world !== w)
+      return { cancelled: true };
     dirty = false;
     scene.lumen.enabled = true;
     fresh.imageBasedLighting.imageBasedLightingFactor = new C.Cartesian2(0, 1);
@@ -592,8 +609,71 @@ async function relight(changes = {}) {
     key === lightingKey(lighting) &&
     revision === w.settledRevision
   ) {
+    await prepareRadianceSource(w, own);
+    if (
+      own !== generation ||
+      disposed ||
+      scene.lumen.world !== w ||
+      revision !== w.settledRevision
+    )
+      return { cancelled: true };
     scene.lumen.enabled = true;
     setPhase(fg.mode === "ddgi" ? "static-ready" : "converging");
+  }
+}
+async function prepareRadianceSource(w, own) {
+  const request = ++sourceRequest;
+  if (radianceSource !== "cache") {
+    if (w.surfaceCache) {
+      if (!w.surfaceCache.ready) {
+        w.surfaceCache.destroy();
+        w.surfaceCache = undefined;
+      } else w.surfaceCache.enabled = false;
+    }
+    sourceStatus = "即时 fgRadiance · 参考后端";
+    return;
+  }
+  if (w.surfaceCache?.matches(w.finalGatherSnapshot)) {
+    w.surfaceCache.enabled = true;
+    sourceStatus = "实验表面缓存就绪";
+    return;
+  }
+  setPhase("building-surface-cache", own);
+  sourceStatus = "实验缓存构建中；旧缓存不参与";
+  try {
+    const cache = await w.buildSurfaceRadiance({
+      spacing: Number(params.get("cacheSpacing") ?? 0.08),
+      samples: Number(params.get("cacheSamples") ?? 256),
+    });
+    if (
+      request !== sourceRequest ||
+      own !== generation ||
+      disposed ||
+      radianceSource !== "cache"
+    )
+      cache.enabled = false;
+    else
+      sourceStatus = `实验 S${cache.metrics.round} · ${cache.metrics.count} 微片元 · 构建 ${cache.metrics.submittedMilliseconds.toFixed(0)}ms`;
+  } catch (e) {
+    if (request === sourceRequest && own === generation && !disposed)
+      sourceStatus = `即时回退：${e.message}`;
+  }
+}
+async function setRadianceSource(value) {
+  if (!["immediate", "cache"].includes(value))
+    throw Error("Invalid radiance source");
+  radianceSource = value;
+  $("radianceSource").value = value;
+  sourceRequest++;
+  fg.release();
+  const own = generation,
+    w = scene.lumen.world;
+  if (dirty || playing || !w?.ready) return;
+  scene.lumen.enabled = false;
+  await prepareRadianceSource(w, own);
+  if (own === generation && !disposed && scene.lumen.world === w) {
+    scene.lumen.enabled = true;
+    setPhase("converging", own);
   }
 }
 async function descriptorHash(d = descriptor) {
@@ -698,6 +778,8 @@ scene.postRender.addEventListener(() => {
     `${labels[phase]} · 几何 ${generation}${scene.lumen.enabled ? ` · ${fg.quality} / ${fg.ready ? fg.samples : 0}r` : ""}`;
   $("debug").disabled = !scene.lumen.enabled;
   $("capture").disabled = !fg.ready;
+  $("sourceState").textContent =
+    `请求 ${radianceSource} · 实际 ${scene.lumen.world?.surfaceCache?.enabled ? "surface-cache" : "immediate"} · ${sourceStatus}`;
   for (const id of ["play", "pause", "toss", "freeze"])
     $(id).disabled = !physics;
   if (
@@ -730,6 +812,9 @@ $("freeze").onclick = catchUI(freeze);
 $("reset").onclick = catchUI(() => reset());
 $("count").onchange = catchUI(() => reset());
 $("fgQuality").onchange = catchUI(() => configureQuality($("fgQuality").value));
+$("radianceSource").onchange = catchUI(() =>
+  setRadianceSource($("radianceSource").value),
+);
 $("compare").onchange = catchUI(async () => {
   const v = $("compare").value;
   scene.lumen.debugMode = v === "without" ? 11 : 0;
@@ -771,6 +856,7 @@ window.ballPool = {
   setMaterial,
   configureQuality,
   snapshot,
+  setRadianceSource,
   dispose,
   get world() {
     return scene.lumen.world;

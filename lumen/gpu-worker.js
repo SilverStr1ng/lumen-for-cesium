@@ -1,5 +1,6 @@
 import { loadGeometry, accepts, materialAt, isSolidMaterial } from "./gltf.js";
 import { BVH } from "./bvh.js";
+import { surfaceRadianceLayout } from "./surface-radiance-layout.js";
 
 // Only static preparation runs here. Runtime intersections and lighting are GPU passes.
 let bvh;
@@ -143,14 +144,37 @@ function pack(b, options) {
       width: counts[0] * counts[1] * 10,
       height: counts[2] * 10,
     },
-    bvh: { ...b.stats, triangles: n, nodes, queries: 0,
+    bvh: {
+      ...b.stats,
+      triangles: n,
+      nodes,
+      queries: 0,
       // Typed buffers retained by the preparation worker; JS object/allocator
       // overhead is separately unmeasured, not silently reported as zero.
-      cpuGeometryBytes:[g.positions,g.uvs,g.normals,g.materialIds,...g.images.filter(Boolean).map(i=>i.data)]
-        .reduce((sum,a)=>sum+a.byteLength,0),
-      cpuRetainedBytes:b.stats.persistentBytes+[g.positions,g.uvs,g.normals,g.materialIds,...g.images.filter(Boolean).map(i=>i.data)]
-        .reduce((sum,a)=>sum+a.byteLength,0),
-      typedPreparationBytes:b.stats.persistentBytes+n*36+nodeData.byteLength+vertices.byteLength+uv.byteLength+materials.byteLength+atlas.byteLength,
+      cpuGeometryBytes: [
+        g.positions,
+        g.uvs,
+        g.normals,
+        g.materialIds,
+        ...g.images.filter(Boolean).map((i) => i.data),
+      ].reduce((sum, a) => sum + a.byteLength, 0),
+      cpuRetainedBytes:
+        b.stats.persistentBytes +
+        [
+          g.positions,
+          g.uvs,
+          g.normals,
+          g.materialIds,
+          ...g.images.filter(Boolean).map((i) => i.data),
+        ].reduce((sum, a) => sum + a.byteLength, 0),
+      typedPreparationBytes:
+        b.stats.persistentBytes +
+        n * 36 +
+        nodeData.byteLength +
+        vertices.byteLength +
+        uv.byteLength +
+        materials.byteLength +
+        atlas.byteLength,
     },
     order: b.order.slice(),
   };
@@ -180,6 +204,12 @@ self.onmessage = async ({ data: m }) => {
         packet.materials.data.buffer,
         packet.atlas.data.buffer,
         packet.order.buffer,
+      ]);
+    } else if (m.type === "surfaceRadianceLayout") {
+      const result = surfaceRadianceLayout(bvh, m.options);
+      self.postMessage({ type: "response", id: m.id, result }, [
+        result.samples.data.buffer,
+        result.metadata.data.buffer,
       ]);
     } else if (m.type === "referenceTrace") {
       send("response", {
