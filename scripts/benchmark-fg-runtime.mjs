@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
+import { sampleSequenceMatches } from "./r8-acceptance.mjs";
 import {
   launchBrowser,
   sourceVersion,
@@ -9,6 +10,7 @@ const execution =
   process.argv.find((a) => a.startsWith("--execution="))?.split("=")[1] ??
   "split";
 const rayOrder = process.argv.includes("--azimuth") ? "azimuth" : "original";
+const rayLayout = process.argv.includes("--planar") ? "planar" : "interleaved";
 const lazyFallback = process.argv.includes("--lazy");
 const arg = (name, fallback) =>
   process.argv.find((a) => a.startsWith("--" + name + "="))?.split("=")[1] ??
@@ -45,14 +47,17 @@ const reportFile =
   "/performance-" +
   execution +
   (rayOrder === "azimuth" ? "-azimuth" : "") +
+  (rayLayout === "planar" ? "-planar" : "") +
   (lazyFallback ? "-lazy" : "-eager") +
   suffix +
   ".json";
 const report = {
+  measurementVersion: 2,
   version: sourceVersion(["scripts/benchmark-fg-runtime.mjs"]),
   configuration: {
     execution,
     rayOrder,
+    rayLayout,
     lazyFallback,
     sceneName,
     quality,
@@ -99,6 +104,7 @@ try {
           execution,
           lazyFallback,
           rayOrder,
+          rayLayout,
           sceneName,
           quality,
           activity,
@@ -123,6 +129,10 @@ try {
               mode === "fixed-raw" || mode === "ddgi" ? "split" : execution,
             rayOrder:
               mode === "fixed-raw" || mode === "ddgi" ? "original" : rayOrder,
+            rayLayout:
+              mode === "fixed-raw" || mode === "ddgi"
+                ? "interleaved"
+                : rayLayout,
             model: d.model,
           });
           await d.world.completed;
@@ -136,12 +146,17 @@ try {
               await new Promise(requestAnimationFrame);
           const origin = Cesium.Cartesian3.clone(s.camera.position),
             right = Cesium.Cartesian3.clone(s.camera.right),
-            initialIntensity = d.world.options.sunIntensity;
+            initialSunRadiance = Array.from(d.lighting.sunRadiance);
           let epoch = 0,
-            activityFrame = 0;
+            activityFrame = 0,
+            wholeDraws = 0,
+            cachedFrames = 0;
           const epochs = [],
+            sampleInputs = [],
+            fallbackReasons = {},
+            lightingEvents = [],
             beforeDraws = f.metrics.draws;
-          const removeActivity = s.preUpdate.addEventListener(() => {
+          const updateActivity = () => {
             const index = activityFrame++;
             if (activity === "moving")
               Cesium.Cartesian3.add(
@@ -154,18 +169,19 @@ try {
                 s.camera.position,
               );
             if (activity === "relight" && [30, 60].includes(index)) {
-              d.lighting.sunIntensity =
-                initialIntensity * (index === 30 ? 1.05 : 1);
+              d.lighting.sunRadiance = initialSunRadiance.map(
+                (v) => v * (index === 30 ? 1.05 : 1),
+              );
               d.lightingController.update();
               d.world.solve({ ...d.lighting });
+              lightingEvents.push({
+                window: f.profileForward ? "components" : "whole-frame",
+                frame: index,
+                sunRadiance: [...d.lighting.sunRadiance],
+              });
             }
-          });
-          const removeSequence = s.preRender.addEventListener(() => {
-            f._sampleEpoch = epoch++;
-          });
-          const removeEpochLog = s.postRender.addEventListener(() => {
-            if (f.ready) epochs.push(f.metrics.sampleEpoch);
-          });
+          };
+          const removeActivity = s.preUpdate.addEventListener(updateActivity);
           const before = performance.now(),
             whole = await measureFrames(s, 100, {
               warmup: 20,
@@ -173,15 +189,45 @@ try {
                 activity === "static" || activity === "moving"
                   ? mode !== "ddgi"
                   : false,
+              beforeFrame() {
+                f._sampleEpoch = epoch;
+              },
+              afterFrame({ index, executed }) {
+                if (executed === 1) {
+                  epochs.push(f.metrics.sampleEpoch);
+                  sampleInputs.push({
+                    frame: index,
+                    epoch: f.metrics.sampleEpoch,
+                    seed: f.seed,
+                    revision: f.metrics.revision,
+                    round: f.metrics.round,
+                    receiver: [f.resultSize.x, f.resultSize.y],
+                    samples: f.samples,
+                    camera: Cesium.Cartesian3.toArray(s.camera.position),
+                  });
+                  epoch++;
+                } else if (mode !== "ddgi" && !f.ready) {
+                  const reason = f.metrics.status;
+                  fallbackReasons[reason] = (fallbackReasons[reason] ?? 0) + 1;
+                } else if (mode !== "ddgi") {
+                  cachedFrames++;
+                }
+                // Query polling may render more frames, but they are outside this window.
+                if (index === 99) {
+                  wholeDraws = f.metrics.draws - beforeDraws;
+                  removeActivity();
+                }
+              },
             });
-          removeSequence();
-          removeEpochLog();
           activityFrame = 0;
-          const wholeDraws = f.metrics.draws - beforeDraws;
+          const queryDrainDraws = f.metrics.draws - beforeDraws - wholeDraws,
+            componentBeforeDraws = f.metrics.draws;
           const fgBefore = f.metrics.frames,
             sceneBefore = s.frameState.frameNumber;
           f.metrics.completedTimings.length = 0;
           f.profileForward = mode !== "ddgi" && activity !== "pause";
+          const removeComponentActivity =
+            s.preUpdate.addEventListener(updateActivity);
           const minFrame = s.frameState.frameNumber + 1,
             start = performance.now();
           if (mode !== "ddgi" && activity !== "pause")
@@ -205,7 +251,7 @@ try {
                 );
             }
           f.profileForward = false;
-          removeActivity();
+          removeComponentActivity();
           const complete = f.metrics.completedTimings
               .filter((x) => x.frame >= minFrame && x.fgExecuted)
               .slice(0, 60),
@@ -224,10 +270,18 @@ try {
             round,
             mode,
             epochs,
+            sampleInputs,
+            fallbackReasons,
+            lightingEvents,
             draws: f.metrics.draws - beforeDraws,
             wholeDraws,
-            componentDraws: f.metrics.draws - beforeDraws - wholeDraws,
-            fallbackFrames: whole.renderedFrames - whole.actualFGFrames,
+            queryDrainDraws,
+            componentDraws: f.metrics.draws - componentBeforeDraws,
+            cachedFrames,
+            fallbackFrames: Object.values(fallbackReasons).reduce(
+              (sum, n) => sum + n,
+              0,
+            ),
             whole,
             components: {
               window: "separate from whole-frame timer",
@@ -255,6 +309,7 @@ try {
           execution,
           lazyFallback,
           rayOrder,
+          rayLayout,
           sceneName,
           quality,
           activity,
@@ -302,19 +357,24 @@ try {
   report.checks = {
     sameSequence:
       activity === "pause" ||
-      [0, 1, 2].every(
-        (round) =>
-          JSON.stringify(
-            report.rounds.find(
-              (r) => r.round === round && r.mode === "decorrelated-raw",
-            ).epochs,
-          ) ===
-          JSON.stringify(
-            report.rounds.find(
-              (r) => r.round === round && r.mode === "reconstructed",
-            ).epochs,
+      [0, 1, 2].every((round) =>
+        sampleSequenceMatches(
+          report.rounds.find(
+            (r) => r.round === round && r.mode === "decorrelated-raw",
           ),
+          report.rounds.find(
+            (r) => r.round === round && r.mode === "reconstructed",
+          ),
+        ),
       ),
+    boundedWindow: report.rounds.every(
+      (x) =>
+        x.epochs.length === x.whole.actualFGFrames &&
+        x.sampleInputs.length === x.whole.actualFGFrames &&
+        x.sampleInputs.every(
+          (input) => input.frame >= 0 && input.frame < x.whole.renderedFrames,
+        ),
+    ),
     completeQueries: report.rounds.every(
       (x) =>
         x.whole.gpuMilliseconds.samples >= 75 &&

@@ -82,11 +82,13 @@ assert.deepEqual(aggregate({ regression: "passed", quality: "not-run" }), {
 });
 assert.equal(aggregate({ performance: "failed" }).exitCode, 1);
 const good = {
+  measurementVersion: 2,
   status: "passed",
   configuration: { activity: "static" },
   checks: {
     sameSequence: true,
     completeQueries: true,
+    boundedWindow: true,
     activeFG: true,
     resourceBudget: true,
     productionReadback: true,
@@ -95,7 +97,20 @@ const good = {
     ["ddgi", "fixed-raw", "decorrelated-raw", "reconstructed"].map((mode) => ({
       round,
       mode,
-      epochs: Array.from({ length: 100 }, (_, i) => i),
+      epochs: mode === "ddgi" ? [] : Array.from({ length: 100 }, (_, i) => i),
+      sampleInputs:
+        mode === "ddgi"
+          ? []
+          : Array.from({ length: 100 }, (_, frame) => ({
+              frame,
+              epoch: frame,
+              seed: 0,
+              revision: 1,
+              round: 2,
+              receiver: [640, 400],
+              samples: 32,
+              camera: [100, 0, 0],
+            })),
       metrics: {
         plan: { rw: 640, rh: 400 },
         samples: 32,
@@ -119,6 +134,21 @@ const good = {
   ),
 };
 assert(performancePassed(good, { exitCode: 0 }));
+const unbounded = structuredClone(good);
+unbounded.rounds[1].epochs.push(100);
+assert(!performancePassed(unbounded, { exitCode: 0 }));
+const pollFrame = structuredClone(good);
+pollFrame.rounds[1].sampleInputs[99].frame = 100;
+assert(!performancePassed(pollFrame, { exitCode: 0 }));
+const oldWindow = structuredClone(good);
+delete oldWindow.measurementVersion;
+assert(!performancePassed(oldWindow, { exitCode: 0 }));
+for (const field of ["seed", "round", "revision", "camera"]) {
+  const differentInput = structuredClone(good);
+  differentInput.rounds[3].sampleInputs[2][field] =
+    field === "camera" ? [101, 0, 0] : 9;
+  assert(!performancePassed(differentInput, { exitCode: 0 }), field);
+}
 for (const field of [
   "samples",
   "disjoint",
@@ -139,7 +169,11 @@ const pause = structuredClone(good);
 pause.configuration.activity = "pause";
 pause.rounds
   .filter((r) => r.mode === "reconstructed")
-  .forEach((r) => (r.whole.actualFGFrames = 0));
+  .forEach((r) => {
+    r.whole.actualFGFrames = 0;
+    r.epochs = [];
+    r.sampleInputs = [];
+  });
 assert(performancePassed(pause, { exitCode: 0 }));
 assert(!performancePassed(pause, { exitCode: 1 }));
 const mandatory = requiredCaptureFiles("reports/fg-runtime-budget-v7"),

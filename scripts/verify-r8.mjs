@@ -16,9 +16,17 @@ import {
   requiredInputsPresent,
   childGroupState,
 } from "./r8-acceptance.mjs";
-const out = "reports/fg-runtime-budget-v7",
+const out =
+    process.argv
+      .find((a) => a.startsWith("--output="))
+      ?.slice("--output=".length) ?? "reports/fg-runtime-budget-v7",
   cached = process.argv.includes("--cached"),
   onlyQuality = process.argv.includes("--quality-only");
+const outputRoot = path.resolve("reports"),
+  outputPath = path.resolve(out);
+if (!outputPath.startsWith(outputRoot + path.sep)) {
+  throw Error("R8 output must be a directory inside this repository's reports");
+}
 const configs = configurations;
 const regressions = [
   "pipeline",
@@ -56,6 +64,7 @@ const regressions = [
   "gallery",
   "r8-acceptance",
   "fg-budget",
+  "fg-runtime-window",
   "fg-order",
   "fg-execution",
   "fg-desktop",

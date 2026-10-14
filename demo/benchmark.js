@@ -3,7 +3,7 @@
 export async function measureFrames(
   scene,
   frames = 150,
-  { warmup = 20, requireFG = false } = {},
+  { warmup = 20, requireFG = false, beforeFrame, afterFrame } = {},
 ) {
   const intervals = [],
     gpu = [],
@@ -41,6 +41,7 @@ export async function measureFrames(
   };
   const before = () => {
     if (rendered >= frames) return;
+    beforeFrame?.(rendered);
     active = { queries: [], fgBefore: scene.lumen.finalGather.metrics.frames };
     if (!ext) return;
     if (timestamps) {
@@ -70,6 +71,7 @@ export async function measureFrames(
       else pending.push(active);
     } else missing++;
     active = undefined;
+    afterFrame?.({ index: rendered - 1, executed });
   };
   const unregister = Cesium.LumenGpuTimer.register(scene.context, () => {
     disjoint++;

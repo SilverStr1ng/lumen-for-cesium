@@ -168,6 +168,18 @@ export function childGroupState(tests, names) {
 export function childPassed(run) {
   return run?.exitCode === 0;
 }
+export function sampleSequenceMatches(c, d) {
+  const inputs = (row) =>
+    row.sampleInputs?.map((input) => ({
+      ...input,
+      revision: input.revision - row.sampleInputs[0].revision,
+    }));
+  return (
+    Array.isArray(c?.sampleInputs) &&
+    c.sampleInputs.length > 0 &&
+    JSON.stringify(inputs(c)) === JSON.stringify(inputs(d))
+  );
+}
 export function artifactMatches(data, current, configuration, required) {
   return (
     versionMatches(data?.version, current, required) &&
@@ -180,6 +192,7 @@ export function artifactMatches(data, current, configuration, required) {
 export function performancePassed(data, run) {
   if (
     !childPassed(run) ||
+    data?.measurementVersion !== 2 ||
     data?.status !== "passed" ||
     data?.rounds?.length !== 12 ||
     !data.configuration
@@ -207,6 +220,26 @@ export function performancePassed(data, run) {
           r.whole.renderedFrames < 75 ||
           !nat(r.whole.actualFGFrames) ||
           r.whole.actualFGFrames > r.whole.renderedFrames ||
+          !Array.isArray(r.epochs) ||
+          r.epochs.length !== r.whole.actualFGFrames ||
+          !Array.isArray(r.sampleInputs) ||
+          r.sampleInputs.length !== r.whole.actualFGFrames ||
+          r.sampleInputs.some(
+            (input, index) =>
+              !nat(input.frame) ||
+              input.frame >= r.whole.renderedFrames ||
+              input.epoch !== r.epochs[index] ||
+              !nat(input.epoch) ||
+              !Number.isInteger(input.seed) ||
+              !nat(input.revision) ||
+              !nat(input.round) ||
+              !Array.isArray(input.camera) ||
+              input.camera.length !== 3 ||
+              input.camera.some((n) => !Number.isFinite(n)) ||
+              JSON.stringify(input.receiver) !==
+                JSON.stringify([r.metrics?.plan?.rw, r.metrics?.plan?.rh]) ||
+              input.samples !== r.metrics?.samples,
+          ) ||
           r.whole.disjoint !== 0 ||
           r.whole.incompleteQueries !== 0 ||
           r.whole.excludedFallbackFrames !== 0 ||
@@ -220,8 +253,7 @@ export function performancePassed(data, run) {
       !c.metrics?.plan ||
       !d.metrics?.plan ||
       (!isPause &&
-        (!Array.isArray(c.epochs) ||
-          c.epochs.length === 0 ||
+        (!sampleSequenceMatches(c, d) ||
           JSON.stringify(c.epochs) !== JSON.stringify(d.epochs))) ||
       JSON.stringify([
         c.metrics.plan.rw,
@@ -260,6 +292,7 @@ export function performancePassed(data, run) {
   if (
     ![
       "completeQueries",
+      "boundedWindow",
       "activeFG",
       "resourceBudget",
       "productionReadback",
