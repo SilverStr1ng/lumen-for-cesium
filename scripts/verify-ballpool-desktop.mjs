@@ -20,7 +20,7 @@ try {
       const page = await browser.newPage({ viewport: { width, height } });
       page.on("pageerror", (e) => report.errors.push(String(e)));
       await page.goto(
-        `http://localhost:8090/demo/ballpool.html?diagnostic=1&count=${count}&fgQuality=auto`,
+        `http://localhost:8090/demo/ballpool.html?diagnostic=1&count=${count}&fgQuality=auto&radianceSource=${process.env.LUMEN_RADIANCE_SOURCE ?? "immediate"}`,
       );
       await page.waitForFunction(
         () => ballPool.snapshot().phase === "static-ready",

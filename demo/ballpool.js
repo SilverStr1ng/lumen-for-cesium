@@ -42,6 +42,8 @@ const lighting = {
   skyRadiance: [0.15, 0.18, 0.22],
   bounces: 3,
   environmentMode: "upper-hemisphere",
+  rayOriginPolicy:
+    params.get("transport") === "legacy" ? "legacy-15mm" : "physical",
 };
 let descriptor = createBallPool({
     count: Number(params.get("count") ?? 64),
@@ -619,6 +621,7 @@ async function relight(changes = {}) {
       disposed ||
       scene.lumen.world !== w ||
       revision !== w.settledRevision ||
+      revision !== w.requestedRevision ||
       source !== sourceRequest
     )
       return { cancelled: true };
@@ -685,7 +688,8 @@ async function setRadianceSource(value) {
     !disposed &&
     scene.lumen.world === w &&
     source === sourceRequest &&
-    revision === w.settledRevision
+    revision === w.settledRevision &&
+    revision === w.requestedRevision
   ) {
     scene.lumen.enabled = true;
     setPhase("converging", own);

@@ -18,6 +18,7 @@ class LumenSurfaceRadianceCache {
       cpuBytes: 0,
       peakBytes: 0,
       submittedMilliseconds: 0,
+      cpuSubmissionMilliseconds: 0,
       round: 0,
       experimental: true,
     };
@@ -98,6 +99,7 @@ class LumenSurfaceRadianceCache {
     // Account the temporary transferred buffers and both generation images.
     if (
       (fg.additionalOwnedBytes ?? 0) +
+        (fg.metrics.memoryBytes ?? 0) +
         (fg.metrics.snapshotBytes ?? 0) +
         layout.gpuBytes +
         8192 >
@@ -107,9 +109,11 @@ class LumenSurfaceRadianceCache {
     }
     this.metrics.status = "building";
     this.metrics.count = layout.count;
+    this.metrics.workerLayoutMilliseconds = layout.workerMilliseconds;
     this.metrics.spacing = spacing;
     this.metrics.samples = samples;
     this.metrics.unsupported = layout.unsupported;
+    const uploadStarted = performance.now();
     const allocate = (p, type, data) => {
       const texture = w._texture(p.width, p.height, type, data),
         resource = { texture, fb: undefined };
@@ -168,6 +172,7 @@ class LumenSurfaceRadianceCache {
         depthMask: false,
       }),
     });
+    this.metrics.cpuSubmissionMilliseconds += performance.now() - uploadStarted;
     for (this.round = 0; this.round < rounds; this.round++) {
       const output = this.images[this.round % 2];
       this.input = this.images[(this.round + 1) % 2].texture;
@@ -184,6 +189,15 @@ class LumenSurfaceRadianceCache {
         );
         this.command.framebuffer = output.fb;
         this.pollQueries();
+        const waiting = performance.now();
+        while (this.timer && this.queries.length >= 64) {
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          if (this.destroyed || w.finalGatherSnapshot !== s)
+            throw Error("Superseded surface source while timing");
+          this.pollQueries();
+          if (performance.now() - waiting > 10000)
+            throw Error("Surface timer backlog timeout");
+        }
         const gl = context._gl,
           ext = this.timer,
           canTime =
@@ -191,6 +205,7 @@ class LumenSurfaceRadianceCache {
             this.queries.length < 64 &&
             !gl.getQuery(ext.TIME_ELAPSED_EXT, gl.CURRENT_QUERY),
           query = canTime ? gl.createQuery() : undefined;
+        const submitStarted = performance.now();
         if (query) {
           gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
         } else {
@@ -203,6 +218,8 @@ class LumenSurfaceRadianceCache {
             gl.endQuery(ext.TIME_ELAPSED_EXT);
             this.queries.push({ query, round: this.round });
           }
+          this.metrics.cpuSubmissionMilliseconds +=
+            performance.now() - submitStarted;
         }
         await new Promise((resolve) => setTimeout(resolve, 0));
         if (this.destroyed || w.finalGatherSnapshot !== s)

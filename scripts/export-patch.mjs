@@ -14,7 +14,7 @@ async function collect(directory) {
 }
 await collect(baseline);
 let patch = "";
-for (const file of [
+const sections=[
   ...files,
   "packages/engine/Source/Scene/GBuffer.js",
   "packages/engine/Source/Scene/Lumen.js",
@@ -29,10 +29,14 @@ for (const file of [
   "packages/engine/Source/Scene/LumenFinalGatherGeometry.js",
   "packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
   "packages/engine/Source/Scene/LumenFinalGatherSnapshot.js",
+  "packages/engine/Source/Scene/LumenFinalGatherNormals.js",
+  "packages/engine/Source/Scene/LumenFinalGatherPlan.js",
+  "packages/engine/Source/Scene/LumenSurfaceRadianceCache.js",
   "packages/engine/Source/Scene/LumenReceiverPass.js",
   "packages/engine/Source/Scene/destroyLumenResource.js",
   "packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
-]) {
+];
+for (const file of sections) {
   const old = files.includes(file) ? `.lumen-baseline/${file}` : "NUL";
   const current = `cesium-1.146/${file}`;
   const result = spawnSync(
@@ -54,5 +58,5 @@ for (const file of [
 await mkdir(path.join(root, "artifacts"), { recursive: true });
 await writeFile(path.join(root, "artifacts", "cesium-lumen.patch"), patch);
 console.log(
-  `Wrote ${files.length + 16} file diffs to artifacts/cesium-lumen.patch`,
+  `Wrote ${sections.length} file diffs to artifacts/cesium-lumen.patch`,
 );

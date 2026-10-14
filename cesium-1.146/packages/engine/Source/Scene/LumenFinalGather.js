@@ -42,8 +42,8 @@ const nearest = new Sampler({
  * Unsupported views/surfaces and resource failures use the existing DDGI. @private */
 class LumenFinalGather {
   get additionalOwnedBytes() {
-    let bytes = this.additionalSceneBytes;
-    for (const cache of this.lumen.world?._surfaceCaches ?? []) {
+    let bytes = this.additionalSceneBytes ?? 0;
+    for (const cache of this.lumen?.world?._surfaceCaches ?? []) {
       bytes += cache.additionalBytes;
     }
     return bytes;
@@ -532,6 +532,16 @@ class LumenFinalGather {
     this.metrics.effectiveMode = "ddgi";
     this.fallbackReason = 1;
     if (this.mode === "ddgi" || !this.lumen.enabled) {
+      return;
+    }
+    if (
+      w &&
+      [...(w._surfaceCaches ?? [])].some(
+        (cache) => !cache.ready && !cache.destroyed,
+      )
+    ) {
+      this.release();
+      this.metrics.status = "DDGI fallback: static surface source building";
       return;
     }
     if (

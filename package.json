@@ -56,7 +56,10 @@
     "test:curved-receivers": "node scripts/verify-curved-contract.mjs && node scripts/verify-curved-topology.mjs && node scripts/verify-curved-receivers.mjs && node scripts/verify-curved-temporal.mjs",
     "test:ballpool": "node scripts/verify-ballpool-descriptor.mjs && node scripts/verify-ballpool.mjs && node scripts/verify-ballpool-desktop.mjs",
     "benchmark:ballpool": "node scripts/benchmark-ballpool.mjs",
-    "test:r9": "node scripts/verify-r9.mjs"
+    "test:r9": "node scripts/verify-r9.mjs",
+    "test:contact-transport": "node scripts/verify-contact-transport.mjs",
+    "benchmark:contact-cache": "node scripts/benchmark-contact-cache.mjs",
+    "test:r10": "node scripts/verify-r10.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-deterministic-compat": "0.18.0"

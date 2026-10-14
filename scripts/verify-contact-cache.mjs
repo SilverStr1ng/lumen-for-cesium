@@ -4,6 +4,11 @@ import { launchBrowser, sourceVersion, environment } from "./browser-tools.mjs";
 import { loadGeometry } from "../lumen/gltf.js";
 import { BVH } from "../lumen/bvh.js";
 import { referenceIrradiance } from "../lumen/path-reference.js";
+import { surfaceRadianceLayout } from "../lumen/surface-radiance-layout.js";
+import { materialAt, accepts } from "../lumen/gltf.js";
+import { referenceSpawn } from "../lumen/ray-spawn.js";
+import { normalize, dot } from "../lumen/math.js";
+import { completeTraceDistance } from "../lumen/trace-domain.js";
 const out =
   process.env.LUMEN_REPORT_DIRECTORY ??
   "reports/contact-transport-v9/cache-first";
@@ -103,6 +108,122 @@ try {
         }
         return { valid, unknown, missing, total: c.metrics.count };
       });
+      const sourcePoints = await page.evaluate(() => {
+        const w = ballPool.world,
+          c = w.surfaceCache,
+          fb = c.images.find((r) => r.texture === c.texture).fb,
+          a = w._read(fb, c.texture.width, c.texture.height);
+        return {
+          order: Array.from(w._order),
+          samples: Array.from({ length: 24 }, (_, i) => {
+            const index = Math.min(
+              c.metrics.count - 1,
+              Math.floor((i * c.metrics.count) / 24),
+            );
+            return {
+              index,
+              radiance: Array.from(a.slice(index * 4, index * 4 + 3)),
+              valid: a[index * 4 + 3],
+            };
+          }),
+        };
+      });
+      const layout = surfaceRadianceLayout(
+        { geometry, order: sourcePoints.order },
+        { spacing: 0.08 },
+      );
+      row.surfaceReference = sourcePoints.samples.map(
+        ({ index, radiance, valid }) => {
+          const o = index * 4,
+            triangle = sourcePoints.order[layout.samples.data[o] - 2],
+            u = layout.samples.data[o + 1],
+            v = layout.samples.data[o + 2],
+            m = materialAt(geometry, triangle, u, v),
+            normal = m.normal,
+            position = [0, 1, 2].map(
+              (k) =>
+                geometry.positions[triangle * 9 + k] * (1 - u - v) +
+                geometry.positions[triangle * 9 + 3 + k] * u +
+                geometry.positions[triangle * 9 + 6 + k] * v,
+            ),
+            lighting = {
+              sunDirection: normalize([-0.8, 0.6, 1.1]),
+              sunRadiance: [2, 2, 2],
+              skyRadiance: [0.15, 0.18, 0.22],
+              bounces: depth - 1,
+              environmentMode: "upper-hemisphere",
+              rayOriginPolicy: "physical",
+            },
+            solar = referenceSpawn(
+              geometry.positions,
+              triangle,
+              u,
+              v,
+              normal,
+              lighting.sunDirection,
+            ),
+            shadow = bvh.trace(solar, lighting.sunDirection, {
+              ignore: triangle,
+              tMin: 0,
+              accept: (t, u, v) => accepts(geometry, t, u, v),
+              maxDistance: completeTraceDistance(geometry.bounds, solar),
+            }),
+            indirect =
+              depth > 1
+                ? referenceIrradiance(
+                    bvh,
+                    position,
+                    normal,
+                    lighting,
+                    8192,
+                    1019 + index,
+                    normal,
+                    { triangle, u, v },
+                  )
+                : { irradiance: [0, 0, 0], standardError: [0, 0, 0] },
+            reference = indirect.irradiance.map(
+              (E, k) =>
+                m.emissive[k] +
+                (m.albedo[k] *
+                  (E +
+                    (shadow.status === "Miss"
+                      ? lighting.sunRadiance[k] *
+                        Math.max(0, dot(normal, lighting.sunDirection))
+                      : 0))) /
+                  Math.PI,
+            );
+          return {
+            index,
+            triangle,
+            u,
+            v,
+            position,
+            normal,
+            radiance,
+            valid,
+            reference,
+            referenceStandardError: indirect.standardError.map(
+              (v, k) => (v * m.albedo[k]) / Math.PI,
+            ),
+            shadow,
+          };
+        },
+      );
+      row.surfacePointNRMSE = Math.sqrt(
+        row.surfaceReference.reduce(
+          (s, r) =>
+            s +
+            r.radiance.reduce((a, v, k) => a + (v - r.reference[k]) ** 2, 0),
+          0,
+        ) /
+          Math.max(
+            0.00001,
+            row.surfaceReference.reduce(
+              (s, r) => s + r.reference.reduce((a, v) => a + v * v, 0),
+              0,
+            ),
+          ),
+      );
       for (const [name, data] of Object.entries(old?.regionErrors ?? {})) {
         if (!data.points.length) continue;
         const refs = data.points.map((p, i) =>
@@ -116,6 +237,7 @@ try {
               skyRadiance: [0.15, 0.18, 0.22],
               bounces: depth,
               environmentMode: "upper-hemisphere",
+              rayOriginPolicy: "physical",
             },
             8192,
             5019 + i,
@@ -156,11 +278,15 @@ try {
           nrmse,
         };
       }
-      row.status = Object.values(row.regions).every(
-        (r) => r.nrmse <= 0.12 && r.query.every((q) => q.valid && !q.unknown),
-      )
-        ? "passed"
-        : "failed";
+      row.status =
+        row.surfacePointNRMSE <= 0.12 &&
+        row.cacheValidity.unknown === 0 &&
+        row.cacheValidity.missing === 0 &&
+        Object.values(row.regions).every(
+          (r) => r.nrmse <= 0.12 && r.query.every((q) => q.valid && !q.unknown),
+        )
+          ? "passed"
+          : "failed";
       report.rows.push(row);
       console.log(
         JSON.stringify({

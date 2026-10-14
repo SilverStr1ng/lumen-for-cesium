@@ -54,7 +54,21 @@ try {
         ballPool.widget.useDefaultRenderLoop = true;
         await ballPool.relight({ bounces: depth });
         ballPool.widget.useDefaultRenderLoop = false;
+        const f = ballPool.scene.lumen.finalGather;
+        await f.configure({
+          seed: 0,
+          sequenceEpoch: null,
+          model: ballPool.model,
+          sampling: "reconstructed",
+        });
+        ballPool.camera("contact");
+        f._sampleEpoch = 0;
+        for (let i = 0; i < 32; i++) ballPool.widget.render();
       }, depth);
+      const reconstruction = await page.evaluate(async () => {
+        const { captureCurved } = await import("/demo/curved-diagnostics.js");
+        return captureCurved(ballPool, { primary: false });
+      });
       const field = await page.evaluate(() => {
         const w = ballPool.world,
           s = w.finalGatherSnapshot;
@@ -126,6 +140,13 @@ try {
             oracle,
             probes,
             reference: ref,
+            reconstruction: {
+              regions: reconstruction.regions,
+              points: reconstruction.regionPoints[region],
+              fallback: reconstruction.fallback,
+              revision: reconstruction.revision,
+              round: reconstruction.round,
+            },
             ...integrated,
           });
           console.log(

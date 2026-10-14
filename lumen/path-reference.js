@@ -12,9 +12,10 @@ export function referenceIrradiance(
   samples = 8192,
   seed = 543190,
   geometricNormal = normal,
+  sourceHit,
 ) {
   const geometry = bvh.geometry,
-    physical = lighting.rayOriginPolicy !== "legacy-15mm",
+    physical = lighting.rayOriginPolicy === "physical",
     sun = normalize(lighting.sunDirection),
     counts = { rays: 0, solar: 0, unknown: 0 };
   const accept = (t, u, v) => accepts(geometry, t, u, v);
@@ -40,9 +41,18 @@ export function referenceIrradiance(
   const sum = [0, 0, 0],
     squares = [0, 0, 0];
   for (let sample = 0; sample < samples; sample++) {
-    let origin = add(position, mul(geometricNormal, 0.0002)),
-      direction = cosine(normal),
-      ignore = -1;
+    let direction = cosine(normal),
+      origin = sourceHit
+        ? referenceSpawn(
+            geometry.positions,
+            sourceHit.triangle,
+            sourceHit.u,
+            sourceHit.v,
+            geometricNormal,
+            direction,
+          )
+        : add(position, mul(geometricNormal, 0.0002)),
+      ignore = sourceHit?.triangle ?? -1;
     const value = [0, 0, 0],
       throughput = [1, 1, 1],
       receiverValid = dot(direction, geometricNormal) > 0;

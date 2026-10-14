@@ -36,7 +36,8 @@ const error = (points, reference) =>
   );
 try {
   await page.goto(
-    "http://localhost:8090/demo/ballpool.html?count=16&camera=close&diagnostic=1",
+    "http://localhost:8090/demo/ballpool.html?count=16&camera=close&diagnostic=1&radianceSource=" +
+      (process.env.LUMEN_RADIANCE_SOURCE ?? "immediate"),
   );
   await page.waitForFunction(
     () => ballPool.snapshot().phase === "static-ready",

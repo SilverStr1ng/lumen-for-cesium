@@ -6,7 +6,11 @@ export default function destroyLumenResource(resource) {
   for (const name of Object.getOwnPropertyNames(
     Object.getPrototypeOf(resource),
   )) {
-    if (name !== "constructor" && typeof resource[name] === "function") {
+    const descriptor = Object.getOwnPropertyDescriptor(
+      Object.getPrototypeOf(resource),
+      name,
+    );
+    if (name !== "constructor" && typeof descriptor.value === "function") {
       Object.defineProperty(resource, name, {
         value: resource[name],
         writable: true,

@@ -32,6 +32,9 @@ assert.equal(
 for (const dep of [
   "packages/engine/Source/Shaders/Builtin/Functions/pbrLighting.glsl",
   "packages/engine/Source/Scene/DynamicEnvironmentMapManager.js",
+  "packages/engine/Source/Scene/LumenFinalGatherNormals.js",
+  "packages/engine/Source/Scene/LumenFinalGatherPlan.js",
+  "packages/engine/Source/Scene/LumenSurfaceRadianceCache.js",
 ])
   assert(touched.includes(dep), dep + " missing from patch");
 const temp = await mkdtemp(path.join(tmpdir(), "lumen-r6-patch-"));

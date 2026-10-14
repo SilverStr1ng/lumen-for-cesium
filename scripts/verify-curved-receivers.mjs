@@ -259,6 +259,30 @@ try {
               resource: capture.state.resources,
             };
           if (contact) {
+            for (const region of Object.values(row.regionErrors))
+              if (region.points.length) {
+                const error = (key) =>
+                  region.points.flatMap((p, i) =>
+                    (key === "query" ? region.query[i].irradiance : p.E).map(
+                      (v, k) => Math.abs(v - region.reference[i].irradiance[k]),
+                    ),
+                  );
+                for (const key of ["query", "image"]) {
+                  const errors = error(key);
+                  region[key + "AbsoluteRMSE"] = Math.sqrt(
+                    errors.reduce((s, v) => s + v * v, 0) / errors.length,
+                  );
+                  region[key + "MaximumAbsoluteError"] = Math.max(...errors);
+                }
+                region.legacyQueryNRMSE = nrmse(
+                  region.query.map((q) => q.irradiance),
+                  region.legacyReference.map((r) => r.irradiance),
+                );
+                region.legacyImageNRMSE = nrmse(
+                  region.points.map((p) => p.E),
+                  region.legacyReference.map((r) => r.irradiance),
+                );
+              }
             row.legacyReference = c.points.map((p, i) =>
               referenceIrradiance(
                 bvh,
@@ -278,6 +302,32 @@ try {
               cache: ballPool.world.surfaceCache?.metrics,
               resource: ballPool.snapshot().resources,
             }));
+            row.sourceUse = await page.evaluate(async (points) => {
+              const { receiverRays } =
+                  await import("/lumen/contact-transport.js"),
+                f = ballPool.scene.lumen.finalGather,
+                all = points.flatMap((p) =>
+                  receiverRays(p, f.samples, f.seed, f.metrics.sampleEpoch),
+                ),
+                rays = all.filter((r) => !r.knownZero),
+                values = ballPool.world.diagnoseTransport(rays).cacheStatus;
+              return {
+                scheduled: all.length,
+                knownZero: all.length - rays.length,
+                executed: rays.length,
+                cachedHits: values.filter((v) => v[0] > 0.5 && v[1] > 0.5)
+                  .length,
+                missOrKnownBlack: values.filter((v) => v[0] < 0.5 && v[1] > 0.5)
+                  .length,
+                unsupported: values.filter(
+                  (v) => v[0] < 0.5 && v[3] > 0.5 && v[2] < 0.5,
+                ).length,
+                invalidCached: values.filter((v) => v[0] > 0.5 && v[1] < 0.5)
+                  .length,
+                unknown: values.filter((v) => v[2] > 0.5).length,
+                fallback: values.filter((v) => v[3] > 0.5).length,
+              };
+            }, Object.values(c.regionPoints).flat());
           }
           report.rows.push(row);
           await writeFile(
@@ -369,6 +419,15 @@ try {
                 [20, "Ng-Ns-angle"],
                 [15, "FG-weight"],
                 [17, "fallback"],
+                ...(contact
+                  ? [
+                      [6, "forward-shadow"],
+                      [7, "forward-direct-sun"],
+                      [3, "emission"],
+                      [2, "indirect-diffuse"],
+                      [4, "E-used"],
+                    ]
+                  : []),
               ]) {
                 await page.evaluate((mode) => {
                   ballPool.scene.lumen.finalGather.freezeSampling = true;

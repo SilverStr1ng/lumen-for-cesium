@@ -4,6 +4,7 @@ export function surfaceRadianceLayout(
   bvh,
   { spacing = 0.08, maxSamples = 262144 } = {},
 ) {
+  const started = performance.now();
   if (
     !Number.isFinite(spacing) ||
     spacing < 0.01 ||
@@ -14,8 +15,7 @@ export function surfaceRadianceLayout(
   )
     throw Error("Invalid bounded surface layout");
   const g = bvh.geometry,
-    metadata = new Float32Array(bvh.order.length * 4),
-    plans = [];
+    metadata = new Float32Array(bvh.order.length * 4);
   let count = 0,
     unsupported = 0;
   for (let packed = 0; packed < bvh.order.length; packed++) {
@@ -44,13 +44,14 @@ export function surfaceRadianceLayout(
         `Surface sample budget exceeded at original triangle ${original}: ${count + n * n}/${maxSamples}`,
       );
     metadata.set([count, n, original, 1], packed * 4);
-    plans.push({ packed, n, offset: count });
     count += n * n;
   }
   const width = Math.min(1024, Math.max(1, count)),
     height = Math.ceil(count / width),
     samples = new Float32Array(width * height * 4);
-  for (const { packed, n, offset } of plans)
+  for (let packed = 0; packed < bvh.order.length; packed++) {
+    const offset = metadata[packed * 4],
+      n = metadata[packed * 4 + 1];
     for (let i = 0; i < n; i++)
       for (let j = 0; j < n - i; j++) {
         const index = offset + i * (2 * n - i) + 2 * j;
@@ -64,6 +65,7 @@ export function surfaceRadianceLayout(
             (index + 1) * 4,
           );
       }
+  }
   const metaWidth = Math.min(1024, Math.max(1, bvh.order.length)),
     metaHeight = Math.ceil(bvh.order.length / metaWidth),
     packedMetadata = new Float32Array(metaWidth * metaHeight * 4);
@@ -78,6 +80,7 @@ export function surfaceRadianceLayout(
     spacing,
     cpuBytes,
     workerPeakBytes,
+    workerMilliseconds: performance.now() - started,
     gpuBytes:
       samples.byteLength + packedMetadata.byteLength + 2 * width * height * 8,
     peakBytes:

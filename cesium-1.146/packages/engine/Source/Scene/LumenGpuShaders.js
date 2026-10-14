@@ -360,6 +360,7 @@ void main(){ivec2 c=ivec2(gl_FragCoord.xy);vec3 o=texelFetch(u_queryOrigin,c,0).
  if(black){out_FragColor=vec4(0,0,0,1);return;}
  if(u_transportPart==2){out_FragColor=vec4(emission,1);return;}
  if(u_transportPart==4){vec4 e=lumen_worldIrradianceWithBias(p,n,n,u_contactTransport?0.0:u_lumenNormalBias);out_FragColor=vec4(rho*e.rgb/czm_pi,e.a);return;}
+ if(u_transportPart==3&&(dot(n,u_sunDirection)<=0.0||!any(greaterThan(u_sunRadiance,vec3(0))))){out_FragColor=vec4(0,0,0,1);return;}
  vec3 origin=spawnSurface(h,n,u_sunDirection);vec4 s=traceRange(origin,u_sunDirection,completeDistance(origin),t,false,false,u_contactTransport?0.0:0.00001);
  if(u_transportPart==7){out_FragColor=vec4(origin,length(origin-p));return;}
  if(u_transportPart==8){out_FragColor=s;return;}

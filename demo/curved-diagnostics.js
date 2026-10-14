@@ -119,7 +119,8 @@ export function captureCurved(lab, { primary = true } = {}) {
     const mask = frame(18),
       weights = frame(15),
       reasons = frame(17),
-      owners = frame(19);
+      owners = frame(19),
+      usedImage = frame(4);
     const [rw, rh] = fg.metrics.receiverResolution,
       [fw, fh] = fg.metrics.resolution,
       p = w._read(fg.receiver.framebuffer, rw, rh, 0),
@@ -131,6 +132,7 @@ export function captureCurved(lab, { primary = true } = {}) {
       ),
       history = fg.reconstruction?.history[fg.reconstruction._index],
       hn = history ? w._read(history.framebuffer, fw, fh, 3) : null,
+      temporal = history ? w._read(history.framebuffer, fw, fh, 0) : raw,
       E = fg.reconstruction?.texture
         ? (() => {
             const targets = fg.reconstruction.filterTargets;
@@ -251,6 +253,23 @@ export function captureCurved(lab, { primary = true } = {}) {
           normal: ns,
           owner: p[r + 3],
           raw: Array.from(raw.slice(i, i + 3)),
+          temporal: Array.from(temporal.slice(i, i + 3)),
+          E_used: [0, 1, 2].map(
+            (k) =>
+              usedImage[
+                (Math.min(
+                  height - 1,
+                  Math.floor(((y + fg.offset.y + 0.5) * height) / rh),
+                ) *
+                  width +
+                  Math.min(
+                    width - 1,
+                    Math.floor(((x + fg.offset.x + 0.5) * width) / rw),
+                  )) *
+                  4 +
+                  k
+              ],
+          ),
           E: Array.from(E.slice(i, i + 3)),
           valid: raw[i + 3] > 0.5,
         });
@@ -319,6 +338,8 @@ export function captureCurved(lab, { primary = true } = {}) {
       regionDefinition:
         "foreground projected contour excluding floor-contact band; ball-floor boundary within 4cm of floor; boundary against a different ball owner. Reference points use actual low receiver Ng/Ns, within 4cm of floor/other sphere; invalid samples retained.",
       regionPoints,
+      usedScope:
+        "E_used is full-pixel queriedE in scene HDR target before material response/postprocess; E is low receiver spatial result; temporal is unfiltered history. Pixel positions can differ, so existing low receiver error gates are unchanged.",
       rayCounts: primary ? primaryCounts(lab) : undefined,
       angleBins5Degrees: angleBins,
       fallback,
