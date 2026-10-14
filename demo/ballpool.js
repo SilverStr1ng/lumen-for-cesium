@@ -133,7 +133,7 @@ function resourceMetrics() {
     workerCpuBytes = w?.packet?.bvh?.cpuRetainedBytes ?? 0,
     mainWorldCpuBytes =
       (w?._order?.byteLength ?? 0) + (w?._baseMaterials?.byteLength ?? 0),
-    physicsWasmReservedBytes = physics?.memoryBytes ?? 0,
+    physicsWasmReservedBytes = BallPoolPhysics.memoryBytes,
     sceneBytes =
       modelGpuBytes +
       worldGeometryBytes +
@@ -516,6 +516,7 @@ function freeze() {
   return request;
 }
 async function reset(count = Number($("count").value)) {
+  if (disposed) throw Error("Ball Pool disposed");
   // Validate before retiring the visible descriptor/model pair.
   const replacement = createBallPool({
     count,
@@ -526,6 +527,7 @@ async function reset(count = Number($("count").value)) {
   invalidate();
   physics?.destroy();
   physics = undefined;
+  tossId = 0;
   if (model && !model.isDestroyed()) scene.primitives.remove(model);
   model = undefined;
   releaseAsset(asset);
@@ -600,6 +602,18 @@ async function descriptorHash(d = descriptor) {
   ).join("");
 }
 function snapshot() {
+  if (disposed)
+    return {
+      phase,
+      generation,
+      playing,
+      modelBuilds,
+      worldBuilds,
+      worldGeneration: null,
+      modelGeneration: null,
+      historyFrames: 0,
+      errors: [...errors],
+    };
   return {
     phase,
     camera: {
@@ -648,6 +662,7 @@ function dispose() {
   disposed = true;
   phase = "disposed";
   physics?.destroy();
+  physics = undefined;
   for (const fresh of pendingModels) {
     if (!fresh.isDestroyed()) {
       scene.primitives.remove(fresh);
@@ -693,8 +708,10 @@ scene.postRender.addEventListener(() => {
     if (l && l.generation === generation && !l.convergedMilliseconds)
       l.convergedMilliseconds = performance.now() - l.started;
   }
+  const activeFg =
+    scene.lumen.enabled && fg.ready && fg.metrics.effectiveMode === "fg";
   $("metrics").textContent =
-    `请求 ${fg.mode} / ${fg.quality} · 实际 ${scene.lumen.enabled ? (fg.metrics.effectiveMode ?? "ddgi") : "preview / 局部 GI 暂停"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} → ${fg.metrics.receiverResolution?.join("×") ?? "…"}\n${fg.samples ?? 0}r · epoch ${fg.metrics.sampleEpoch ?? 0} · 历史 ${fg._stableFrames}\n${fg.metrics.status}\n附加峰值 ${(resources.peakAdditionalBytes / 1048576).toFixed(2)} / 64 MiB\n球 ${descriptor.balls.length} · 步数 ${physics?.ticks ?? 0}\n回退 ${fg.metrics.fallbackReason ?? fg.fallbackReason}`;
+    `请求 ${fg.mode} / ${fg.quality} · 实际 ${scene.lumen.enabled ? (fg.metrics.effectiveMode ?? "ddgi") : "preview / 局部 GI 暂停"}\n${scene.drawingBufferWidth}×${scene.drawingBufferHeight} → ${activeFg ? fg.metrics.receiverResolution?.join("×") : "无活动接收纹理"}\n配置 ${fg.samples ?? 0}r · 实际 ${activeFg ? fg.samples : 0}r · epoch ${fg.metrics.sampleEpoch ?? 0} · 历史 ${fg._stableFrames}\n${fg.metrics.status}\n附加峰值 ${(resources.peakAdditionalBytes / 1048576).toFixed(2)} / 64 MiB\n球 ${descriptor.balls.length} · 步数 ${physics?.ticks ?? 0}\n回退 ${scene.lumen.enabled ? (fg.metrics.fallbackReason ?? fg.fallbackReason) : "运动或重建预览：旧局部 GI 已失效"}`;
 });
 for (const b of document.querySelectorAll("[data-camera]"))
   b.onclick = () => camera(b.dataset.camera, true);
@@ -819,18 +836,26 @@ window.ballPool = {
 };
 window.earthLab = window.ballPool;
 addEventListener("pagehide", dispose, { once: true });
-try {
-  scene.imageryLayers.addImageryProvider(
-    await C.TileMapServiceImageryProvider.fromUrl(
-      "../cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII",
-    ),
-  );
+async function initialize() {
+  const own = generation;
   light();
   camera(params.get("camera") ?? "overview");
   $("fgQuality").value = fg.quality;
   $("count").value = String(descriptor.balls.length);
-  physics = await BallPoolPhysics.create(descriptor);
+  const imagery = await C.TileMapServiceImageryProvider.fromUrl(
+    "../cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII",
+  );
+  if (disposed) return;
+  scene.imageryLayers.addImageryProvider(imagery);
+  if (own !== generation) return;
+  const freshPhysics = await BallPoolPhysics.create(descriptor);
+  if (disposed || own !== generation) {
+    freshPhysics.destroy();
+    return;
+  }
+  physics = freshPhysics;
   await freeze();
-} catch (e) {
-  $("error").textContent = String(e.message ?? e);
 }
+window.ballPool.initialized = initialize().catch((e) => {
+  if (!disposed) $("error").textContent = String(e.message ?? e);
+});

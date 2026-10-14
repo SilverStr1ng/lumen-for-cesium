@@ -18,6 +18,9 @@ async function initialize() {
   }
 }
 export class BallPoolPhysics {
+  static get memoryBytes() {
+    return wasmMemory?.buffer.byteLength ?? 0;
+  }
   static async create(descriptor) {
     await (initialization ??= initialize());
     return new BallPoolPhysics(descriptor);
@@ -149,6 +152,6 @@ export class BallPoolPhysics {
     }
   }
   get memoryBytes() {
-    return wasmMemory?.buffer.byteLength ?? 0;
+    return BallPoolPhysics.memoryBytes;
   }
 }

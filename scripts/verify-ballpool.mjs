@@ -71,7 +71,116 @@ const ready = () =>
     null,
     { timeout: 180000 },
   );
+async function coldBootstrap(action) {
+  const cold = await browser.newPage({
+      viewport: { width: 1280, height: 800 },
+    }),
+    errors = [],
+    renderErrors = [];
+  cold.on("pageerror", (e) => errors.push(String(e)));
+  cold.on("console", (m) => {
+    if (m.type() === "error") renderErrors.push(m.text());
+  });
+  await cold.addInitScript(installGlObserver);
+  let release, requested;
+  const held = new Promise((resolve) => (release = resolve)),
+    requestStarted = new Promise((resolve) => (requested = resolve));
+  await cold.route("**/tilemapresource.xml", async (route) => {
+    requested();
+    await held;
+    await route.continue();
+  });
+  try {
+    await cold.goto(
+      "http://localhost:8090/demo/ballpool.html?count=64&diagnostic=1",
+      { waitUntil: "domcontentloaded" },
+    );
+    await requestStarted;
+    await cold.waitForFunction(() => !!window.ballPool);
+    let state;
+    if (action === "dispose") {
+      await cold.evaluate(() => ballPool.dispose());
+      release();
+      await cold.evaluate(() => ballPool.initialized);
+      state = await cold.evaluate(async () => {
+        let resetError;
+        try {
+          await ballPool.reset(16);
+        } catch (e) {
+          resetError = e.message;
+        }
+        return {
+          state: ballPool.snapshot(),
+          physicsAbsent: !ballPool.physics,
+          sceneDestroyed: ballPool.scene.isDestroyed(),
+          resetError,
+          gl: glObserver.snapshot(),
+        };
+      });
+      check(
+        "cold disposal cancels delayed imagery and physics initialization",
+        state.physicsAbsent &&
+          state.sceneDestroyed &&
+          state.state.phase === "disposed" &&
+          state.state.worldBuilds === 0 &&
+          state.resetError === "Ball Pool disposed" &&
+          state.gl.every((s) => Object.values(s.live).every((n) => n === 0)),
+        state,
+      );
+    } else {
+      await cold.evaluate(async () => {
+        await ballPool.reset(16);
+        window.coldPhysics = ballPool.physics;
+        window.coldBuilds = ballPool.snapshot().worldBuilds;
+      });
+      await cold.waitForFunction(
+        () => ballPool.snapshot().phase === "static-ready",
+        null,
+        { timeout: 180000 },
+      );
+      release();
+      await cold.evaluate(() => ballPool.initialized);
+      state = await cold.evaluate(() => ({
+        state: ballPool.snapshot(),
+        samePhysics: ballPool.physics === window.coldPhysics,
+        previousBuilds: window.coldBuilds,
+      }));
+      check(
+        "cold reset owns physics and world after delayed initial request",
+        state.samePhysics &&
+          state.previousBuilds === 1 &&
+          state.state.worldBuilds === 1 &&
+          state.state.descriptor.balls.length === 16 &&
+          state.state.generation === state.state.worldGeneration &&
+          state.state.generation === state.state.modelGeneration &&
+          state.state.resources.physicsWasmReservedBytes > 0 &&
+          state.state.resources.peakAdditionalBytes <= 64 * 1048576,
+        state,
+      );
+      await cold.evaluate(() => ballPool.dispose());
+      state.disposedGl = await cold.evaluate(() => glObserver.snapshot());
+      check(
+        "cold reset scene releases its GL resources",
+        state.disposedGl.every((s) =>
+          Object.values(s.live).every((n) => n === 0),
+        ),
+        state.disposedGl,
+      );
+    }
+    check(
+      `cold ${action} has no late rendering error`,
+      !errors.length && !renderErrors.length,
+      { errors, renderErrors },
+    );
+    return state;
+  } finally {
+    release();
+    await cold.close();
+  }
+}
 try {
+  report.coldDisposal = await coldBootstrap("dispose");
+  report.coldReset = await coldBootstrap("reset");
   await page.goto(
     "http://localhost:8090/demo/ballpool.html?diagnostic=1&count=64",
   );
@@ -116,6 +225,7 @@ try {
       snapshotDestroyed: snapshot.isDestroyed(),
       fgTextures: ballPool.scene.lumen.finalGather._textures.length,
       enabled: ballPool.scene.lumen.enabled,
+      hud: document.getElementById("metrics").textContent,
       movement: Math.max(
         ...ballPool.descriptor.balls.map((b, i) =>
           Math.hypot(
@@ -141,6 +251,12 @@ try {
     "real finite physics interaction",
     report.motion.movement > 0.2,
     report.motion.movement,
+  );
+  check(
+    "motion HUD reports no active receivers and zero actual FG rays",
+    report.motion.hud.includes("无活动接收纹理") &&
+      report.motion.hud.includes("实际 0r"),
+    report.motion.hud,
   );
   await page.screenshot({ path: out + "/motion-64.png" });
   await page.evaluate(() => {
