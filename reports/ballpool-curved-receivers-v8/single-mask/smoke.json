@@ -1,0 +1,4275 @@
+{
+  "version": {
+    "head": "d05f2e22b921d2440d383d46239c2c14c50b56fb",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "fae3e4d0f44ea72ddbae1726f44d41fd70abe535af3226114b4cbace2b383a51",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "f2c00b86c5e2b18c3bfbe6b6d52853078a1ffdc457473fc0dca458340f3e514c",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "20685ad8e52c10dc11ea01a161a6b0bb22d1ff21bc172b8ad79cd3630aa0bb02",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "821d12b7534f64aadb50f0fd745890c1e07b2114d8dc0dc30116c69ef8a35c8a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "6b80dede18b2e7fac5aee087fa0af91a0a5f0ab7735769a4355406bceb43de7e",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "9bd8bd3f697f35732d35ba07516acab9bb5cc2768a930187742acb97abff23a5",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "3d640c3d66f92ca0c18a33d9192c5c04ceebfc055b687cdf8d91275ae3b114c4",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "c2d2dbcdda6c0f50a20b2ae8fd87a9d0855c1388391e1f9735e23f0500297aa1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "90c5c07d2d5bbb6e3bd936a8b4301d5118b86c11861f78011c5c306c7850b5e4",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "84150ffb71a896377bd01d75b99fb666028f5ebdfa46cc59158648f98ab19e74",
+      "demo/globe.js": "e29a4239c75fb3b856182d2bb31566a7c2a0512c43534ad634a2f927a210e348",
+      "demo/benchmark.js": "c838e4fde77ceebfdc69c05c60143ad2d0152523ade14c1d9a10ddf3aed5c4e2",
+      "scripts/browser-tools.mjs": "1d11c0af6b989d8701e82fdd436d5169ac49580fa2746f026bdac00b66fb3fe5",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "6b3680a96e8c96785375018c8070f92208b05351bfe2828c353e7bea99f10546",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "248328dd3aa76359572f49d229f3be5aea67d4592faf1120bb6ddaa3b2813794",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "cesium-1.146/packages/engine/Source/Scene/Scene.js": "0f794344b8699510ecaddfa40c3675856a29ef87ffc4f25aaff9439ebce9c2fc",
+      "cesium-1.146/packages/engine/Source/Scene/GBuffer.js": "d2bf883b7bd5229d0771324da06536b32f25492cf039894a5beba93fc77a4453",
+      "scripts/r8-acceptance.mjs": "d58bde75a7806315c2b346d44ac7655742bbb18cc0b6a864af3daba1ac6f9d1a",
+      "lumen/ballpool-scene.js": "6dd5e87f902044e9c3bc5826eb243ae0279a518b5d6b2ecab284f612dcfbef7c",
+      "lumen/bvh.js": "a505d6b19b964115ebc4294a0318fef45bd66d80c3af64daac5d31a912818b53",
+      "lumen/ddgi.js": "b90701c431aedb3124852a690dcfe9d30e6d43d5d56c369d6ccc8aa1786009c6",
+      "lumen/fg-sampling.js": "44ce89c085b15d50cb61a86efa74e7e8c0507ba83ff0255b43bc2f12d50688a0",
+      "lumen/surface-cache.js": "f29b468eec48611f9891985a22a31db0184cd5c582c419288d342609abff4dfb",
+      "lumen/trace-domain.js": "2c71e5fa34862770e46371bfc2795c2968994fea983916be06d78a89b3a579d5",
+      "lumen/worker.js": "bfa0bb17475adfba88490151d0b6e004218774f1a3d741bd3f7e228c0ff6e629",
+      "demo/ballpool-physics.js": "55a09e88f6968be87ca5992504fab1e86516dc12bf56d5f18101e79a8e6fa769",
+      "demo/ballpool.css": "fb91a225f8be624497a794701555444191bc8b1027714940032e86357aee7f77",
+      "demo/ballpool.html": "23bd249222d02685ec704c7cc7dbffbf5b1d1a61b81902d90d21b46b7f073a72",
+      "demo/ballpool.js": "a0e5932ca4a11b5b49500ef1711ae360c864ac54860dbb1bf6b30a643a2509cb",
+      "demo/curved-diagnostics.js": "06f8d1c2ad11343ca42bf7da1f08148b008b5a71a94a685b52540d74072e8e6a",
+      "demo/gallery.css": "381e05c01ebe059bc5481f80f8fdbdfd4fadef2fe0e6d91a8ded3bab75bae3a2",
+      "demo/gallery.html": "4a574f1a52ee6ce993e21d6d20458b83cfe68d3d95c609185bb6f738c759bf4f",
+      "demo/globe.css": "1fd71e3cf90a9f29deb3cd1dec9b58ba32aaa3e98e2328dde19f0b0074f9f3b2",
+      "demo/globe.html": "16d89ab640f2aa525380bc6696459bb827f1587b041f368de757ed44a3b7b941",
+      "demo/index.html": "ecd7ea1d2ff093ba6b9ef9925ea090c645a4a34f2f02a59e81e1cd3b86483a88",
+      "demo/lighting-environment.js": "ebece9c8ee7d2dd6abc80ac647afc92ecb9527ff6694781c4bea1001841f76e8",
+      "demo/main.js": "4a88afd279448579ebf1abfff1df1cd52a39219ed95e91dc1e25564ce589141c",
+      "demo/regression.html": "e9f112cc511e95be1819f4673fe27682cf8abcbc96ed456057a847483b4df4d6",
+      "demo/regression.js": "7a0c48abd9d6ea9ee434740dc7f4d11290018bf408ae5ae8ffd56fda593d2548",
+      "cesium-1.146/packages/engine/Source/Scene/Lumen.js": "ffbe8bb642d5f360fe084bcabce9e8568ad50d6db493f222fffaab7110eb39bc",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherNormals.js": "83a68767787490f5a20009a6036e3e150c6e4c7c115a03e42e217f0d6e99a017",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSnapshot.js": "ddbe2a71ce760260c155e0fe7a3fd7916e1de8bc5e8daa1c3320c97256642abb",
+      "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": "f5d66883dc3bf9a9d67c7c8208721d03eb95558c9547a20245cb1266e1b4526b",
+      "cesium-1.146/packages/engine/Source/Scene/LumenWorld.js": "f79f3b718584fd50ada9bc45c8694a3f534c5e0002e113bccb9d394f4704e579"
+    },
+    "compiledBundle": "48ec997abb3cb80cc5b4990f6950aecd351b6fbb32d190ceb95386a98578e830",
+    "assets": {
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_0.json": "eacde1b661c07ae81779214f2ee1c840dd24ea56cdba38735d9f63bb51d3f534",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_1.json": "687cb449340f43ed67ccdb59e009c76642ec4a7dda63504c537f6c8b03371632",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_10.json": "3337da09252e812c2609fe17966824d9387600b16b5faeca3b279121ce951a55",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_11.json": "1213a76851024f19bedb1f1177099cc867876c9477214ce25c4aca5922ae0c59",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_12.json": "ecea15bed860ca0dd962e427ddc929c356c8de4f5ea0599dd4a4d117c9ba5fdc",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_13.json": "a7f459cda58803d906bb3e63d98f250c9211c16e99a964b39cab1af20c3c54a7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_14.json": "051627ca694ce9a0585eea402b11a7e74b70c4a941863ee731e1537da77354b8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_15.json": "ef41a0fb36667716e1aac3ed84c1e92fc0b80697a11434a08dfec80c10fa3b38",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_16.json": "17c2ec764a2b2d4a93558009e1eb02912757999f3dedea775c961d689bec6155",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_17.json": "95bbcd68070cff4725867054f6da18e6d79d1e7876efd116f046f6d99b6ffec7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_18.json": "19ec8e50b7a8604bcd93bf20850f033e153242663107f372e3af09194f903497",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_19.json": "9d33b633af09f381d2aeabf1c08a80b327fea00105145310f706a7a2f3f3b395",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_2.json": "79e5007d0f7d284035286ff31e7959f1d8c5654261ffb5a01ec298fc7ecfdaf2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_20.json": "d4a6ee787228e9ca38799199a6d69aaaf1a2401d0bad5f9b3ff30c30a6e35685",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_21.json": "deab5998d0e85929227c82fd4267f179940b77ac9fe3d9da51ee222745658773",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_22.json": "cbc988d6f44052aae9bea4d437b74f97a9a11d1370137cf3944d7a3dfdb00c28",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_23.json": "fe1cbcb3177839ba821ae202184f4862a17321525556c06e3c000ab02d449645",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_24.json": "336a61b2b5c63a31b169f19c95dfa4607874f2a2cdca3f5f6b995a2526e8090f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_25.json": "7b9d89953db4bb5d4d51b287cbf01b2c1c0a4d1d2fcf3696b4682f77cb9a12c5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_26.json": "03c47eff883b79a9863011ba286dea815320f274049ec9f71649c9a45b52db95",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_27.json": "d9d755dd689d6af3d117c82e5e07c2f9986e43fe966cd3520d4a8e28201d7c6e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_3.json": "2c9ad7c9ca22e45f93354a078be51e63579cc67d960df3fb9cddd237a0fa7d05",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_4.json": "2019a8459a5795b4203d58cedc5ab54e0ab17c66084198106da4755ccd89321e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_5.json": "b5cd2ed128bb530e920633cee2f9131687dc46673116fa482a59916945ab5e5e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_6.json": "775adc76b9497c0abfb6a71ec77149abf1f160aeb6dd1380056391916dc9d3c6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_7.json": "f3e330690aad3c977a66f3bb98952bcedd3c73886502e9477df9fe27855dd0cd",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_8.json": "5da58dafb2a105234978e29f659dbb75ca716222cdf35dae975a9f380fa97fb6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_9.json": "36dc6631c6018fc9cd3df3f649b74308bb5c6a3303ac7b59067c4b4fe1e564c0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/bing_maps_credit.png": "e5c3467a2532a0986ca0f90189e9bdae3222d3f1580d2e8c0261fb2bc2b4417f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/cesium_credit.png": "20dadec44d030ec7de6193b0ee98329a896c4dcb4ed8f7a26d4781127b6fa989",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/google_earth_credit.png": "d4c3719a707ca487d847d7c8ea8ffc590f1297f987e95d1acf88d433b92c1c3f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/ion-credit.png": "721870c1417e20d25e2d1b834e80c66908418e459dcf76c95bf2997dc0733289",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/LensFlare/DirtMask.jpg": "3d06a15d04154f027e0b2b110c7c9952329b385682c327cdeb71e0e3c720f3d4",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/LensFlare/StarBurst.jpg": "c42ecef9345e34549fb9528e25cac8f38c9f8c43f73d812c2ccaf5909ab249a5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/0/0/0.jpg": "919864197d2f27a165420331d47458614a056c36dcdf306ce89ed2248bd0041d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/0/1/0.jpg": "f336509772ab57ee14e15c72579dd9fb0297c779c853d4c65db04bef78305b48",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/0/0.jpg": "3f40b94a0adb4efe212899374d3dd2bc7abe0491ce3a30d89f4392f498a328cf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/0/1.jpg": "76393f9322c791564a9dc9529822637fdcc8b63418be502f4ef0ab9ca2708664",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/1/0.jpg": "cec03089c65ac612ef0655739fd1c66e068a98739aec325ba8743aca7338e6f1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/1/1.jpg": "b1b860b99fd3fdc1a91eb09576563efd5cc91d95f4e869fb436a35c4ff8994c6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/2/0.jpg": "7c59ff20319379afea17d029fca11ea497fd16a4f9da574137948b0631c71c63",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/2/1.jpg": "ed0209ef589d9cc34a26663f8c9ecdd63de705482692290328cfd2fff984451d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/3/0.jpg": "d7fa5cd581a7b1d004d6dfcf329a09cd51859dd503f864a85756a35a456a0030",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/3/1.jpg": "8637acf2981f7209ec449a5812c855650a7eeeca5bd8a9d328310bb2a5295b39",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/0.jpg": "d12e2e52ae4d2e0c23ec15de8a1e006ccae0d3142b286578670cb4a8fd3f2311",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/1.jpg": "87a7ea00d62fe0517680cb58953e46faf9b325b9ce8e982c5a68b7e6c6c46822",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/2.jpg": "eecc7078cc54ec05f96cdf472519d5f159797015afaad23c2e56bed2fb79b481",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/3.jpg": "3d4dc525adaed0c3ddf5e5047bd1b348f2df473449c50b6b8175d5d073e7d88b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/0.jpg": "e586e2884f6fe3a78291776b5bd4b190ffa0c9129c146ef78c7918e570e40e07",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/1.jpg": "bd0b39a8e734b137e8017cb02f1bae541452bea034be5bc7e2bf8a6cb8a220ae",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/2.jpg": "af8eb0a43423d28c7cb3a92553967205d9e3ced5738bd75f773d653fa5849c90",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/3.jpg": "48450e09b99e3283945bda85be1513a5ed28a4b1e58cd0b299c295d16c25935c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/0.jpg": "4615813c56a8ee304d78d3768c489a4e00a5c4542f2d937b6be7db7c12b42b28",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/1.jpg": "66df8171de54015866691a00fd03ad8c5c11dc75466a70d11a43b2020eb63dba",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/2.jpg": "669649edf6e1e0e66ee03224a792d5fb09e8aef7a7a187697a3c10f9a7904c5c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/3.jpg": "21585c5a2551120948ec5d0f04a533805b2ba63b7a5b961ad722fca25cf6299f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/0.jpg": "640f7fd8fd3e5923ef1b021476f13c1e6919f339b17e539b9e20fe6bc16240f7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/1.jpg": "e418706ca6c844a67aa71e448ef97e703d5c3a9e3791db255366dad49b4adeb9",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/2.jpg": "79d04283b385d193bbf5bd84d40744c8f5bc8d6f52dfab8d965b647fdb61d72f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/3.jpg": "4e693d36407dab81266071edbca5915872284532498dfa29472cc71b2810482d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/0.jpg": "46e6a0608fc8261bbeaad8fffa995ee3c85fddebb3b463f3e391634ea8a2a9ec",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/1.jpg": "0f341c2ace1b0b1803aa22c09c2ab8fde4c3a1a7cb013a963e750997deb6b1c2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/2.jpg": "13a22c18a223ba4d8c2689793a5dff83e4e50b3790ddcb2a32ac5a97b8e1e0c8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/3.jpg": "93c5f45d481111b4cd2d38792cfb049e5176be566b622028e0704151c0c23aaf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/0.jpg": "7fbb096ff03dd162ae965a6c7e1c47e29599e7f3f1031ce59fb07ff669ca3995",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/1.jpg": "70b04e7e362cb4c80d8c7cce1a9401ef9c7606bb2c4b9de011dea58d79b8b4e6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/2.jpg": "8d03e07689c97fff91497250f1cbeb19fbe5331f38bd91b38a44bb69745bb29b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/3.jpg": "17b46ab558da6e9fa715a8ab365109bd808d897c53a9f5401da55dd6b9566a7a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/0.jpg": "e25e95c8a6dcb21f6668541c925ee670c42fdc0c0d409c520bf29542a2b3fc52",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/1.jpg": "0a57813b25a70cf86a09bb251018e488b87e795cd2dbcaee7f8a9e80e7c449bf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/2.jpg": "f0e9d28b216838c7c30375bb50a7c285203d4bad20eb581c2ee0b2468da20f8a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/3.jpg": "c2a663dcf812d9a7034d48707a33a2f341d22a99aa277f69b0e06f064de26fab",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/0.jpg": "65c1f1b10a04387f2f64b3c4bc111803ddbf32dd2708f02eabca048e88e8edf3",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/1.jpg": "11ac8ae6af861b966d25ed660549d2a9ce164cb9e327a247655e949f967fbc2b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/2.jpg": "59ca5b5264df0421c42cc9d3e6369d91ff9f5f387fc8fd578c25b113cae52b78",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/3.jpg": "7064a9817de3f19fbfc66c36d575fdd10a8d976a93f655b7b1bee591b07314b7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_mx.jpg": "7eb5dfe95bebe58aaeff1a29f1e435e2e9985c7007d32397f63f1aa798062435",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_my.jpg": "ee944d55d7abe7799f54768f59d6a3da6b802fabd50d20d3ceb898e888b6ca7a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_mz.jpg": "958b3d7779bf39e93dbb3373379a696c1b1d5660535d2ff963ab3c7f86d8042e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_px.jpg": "075509b5c76a3db76baf219c71d1156c90bd87a201e4402e80d4fb1f16b526da",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_py.jpg": "62404c604baff09b6293e79d83a6c851428452a07568aca2f4b69cfd67c8a25a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_pz.jpg": "8a367b21469de9c3d41dec0a9b1aaf80472b5945e7f6827fb3a403707333e13b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/airfield.png": "9607228765a05a29c5feb0ded034ee7f2aa2e9641faf512fb122fba03e443b29",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/airport.png": "fbdde1b757753fbf54811a7733e78d43af43ffee204fa8169b295a3610e889fa",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/alcohol-shop.png": "920cc1449428757a73aee044d07e72a9c5e17535feb5754cfc43b4a1e6652cf6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/america-football.png": "ed7a66dc97a71fb689cb1b5c1f5d2832644152668be8d011aee23310e34bbd3b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/art-gallery.png": "b57e75127fe217af9fc0b9cfc67f53b3db7aa72b06b30ce443be89c0764b2b4a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bakery.png": "7f8fa5241c76569cee88f34bd21afc54d1cdcbffe8a1633fe91df23b28a3486a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bank.png": "fcb114b2229e1c2b01a21032958c49f405ef04e106b27cf91512852944b610d4",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bar.png": "be2709f48516f1b4203d3f10a9a24159e7761d91fe8f2276f860259d0ea73851",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/baseball.png": "24db293dfeabe9e77c3e1cd2f5ca26b61b8919961cf3415880d017be1aa0d3b3",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/basketball.png": "96bae0a41bccd20ccd8b496376df9415364dfc008b8eb6aaddff68371b5d0e96",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/beer.png": "8ad8f0c1414f5574103cb7e0d14c136292e847583ef06154c27f7765b6208474",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bicycle.png": "d998b6e08bbcaa658ae6679e7197349518cf4cfd610ec1f69c8643a4f007186d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/building.png": "d4375df9fc15b0eeb0b54680e27423a2d6d60ad17f515f99236510dbc246c6af",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bus.png": "834a867a10afd8078f3ddee6d4231bf136b46c603afe31f6c089dfb55e47a9de",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cafe.png": "07ff7a0dd1da1496aeff569291ae3add49ede31dd35674858bf5fcf9d21d5728",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/camera.png": "c6dfe806ebed73bd168fbace390d6402a64c54bb7cdccd17ba5813d4469f90d6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/campsite.png": "e3ed13ecf426166fded98e86057423ca2333ce3c3795a0efa5f8c3b8063475cb",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/car.png": "189c871c1ed9a60000276fcc375b368f06d0a72b2c1de1032ba1caddbc04f8f6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cemetery.png": "d066f21dea8cb8e667326b5c7399bc55c293881cc8b731acdc621b804a508d79",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cesium.png": "d5857cc955c248b95c0c12f2c533629e9c83f324b89eb56aa1b12a68a1f64256",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/chemist.png": "d4852a72e3baaa9efd61293963db89a72d4d0c910aec0419e92af630a1cd6390",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cinema.png": "eba78ccef08d317d931b796b5630db396a4c6647f8d4b57764357e5e24d2599b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/circle-stroked.png": "4a609e3399a2fad31b9e75bfdd17c4cc95e5b2f260f1d902aa1cb5b040c66523",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/circle.png": "05b7a313a6d4e47d7e13591f06dae1c4fc706146632fc7d9758d59f687d84ea9",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/city.png": "92539b16e075cb79b26daffffbff2bafaf1f09c91d5cda5b6a9ef8cbb4327341",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/clothing-store.png": "34a527cd4f0d4ae5759e98921dbfe23699b4708288985f85b64ff75353b3ca97",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/college.png": "26a9bd248ba058414c36f7d140ff148c513b72170432b892c3ec5ce0f12bd146",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/commercial.png": "0deb24e319298a2d2890e76b44c4120c29ec89f6daf73cc2151bf28dbd960946",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cricket.png": "07cc9f8540e7574d426cdd05fdab1bb71cdbe3b22c59f88ce6c9f20929d8ecaf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cross.png": "fb878dd32c44ca83370a944d766b0e992ee5a01accb54d81b19867beef03a2d0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/dam.png": "2ab3ed160681f8894b76e6640de3c103caedb65f14e4565dcf123ed413502345",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/danger.png": "c268ee6d675c9db3562f44aaa7b46bca2815124f520365d3f517ccf3430e9e43",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/disability.png": "b2293d6411ae95ed7113bb6b7de19b5863164a697212d9642ddddef23634da45",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/dog-park.png": "6b3b662c50623e31e69e44b6ab80aad116a9cbe406814acc60920e7bb8b46c31",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/embassy.png": "83c902b90a4f5de175631f7b91ec2b1c3f461e0395f34507cb007572e1550137",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/emergency-telephone.png": "2b374c00679109719202b61c5f1ca4b108ba859318e4a12d27d9d65081491b5c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/entrance.png": "ee93d08539b460126b32691e71781e26585003390dbab05ff9037d2b41722edc",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/farm.png": "a1ea51ae83cb6db984bda6f451de81b232cf1c193176142cb44f0664692f0772",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/fast-food.png": "24d42a6409ff1f518c776997ef7b07ecb76c4cf446248551f22814d8bbf4e99b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/ferry.png": "97fcf2915ffe3ef62e8ee5a05672ae6dbdabd24d6aa1b4cb709302487ee06b2a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/fire-station.png": "9e17c8f458a6e7a525eace12875c4f16acd4e6750a19271448bd0e926da860b2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/fuel.png": "9e59bcba3f758998a6a55bf15174727e779207abf5a4f324c2cf5593fbac983a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/garden.png": "9c860cde4e54fbec8709b243052f37700e0d64fb9aa61f33818b0fe838b7a8ae",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/gift.png": "4814551df01639c36c1333de3a99fb9b5a9d758dab186fc7132579d984ebcf96",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/golf.png": "9e447b620baddad979776dc4fa4634f6cc96c0e00682282e008f2041c6f98e57",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/grocery.png": "6970b52af4509ab118d1d898a959bf631ae21e457803214fa9fab337770e8ca5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/hairdresser.png": "ea92df398c4ced256fa144958d3a8b7d60ece46c226dcb8832868ffb1df7f7d5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/harbor.png": "506545526fcfa6655206d840da1392b14d8a53ed63bb40ba907c1e503834fd90",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/heart.png": "f648f8d38ae47696c6596c106c6ef4b3984cfbbab2a83a82b911f5be7621067f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/heliport.png": "4c5ec82bae0ef3ed3b38bd8089ce0ae64b4a9a2de6202855b22c736281f65440",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/hospital.png": "0ba68595b4d670a16c953894b2c1a0c342c072a2003cec4dbe630aa10efa1568",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/ice-cream.png": "9ee2b16f1ae408f624d79cdbde704284579238c9daadda5938382abe1c4d543e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/industrial.png": "4bc573a1d392c228c94d8a397a830cbb7093cb969469eda44019634e3885d5a1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/land-use.png": "261d7de6098521628cc6c6bfa02a47d17931fe521cc8e47dc56bc5d83aa28443",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/laundry.png": "303c0bd8319b88b139997cabfba201eccb5afd1f7d5401eabd90c2c66ca2a43b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/library.png": "511b7f8d3b1a2ea2205d8466b5d5129855a12af6cf1f5baba2f4b8a4dd5e562c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/lighthouse.png": "dbccce865f1789f5326566145401366fa94913b6462672c5f252be803014c714",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/lodging.png": "02c1d81ef957255d27cb5fce70ef4f3bee79f4f8ec3b222f559f4375ef7ea6ac",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/logging.png": "056e8893c58ba30f5a0d9905194b0e60e4f31d9c1a59b5711d53647e4749528c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/london-underground.png": "f8a41f09994d53d27335bbc70aab29a3d042583bb6b4520afaaffd0dd3f8e2fa",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/marker-stroked.png": "e21d955606f5911a981e4674ba1a491b68bdf37c7ed698be2bc210d7e86c9bc1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/marker.png": "f8fcf45e3b3355ed9fba1050a26380927732300b54d8bb00b80fecf7bdcfc7d7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/minefield.png": "aa1634ca37adee2849fba655285fed160763f53b7c5163f2753609c506312d64",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/mobilephone.png": "07e26f366da18b3fdeb53b6f29ff5bacdab5513758bbd6217ac41ebe5fdc104e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/monument.png": "707a32e0c3b943941c396b18d6caa08fb0620a0ed07d84496ffad42cdb2d57e6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/museum.png": "384ccd2fe0977c7b7a51635c6a16e81f6c906a355635ccda2ff33d897c16bd93",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/music.png": "c6bd30e02b950aeb2f5da711011d9b0bd5dbec687adc39a2f8f27025c8fb8508",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/oil-well.png": "f0c99b3662e9f1abe63a387c1da5cadd5336b155650d3daf678a8f18401c2fd5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/park.png": "b5ee53a16dd03e32630218a2453065f3f6435ec9246028fa08785eb1d52ef54a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/park2.png": "7fd262afad32b6d2aabeb0839b746468671e131b234a6265b40cb284a4003c4f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/parking-garage.png": "251d73325620f24a16357f542967dc0112dce10679b27db3e7f489fd05ab9ded",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/parking.png": "3e62ecf1573c7b13d7be9cc28ffe9576e6e30963fb5d1df6dace01acd72dd447",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/pharmacy.png": "d382d9b8a06ac3a089b35a8137848c74fd41bf465b5d4b1a975ecebe4a992163",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/pitch.png": "abe872e09e244eab94237c254926b866dc1685a999833d95f443ac013fc976f3",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/place-of-worship.png": "03755fe12b0b412835dc807fde64973e6316df623d6a6e81ca052d750d85d344",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/playground.png": "0fac0aa78869da09e39e88632af82177d98723dd38141e81ab6b09a29129a7d8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/police.png": "51592091904f75f4a25e37f87b326dc576bfacac9317aa6dfae2d0e0a8f117ba",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/polling-place.png": "0c4c8a5d1bbc1cc0f137cc1a357d418a442ad0bd3074a32819e9704fcbb265be",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/post.png": "cff1c2c20e77dece1eecf3dfb0fe10f139309ac78a2523bc9f01b4279e98e291",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/prison.png": "64636c8abe45f5cb8c3dc9ab73111683c4aa345691a5f17c327f909c774c0a0e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-above.png": "1b4555bb2169307c5ee1bc8afbd9ad97cfb36121e87e6413ae6ae137fb501109",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-light.png": "e989ebe529a979dd7600f5a6c8039c32972bf424b70558baf134f779901f1703",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-metro.png": "b89c202b5fdea739ce812932a22a3a15ab921a1aa2ceb0d801d4913f763095a5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-underground.png": "2be6c183a1b8604551a8c88d6437e826680da8b5fc75237b5e7108f38f347e11",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail.png": "4965beb812449d4abc1cdb9e30a3d1a5f7c18999571794e38eb92c8ad98cb048",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/religious-christian.png": "a74c5e18bacf1469c22e6ff84736a63187b0c21048799885acabd5fac25d5cc0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/religious-jewish.png": "fe5d53b2f1cc5e80a2e2fb6b9163ca27748c2a031ea2df4d0c614ffd338adba1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/religious-muslim.png": "5b06c277d3638ee79172fb4ff89d84f1e475a1b25434953f19cb343e2b7c9fd1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/restaurant.png": "85031df6b2174e72ec76dc0de6f4e54ab348426c7f738b11d8b7eb22bb72722e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/roadblock.png": "d455530701e372698538f32a4d71029897e297e6124fb68550e5f323fee40bb0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rocket.png": "a167e92802b80e5bc5f78bea77d051007524782979a1b89eab9288d1e80ff5db",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/school.png": "1cc6087b652577de5e60525b5daa20c07cc126b526fd461f04381ae586a7025d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/scooter.png": "4aa704ae97edb9bc514c0fc0ebe7adf2aa3f515ba3a15c6c17c25e17c8c1b8d6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/shop.png": "1742dceb33d3ecd6dc66e5f5f1e637c65da7f4d92b066a2379dcb7e7e642ffc0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/skiing.png": "576d29be1492b2973ffbaf688c7e8b8044f350c29317ad29060e3db29c3dc751",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/slaughterhouse.png": "69a20fc6dff36897cf3152a525d36752799d5805bf5f01ae5bcdeaa55abdd84c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/soccer.png": "34308b14fe61df1608ddae5a8cd42e246487f11368f91867cb80e43590bfd4a0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/square-stroked.png": "2b48882145df7a64dcfa5f94789875a3818eb5976494198a72dcfbd2ecc2984c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/square.png": "68ba096d343037fed0dd1271ef8cc0bad600a134ec6082ff613f1a340f3c0ed8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/star-stroked.png": "41f15812c35881118eee7b8eb3487538f2617ef8523f22ca738e2901e5752469",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/star.png": "58e516f3e338a1784198a5d3c05a486d41b55dca4122bf5c40986a9e0528460a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/suitcase.png": "066e75d3303b4edf97086acd70e6e9aebf1165faf9c40adbf58f6585bc04552c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/swimming.png": "3e7e12dc1197399ee43900a77444e7d8cfeba04732a7547f5b13d0e99fe70b63",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/telephone.png": "3d6da688ab5735a1137207e041fb0023dbb1d6d40e328c63664c8a2c737c5391",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/tennis.png": "7138863b8e10b5e78f5f0a02cf78b5f1f8912a97da433fe2df2c60f3b18ed556",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/theatre.png": "cb45d9d94385e3d164fddceb40c00cd6f3654de4fd44df0fa9d539ce1f68fecd",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/toilets.png": "e08a3ff947299d4f110fd7fd4ff30719d433d95cd52337341915f0e06c2f2f74",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/town-hall.png": "33b7f1bcd10f771f821de464367d785c20545075142bf341b250e5822124795e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/town.png": "1402be94a92ac7884d0e0b0344db84f1b74170ed7012b7d95982e072b38eab59",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/triangle-stroked.png": "880ea63998f0cbe79730df17e22d2b6f87941a535408b06d5ef62df4b3d6fdba",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/triangle.png": "6ccfb06da43d5969424510d418e75b18c9c06fbbac2c6531105ccee98d26c551",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/village.png": "3e73ebd0f5c2bfa83764a1fd74a4e4de855e43a38acc9b75aaf423a8a63342d2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/warehouse.png": "90fe8a1799906e59ed8fe7e0b35ca2ec66a39a592c3a8e5c8fe8f93a06eef387",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/waste-basket.png": "5ef33ea09aaf66f1f429efb735cd0b2fcc7b8372305f9acdc2d27f621b8fb889",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/water.png": "a1b40fc3d50e119865ed8b98fccee6b0d2d1da2133731074d3df8f1f5f5b38c9",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/wetland.png": "bdbb392ad5fd31edcc9973f72e1ebc03911204d98c2e786b07bb4adae65ca7b2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/zoo.png": "3c8d46e2412476547805180fb62d0c5fc23d7cbd65c71a6738ecb668effbcdcb",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/moonSmall.jpg": "380fa69424e1cd2268816e346dc56393bd1c809b8e0cb078e705ec469a5847db",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/waterNormals.jpg": "9ab17625d9a2b0541c14a1b24ae8e3e192b40882cc77729c46b5de5648a991a8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/waterNormalsSmall.jpg": "ef35a21e3cbff36032d118ff1df951ad88c023c39562c44f5b2d46f308e98858",
+      "cesium-1.146/Build/CesiumUnminified/Assets/approximateTerrainHeights.json": "6dbd104a916bb05d0f5103f46fb1c36d9966947a74984b5614607edda9325e57",
+      "fixtures/alpha-mask.bin": "f9c9cee34b6407e5842d4f4fdebea2802b3b98f36de8ff0789ec6d8ad623a807",
+      "fixtures/alpha-mask.gltf": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "fixtures/alpha-mask.json": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "fixtures/alpha-mask.png": "5a173415420a42b3b032ef3729c61268b04ac67b01cbe2fd7b241b87dcee3de4",
+      "fixtures/earth-gi-gallery-off.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery-off.gltf": "ac88919b7c261d998d7c82a0691e4c04eca422b423248c38c40a43a459c2230d",
+      "fixtures/earth-gi-gallery-off.json": "04c4a3576e1ca7546cda3ebcc17264c6a485e7942ac504156f64db31416351b3",
+      "fixtures/earth-gi-gallery.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery.gltf": "60fb80a3cc64244c5e3a0c34e370f9869435ce5f14293ffd116680bb088f18b5",
+      "fixtures/earth-gi-gallery.json": "feef0fd8d9a23a6e121fcbb48cce8ae188394674107aac24be99d0dbad26b297",
+      "fixtures/earth-pavilion-held-out.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion-held-out.gltf": "6bf0fd7ab3a5bb28a4a7daee047c9a7a8903b5203a8a3e0a2cbdd8de5e5c6f4a",
+      "fixtures/earth-pavilion-held-out.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/earth-pavilion-presentation.bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "fixtures/earth-pavilion-presentation.gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "fixtures/earth-pavilion-presentation.json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "fixtures/earth-pavilion.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion.gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/far-blocker.gltf": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "fixtures/far-blocker.json": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "fixtures/fg-slanted-barrier.bin": "8b07bba2e4c8c7aaa0b0e6cd20c44091cf4d0723ca3305fa8e9ed6d311ad64af",
+      "fixtures/fg-slanted-barrier.gltf": "82e17c00914c35bdd35ca5364635a6a311f50b39932c22386398e3bfac366074",
+      "fixtures/fg-slanted-barrier.json": "1cb69fdeb7abae75d67a9db5b79f8ecb745834a05a243e213536532b2ef7cc2b",
+      "fixtures/gallery-mineral.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/pavilion-detail.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/two-rooms.bin": "679eca85743630fa20c6e458c33e6b507ab386d1a66c39aa759c6ff0d75cbd19",
+      "fixtures/two-rooms.gltf": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "fixtures/two-rooms.json": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "fixtures/untextured.bin": "4f25e6c38fe7ccf71da9835afcf488a1f33ea7a3d94c45aaae7f2e03b0a81679",
+      "fixtures/untextured.gltf": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "fixtures/untextured.json": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa"
+    },
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/Lumen.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSnapshot.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
+      "demo/gallery.html",
+      "lumen/path-reference.js"
+    ]
+  },
+  "errors": [],
+  "console": [],
+  "environment": {
+    "browser": "155.0.8059.40",
+    "headless": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "visibility": "visible",
+    "resolution": [
+      960,
+      600
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+  },
+  "capture": {
+    "generation": 1,
+    "revision": 1,
+    "round": 3,
+    "seed": 0,
+    "epoch": 31,
+    "receiver": [
+      480,
+      300
+    ],
+    "samples": 32,
+    "resolution": [
+      960,
+      600
+    ],
+    "pixels": 19077,
+    "insideVolumePixels": 19077,
+    "meanWeight": 0.9912984221837815,
+    "unsupportedPixels": 0,
+    "edgePixels": 439,
+    "edgeMeanWeight": 0.6788154897494305,
+    "contactPixels": 439,
+    "contactMeanWeight": 0.6788154897494305,
+    "angleBins5Degrees": [
+      8010,
+      11025,
+      42,
+      0,
+      0,
+      0,
+      0
+    ],
+    "fallback": {
+      "0": 18911,
+      "7": 61,
+      "8": 105
+    },
+    "receivers": 4770,
+    "validRawFraction": 1,
+    "maxHistoryNormalDegrees": 0.13034711351999517,
+    "points": [
+      {
+        "pixel": [
+          210,
+          90
+        ],
+        "position": [
+          -0.2590278387069702,
+          0.06772804260253906,
+          0.13645923137664795
+        ],
+        "geometricNormal": [
+          -0.789061319962258,
+          0.103882865103609,
+          -0.6054672440993686
+        ],
+        "normal": [
+          -0.7687963686483776,
+          0.20101757256355937,
+          -0.6070783137896805
+        ],
+        "owner": 4097,
+        "raw": [
+          1.1954317092895508,
+          1.2591233253479004,
+          1.2580928802490234
+        ],
+        "E": [
+          1.1953125,
+          1.2587890625,
+          1.2578125
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          231,
+          90
+        ],
+        "position": [
+          -0.22433602809906006,
+          -0.231583833694458,
+          0.24007093906402588
+        ],
+        "geometricNormal": [
+          -0.5631215826390906,
+          -0.7338941210632804,
+          -0.3798598455151596
+        ],
+        "normal": [
+          -0.6640058229339544,
+          -0.6854577976241749,
+          -0.29873713325600776
+        ],
+        "owner": 4097,
+        "raw": [
+          1.0279715061187744,
+          1.0626814365386963,
+          1.0743491649627686
+        ],
+        "E": [
+          1.005859375,
+          1.072265625,
+          1.1005859375
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          252,
+          90
+        ],
+        "position": [
+          -0.07416331768035889,
+          -0.3111875057220459,
+          0.23498356342315674
+        ],
+        "geometricNormal": [
+          -0.12076582727457028,
+          -0.917106935385884,
+          -0.3799085206070021
+        ],
+        "normal": [
+          -0.22006191143859036,
+          -0.9233711376045105,
+          -0.3145766955337698
+        ],
+        "owner": 4097,
+        "raw": [
+          0.9756957292556763,
+          1.0501067638397217,
+          1.0826642513275146
+        ],
+        "E": [
+          0.95751953125,
+          1.0361328125,
+          1.0712890625
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          210,
+          108
+        ],
+        "position": [
+          -0.3277294635772705,
+          -0.0711207389831543,
+          0.36308062076568604
+        ],
+        "geometricNormal": [
+          -0.9831094208743757,
+          -0.12942361439677436,
+          0.12940399771461797
+        ],
+        "normal": [
+          -0.9751420056726356,
+          -0.21161657158961442,
+          0.0657000411065843
+        ],
+        "owner": 4097,
+        "raw": [
+          0.8757792115211487,
+          0.9234854578971863,
+          0.9674352407455444
+        ],
+        "E": [
+          0.84033203125,
+          0.8759765625,
+          0.912109375
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          231,
+          108
+        ],
+        "position": [
+          -0.22842085361480713,
+          -0.24014782905578613,
+          0.3985743522644043
+        ],
+        "geometricNormal": [
+          -0.6036366165611718,
+          -0.786683088808209,
+          0.12943165350777244
+        ],
+        "normal": [
+          -0.6790248207043748,
+          -0.7138855912993838,
+          0.1711509725433109
+        ],
+        "owner": 4097,
+        "raw": [
+          0.8125525116920471,
+          0.8571279644966125,
+          0.9040271639823914
+        ],
+        "E": [
+          0.86279296875,
+          0.91162109375,
+          0.95361328125
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          252,
+          108
+        ],
+        "position": [
+          -0.08279228210449219,
+          -0.32189512252807617,
+          0.39573097229003906
+        ],
+        "geometricNormal": [
+          -0.1294287425498913,
+          -0.9831083143531308,
+          0.12940727511117658
+        ],
+        "normal": [
+          -0.24578551593908027,
+          -0.9556096558125775,
+          0.16247973988262931
+        ],
+        "owner": 4097,
+        "raw": [
+          0.7680937647819519,
+          0.8415317535400391,
+          0.9129437208175659
+        ],
+        "E": [
+          0.73193359375,
+          0.81298828125,
+          0.888671875
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          273,
+          108
+        ],
+        "position": [
+          0.13509666919708252,
+          -0.3081319332122803,
+          0.3464798927307129
+        ],
+        "geometricNormal": [
+          0.379476408940605,
+          -0.9161019345579837,
+          0.12944072217297875
+        ],
+        "normal": [
+          0.4014855355038104,
+          -0.9157205541892016,
+          0.01628592695059026
+        ],
+        "owner": 4097,
+        "raw": [
+          0.8019866943359375,
+          0.905555784702301,
+          0.9836974143981934
+        ],
+        "E": [
+          0.8095703125,
+          0.912109375,
+          0.9921875
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          210,
+          126
+        ],
+        "position": [
+          -0.2974051237106323,
+          -0.019338369369506836,
+          0.49771571159362793
+        ],
+        "geometricNormal": [
+          -0.9171261291998426,
+          -0.12073995657462143,
+          0.37987040688275836
+        ],
+        "normal": [
+          -0.8832290571346884,
+          -0.05743044858622219,
+          0.4654118350538102
+        ],
+        "owner": 4097,
+        "raw": [
+          0.6631001830101013,
+          0.7087709307670593,
+          0.7769162654876709
+        ],
+        "E": [
+          0.650390625,
+          0.68603515625,
+          0.748046875
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          231,
+          126
+        ],
+        "position": [
+          -0.20017433166503906,
+          -0.1939847469329834,
+          0.5307567119598389
+        ],
+        "geometricNormal": [
+          -0.6314260620719688,
+          -0.48450796180068395,
+          0.6054363410698379
+        ],
+        "normal": [
+          -0.5936276316903871,
+          -0.5752714479212445,
+          0.562733503623391
+        ],
+        "owner": 4097,
+        "raw": [
+          0.603996217250824,
+          0.6623979210853577,
+          0.7452506422996521
+        ],
+        "E": [
+          0.65478515625,
+          0.70361328125,
+          0.7734375
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          252,
+          126
+        ],
+        "position": [
+          -0.05286812782287598,
+          -0.27469658851623535,
+          0.5276700258255005
+        ],
+        "geometricNormal": [
+          -0.10391256211238478,
+          -0.7890723368217636,
+          0.6054477902328829
+        ],
+        "normal": [
+          -0.1572049412303356,
+          -0.8168154966711254,
+          0.5550667084690537
+        ],
+        "owner": 4097,
+        "raw": [
+          0.5820808410644531,
+          0.6559250950813293,
+          0.7522196769714355
+        ],
+        "E": [
+          0.52978515625,
+          0.6064453125,
+          0.7099609375
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          273,
+          126
+        ],
+        "position": [
+          0.17365598678588867,
+          -0.25072145462036133,
+          0.4800844192504883
+        ],
+        "geometricNormal": [
+          0.5631326296844623,
+          -0.733870029986255,
+          0.37989001101981523
+        ],
+        "normal": [
+          0.5180592578712211,
+          -0.7479656711267789,
+          0.4149240414217843
+        ],
+        "owner": 4097,
+        "raw": [
+          0.6750717163085938,
+          0.7900760173797607,
+          0.9029207825660706
+        ],
+        "E": [
+          0.6884765625,
+          0.79541015625,
+          0.89892578125
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          231,
+          144
+        ],
+        "position": [
+          -0.13212966918945312,
+          -0.08056378364562988,
+          0.6415799856185913
+        ],
+        "geometricNormal": [
+          -0.30581418802956384,
+          -0.2346844175189901,
+          0.9227138812078156
+        ],
+        "normal": [
+          -0.39082561789764175,
+          -0.23829879529076936,
+          0.8890832472597233
+        ],
+        "owner": 4097,
+        "raw": [
+          0.45941323041915894,
+          0.5378650426864624,
+          0.652560830116272
+        ],
+        "E": [
+          0.486083984375,
+          0.5498046875,
+          0.65478515625
+        ],
+        "valid": true
+      },
+      {
+        "pixel": [
+          252,
+          144
+        ],
+        "position": [
+          0.021193623542785645,
+          -0.16114521026611328,
+          0.63796067237854
+        ],
+        "geometricNormal": [
+          0.050314379999758865,
+          -0.3821977968037283,
+          0.9227097632970054
+        ],
+        "normal": [
+          0.06260472491490468,
+          -0.47601454638776425,
+          0.8772062471537582
+        ],
+        "owner": 4097,
+        "raw": [
+          0.4521794021129608,
+          0.5523420572280884,
+          0.6843364238739014
+        ],
+        "E": [
+          0.47265625,
+          0.5615234375,
+          0.68359375
+        ],
+        "valid": true
+      }
+    ]
+  },
+  "state": {
+    "phase": "static-ready",
+    "generation": 1,
+    "playing": false,
+    "dirty": false,
+    "modelBuilds": 1,
+    "worldBuilds": 1,
+    "descriptor": {
+      "version": 1,
+      "seed": 19,
+      "segments": 24,
+      "generation": 1,
+      "balls": [
+        {
+          "ballId": 1,
+          "radius": 0.34,
+          "position": [
+            0,
+            0,
+            0.3409999907016754
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "material": 4
+        }
+      ],
+      "materials": [
+        {
+          "name": "Ivory pool",
+          "color": [
+            0.73,
+            0.74,
+            0.69
+          ],
+          "roughness": 0.85
+        },
+        {
+          "name": "Warm wall",
+          "color": [
+            0.65,
+            0.23,
+            0.18
+          ],
+          "roughness": 0.9
+        },
+        {
+          "name": "Cool wall",
+          "color": [
+            0.18,
+            0.37,
+            0.59
+          ],
+          "roughness": 0.9
+        },
+        {
+          "name": "Ball finish 0",
+          "color": [
+            0.72,
+            0.28,
+            0.2
+          ],
+          "roughness": 0.5
+        },
+        {
+          "name": "Ball finish 1",
+          "color": [
+            0.17,
+            0.42,
+            0.66
+          ],
+          "roughness": 0.56
+        },
+        {
+          "name": "Ball finish 2",
+          "color": [
+            0.86,
+            0.69,
+            0.24
+          ],
+          "roughness": 0.62
+        },
+        {
+          "name": "Ball finish 3",
+          "color": [
+            0.24,
+            0.58,
+            0.43
+          ],
+          "roughness": 0.6799999999999999
+        },
+        {
+          "name": "Ball finish 4",
+          "color": [
+            0.61,
+            0.39,
+            0.57
+          ],
+          "roughness": 0.74
+        },
+        {
+          "name": "Ball finish 5",
+          "color": [
+            0.79,
+            0.57,
+            0.38
+          ],
+          "roughness": 0.8
+        },
+        {
+          "name": "Ball finish 6",
+          "color": [
+            0.78,
+            0.79,
+            0.73
+          ],
+          "roughness": 0.86
+        },
+        {
+          "name": "Ball finish 7",
+          "color": [
+            0.36,
+            0.46,
+            0.61
+          ],
+          "roughness": 0.9199999999999999
+        }
+      ],
+      "container": [
+        {
+          "name": "floor",
+          "lo": [
+            -4.3,
+            -3.3,
+            -0.3
+          ],
+          "hi": [
+            4.3,
+            3.3,
+            0
+          ],
+          "material": 0
+        },
+        {
+          "name": "west",
+          "lo": [
+            -4.3,
+            -3.3,
+            0
+          ],
+          "hi": [
+            -4,
+            3.3,
+            1.6
+          ],
+          "material": 1
+        },
+        {
+          "name": "east",
+          "lo": [
+            4,
+            -3.3,
+            0
+          ],
+          "hi": [
+            4.3,
+            3.3,
+            1.6
+          ],
+          "material": 2
+        },
+        {
+          "name": "north",
+          "lo": [
+            -4,
+            3,
+            0
+          ],
+          "hi": [
+            4,
+            3.3,
+            1.6
+          ],
+          "material": 0
+        },
+        {
+          "name": "south",
+          "lo": [
+            -4,
+            -3.3,
+            0
+          ],
+          "hi": [
+            4,
+            -3,
+            0.25
+          ],
+          "material": 0
+        }
+      ]
+    },
+    "worldGeneration": 1,
+    "modelGeneration": 1,
+    "worldRevision": 1,
+    "snapshotRevision": 1,
+    "historyFrames": 32,
+    "fg": {
+      "status": "experimental FG: accumulation paused",
+      "frames": 32,
+      "memoryBytes": 33984000,
+      "peakMemoryBytes": 33984000,
+      "draws": 672,
+      "stages": {
+        "receiver": [
+          {
+            "frame": 52,
+            "milliseconds": 0.06816
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.818752
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.033664
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.363136
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.03232
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.342784
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.46736
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.065312
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.03424
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.622624
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.033984
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.404192
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.037504
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.041792
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.038752
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.039552
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.036896
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.280288
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.2056
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.037824
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.036256
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.334336
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.05104
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.936288
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.03552
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.040032
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.75648
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.035968
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.035904
+          }
+        ],
+        "trace": [
+          {
+            "frame": 52,
+            "milliseconds": 1097.328768
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.144
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.164256
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.172384
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.218752
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.154112
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.196224
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.234336
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.156704
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.148736
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.162592
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.159552
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.22048
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.159968
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.216288
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.686528
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.177536
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.141536
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.156032
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.154688
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.92112
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.152832
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.186816
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.247488
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.160544
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.149664
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.16592
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.15616
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.222464
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.162624
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.183712
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.23904
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.163712
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.140416
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.158272
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.158752
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.22
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.153824
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.195584
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.584
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.157728
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.140256
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.15616
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.158816
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.225152
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.153984
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.196672
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.23536
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.16224
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.140032
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.151808
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.159872
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.22784
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.16032
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.197152
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.235424
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.157248
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.150752
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.151616
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.158976
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.237952
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.178176
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.209376
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.253536
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.158176
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.136736
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.164576
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.162944
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.219168
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.153536
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.192768
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.279008
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.164448
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.141952
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.335712
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.16512
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.233888
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.156992
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.192096
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.236864
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.577184
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.148352
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.148672
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.16112
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.224608
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.153184
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.197696
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.239488
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.16256
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.148864
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.157856
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.160672
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.216576
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.579008
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.190144
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.228992
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.15552
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.141888
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.1696
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.715264
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.212992
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.160128
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.184864
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.247936
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.18112
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.147328
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.15376
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.174112
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.217984
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.159008
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.508544
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.23152
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.152352
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.13456
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.14512
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.734272
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.221696
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.154368
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.192832
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.243936
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.15792
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.146944
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.147104
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.15616
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.22512
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.150912
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.193856
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.545152
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.173824
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.135328
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.162304
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.157504
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.221344
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.761088
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.182016
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.238176
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.167296
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.143552
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.14544
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.152768
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.22256
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.154464
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.191552
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.226368
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.161024
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.140832
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.153856
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.16224
+          },
+          {
+            "frame": 73,
+            "milliseconds": 1.327264
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.160992
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.188224
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.23824
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.161696
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.138784
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.159968
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.158208
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.228832
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.15824
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.194112
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.231328
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.168608
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.14432
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.15984
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.166656
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.226176
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.154336
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.628032
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.23104
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.157056
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.137664
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.158688
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.160032
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.225312
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.159712
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.193088
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.2376
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.185952
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.131232
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.159232
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.161792
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.21648
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.45744
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.184128
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.240448
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.16496
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.140352
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.163264
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.158688
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.232704
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.160736
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.192448
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.231168
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.176
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.149472
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.164512
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.158528
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.213664
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.159072
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.203424
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.246144
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.170592
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.150016
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.160832
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.162048
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.21152
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.156608
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.186432
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.2392
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.15312
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.14352
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.164576
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.161024
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.219584
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.165536
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.184032
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.243328
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.155776
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.146112
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.146624
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.161248
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.222336
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.153984
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.18656
+          },
+          {
+            "frame": 82,
+            "milliseconds": 1.034656
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.170656
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.155776
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.152704
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.159104
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.219136
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.15472
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.198144
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.236608
+          }
+        ],
+        "shade": [
+          {
+            "frame": 52,
+            "milliseconds": 0.242304
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.103488
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.096192
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.12032
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.143904
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.14896
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.171552
+          },
+          {
+            "frame": 52,
+            "milliseconds": 0.195744
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.1536
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.112448
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.100032
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.117632
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.165056
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.159744
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.163744
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.177024
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.153504
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.127072
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.09904
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.111872
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.173632
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.167296
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.157472
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.184448
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.155776
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.104864
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.096832
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.118336
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.1576
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.156896
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.193952
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.20336
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.150304
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.11152
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.110848
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.123648
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.154432
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.185952
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.190464
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.19424
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.148
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.129216
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.104192
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.135648
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.166656
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.175616
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.18928
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.194496
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.15168
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.107488
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.099264
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.116832
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.165952
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.16448
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.18096
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.187424
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.164128
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.11808
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.10448
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.123136
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.177088
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.1712
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.193408
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.191584
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.159744
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.110592
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.095296
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.098592
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.166336
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.187392
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.196224
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.188672
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.150048
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.106304
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.11376
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.116576
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.168544
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.1664
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.193728
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.202816
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.167296
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.11248
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.103968
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.11248
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.171296
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.165504
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.16688
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.185088
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.150688
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.109856
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.106496
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.116576
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.154496
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.176256
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.164352
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.184416
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.150976
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.109216
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.099808
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.134176
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.144512
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.157664
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.184704
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.186592
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.151872
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.110496
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.0888
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.116832
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.169824
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.176448
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.175776
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.192416
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.144288
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.109184
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.110592
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.120128
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.143008
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.154112
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.16496
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.19216
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.153504
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.103808
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.09808
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.110496
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.171424
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.164352
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.18016
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.19104
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.156928
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.112192
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.100896
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.11536
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.159424
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.156736
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.16112
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.180704
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.147552
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.11936
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.09344
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.108608
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.176096
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.163456
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.186432
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.201792
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.145184
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.1104
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.101856
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.123328
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.155936
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.16816
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.183744
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.200288
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.150784
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.117696
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.100864
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.10832
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.159072
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.1552
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.193152
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.192896
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.14496
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.100832
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.103296
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.104416
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.175072
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.150048
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.182336
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.185728
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.148032
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.110496
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.1
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.107424
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.170368
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.168448
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.199488
+          },
+          {
+            "frame": 76,
+            "milliseconds": 1.035168
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.155328
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.103968
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.104864
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.120128
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.149824
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.158304
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.164992
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.191872
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.151488
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.116896
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.093024
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.116928
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.15696
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.15936
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.17888
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.201344
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.149408
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.114432
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.10512
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.115904
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.152928
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.189088
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.193888
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.201856
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.154432
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.116832
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.102976
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.11392
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.170304
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.156256
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.186208
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.852768
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.310464
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.115424
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.106688
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.120864
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.175456
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.179488
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.180608
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.200992
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.14944
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.103232
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.101344
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.114272
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.166976
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.178208
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.182816
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.187072
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.155104
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.111968
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.106656
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.110464
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.151296
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.1616
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.198016
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.181376
+          }
+        ],
+        "neighborhood": [
+          {
+            "frame": 52,
+            "milliseconds": 199.579456
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.036512
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.02912
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.029568
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.029536
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.519584
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.826496
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.516768
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.028512
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.030304
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.307168
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.030688
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.030816
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.564224
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.0296
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.02912
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.029376
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.031136
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.029056
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.734368
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.029216
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.043136
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.029344
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.822592
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.431872
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.029888
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.027424
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.03008
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.029984
+          }
+        ],
+        "connections": [
+          {
+            "frame": 52,
+            "milliseconds": 287.937952
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.031232
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.039008
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.040352
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.042144
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.038688
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.040288
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.039136
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.461728
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.03952
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.0456
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.036288
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.036128
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.038272
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.038048
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.041696
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.03696
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.037088
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.040736
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.041664
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.037856
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.032064
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.038176
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.040832
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.039744
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.038336
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.532512
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.0384
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.521504
+          }
+        ],
+        "temporal": [
+          {
+            "frame": 52,
+            "milliseconds": 353.101184
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.056544
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.056224
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.057184
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.059648
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.057312
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.057376
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.056192
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.061568
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.05728
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.056032
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.056704
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.057952
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.057792
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.055232
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.056576
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.054976
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.054464
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.057056
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.057728
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.055808
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.056768
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.056096
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.05696
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.056864
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.055776
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.061216
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.055936
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.07296
+          }
+        ],
+        "filter1": [
+          {
+            "frame": 52,
+            "milliseconds": 1.351072
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.012192
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.011328
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.01136
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.011808
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.011744
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.011424
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.012576
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.012704
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.01168
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.012416
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.011648
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.011936
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.011424
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.01136
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.011456
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.0112
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.830784
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.01232
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.011808
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.012096
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.011296
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.01136
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.011392
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.011328
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.011712
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.011584
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.01168
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.012128
+          }
+        ],
+        "filter2": [
+          {
+            "frame": 52,
+            "milliseconds": 0.01216
+          },
+          {
+            "frame": 53,
+            "milliseconds": 0.012032
+          },
+          {
+            "frame": 54,
+            "milliseconds": 0.011744
+          },
+          {
+            "frame": 55,
+            "milliseconds": 0.011744
+          },
+          {
+            "frame": 56,
+            "milliseconds": 0.011552
+          },
+          {
+            "frame": 57,
+            "milliseconds": 0.012608
+          },
+          {
+            "frame": 58,
+            "milliseconds": 0.011648
+          },
+          {
+            "frame": 59,
+            "milliseconds": 0.011712
+          },
+          {
+            "frame": 61,
+            "milliseconds": 0.011968
+          },
+          {
+            "frame": 62,
+            "milliseconds": 0.011808
+          },
+          {
+            "frame": 64,
+            "milliseconds": 0.0248
+          },
+          {
+            "frame": 65,
+            "milliseconds": 0.011712
+          },
+          {
+            "frame": 66,
+            "milliseconds": 0.011712
+          },
+          {
+            "frame": 68,
+            "milliseconds": 0.011712
+          },
+          {
+            "frame": 69,
+            "milliseconds": 0.016192
+          },
+          {
+            "frame": 70,
+            "milliseconds": 0.011968
+          },
+          {
+            "frame": 71,
+            "milliseconds": 0.011616
+          },
+          {
+            "frame": 72,
+            "milliseconds": 0.015232
+          },
+          {
+            "frame": 73,
+            "milliseconds": 0.011968
+          },
+          {
+            "frame": 74,
+            "milliseconds": 0.011648
+          },
+          {
+            "frame": 75,
+            "milliseconds": 0.012224
+          },
+          {
+            "frame": 76,
+            "milliseconds": 0.012064
+          },
+          {
+            "frame": 77,
+            "milliseconds": 0.011616
+          },
+          {
+            "frame": 78,
+            "milliseconds": 0.011936
+          },
+          {
+            "frame": 79,
+            "milliseconds": 0.011584
+          },
+          {
+            "frame": 80,
+            "milliseconds": 0.012224
+          },
+          {
+            "frame": 81,
+            "milliseconds": 0.01168
+          },
+          {
+            "frame": 82,
+            "milliseconds": 0.011648
+          },
+          {
+            "frame": 83,
+            "milliseconds": 0.011776
+          }
+        ]
+      },
+      "timingUnavailable": 66,
+      "disjoint": 0,
+      "productionReadbacks": 0,
+      "history": true,
+      "completedTimings": [
+        {
+          "frame": 52,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.06816,
+            "trace": 1098.612832,
+            "shade": 1.222464,
+            "neighborhood": 199.579456,
+            "connections": 287.937952,
+            "temporal": 353.101184,
+            "filter1": 1.351072,
+            "filter2": 0.01216
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 53,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.818752,
+            "trace": 1.910848,
+            "shade": 1.14928,
+            "neighborhood": 0.036512,
+            "connections": 0.031232,
+            "temporal": 0.056544,
+            "filter1": 0.012192,
+            "filter2": 0.012032
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 54,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.033664,
+            "trace": 2.1380480000000004,
+            "shade": 1.174336,
+            "neighborhood": 0.02912,
+            "connections": 0.039008,
+            "temporal": 0.056224,
+            "filter1": 0.011328,
+            "filter2": 0.011744
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 55,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.363136,
+            "trace": 1.4401279999999999,
+            "shade": 1.187616,
+            "neighborhood": 0.029568,
+            "connections": 0.040352,
+            "temporal": 0.057184,
+            "filter1": 0.01136,
+            "filter2": 0.011744
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 56,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.03232,
+            "trace": 1.7745600000000001,
+            "shade": 1.221408,
+            "neighborhood": 0.029536,
+            "connections": 0.042144,
+            "temporal": 0.059648,
+            "filter1": 0.011808,
+            "filter2": 0.011552
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 57,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.342784,
+            "trace": 1.424128,
+            "shade": 1.243104,
+            "neighborhood": 0.519584,
+            "connections": 0.038688,
+            "temporal": 0.057312,
+            "filter1": 0.011744,
+            "filter2": 0.012608
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 58,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.46736,
+            "trace": 1.434688,
+            "shade": 1.17408,
+            "neighborhood": 0.826496,
+            "connections": 0.040288,
+            "temporal": 0.057376,
+            "filter1": 0.011424,
+            "filter2": 0.011648
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 59,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.065312,
+            "trace": 1.497632,
+            "shade": 1.243104,
+            "neighborhood": 0.516768,
+            "connections": 0.039136,
+            "temporal": 0.056192,
+            "filter1": 0.012576,
+            "filter2": 0.011712
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 61,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.03424,
+            "trace": 1.466912,
+            "shade": 1.202848,
+            "neighborhood": 0.028512,
+            "connections": 0.461728,
+            "temporal": 0.061568,
+            "filter1": 0.012704,
+            "filter2": 0.011968
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 62,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.622624,
+            "trace": 1.627072,
+            "shade": 1.2181760000000001,
+            "neighborhood": 0.030304,
+            "connections": 0.03952,
+            "temporal": 0.05728,
+            "filter1": 0.01168,
+            "filter2": 0.011808
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 64,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.033984,
+            "trace": 1.850304,
+            "shade": 1.184992,
+            "neighborhood": 0.307168,
+            "connections": 0.0456,
+            "temporal": 0.056032,
+            "filter1": 0.012416,
+            "filter2": 0.0248
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 65,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.404192,
+            "trace": 1.8446720000000003,
+            "shade": 1.163136,
+            "neighborhood": 0.030688,
+            "connections": 0.036288,
+            "temporal": 0.056704,
+            "filter1": 0.011648,
+            "filter2": 0.011712
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 66,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.037504,
+            "trace": 1.988192,
+            "shade": 1.167648,
+            "neighborhood": 0.030816,
+            "connections": 0.036128,
+            "temporal": 0.057952,
+            "filter1": 0.011936,
+            "filter2": 0.011712
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 68,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.041792,
+            "trace": 1.773376,
+            "shade": 1.1824639999999997,
+            "neighborhood": 0.564224,
+            "connections": 0.038272,
+            "temporal": 0.057792,
+            "filter1": 0.011424,
+            "filter2": 0.011712
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 69,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.038752,
+            "trace": 1.9791359999999998,
+            "shade": 1.138432,
+            "neighborhood": 0.0296,
+            "connections": 0.038048,
+            "temporal": 0.055232,
+            "filter1": 0.01136,
+            "filter2": 0.016192
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 70,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.039552,
+            "trace": 1.7231679999999998,
+            "shade": 1.172864,
+            "neighborhood": 0.02912,
+            "connections": 0.041696,
+            "temporal": 0.056576,
+            "filter1": 0.011456,
+            "filter2": 0.011968
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 71,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.036896,
+            "trace": 2.031584,
+            "shade": 1.1433600000000002,
+            "neighborhood": 0.029376,
+            "connections": 0.03696,
+            "temporal": 0.054976,
+            "filter1": 0.0112,
+            "filter2": 0.011616
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 72,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.280288,
+            "trace": 1.404,
+            "shade": 1.1967359999999998,
+            "neighborhood": 0.031136,
+            "connections": 0.037088,
+            "temporal": 0.054464,
+            "filter1": 0.830784,
+            "filter2": 0.015232
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 73,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.2056,
+            "trace": 2.532672,
+            "shade": 1.188896,
+            "neighborhood": 0.029056,
+            "connections": 0.040736,
+            "temporal": 0.057056,
+            "filter1": 0.01232,
+            "filter2": 0.011968
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 74,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.037824,
+            "trace": 1.431168,
+            "shade": 1.177984,
+            "neighborhood": 0.734368,
+            "connections": 0.041664,
+            "temporal": 0.057728,
+            "filter1": 0.011808,
+            "filter2": 0.011648
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 75,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.036256,
+            "trace": 1.879008,
+            "shade": 1.1466880000000002,
+            "neighborhood": 0.029216,
+            "connections": 0.037856,
+            "temporal": 0.055808,
+            "filter1": 0.012096,
+            "filter2": 0.012224
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 76,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.334336,
+            "trace": 1.429152,
+            "shade": 2.039424,
+            "neighborhood": 0.043136,
+            "connections": 0.032064,
+            "temporal": 0.056768,
+            "filter1": 0.011296,
+            "filter2": 0.012064
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 77,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.05104,
+            "trace": 1.7367040000000002,
+            "shade": 1.14928,
+            "neighborhood": 0.029344,
+            "connections": 0.038176,
+            "temporal": 0.056096,
+            "filter1": 0.01136,
+            "filter2": 0.011616
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 78,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.936288,
+            "trace": 1.44432,
+            "shade": 1.1748800000000001,
+            "neighborhood": 0.822592,
+            "connections": 0.040832,
+            "temporal": 0.05696,
+            "filter1": 0.011392,
+            "filter2": 0.011936
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 79,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.03552,
+            "trace": 1.470816,
+            "shade": 1.2226240000000002,
+            "neighborhood": 0.431872,
+            "connections": 0.039744,
+            "temporal": 0.056864,
+            "filter1": 0.011328,
+            "filter2": 0.011584
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 80,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.040032,
+            "trace": 1.437248,
+            "shade": 1.853696,
+            "neighborhood": 0.029888,
+            "connections": 0.038336,
+            "temporal": 0.055776,
+            "filter1": 0.011712,
+            "filter2": 0.012224
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 81,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.75648,
+            "trace": 1.43472,
+            "shade": 1.3899840000000003,
+            "neighborhood": 0.027424,
+            "connections": 0.532512,
+            "temporal": 0.061216,
+            "filter1": 0.011584,
+            "filter2": 0.01168
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 82,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.035968,
+            "trace": 2.2072960000000004,
+            "shade": 1.18336,
+            "neighborhood": 0.03008,
+            "connections": 0.0384,
+            "temporal": 0.055936,
+            "filter1": 0.01168,
+            "filter2": 0.011648
+          },
+          "closed": true,
+          "fgExecuted": true
+        },
+        {
+          "frame": 83,
+          "submitted": 22,
+          "received": 22,
+          "missing": 0,
+          "stages": {
+            "receiver": 0.035904,
+            "trace": 1.4468480000000001,
+            "shade": 1.17648,
+            "neighborhood": 0.029984,
+            "connections": 0.521504,
+            "temporal": 0.07296,
+            "filter1": 0.012128,
+            "filter2": 0.011776
+          },
+          "closed": true,
+          "fgExecuted": true
+        }
+      ],
+      "incompleteTimerFrames": 0,
+      "unknownFraction": "diagnostic-only; no production readback",
+      "effectiveMode": "fg",
+      "accumulationPasses": 32,
+      "snapshotBytes": 405312,
+      "totalAdditionalBytes": 34757569,
+      "peakAdditionalBytes": 34757569,
+      "planChanges": 1,
+      "requestedMode": "fg",
+      "requestedQuality": "auto",
+      "plan": {
+        "supported": true,
+        "reason": "requested receiver fits",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.5",
+        "scale": 0.5,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 480,
+        "rh": 300,
+        "width": 480,
+        "height": 300,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 33984000,
+        "snapshotBytes": 405312,
+        "additionalSceneBytes": 368257,
+        "totalBytes": 34757569,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 34757569,
+        "slots": 4608000,
+        "geometrySlots": 1728000,
+        "checkedInvocations": 6336000,
+        "requiredSamplers": 13,
+        "attachments": {
+          "receiverBytes": 5184000,
+          "hitBytes": 9216000,
+          "workBytes": 5184000,
+          "historyBytes": 14400000
+        },
+        "rejections": []
+      },
+      "receiverDraws": 122,
+      "stablePasses": 32,
+      "historyReset": "source/round/sampling epoch",
+      "sampleEpoch": 31,
+      "sampling": "reconstructed",
+      "revision": 1,
+      "round": 3,
+      "versions": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 1,
+        "sunVisibility": 1,
+        "lighting": 1
+      },
+      "quality": "auto",
+      "resolution": [
+        480,
+        300
+      ],
+      "receiverResolution": [
+        480,
+        300
+      ],
+      "fallbackReason": "none",
+      "effectiveQuality": "auto@0.5",
+      "execution": "split",
+      "rayLayout": "interleaved",
+      "rayOrder": "azimuth",
+      "reconstructionEnabled": true,
+      "lazyFallback": true,
+      "samples": 32,
+      "raySlots": 4608000,
+      "primaryRayUpperBound": 4608000,
+      "solarRayUpperBound": 4608000,
+      "traversalBudget": 256,
+      "geometryRayUpperBound": 1728000,
+      "additionalSceneBytes": 368257
+    },
+    "resources": {
+      "modelGpuBytes": 14208,
+      "worldGeometryBytes": 100420,
+      "environmentGpuBytes": 229376,
+      "assetCpuBytes": 24253,
+      "sceneBytes": 368257,
+      "fgBytes": 33984000,
+      "snapshots": 405312,
+      "totalAdditionalBytes": 34757569,
+      "peakAdditionalBytes": 34757569,
+      "peakSceneBytes": 368313,
+      "worldGpuBytes": 2154820,
+      "driverVram": "not-run",
+      "wasmHeap": "not-run"
+    },
+    "events": [
+      {
+        "phase": "frozen-pending",
+        "generation": 1,
+        "at": 444.20000000298023,
+        "worldGeneration": null
+      },
+      {
+        "phase": "building-world",
+        "generation": 1,
+        "at": 444.20000000298023,
+        "worldGeneration": null
+      },
+      {
+        "phase": "lighting",
+        "generation": 1,
+        "at": 827.4000000022352,
+        "worldGeneration": 1
+      },
+      {
+        "phase": "converging",
+        "generation": 1,
+        "at": 21999.5,
+        "worldGeneration": 1
+      },
+      {
+        "phase": "static-ready",
+        "generation": 1,
+        "at": 24538.900000002235,
+        "worldGeneration": 1
+      }
+    ],
+    "latencies": [
+      {
+        "generation": 1,
+        "count": 1,
+        "triangles": 588,
+        "modelAndWorldMilliseconds": 21555.099999997765,
+        "started": 444.4000000022352,
+        "lightingFinished": 21999.5,
+        "resource": {
+          "modelGpuBytes": 14208,
+          "worldGeometryBytes": 100420,
+          "environmentGpuBytes": 229376,
+          "assetCpuBytes": 24253,
+          "sceneBytes": 368257,
+          "fgBytes": 0,
+          "snapshots": 405312,
+          "totalAdditionalBytes": 773569,
+          "peakAdditionalBytes": 773569,
+          "peakSceneBytes": 368313,
+          "worldGpuBytes": 2154820,
+          "driverVram": "not-run",
+          "wasmHeap": "not-run"
+        },
+        "geometryHash": "a5cb92ed073b538dc2434f60fc130a9a9999509ebc519d3c53d0f7bc763d54a5",
+        "convergedMilliseconds": 24094.599999997765
+      }
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

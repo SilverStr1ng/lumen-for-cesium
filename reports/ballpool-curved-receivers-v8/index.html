@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  />
+  <title>R9 · Ball Pool 实现与证据</title>
+  <link rel="icon" href="data:," />
+  <style>
+    :root {
+      font-family:
+        Segoe UI,
+        Microsoft YaHei,
+        sans-serif;
+      color: #223438;
+      background: #f2f5f3;
+    }
+    body {
+      max-width: 1120px;
+      margin: 38px auto;
+      padding: 0 24px;
+      line-height: 1.6;
+    }
+    h1 {
+      font-weight: 500;
+      font-size: 32px;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-top: 32px;
+    }
+    a {
+      color: #175f73;
+    }
+    nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: #fff;
+      font-size: 14px;
+    }
+    td,
+    th {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid #dde4e1;
+    }
+    th {
+      font-weight: 600;
+    }
+    small {
+      color: #536768;
+    }
+    .notice {
+      padding: 18px 22px;
+      background: #fff0db;
+      border-left: 4px solid #b56c22;
+    }
+    .passed {
+      color: #176447;
+    }
+    .failed {
+      color: #9b341e;
+    }
+    .not-run {
+      color: #687778;
+    }
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+    .shots img {
+      width: 100%;
+      background: #18383f;
+    }
+    .shots figcaption {
+      font-size: 13px;
+    }
+    figure {
+      margin: 0;
+    }
+    select {
+      padding: 8px;
+      max-width: 100%;
+      font: inherit;
+    }
+    code,
+    pre {
+      background: #e6ece8;
+      padding: 3px 6px;
+    }
+    pre {
+      white-space: pre-wrap;
+      padding: 14px;
+    }
+    #cost {
+      overflow: auto;
+    }
+    @media (max-width: 750px) {
+      .shots {
+        grid-template-columns: 1fr;
+      }
+      body {
+        margin: 20px auto;
+      }
+      table {
+        font-size: 12px;
+      }
+    }
+  </style>
+  <nav>
+    <a href="/demo/ballpool.html">打开 Ball Pool · 默认64球</a
+    ><a href="/demo/gallery.html">Gallery</a
+    ><a href="/docs/progress/latest.md">用户进度报告</a
+    ><a href="/docs/progress/template.md">报告模板</a>
+  </nav>
+  <h1>光滑曲面 · 物理预览 · 定格 GI</h1>
+  <p>
+    球池复用 Cesium / WebGL2 与真实 Globe。播放或投球前，旧球位置的局部 GI
+    与历史立即失效；暂停只停止物理，“定格并更新 GI”才捕获新姿态并重建静态世界。
+  </p>
+  <div class="notice" id="summary">
+    正在读取不可变验收报告。曲面近接触误差与固定32r持续成本有已知失败，当前不标
+    recommended。
+  </div>
+  <p id="version"></p>
+  <h2>操作与范围</h2>
+  <pre>
+npm run setup
+npm run build
+npm start</pre>
+  <p>
+    默认64球可直接看静态效果；点击播放、暂停，再点击“定格并更新 GI”并等待“静态
+    GI 就绪”。16球为验证档；128球为压力档。Auto 保留32r并按实际 drawing buffer
+    规划64MiB附加资源；Interactive16
+    是独立质量和收敛取舍。DDGI、重建FG、仅移除局部间接光在同机位、曝光1下对照。
+  </p>
+  <p>
+    受控接收支持半径0.34m、不透明基础PBR球，按Ns采样并由Ng约束真实半球；稳定球体身份防止跨球借用。命中侧仍采用三角形Ng
+    Lambert。近接触区域的独立数值误差单独保留。运动中完整多反弹GI、通用动态BVH、地形/Tiles
+    GI和局部镜面追踪尚未实现。
+  </p>
+  <h2>分项验收</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>关卡</th>
+        <th>状态</th>
+      </tr>
+    </thead>
+    <tbody id="states"></tbody>
+  </table>
+  <h2>静态、运动、定格重算</h2>
+  <div class="shots" id="shots"></div>
+  <p id="freeze"></p>
+  <h2>持续活动成本 · 同构建控制变量</h2>
+  <label
+    >场景 / 活动
+    <select id="configuration">
+      <option value="original/static">原展馆 · static</option>
+      <option value="original/moving">原展馆 · moving</option>
+      <option value="original/relight">原展馆 · relight</option>
+      <option value="gallery/static">Gallery · static</option>
+      <option value="gallery/moving">Gallery · moving</option>
+      <option value="gallery/relight">Gallery · relight</option>
+      <option value="ballpool/static">Ball Pool · static</option>
+    </select></label
+  >
+  <div id="cost"></div>
+  <p>
+    <small
+      >每项使用三轮整帧异步GPU
+      query。P95表值是各轮P95的算术平均，不是合并分布的P95。CPU范围为preRender→postRender提交，物理单列。固定门限仍为
+      D−B≤1ms、D−A≤3ms。B=fixed
+      raw，C=同序列去相关raw，D=重建；16r与32r属于不同质量档。</small
+    >
+  </p>
+  <h2>桌面 Auto / 实际覆盖</h2>
+  <div id="desktop"></div>
+  <p>
+    预算覆盖FG附件、历史、快照和球池新增资源，包括已知CPU几何与物理WASM保留内存。该数值不等于整个Cesium或驱动物理显存；主画面、阴影、DDGI网格和反弹保持公开配置。128球的资源通过不代表画质通过。
+  </p>
+  <h2>曲面独立误差</h2>
+  <div id="curves"></div>
+  <p>
+    <small
+      >前景轮廓、球-地面与球-球区域分别测量，完整球面身份作覆盖分母；不剔除门控失败边缘。原close机位和低位contact机位都保留。参考采用实际几何、Ng/Ns合同、独立8192路径；截图不作为线性参考。</small
+    >
+  </p>
+  <h2>可复现记录</h2>
+  <p id="records"></p>
+  <p>
+    驱动物理VRAM、GPU汇编/寄存器、JavaScript堆总开销、认证ion/World
+    Terrain均为not-run。R8历史持续性能14/18失败保持可见；新模块单项通过不能使旧失败变绿。
+  </p>
+  <script type="module">
+    const root =
+      "/reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe";
+    const get = async (file) => {
+      const r = await fetch(root + "/" + file);
+      if (!r.ok) throw Error(file + " not-run");
+      return r.json();
+    };
+    const el = (id) => document.getElementById(id),
+      fmt = (v, n = 2) => (Number.isFinite(v) ? v.toFixed(n) : "not-run"),
+      mean = (a) => (a.length ? a.reduce((s, v) => s + v, 0) / a.length : null);
+    function table(id, headers, rows) {
+      const t = document.createElement("table"),
+        tr = document.createElement("tr");
+      for (const h of headers) {
+        const th = document.createElement("th");
+        th.textContent = h;
+        tr.append(th);
+      }
+      t.append(tr);
+      for (const values of rows) {
+        const row = document.createElement("tr");
+        for (const v of values) {
+          const cell = document.createElement("td");
+          cell.textContent = String(v);
+          row.append(cell);
+        }
+        t.append(row);
+      }
+      el(id).replaceChildren(t);
+    }
+    const names = {
+      regression: "既有回归",
+      "fixed-quality-regression": "既有固定质量",
+      "Auto-quality-regression": "既有Auto质量",
+      "temporal-regression": "既有时间质量",
+      "curved-quality": "曲面静态与独立区域画质",
+      "curved-temporal": "曲面时间质量",
+      "ballpool-frozen-GI": "Ball Pool冻结GI",
+      "physics-interaction": "物理交互",
+      "snapshot-consistency": "快照一致性",
+      resource: "资源预算",
+      "fixed32-performance": "固定32r持续性能",
+      "interactive-performance": "新16r档持续性能",
+      "ballpool-static-performance": "球池静态持续性能",
+      "physics-preview-performance": "物理预览性能",
+      "snapshot-update-latency": "定格更新延迟记录",
+      showcase: "Gallery与球池展示",
+    };
+    try {
+      const suite = await get("test-suite.json");
+      el("summary").textContent =
+        `总结果 ${suite.status} · recommended=${suite.recommended}。请按分项状态判断；近接触误差和持续成本的失败均保留。`;
+      el("version").textContent =
+        `实际测试源码 ${suite.version.head} · ${suite.started} → ${suite.finished}`;
+      for (const [name, state] of Object.entries(suite.states)) {
+        const tr = document.createElement("tr"),
+          a = document.createElement("td"),
+          b = document.createElement("td");
+        a.textContent = names[name] ?? name;
+        b.textContent = state;
+        b.className = state;
+        tr.append(a, b);
+        el("states").append(tr);
+      }
+    } catch (e) {
+      el("version").textContent =
+        "本批次仍在运行或尚未完成：必需关卡标not-run。";
+    }
+    for (const [file, label] of [
+      ["static-64.png", "可复现静态64球"],
+      ["motion-64.png", "真实物理预览：局部GI暂停"],
+      ["frozen-64.png", "移动后定格：新几何GI"],
+    ]) {
+      const f = document.createElement("figure"),
+        a = document.createElement("a"),
+        im = document.createElement("img"),
+        cap = document.createElement("figcaption");
+      a.href = root + "/" + file;
+      im.src = a.href;
+      im.alt = label;
+      cap.textContent = label;
+      a.append(im);
+      f.append(a, cap);
+      el("shots").append(f);
+    }
+    try {
+      const r = await get("ballpool.json"),
+        c = r.frozen.coverage,
+        l = r.frozen.state.latencies.at(-1);
+      el("freeze").textContent =
+        `冻结球面FG平均权重 ${fmt(c.meanWeight * 100)}%；独立E NRMSE ${fmt(r.frozen.independentNRMSE * 100)}%；重建至照明CPU提交 ${fmt(l.modelAndWorldMilliseconds)}ms，至目标有效FG帧 ${fmt(l.convergedMilliseconds)}ms。实际primary ${c.rayCounts.actualPrimaryRays.toLocaleString()}，Ng背面已知零 ${c.rayCounts.knownZeroDirections.toLocaleString()}。延迟为墙钟与提交记录，未使用GPU fence确认。`;
+    } catch (e) {
+      el("freeze").textContent = e.message;
+    }
+    async function cost() {
+      const [scene, activity] = el("configuration").value.split("/"),
+        rows = [];
+      for (const q of scene === "ballpool"
+        ? ["auto", "interactive16"]
+        : ["high", "interactive16"]) {
+        const suffix =
+          scene === "original" && q === "high" && activity === "static"
+            ? ""
+            : `-${scene}-1280x800-${q}-${activity}`;
+        try {
+          const r = await get(`performance-split-azimuth-lazy${suffix}.json`);
+          for (const mode of [
+            "ddgi",
+            "fixed-raw",
+            "decorrelated-raw",
+            "reconstructed",
+          ]) {
+            const windows = r.rounds.filter((x) => x.mode === mode);
+            rows.push([
+              q,
+              mode,
+              fmt(mean(windows.map((x) => x.whole.gpuMilliseconds.p95))),
+              fmt(mean(windows.map((x) => x.whole.cpuMilliseconds.p95))),
+              windows
+                .map(
+                  (x) => `${x.whole.actualFGFrames}/${x.whole.renderedFrames}`,
+                )
+                .join(" · "),
+              windows
+                .map((x) =>
+                  mode === "ddgi"
+                    ? "无活动FG / 0r"
+                    : `${x.metrics.receiverResolution?.join("×") ?? "无"} / ${x.metrics.samples ?? 0}r`,
+                )
+                .join(" · "),
+              r.status,
+            ]);
+          }
+          rows.push([
+            q,
+            "D−B / D−A",
+            `${fmt(r.targets.additionalReconstructionP95.value)} / ${fmt(r.targets.completeFGP95.value)}`,
+            "",
+            "",
+            "",
+            r.status,
+          ]);
+          if (r.checks?.sameSequence === false)
+            rows.push([
+              q,
+              "同序列匹配失败",
+              "C↔D不作同样本收益",
+              "",
+              "",
+              "",
+              "failed",
+            ]);
+        } catch (e) {
+          rows.push([q, "not-run", "", "", "", "", e.message]);
+        }
+      }
+      table(
+        "cost",
+        [
+          "质量档",
+          "模式",
+          "GPU P95 ms",
+          "CPU P95 ms",
+          "FG帧/绘制帧",
+          "接收尺寸/样本",
+          "结论",
+        ],
+        rows,
+      );
+    }
+    el("configuration").onchange = cost;
+    await cost();
+    try {
+      const r = await get("desktop.json");
+      table(
+        "desktop",
+        [
+          "球数",
+          "drawing buffer",
+          "实际receiver / rays",
+          "球面FG权重",
+          "附加峰值MiB",
+          "质量状态",
+        ],
+        r.rows.map((x) => [
+          x.count,
+          x.actualBuffer.join("×"),
+          x.state.fg.receiverResolution.join("×") + " / " + x.state.fg.samples,
+          fmt(x.coverage.meanWeight * 100) + "%",
+          fmt(x.state.resources.peakAdditionalBytes / 1048576),
+          x.qualityStatus,
+        ]),
+      );
+    } catch (e) {
+      el("desktop").textContent = e.message;
+    }
+    try {
+      const r = await get("curved.json");
+      table(
+        "curves",
+        ["区域", "测量案例", "最小FG权重", "最大独立E NRMSE", "最大绝对RMSE"],
+        ["foregroundContour", "ballFloorContact", "ballBallContact"].map(
+          (name) => {
+            const a = r.rows.filter((x) => x.regionErrors[name].points.length);
+            return [
+              name,
+              a.length,
+              fmt(Math.min(...a.map((x) => x.regions[name].meanWeight)) * 100) +
+                "%",
+              fmt(
+                Math.max(...a.map((x) => x.regionErrors[name].linearNRMSE)) *
+                  100,
+              ) + "%",
+              fmt(
+                Math.max(...a.map((x) => x.regionErrors[name].absoluteRMSE)),
+                4,
+              ),
+            ];
+          },
+        ),
+      );
+    } catch (e) {
+      el("curves").textContent = e.message;
+    }
+    for (const [file, label] of [
+      ["test-suite.json", "严格总表 / 输入SHA"],
+      ["curved.json", "曲面实际数据与独立参考"],
+      ["curved-temporal.json", "冷启动 / 墙钟时间质量"],
+      ["ballpool.json", "交互 / 一致性 / 资源释放"],
+      ["desktop.json", "桌面 Auto"],
+      ["preview-performance.json", "物理预览成本"],
+      ["regression/test-suite.json", "原展馆 / held-out / Gallery回归"],
+      ["cached-verification.json", "cached 校验"],
+    ]) {
+      const a = document.createElement("a");
+      a.href = root + "/" + file;
+      a.textContent = label;
+      el("records").append(a, document.createTextNode(" · "));
+    }
+  </script>
+</html>

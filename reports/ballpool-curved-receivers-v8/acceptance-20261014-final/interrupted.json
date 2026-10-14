@@ -1,0 +1,103 @@
+{
+  "status": "interrupted",
+  "reason": "Superseded by cold-bootstrap lifecycle and lint fixes; R8 restored historical reports before stopping the parent. Performance jobs were not completed.",
+  "stopped": "2026-10-14T07:00:39.562Z",
+  "source": "65d13a389e5063fc43eea35e411be438804a3e00",
+  "completed": [
+    {
+      "name": "verify-r9-acceptance",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 208.52960000000002,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-0-verify-r9-acceptance.log"
+    },
+    {
+      "name": "verify-curved-contract",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 430.9809999999999,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-1-verify-curved-contract.log"
+    },
+    {
+      "name": "verify-curved-topology",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 429.471,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-2-verify-curved-topology.log"
+    },
+    {
+      "name": "verify-curved-receivers",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 1,
+      "status": "failed",
+      "milliseconds": 145631.9249,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-3-verify-curved-receivers.log"
+    },
+    {
+      "name": "verify-curved-temporal",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 45773.04940000002,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-4-verify-curved-temporal.log"
+    },
+    {
+      "name": "verify-ballpool-descriptor",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 464.0064999999886,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-5-verify-ballpool-descriptor.log"
+    },
+    {
+      "name": "verify-ballpool",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 48550.99769999998,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-6-verify-ballpool.log"
+    },
+    {
+      "name": "verify-ballpool-desktop",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 35706.61499999999,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-7-verify-ballpool-desktop.log"
+    },
+    {
+      "name": "benchmark-ballpool-preview",
+      "parameters": [],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final",
+      "exitCode": 0,
+      "status": "passed",
+      "milliseconds": 32192.03390000004,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-8-benchmark-ballpool-preview.log"
+    },
+    {
+      "name": "verify-r8",
+      "parameters": [
+        "--without-performance",
+        "--output=reports/ballpool-curved-receivers-v8/acceptance-20261014-final/regression"
+      ],
+      "directory": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/regression",
+      "exitCode": 1,
+      "status": "failed",
+      "milliseconds": 2735337.0927,
+      "log": "reports/ballpool-curved-receivers-v8/acceptance-20261014-final/run-9-verify-r8.log"
+    }
+  ],
+  "pendingPerformance": "not-run",
+  "recommended": false
+}

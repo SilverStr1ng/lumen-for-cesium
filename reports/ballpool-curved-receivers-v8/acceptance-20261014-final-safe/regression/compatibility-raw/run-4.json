@@ -1,0 +1,10 @@
+{
+  "name": "verify-environment",
+  "args": [],
+  "environment": {},
+  "exitCode": 0,
+  "milliseconds": 152.23449999999957,
+  "status": "passed",
+  "stdout": "{\n  \"tolerance\": 0.025,\n  \"checks\": [\n    {\n      \"name\": \"sphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.005319031076975733,\n      \"passed\": true\n    },\n    {\n      \"name\": \"upper-hemisphere: analytic directional irradiance; no energy growth\",\n      \"maximumError\": 0.017878325282171925,\n      \"passed\": true\n    },\n    {\n      \"name\": \"root domain includes 200m blocker and retains historical 100m floor\",\n      \"maximum\": 201.01999900009997,\n      \"full\": {\n        \"status\": \"Hit\",\n        \"triangle\": 0,\n        \"u\": 0.25,\n        \"v\": 0.5,\n        \"distance\": 200,\n        \"backface\": true\n      },\n      \"passed\": true\n    }\n  ],\n  \"status\": \"passed\"\n}\n",
+  "stderr": ""
+}

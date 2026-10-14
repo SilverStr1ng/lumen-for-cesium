@@ -1,0 +1,3372 @@
+{
+  "version": "93b5f2260593ca1348a034a10fb0027958ca0f46",
+  "states": {
+    "regression": "passed",
+    "fixed-quality-regression": "passed",
+    "Auto-quality-regression": "passed",
+    "temporal-regression": "passed",
+    "curved-quality": "failed",
+    "curved-temporal": "passed",
+    "ballpool-frozen-GI": "passed",
+    "physics-interaction": "passed",
+    "snapshot-consistency": "passed",
+    "resource": "passed",
+    "fixed32-performance": "failed",
+    "interactive-performance": "failed",
+    "ballpool-static-performance": "failed",
+    "physics-preview-performance": "passed",
+    "snapshot-update-latency": "passed",
+    "showcase": "passed"
+  },
+  "recommended": false,
+  "costs": [
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "ballpool",
+        "quality": "auto",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": false
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.5910933333333332,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.28033066666666606,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 7.174261333333334,
+          "limit": 3
+        },
+        "memory": {
+          "value": 56899020,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 2.0788266666666666,
+          "cpuP95Mean": 1.8666666659216087,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 8.661994666666667,
+          "cpuP95Mean": 2.733333334326744,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.028907022222222228,
+            "trace": 5.081409244444444,
+            "shade": 2.2492376888888894,
+            "neighborhood": 0.03340977777777777,
+            "forward": 0.49594097777777774
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 8.972757333333334,
+          "cpuP95Mean": 2.9666666674117246,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.02988853333333334,
+            "trace": 4.9749260444444445,
+            "shade": 2.684934044444445,
+            "neighborhood": 0.03865831111111112,
+            "forward": 0.4331731555555556
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 9.253088,
+          "cpuP95Mean": 2.9666666674117246,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.03327093333333333,
+            "trace": 4.7987038222222225,
+            "shade": 2.702686577777778,
+            "neighborhood": 0.03694328888888889,
+            "connections": 0.019230222222222225,
+            "temporal": 0.07545279999999999,
+            "filter1": 0.0891616,
+            "filter2": 0.03933262222222222,
+            "forward": 0.3155829333333333
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-ballpool-1280x800-auto-static.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "ballpool",
+        "quality": "interactive16",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "passed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.24426666666666552,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": -0.07747200000000021,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 1.6933546666666666,
+          "limit": 3
+        },
+        "memory": {
+          "value": 56899020,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 3.3222399999999994,
+          "cpuP95Mean": 1.8333333345750968,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 4.7713280000000005,
+          "cpuP95Mean": 3.066666666418314,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.028723911111111108,
+            "trace": 2.3751729777777775,
+            "shade": 1.1896951111111111,
+            "neighborhood": 0.034697422222222225,
+            "forward": 0.5089264
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.093066666666666,
+          "cpuP95Mean": 2.8999999997516475,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.02994648888888889,
+            "trace": 2.591585244444444,
+            "shade": 1.2863518222222226,
+            "neighborhood": 0.03398897777777777,
+            "forward": 0.4062480000000001
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 5.015594666666666,
+          "cpuP95Mean": 2.8999999997516475,
+          "receiver": [
+            576,
+            360
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.02873688888888888,
+            "trace": 2.4171998222222224,
+            "shade": 1.2521226666666667,
+            "neighborhood": 0.03634062222222224,
+            "connections": 0.01985368888888889,
+            "temporal": 0.05160604444444444,
+            "filter1": 0.09320995555555557,
+            "filter2": 0.07823875555555554,
+            "forward": 0.30852391111111116
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-ballpool-1280x800-interactive16-static.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "moving",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.9268906666666679,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.7957760000000018,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 4.505216000000002,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.586208,
+          "cpuP95Mean": 2.0333333325882754,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 7.164533333333334,
+          "cpuP95Mean": 3.600000001490116,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05763128888888889,
+            "trace": 3.6305008,
+            "shade": 1.2546892444444444,
+            "neighborhood": 0.04861066666666666,
+            "forward": 1.2996417777777776
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 8.295648,
+          "cpuP95Mean": 3.433333333581686,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.0587792,
+            "trace": 4.433840177777778,
+            "shade": 2.0118426666666664,
+            "neighborhood": 0.044478577777777785,
+            "forward": 0.9689141333333332
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 9.091424000000002,
+          "cpuP95Mean": 3.2666666681567826,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.06067786666666667,
+            "trace": 4.389568355555555,
+            "shade": 2.0008160000000004,
+            "neighborhood": 0.06723484444444443,
+            "connections": 0.14833155555555555,
+            "temporal": 0.2017333333333333,
+            "filter1": 0.058608533333333324,
+            "filter2": 0.015232711111111111,
+            "forward": 1.0873297777777775
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-moving.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "relight",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 4.685344,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 2.0899626666666684,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 7.2912213333333336,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.58832,
+          "cpuP95Mean": 2.433333333581686,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 7.194197333333334,
+          "cpuP95Mean": 3.2333333330849805,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              30,
+              100
+            ],
+            [
+              64,
+              100
+            ],
+            [
+              30,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            70,
+            36,
+            70
+          ],
+          "components": {
+            "receiver": 0.06161119999999998,
+            "trace": 3.6678597333333336,
+            "shade": 1.3729424000000001,
+            "neighborhood": 0.0685728,
+            "forward": 1.2528359111111111
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 9.789578666666666,
+          "cpuP95Mean": 3.6333333340783915,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              64,
+              100
+            ],
+            [
+              64,
+              100
+            ],
+            [
+              30,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            36,
+            36,
+            70
+          ],
+          "components": {
+            "receiver": 0.06412071111111112,
+            "trace": 4.6512384,
+            "shade": 2.1732666666666662,
+            "neighborhood": 0.0510807111111111,
+            "forward": 0.9639041777777777
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 11.879541333333334,
+          "cpuP95Mean": 4.100000000248353,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              62,
+              100
+            ],
+            [
+              64,
+              100
+            ],
+            [
+              64,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            38,
+            36,
+            36
+          ],
+          "components": {
+            "receiver": 0.06860604444444444,
+            "trace": 4.7139648,
+            "shade": 2.136012266666667,
+            "neighborhood": 0.06021297777777779,
+            "connections": 0.16537475555555553,
+            "temporal": 0.1629233777777778,
+            "filter1": 0.11802791111111109,
+            "filter2": 0.018735466666666672,
+            "forward": 1.010324622222222
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-relight.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.7073919999999996,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.10468266666666715,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 4.133877333333333,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.524992,
+          "cpuP95Mean": 1.9333333323399227,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 6.951477333333334,
+          "cpuP95Mean": 3.366666667163372,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.06117848888888888,
+            "trace": 3.5774865777777776,
+            "shade": 1.2489599999999998,
+            "neighborhood": 0.04484960000000001,
+            "forward": 1.2179114666666666
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 8.554186666666666,
+          "cpuP95Mean": 3.1666666666666665,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.059657244444444445,
+            "trace": 4.426253688888889,
+            "shade": 2.0327873777777783,
+            "neighborhood": 0.045514844444444445,
+            "forward": 0.9315312000000001
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 8.658869333333334,
+          "cpuP95Mean": 3.5333333338300386,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05964355555555556,
+            "trace": 4.4220640000000015,
+            "shade": 2.029577599999999,
+            "neighborhood": 0.04629048888888889,
+            "connections": 0.13626186666666668,
+            "temporal": 0.16609084444444444,
+            "filter1": 0.07013831111111112,
+            "filter2": 0.02056693333333334,
+            "forward": 0.9971690666666668
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-static.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "interactive16",
+        "activity": "moving",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "passed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.9698239999999991,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.5507626666666665,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 1.2928639999999998,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.491477333333333,
+          "cpuP95Mean": 2,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 4.814517333333334,
+          "cpuP95Mean": 3.5666666651765504,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05821208888888888,
+            "trace": 1.837125866666667,
+            "shade": 0.6670936888888889,
+            "neighborhood": 0.047860444444444455,
+            "forward": 1.2973200000000003
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.233578666666666,
+          "cpuP95Mean": 3.5999999990065894,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05798986666666667,
+            "trace": 2.3131048888888888,
+            "shade": 1.046924977777778,
+            "neighborhood": 0.042428444444444456,
+            "forward": 1.0188343111111113
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 5.784341333333333,
+          "cpuP95Mean": 3.4666666661699614,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.059368888888888895,
+            "trace": 2.4968360888888887,
+            "shade": 1.0476847999999999,
+            "neighborhood": 0.044391644444444454,
+            "connections": 0.15621671111111113,
+            "temporal": 0.17969066666666664,
+            "filter1": 0.044001955555555555,
+            "filter2": 0.015195199999999999,
+            "forward": 0.9787576888888889
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-interactive16-moving.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "interactive16",
+        "activity": "relight",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 2.1445013333333343,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 1.1072960000000007,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 3.057141333333334,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.612341333333333,
+          "cpuP95Mean": 2.5333333338300386,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 5.524981333333333,
+          "cpuP95Mean": 3.3333333333333335,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              30,
+              100
+            ],
+            [
+              66,
+              100
+            ],
+            [
+              66,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            70,
+            34,
+            34
+          ],
+          "components": {
+            "receiver": 0.058023288888888885,
+            "trace": 1.9254723555555557,
+            "shade": 0.7254616888888888,
+            "neighborhood": 0.05360906666666667,
+            "forward": 1.3122412444444445
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 6.562186666666666,
+          "cpuP95Mean": 3.6666666666666665,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              66,
+              100
+            ],
+            [
+              66,
+              100
+            ],
+            [
+              66,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            34,
+            34,
+            34
+          ],
+          "components": {
+            "receiver": 0.060269688888888874,
+            "trace": 2.5150768000000006,
+            "shade": 1.1303813333333332,
+            "neighborhood": 0.046168000000000015,
+            "forward": 0.9185669333333334
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 7.669482666666667,
+          "cpuP95Mean": 4.16666666790843,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              66,
+              100
+            ],
+            [
+              66,
+              100
+            ],
+            [
+              66,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            34,
+            34,
+            34
+          ],
+          "components": {
+            "receiver": 0.06428088888888887,
+            "trace": 2.5496236444444444,
+            "shade": 1.1202739555555554,
+            "neighborhood": 0.05386951111111112,
+            "connections": 0.16844373333333337,
+            "temporal": 0.15881920000000002,
+            "filter1": 0.08364479999999996,
+            "filter2": 0.015816177777777787,
+            "forward": 1.078049777777778
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-interactive16-relight.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "interactive16",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "passed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.5955946666666669,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.3252480000000002,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 1.1194880000000005,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.516298666666667,
+          "cpuP95Mean": 2,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 5.040192,
+          "cpuP95Mean": 3.3999999997516475,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.059100977777777786,
+            "trace": 1.807695111111111,
+            "shade": 0.6632968888888889,
+            "neighborhood": 0.03853475555555555,
+            "forward": 1.268245511111111
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.310538666666667,
+          "cpuP95Mean": 3.4333333323399224,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05968035555555554,
+            "trace": 2.3126691555555556,
+            "shade": 1.0414199111111109,
+            "neighborhood": 0.04089866666666667,
+            "forward": 0.9083489777777776
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 5.635786666666667,
+          "cpuP95Mean": 3.5999999990065894,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.06446879999999999,
+            "trace": 2.3380892444444448,
+            "shade": 1.0405216,
+            "neighborhood": 0.0470992,
+            "connections": 0.1440112,
+            "temporal": 0.14604017777777778,
+            "filter1": 0.06982951111111109,
+            "filter2": 0.01538844444444444,
+            "forward": 0.9960823111111111
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-interactive16-static.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "moving",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.1341653333333328,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.5027306666666673,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.1063253333333334,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.168,
+          "cpuP95Mean": 2.133333332836628,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 5.140160000000001,
+          "cpuP95Mean": 3.266666665673256,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05259448888888888,
+            "trace": 2.509270577777778,
+            "shade": 0.9591313777777778,
+            "neighborhood": 0.03366346666666666,
+            "forward": 0.7206216888888889
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.771594666666666,
+          "cpuP95Mean": 3.1333333340783915,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05682168888888888,
+            "trace": 2.9087644444444436,
+            "shade": 1.5960874666666662,
+            "neighborhood": 0.03287431111111111,
+            "forward": 0.5365909333333333
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 6.2743253333333335,
+          "cpuP95Mean": 3.2999999995032945,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05527004444444445,
+            "trace": 3.1050478222222218,
+            "shade": 1.5741072000000003,
+            "neighborhood": 0.03564124444444445,
+            "connections": 0.1253688888888889,
+            "temporal": 0.13955537777777777,
+            "filter1": 0.04961973333333333,
+            "filter2": 0.015398222222222221,
+            "forward": 0.4838867555555555
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-original-1280x800-high-moving.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "relight",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.237184,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": -0.3705813333333339,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.9712639999999997,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.259648,
+          "cpuP95Mean": 2.0000000012417636,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 5.993728,
+          "cpuP95Mean": 3.233333334326744,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              39,
+              100
+            ],
+            [
+              57,
+              100
+            ],
+            [
+              79,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            61,
+            43,
+            21
+          ],
+          "components": {
+            "receiver": 0.06344320000000002,
+            "trace": 2.3605112888888886,
+            "shade": 1.0229333333333333,
+            "neighborhood": 0.03913546666666667,
+            "forward": 0.734114488888889
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 7.601493333333334,
+          "cpuP95Mean": 3.9333333323399224,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              57,
+              100
+            ],
+            [
+              69,
+              100
+            ],
+            [
+              84,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            43,
+            31,
+            16
+          ],
+          "components": {
+            "receiver": 0.05372693333333334,
+            "trace": 3.0749907555555556,
+            "shade": 1.7110364444444446,
+            "neighborhood": 0.0400784,
+            "forward": 0.5380984888888889
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 7.230912,
+          "cpuP95Mean": 7.800000000745058,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              78,
+              100
+            ],
+            [
+              33,
+              100
+            ],
+            [
+              79,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            22,
+            67,
+            21
+          ],
+          "components": {
+            "receiver": 0.054667733333333336,
+            "trace": 3.1744559999999997,
+            "shade": 1.7548938666666671,
+            "neighborhood": 0.045287466666666665,
+            "connections": 0.10121155555555557,
+            "temporal": 0.10411111111111111,
+            "filter1": 0.0550544,
+            "filter2": 0.016710577777777777,
+            "forward": 0.5613793777777779
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-original-1280x800-high-relight.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "interactive16",
+        "activity": "moving",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "passed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.067861333333334,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.05601066666666732,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 1.0227413333333333,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.180597333333334,
+          "cpuP95Mean": 2.0999999990065894,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 5.135477333333333,
+          "cpuP95Mean": 3.3666666684051356,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.06186613333333333,
+            "trace": 1.4668986666666666,
+            "shade": 0.6917429333333333,
+            "neighborhood": 0.03996124444444445,
+            "forward": 1.4376414222222227
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.147328,
+          "cpuP95Mean": 3.2333333318432174,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.061220444444444445,
+            "trace": 2.0564807111111114,
+            "shade": 1.1085685333333333,
+            "neighborhood": 0.04611893333333333,
+            "forward": 0.7126215111111112
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 5.203338666666667,
+          "cpuP95Mean": 3.0999999990065894,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.055037511111111125,
+            "trace": 1.9201320888888889,
+            "shade": 1.0122796444444446,
+            "neighborhood": 0.043818666666666665,
+            "connections": 0.11636657777777777,
+            "temporal": 0.13374844444444445,
+            "filter1": 0.04410044444444445,
+            "filter2": 0.019587555555555556,
+            "forward": 0.6776714666666668
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-original-1280x800-interactive16-moving.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "interactive16",
+        "activity": "relight",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.07627733333333353,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.5137280000000004,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 0.6743893333333331,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.370997333333333,
+          "cpuP95Mean": 2.0333333338300386,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 4.969109333333333,
+          "cpuP95Mean": 3.7000000004967055,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              86,
+              100
+            ],
+            [
+              62,
+              100
+            ],
+            [
+              88,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            14,
+            38,
+            12
+          ],
+          "components": {
+            "receiver": 0.06343697777777779,
+            "trace": 1.4625541333333334,
+            "shade": 0.7281704888888888,
+            "neighborhood": 0.060930311111111114,
+            "forward": 1.3935184000000003
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 4.531658666666666,
+          "cpuP95Mean": 3.133333332836628,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              55,
+              100
+            ],
+            [
+              30,
+              100
+            ],
+            [
+              86,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            45,
+            70,
+            14
+          ],
+          "components": {
+            "receiver": 0.05713084444444446,
+            "trace": 2.0987706666666663,
+            "shade": 1.1111370666666665,
+            "neighborhood": 0.03889173333333334,
+            "forward": 0.7109614222222221
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 5.0453866666666665,
+          "cpuP95Mean": 3.100000001490116,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              88,
+              100
+            ],
+            [
+              35,
+              100
+            ],
+            [
+              58,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            12,
+            65,
+            42
+          ],
+          "components": {
+            "receiver": 0.05430346666666667,
+            "trace": 1.9277429333333336,
+            "shade": 1.0560224,
+            "neighborhood": 0.04266648888888889,
+            "connections": 0.12328728888888889,
+            "temporal": 0.10791982222222223,
+            "filter1": 0.06455697777777777,
+            "filter2": 0.017837511111111114,
+            "forward": 0.6691427555555555
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-original-1280x800-interactive16-relight.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "interactive16",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "passed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.08942933333333336,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.08849066666666694,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 0.8698560000000004,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.308896,
+          "cpuP95Mean": 2.0333333325882754,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 5.089322666666667,
+          "cpuP95Mean": 3.33333333209157,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.06108355555555555,
+            "trace": 1.5251221333333336,
+            "shade": 0.7139710222222222,
+            "neighborhood": 0.05569671111111111,
+            "forward": 1.3762385777777775
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.090261333333333,
+          "cpuP95Mean": 3.1333333340783915,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05939146666666666,
+            "trace": 2.0768648888888883,
+            "shade": 1.0990362666666667,
+            "neighborhood": 0.044932799999999995,
+            "forward": 0.6896800000000001
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 5.178752,
+          "cpuP95Mean": 3.4000000009934106,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 16,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05422293333333331,
+            "trace": 1.9147407999999995,
+            "shade": 1.0494558222222221,
+            "neighborhood": 0.04338275555555555,
+            "connections": 0.13128177777777775,
+            "temporal": 0.1322199111111111,
+            "filter1": 0.0451184,
+            "filter2": 0.02061991111111111,
+            "forward": 0.6447779555555556
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy-original-1280x800-interactive16-static.json"
+    },
+    {
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "rayLayout": "interleaved",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "status": "failed",
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": true
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.5125653333333338,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.8192000000000013,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.287594666666667,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "modes": {
+        "ddgi": {
+          "gpuP95Mean": 4.219381333333334,
+          "cpuP95Mean": 2.0333333338300386,
+          "fgFrames": [
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              0,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {}
+        },
+        "fixed-raw": {
+          "gpuP95Mean": 4.994410666666667,
+          "cpuP95Mean": 3.2000000017384687,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05228675555555556,
+            "trace": 2.4347409777777784,
+            "shade": 0.9727013333333331,
+            "neighborhood": 0.03385191111111111,
+            "forward": 0.7734867555555555
+          }
+        },
+        "decorrelated-raw": {
+          "gpuP95Mean": 5.6877759999999995,
+          "cpuP95Mean": 3.1666666666666665,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.059120533333333336,
+            "trace": 3.0274220444444455,
+            "shade": 1.6002115555555558,
+            "neighborhood": 0.03533884444444444,
+            "forward": 0.533035911111111
+          }
+        },
+        "reconstructed": {
+          "gpuP95Mean": 6.506976000000001,
+          "cpuP95Mean": 3.4999999987582364,
+          "receiver": [
+            640,
+            400
+          ],
+          "samples": 32,
+          "fgFrames": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          "cachedFrames": [
+            0,
+            0,
+            0
+          ],
+          "fallbackFrames": [
+            0,
+            0,
+            0
+          ],
+          "components": {
+            "receiver": 0.05782844444444444,
+            "trace": 2.9504259555555556,
+            "shade": 1.5847267555555558,
+            "neighborhood": 0.05526168888888888,
+            "connections": 0.1005584,
+            "temporal": 0.14911093333333333,
+            "filter1": 0.04458684444444444,
+            "filter2": 0.01856337777777778,
+            "forward": 0.4768083555555555
+          }
+        }
+      },
+      "file": "performance-split-azimuth-lazy.json"
+    }
+  ],
+  "frozen": {
+    "coverage": 0.9834204193424009,
+    "independentNRMSE": 0.10104637519417586,
+    "rays": {
+      "actualPrimaryRays": 1782151,
+      "knownZeroDirections": 1145,
+      "supportedReceiverSlots": 1783296,
+      "plannedSlots": 6635520,
+      "solarRayUpperBound": 1782151,
+      "scratchBytes": 9216,
+      "method": "same production GPU sampler, normals, pixel/epoch and Ng gate; counts every scheduled primary direction"
+    },
+    "resources": {
+      "modelGpuBytes": 14208,
+      "worldGeometryBytes": 2722052,
+      "environmentGpuBytes": 229376,
+      "assetCpuBytes": 40926,
+      "workerCpuBytes": 3110128,
+      "mainWorldCpuBytes": 137712,
+      "physicsWasmReservedBytes": 1835008,
+      "sceneBytes": 8089410,
+      "fgBytes": 48936960,
+      "snapshots": 405504,
+      "totalAdditionalBytes": 57431874,
+      "peakAdditionalBytes": 57431874,
+      "peakSceneBytes": 8089410,
+      "worldGpuBytes": 4776644,
+      "driverVram": "not-run",
+      "wasmHeap": "measured reserved linear memory",
+      "workerJsHeap": "not-run"
+    },
+    "latency": {
+      "generation": 3,
+      "count": 64,
+      "triangles": 33852,
+      "modelAndWorldMilliseconds": 405.19999999925494,
+      "started": 1576,
+      "lightingFinished": 1981.199999999255,
+      "resource": {
+        "modelGpuBytes": 14208,
+        "worldGeometryBytes": 2722052,
+        "environmentGpuBytes": 229376,
+        "assetCpuBytes": 40926,
+        "workerCpuBytes": 3110128,
+        "mainWorldCpuBytes": 137712,
+        "physicsWasmReservedBytes": 1835008,
+        "sceneBytes": 8089410,
+        "fgBytes": 0,
+        "snapshots": 405504,
+        "totalAdditionalBytes": 8494914,
+        "peakAdditionalBytes": 56899020,
+        "peakSceneBytes": 8089410,
+        "worldGpuBytes": 4776644,
+        "driverVram": "not-run",
+        "wasmHeap": "measured reserved linear memory",
+        "workerJsHeap": "not-run"
+      },
+      "geometryHash": "fad0943749692bbf2d7c0940eacda9372bbf573f7c45e95da8a75d056e9d36ad",
+      "convergedMilliseconds": 700.7999999970198
+    }
+  },
+  "desktop": [
+    {
+      "count": 16,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "receiver": [
+        640,
+        360
+      ],
+      "coverage": 0.9982097649186257,
+      "peakBytes": 57833562,
+      "quality": "passed",
+      "planningReason": "Auto reduced receiver to fit budgets",
+      "rejections": [
+        {
+          "scale": 0.5,
+          "receiver": [
+            960,
+            540
+          ],
+          "totalBytes": 125801562,
+          "checkedInvocations": 22809600,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.45,
+          "receiver": [
+            864,
+            486
+          ],
+          "totalBytes": 102556506,
+          "checkedInvocations": 18869760,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.4,
+          "receiver": [
+            768,
+            432
+          ],
+          "totalBytes": 81758298,
+          "checkedInvocations": 15344640,
+          "reasons": [
+            "additional memory budget"
+          ]
+        }
+      ]
+    },
+    {
+      "count": 16,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "receiver": [
+        640,
+        360
+      ],
+      "coverage": 0.9978946083666432,
+      "peakBytes": 57833562,
+      "quality": "passed",
+      "planningReason": "Auto reduced receiver to fit budgets",
+      "rejections": [
+        {
+          "scale": 0.5,
+          "receiver": [
+            1280,
+            720
+          ],
+          "totalBytes": 220956762,
+          "checkedInvocations": 40550400,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.45,
+          "receiver": [
+            1152,
+            648
+          ],
+          "totalBytes": 179632218,
+          "checkedInvocations": 33546240,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.4,
+          "receiver": [
+            1024,
+            576
+          ],
+          "totalBytes": 142657626,
+          "checkedInvocations": 27279360,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.3333333333333333,
+          "receiver": [
+            854,
+            480
+          ],
+          "totalBytes": 100200282,
+          "checkedInvocations": 20083200,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.3,
+          "receiver": [
+            768,
+            432
+          ],
+          "totalBytes": 81758298,
+          "checkedInvocations": 16957440,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        }
+      ]
+    },
+    {
+      "count": 64,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "receiver": [
+        640,
+        360
+      ],
+      "coverage": 0.9954079830448604,
+      "peakBytes": 62336460,
+      "quality": "passed",
+      "planningReason": "Auto reduced receiver to fit budgets",
+      "rejections": [
+        {
+          "scale": 0.5,
+          "receiver": [
+            960,
+            540
+          ],
+          "totalBytes": 130304460,
+          "checkedInvocations": 22809600,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.45,
+          "receiver": [
+            864,
+            486
+          ],
+          "totalBytes": 107059404,
+          "checkedInvocations": 18869760,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.4,
+          "receiver": [
+            768,
+            432
+          ],
+          "totalBytes": 86261196,
+          "checkedInvocations": 15344640,
+          "reasons": [
+            "additional memory budget"
+          ]
+        }
+      ]
+    },
+    {
+      "count": 64,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "receiver": [
+        640,
+        360
+      ],
+      "coverage": 0.9947963413380837,
+      "peakBytes": 62336460,
+      "quality": "passed",
+      "planningReason": "Auto reduced receiver to fit budgets",
+      "rejections": [
+        {
+          "scale": 0.5,
+          "receiver": [
+            1280,
+            720
+          ],
+          "totalBytes": 225459660,
+          "checkedInvocations": 40550400,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.45,
+          "receiver": [
+            1152,
+            648
+          ],
+          "totalBytes": 184135116,
+          "checkedInvocations": 33546240,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.4,
+          "receiver": [
+            1024,
+            576
+          ],
+          "totalBytes": 147160524,
+          "checkedInvocations": 27279360,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.3333333333333333,
+          "receiver": [
+            854,
+            480
+          ],
+          "totalBytes": 104703180,
+          "checkedInvocations": 20083200,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.3,
+          "receiver": [
+            768,
+            432
+          ],
+          "totalBytes": 86261196,
+          "checkedInvocations": 16957440,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        }
+      ]
+    },
+    {
+      "count": 128,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "receiver": [
+        576,
+        324
+      ],
+      "coverage": 0.9260874900041042,
+      "peakBytes": 58073140,
+      "quality": "failed",
+      "planningReason": "Auto reduced receiver to fit budgets",
+      "rejections": [
+        {
+          "scale": 0.5,
+          "receiver": [
+            960,
+            540
+          ],
+          "totalBytes": 136372276,
+          "checkedInvocations": 22809600,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.45,
+          "receiver": [
+            864,
+            486
+          ],
+          "totalBytes": 113127220,
+          "checkedInvocations": 18869760,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.4,
+          "receiver": [
+            768,
+            432
+          ],
+          "totalBytes": 92329012,
+          "checkedInvocations": 15344640,
+          "reasons": [
+            "additional memory budget"
+          ]
+        },
+        {
+          "scale": 0.3333333333333333,
+          "receiver": [
+            640,
+            360
+          ],
+          "totalBytes": 68404276,
+          "checkedInvocations": 11289600,
+          "reasons": [
+            "additional memory budget"
+          ]
+        }
+      ]
+    },
+    {
+      "count": 128,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "receiver": [
+        512,
+        288
+      ],
+      "coverage": 0.9285394702396534,
+      "peakBytes": 48829492,
+      "quality": "failed",
+      "planningReason": "Auto reduced receiver to fit budgets",
+      "rejections": [
+        {
+          "scale": 0.5,
+          "receiver": [
+            1280,
+            720
+          ],
+          "totalBytes": 231527476,
+          "checkedInvocations": 40550400,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.45,
+          "receiver": [
+            1152,
+            648
+          ],
+          "totalBytes": 190202932,
+          "checkedInvocations": 33546240,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.4,
+          "receiver": [
+            1024,
+            576
+          ],
+          "totalBytes": 153228340,
+          "checkedInvocations": 27279360,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.3333333333333333,
+          "receiver": [
+            854,
+            480
+          ],
+          "totalBytes": 110770996,
+          "checkedInvocations": 20083200,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.3,
+          "receiver": [
+            768,
+            432
+          ],
+          "totalBytes": 92329012,
+          "checkedInvocations": 16957440,
+          "reasons": [
+            "additional memory budget",
+            "primary slots plus geometry query budget"
+          ]
+        },
+        {
+          "scale": 0.25,
+          "receiver": [
+            640,
+            360
+          ],
+          "totalBytes": 68404276,
+          "checkedInvocations": 12902400,
+          "reasons": [
+            "additional memory budget"
+          ]
+        }
+      ]
+    }
+  ],
+  "curved": {
+    "cases": 60,
+    "failed": 48,
+    "normalErrorDegrees": 0.13223557240385114
+  },
+  "preview": [
+    {
+      "count": 16,
+      "gpuP95": 3.194944,
+      "cpuSubmissionP95": 1.300000000745058,
+      "ticks": 59
+    },
+    {
+      "count": 64,
+      "gpuP95": 1.13216,
+      "cpuSubmissionP95": 1.699999999254942,
+      "ticks": 59
+    },
+    {
+      "count": 128,
+      "gpuP95": 2.463104,
+      "cpuSubmissionP95": 2.300000000745058,
+      "ticks": 60
+    }
+  ],
+  "cpuScope": "preRender→postRender submission; physics/update excluded and reported separately"
+}

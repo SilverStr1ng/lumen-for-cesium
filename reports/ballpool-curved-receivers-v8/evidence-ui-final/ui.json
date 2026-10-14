@@ -1,0 +1,40 @@
+{
+  "checks": [
+    {
+      "name": "original/static",
+      "status": "passed"
+    },
+    {
+      "name": "original/moving",
+      "status": "passed"
+    },
+    {
+      "name": "original/relight",
+      "status": "passed"
+    },
+    {
+      "name": "gallery/static",
+      "status": "passed"
+    },
+    {
+      "name": "gallery/moving",
+      "status": "passed"
+    },
+    {
+      "name": "gallery/relight",
+      "status": "passed"
+    },
+    {
+      "name": "ballpool/static",
+      "status": "passed"
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "summary": "总结果 failed · recommended=false。请按分项状态判断；近接触误差和持续成本的失败均保留。",
+  "freeze": "冻结球面FG平均权重 98.34%；独立E NRMSE 10.10%；重建至照明CPU提交 405.20ms，至目标有效FG帧 700.80ms。实际primary 1,782,151，Ng背面已知零 1,145。延迟为墙钟与提交记录，未使用GPU fence确认。",
+  "curves": "区域\t测量案例\t最小FG权重\t最大独立E NRMSE\t最大绝对RMSE\nforegroundContour\t60\t77.14%\t172.90%\t1.3381\nballFloorContact\t30\t75.00%\t595.07%\t1.8172\nballBallContact\t30\t85.81%\t126.57%\t0.6546",
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   'Failed to load resource: the server responded with a status of 404 (Not Found)'\n+ ]\n- []\n\n    at file:///D:/Nothing/lumen-for-cesium/reports/ballpool-curved-receivers-v8/tools/verify-evidence-ui.mjs:34:10"
+}
