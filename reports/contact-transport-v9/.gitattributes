@@ -1,2 +1,3 @@
 # Acceptance SHA is byte-exact across Windows/Linux checkouts.
-* -text
+# Native PowerShell logs retain CRLF; CR is part of the newline, not whitespace.
+* -text whitespace=cr-at-eol
