@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { BVH } from "../lumen/bvh.js";
+import { floatSpawn, referenceSpawn } from "../lumen/ray-spawn.js";
 // Analytic plane intersection derives physical visibility without either spawn policy.
 const rows = [];
 for (const scale of [0.1, 1, 10])
@@ -27,6 +28,25 @@ for (const scale of [0.1, 1, 10])
         legacy = bvh.trace(legacyOrigin, direction, { tMin: 0 });
       assert(physicalDistance > 0);
       assert.equal(legacy.status, legacyDistance > 0 ? "Hit" : "Miss");
+      const source = new Float32Array([
+        translation - scale,
+        -scale,
+        0,
+        translation + scale,
+        -scale,
+        0,
+        translation,
+        scale,
+        0,
+      ]);
+      const spawned = floatSpawn(source, 0, 0.25, 0.5, [0, 0, 1], direction),
+        double = referenceSpawn(source, 0, 0.25, 0.5, [0, 0, 1], direction);
+      assert(
+        spawned[2] > 0 && spawned[2] < planeZ,
+        "bound stays below real blocker",
+      );
+      assert.equal(bvh.trace(spawned, direction, { tMin: 0 }).status, "Hit");
+      assert.equal(bvh.trace(double, direction, { tMin: 0 }).status, "Hit");
       rows.push({
         scale,
         translation,
@@ -35,6 +55,8 @@ for (const scale of [0.1, 1, 10])
         legacyDistance,
         legacy: legacy.status,
         physical: "Hit",
+        spawned,
+        double,
       });
     }
 assert(rows.some((r) => r.legacy === "Miss"));

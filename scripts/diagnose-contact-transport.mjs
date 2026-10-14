@@ -9,6 +9,7 @@ import {
   oracleRemainder,
   integrateParts,
 } from "../lumen/contact-transport.js";
+const policy = process.env.LUMEN_CONTACT_POLICY ?? "legacy-15mm";
 const out =
   process.env.LUMEN_REPORT_DIRECTORY ??
   "reports/contact-transport-v9/root-cause-legacy";
@@ -16,7 +17,7 @@ await mkdir(out, { recursive: true });
 const browser = await launchBrowser(),
   report = {
     version: sourceVersion(["scripts/diagnose-contact-transport.mjs"]),
-    policy: "legacy-15mm",
+    policy,
     rows: [],
     errors: [],
   };
@@ -33,7 +34,7 @@ try {
     });
     page.on("pageerror", (e) => report.errors.push(String(e)));
     await page.goto(
-      `http://localhost:8090/demo/ballpool.html?diagnostic=1&count=${count}&camera=contact`,
+      `http://localhost:8090/demo/ballpool.html?diagnostic=1&count=${count}&camera=contact&transport=${policy === "legacy-15mm" ? "legacy" : "bounded"}`,
     );
     await page.waitForFunction(
       () => ballPool.snapshot().phase === "static-ready",
@@ -68,7 +69,10 @@ try {
       });
       // Probe diagnostics use the same-revision previous complete round, never display E.
       const probe = new ProbeField(
-        field.grid,
+        {
+          ...field.grid,
+          normalBias: policy === "legacy-15mm" ? field.grid.normalBias : 0,
+        },
         Float32Array.from(field.positions),
         Float32Array.from(field.irradiance),
         Float32Array.from(field.moments),
@@ -87,7 +91,10 @@ try {
               (rays) => ballPool.world.diagnoseTransport(rays),
               rays,
             ),
-            lighting = await page.evaluate(() => ({ ...ballPool.lighting })),
+            lighting = {
+              ...(await page.evaluate(() => ({ ...ballPool.lighting }))),
+              rayOriginPolicy: policy,
+            },
             oracle = oracleRemainder(bvh, diagnostic, lighting, depth),
             ref = referenceIrradiance(
               bvh,

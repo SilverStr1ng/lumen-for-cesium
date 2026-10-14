@@ -25,6 +25,7 @@ uniform ivec2 u_neutral;
 uniform bool u_visibilityOptimized;
 uniform bool u_queryAnyHit;
 uniform bool u_queryStats;
+uniform bool u_contactTransport;
 // Production shaders preprocess all traversal counter writes away.
 #ifdef LUMEN_QUERY_COUNTS
 vec3 traversalCounts=vec3(0.0);
@@ -70,7 +71,7 @@ float traversalRank(int t) {
     return fetch1(u_uv,u_tieRankOffset+t/4)[t%4];
 }
 // Stackless pre-order traversal. An exhausted budget is Unknown (-1), never sky.
-vec4 traceWithExitTies(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit,bool preferSolidExit) {
+vec4 traceRange(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit,bool preferSolidExit,float minimum) {
     int node=0;vec4 best=vec4(0.0,0.0,0.0,maximum);
     for(int visit=0;visit<4096;visit++) {
         if(node>=u_nodesCount) return best;
@@ -95,7 +96,7 @@ vec4 traceWithExitTies(vec3 origin,vec3 direction,float maximum,int ignore,bool 
             if(u<0.0||u>1.0) continue;
             vec3 q=cross(s,e1);float v=dot(direction,q)/det;
             if(v<0.0||u+v>1.0) continue;
-            float d=dot(e2,q)/det;if(d<0.00001||d>best.w) continue;
+            float d=dot(e2,q)/det;if(d<=minimum||d>best.w) continue;
             if(d==best.w) {
                 if(best.x==0.0) continue;
                 bool candidateExit=det<0.0 && mat(material,2).w>0.5;
@@ -115,6 +116,7 @@ vec4 traceWithExitTies(vec3 origin,vec3 direction,float maximum,int ignore,bool 
     return node>=u_nodesCount?best:vec4(-1.0,0.0,0.0,maximum);
 }
 // Ordinary transport and shadow rays retain the original exact-tie ordering.
+vec4 traceWithExitTies(vec3 o,vec3 d,float maximum,int ignore,bool anyHit,bool preferSolidExit){return traceRange(o,d,maximum,ignore,anyHit,preferSolidExit,0.00001);}
 vec4 trace(vec3 origin,vec3 direction,float maximum,int ignore,bool anyHit) {
     return traceWithExitTies(origin,direction,maximum,ignore,anyHit,false);
 }
@@ -125,7 +127,7 @@ float completeDistance(vec3 origin) {
     return max(100.0,length(max(abs(lo-origin),abs(hi-origin)))+1.0);
 }
 // Exact any-hit: defer UV and alpha fetches until an accepted geometric hit.
-vec4 occluded(vec3 origin,vec3 direction,float maximum,int ignore) {
+vec4 occludedRange(vec3 origin,vec3 direction,float maximum,int ignore,float minimum) {
     vec3 inverseDirection=vec3(0.0);
     for(int axis=0;axis<3;axis++) if(abs(direction[axis])>=1e-10) inverseDirection[axis]=1.0/direction[axis];
     int node=0;
@@ -151,7 +153,7 @@ vec4 occluded(vec3 origin,vec3 direction,float maximum,int ignore) {
             if(u<0.0||u>1.0) continue;
             vec3 q=cross(delta,e1);float v=dot(direction,q)/det;
             if(v<0.0||u+v>1.0) continue;
-            float d=dot(e2,q)/det;if(d<0.00001||d>=maximum) continue;
+            float d=dot(e2,q)/det;if(d<=minimum||d>=maximum) continue;
             int material=int(a.w);vec4 params=mat(material,1);
             if(params.w>0.5) {countAlpha();}
             if(params.w>0.5 && image(material,0,hitUV(vec2(b.w,c.w),fetch1(u_uv,t),vec2(u,v))).a*mat(material,0).a<params.y) continue;
@@ -160,6 +162,20 @@ vec4 occluded(vec3 origin,vec3 direction,float maximum,int ignore) {
         node=int(lo.w);
     }
     return vec4(node>=u_nodesCount?0.0:-1.0,0.0,0.0,maximum);
+}
+vec4 occluded(vec3 o,vec3 d,float maximum,int ignore){return occludedRange(o,d,maximum,ignore,0.00001);}
+// Local binary32 reconstruction error envelope (gamma(15)), projected onto Ng.
+// One outward ULP avoids rounding the offset back onto its uncertainty slab.
+// Only the source triangle is excluded; all neighbouring faces remain blockers.
+float outwardFloat(float p,float n){if(n==0.0)return p;if(p==0.0)return n>0.0?uintBitsToFloat(1u):-uintBitsToFloat(1u);uint bits=floatBitsToUint(p);return uintBitsToFloat((p>0.0)==(n>0.0)?bits+1u:bits-1u);}
+vec3 spawnSurface(vec4 h,vec3 n,vec3 direction){
+ vec3 a,b,c;int m;vec2 uv0;vec4 uv12;triangle(int(abs(h.x))-2,a,b,c,m,uv0,uv12);
+ vec3 p=a*(1.0-h.y-h.z)+b*h.y+c*h.z;
+ if(!u_contactTransport)return p+n*0.015;
+ vec3 extent=abs(b-a)+abs(c-a);float size=max(extent.x,max(extent.y,extent.z));
+ vec3 error=0.000000894071*(abs(a)*(1.0-h.y-h.z)+abs(b)*h.y+abs(c)*h.z+vec3(size));
+ vec3 offset=n*(dot(abs(n),error)*(dot(n,direction)>=0.0?1.0:-1.0)),o=p+offset;
+ return vec3(outwardFloat(o.x,offset.x),outwardFloat(o.y,offset.y),outwardFloat(o.z,offset.z));
 }
 vec3 rayDirection(int i) {
     float z=1.0-2.0*(float(i)+0.5)/float(u_rays),a=float(i)*2.399963229728653;
@@ -230,8 +246,8 @@ triangle(t,a,b,cc,m,uv0,uv12);
 vec3 p=a*(1.0-h.y-h.z)+b*h.y+cc*h.z,n=normalize(cross(b-a,cc-a));
 bool black=h.x<0.0&&mat(m,1).z<0.5;if(h.x<0.0) n=-n;
 if(black||dot(n,u_sunDirection)<=0.0) {out_FragColor=vec4(0.0,1.0,0.0,0.0);return;}
-vec3 origin=p+n*0.015;float maximum=completeDistance(origin);
-vec4 shadow=u_visibilityOptimized?occluded(origin,u_sunDirection,maximum,t):trace(origin,u_sunDirection,maximum,t,true);
+vec3 origin=spawnSurface(h,n,u_sunDirection);float maximum=completeDistance(origin);
+vec4 shadow=u_visibilityOptimized?occludedRange(origin,u_sunDirection,maximum,t,u_contactTransport?0.0:0.00001):traceRange(origin,u_sunDirection,maximum,t,true,false,u_contactTransport?0.0:0.00001);
 out_FragColor=vec4(shadow.x==0.0?1.0:0.0,shadow.x==-1.0?0.0:1.0,1.0,0.0);
 }`;
 export const direct = `${common + worldUniforms}
@@ -249,7 +265,7 @@ export const bounce = `${common + gather}
 void main() {ivec2 c=ivec2(gl_FragCoord.xy);vec4 value=texelFetch(u_direct,c,0),h=texelFetch(u_hits,c,0);
 if(u_first==0 && abs(h.x)>1.0 && value.a>0.5) {
 vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
-if(!black) value.rgb+=rho*lumen_worldIrradiance(p,n).rgb/czm_pi;
+if(!black) value.rgb+=rho*lumen_worldIrradianceWithBias(p,n,n,u_contactTransport?0.0:u_lumenNormalBias).rgb/czm_pi;
 }
 out_FragColor=value;}`;
 const integrationDirection = `
@@ -343,24 +359,64 @@ void main(){ivec2 c=ivec2(gl_FragCoord.xy);vec3 o=texelFetch(u_queryOrigin,c,0).
  if(u_transportPart==6){out_FragColor=vec4(n,1);return;}
  if(black){out_FragColor=vec4(0,0,0,1);return;}
  if(u_transportPart==2){out_FragColor=vec4(emission,1);return;}
- if(u_transportPart==4){vec4 e=lumen_worldIrradiance(p,n);out_FragColor=vec4(rho*e.rgb/czm_pi,e.a);return;}
- vec3 origin=p+n*0.015;vec4 s=trace(origin,u_sunDirection,completeDistance(origin),t,false);
+ if(u_transportPart==4){vec4 e=lumen_worldIrradianceWithBias(p,n,n,u_contactTransport?0.0:u_lumenNormalBias);out_FragColor=vec4(rho*e.rgb/czm_pi,e.a);return;}
+ vec3 origin=spawnSurface(h,n,u_sunDirection);vec4 s=traceRange(origin,u_sunDirection,completeDistance(origin),t,false,false,u_contactTransport?0.0:0.00001);
  if(u_transportPart==7){out_FragColor=vec4(origin,length(origin-p));return;}
  if(u_transportPart==8){out_FragColor=s;return;}
  out_FragColor=vec4(s.x==0.0?rho*u_sunRadiance*max(0.0,dot(n,u_sunDirection))/czm_pi:vec3(0),s.x==-1.0?-1.0:1.0);
 }`;
-const finalGather = `${finalGatherSampling}
+const surfaceRadiance = `
+uniform sampler2D u_surfaceMetadata,u_surfaceRadiance;
+uniform bool u_surfaceEnabled;
+vec4 surfaceCached(vec4 h){
+ if(h.x==-1.0)return vec4(0,0,0,-1);
+ if(abs(h.x)<=1.0)return vec4(0);
+ int t=int(abs(h.x))-2;vec4 meta=fetch1(u_surfaceMetadata,t);int n=int(meta.y);
+ if(n<1||h.x<0.0)return vec4(0);
+ vec2 q=clamp(h.yz,vec2(0),vec2(0.999999))*float(n);ivec2 cell=ivec2(floor(q));
+ if(cell.x+cell.y>=n)cell.y=n-1-cell.x;
+ int upper=cell.x+cell.y<n-1&&fract(q.x)+fract(q.y)>1.0?1:0;
+ int index=int(meta.x)+cell.x*(2*n-cell.x)+2*cell.y+upper;
+ return fetch1(u_surfaceRadiance,index);
+}
+`;
+export const buildSurfaceRadiance = `${common + finalGatherSampling + surfaceRadiance}
+uniform sampler2D u_surfaceSamples;uniform int u_surfaceRound;
+void main(){vec4 address=texelFetch(u_surfaceSamples,ivec2(gl_FragCoord.xy),0);
+ if(address.a<0.5){out_FragColor=vec4(0);return;}
+ vec4 h=vec4(address.xyz,0);vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
+ vec3 direct=emission;float c=max(0.0,dot(n,u_sunDirection));
+ if(c>0.0&&any(greaterThan(u_sunRadiance,vec3(0)))){
+  vec3 o=spawnSurface(h,n,u_sunDirection);vec4 shadow=occludedRange(o,u_sunDirection,completeDistance(o),t,0.0);
+  if(shadow.x==-1.0){out_FragColor=vec4(0,0,0,-1);return;}
+  if(shadow.x==0.0)direct+=rho*u_sunRadiance*c/czm_pi;
+ }
+ vec3 incoming=vec3(0);
+ if(u_surfaceRound>0)for(int i=0;i<1024;i++){
+  if(i>=u_fgSamples)break;vec3 d=fgDirection(n,i,ivec2(gl_FragCoord.xy));
+  vec3 o=spawnSurface(h,n,d);vec4 hit=traceRange(o,d,completeDistance(o),t,false,false,0.0),L;
+  if(hit.x==-1.0){out_FragColor=vec4(0,0,0,-1);return;}
+  if(hit.x==0.0)L=vec4(u_upperHemisphere==0||d.z>=0.0?u_skyRadiance:vec3(0),1);
+  else {vec3 y,ng,r,e;int triangleId;bool back;surface(hit,y,ng,r,e,triangleId,back);L=back?vec4(0,0,0,1):surfaceCached(hit);}
+  if(L.a<=0.0){out_FragColor=vec4(0,0,0,L.a);return;}
+  incoming+=L.rgb*(czm_pi/float(u_fgSamples));
+ }
+ vec3 value=direct+rho*incoming/czm_pi;
+ out_FragColor=vec4(value,any(greaterThan(value,vec3(65504)))?0.0:1.0);
+}`;
+const finalGather = `${finalGatherSampling + surfaceRadiance}
 vec4 fgRadiance(vec4 h,vec3 d){
  if(h.x==-1.0)return vec4(0,0,0,-1);
  if(h.x==0.0)return vec4(u_upperHemisphere==0||d.z>=0.0?u_skyRadiance:vec3(0),1);
  vec3 y,n,rho,emission;int t;bool black;surface(h,y,n,rho,emission,t,black);if(black)return vec4(0,0,0,1);
+ if(u_surfaceEnabled){vec4 cached=surfaceCached(h);if(cached.a!=0.0)return cached;}
  vec3 L=emission;float cosine=max(0.0,dot(n,u_sunDirection));
  if(cosine>0.0&&any(greaterThan(u_sunRadiance,vec3(0)))){
-  vec3 p=y+n*0.015;vec4 shadow=occluded(p,u_sunDirection,completeDistance(p),t);
+  vec3 p=spawnSurface(h,n,u_sunDirection);vec4 shadow=occludedRange(p,u_sunDirection,completeDistance(p),t,u_contactTransport?0.0:0.00001);
   if(shadow.x==-1.0)return vec4(0,0,0,-2);
   if(shadow.x==0.0)L+=rho*u_sunRadiance*cosine/czm_pi;
  }
- if(u_fgPreviousEnabled){vec4 field=lumen_worldIrradiance(y,n);
+ if(u_fgPreviousEnabled){vec4 field=lumen_worldIrradianceWithBias(y,n,n,u_contactTransport?0.0:u_lumenNormalBias);
   // Partial active support retains the R5 normalized gather contract. No support
   // is missing data, not known black irradiance. Keep it distinct from Unknown.
   if(field.a<=0.0)return vec4(0);L+=rho*field.rgb/czm_pi;

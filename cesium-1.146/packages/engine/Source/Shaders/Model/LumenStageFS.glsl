@@ -18,13 +18,13 @@ vec4 lumen_atlas(sampler2D atlas, ivec2 tile, vec3 direction) {
     vec2 f = fract(p);
     return mix(mix(texelFetch(atlas,i,0),texelFetch(atlas,i+ivec2(1,0),0),f.x),mix(texelFetch(atlas,i+ivec2(0,1),0),texelFetch(atlas,i+ivec2(1,1),0),f.x),f.y);
 }
-vec4 lumen_worldIrradianceWithNormals(vec3 positionEC, vec3 geometricNormalEC, vec3 shadingNormalEC) {
+vec4 lumen_worldIrradianceWithBias(vec3 positionEC, vec3 geometricNormalEC, vec3 shadingNormalEC, float normalBias) {
     lumen_volumeCoverage = 0.0;
     vec3 p = (u_lumenEyeToLocal * vec4(positionEC,1.0)).xyz;
     vec3 n = normalize(mat3(u_lumenEyeToLocal) * shadingNormalEC);
     vec3 ng = normalize(mat3(u_lumenEyeToLocal) * geometricNormalEC);
     // Ng biases geometry; Ns only addresses directional E. Logical grid stays unrelocated.
-    vec3 biased=p+ng*u_lumenNormalBias;
+    vec3 biased=p+ng*normalBias;
     vec3 kernelPosition=u_lumenLegacyKernel?p:biased;
     vec3 q = (kernelPosition-u_lumenProbeOrigin)/u_lumenProbeSpacing;
     if (any(lessThan(q,vec3(0.0))) || any(greaterThan(q,u_lumenProbeCounts-1.0))) return vec4(0.0);
@@ -55,6 +55,7 @@ vec4 lumen_worldIrradianceWithNormals(vec3 positionEC, vec3 geometricNormalEC, v
     }
     return vec4(weight>1e-10 ? irradiance/weight : vec3(0.0),clamp(available,0.0,1.0));
 }
+vec4 lumen_worldIrradianceWithNormals(vec3 p,vec3 ng,vec3 ns) { return lumen_worldIrradianceWithBias(p,ng,ns,u_lumenNormalBias); }
 vec4 lumen_worldIrradiance(vec3 positionEC, vec3 normalEC) { return lumen_worldIrradianceWithNormals(positionEC,normalEC,normalEC); }
 #endif
 #ifdef LUMEN_RECEIVER_COMPOSITE

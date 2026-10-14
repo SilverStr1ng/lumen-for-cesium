@@ -497,6 +497,7 @@ class LumenGpuWorld {
       u_atlas: () => g.atlas,
       u_materials: () => snapshot.materials,
       u_sunDirection: () => snapshot.light.sunDirection,
+      u_contactTransport: () => snapshot.options.contactTransport === true,
       u_sunRadiance: () => snapshot.light.sunRadiance,
       u_skyRadiance: () => snapshot.light.skyRadiance,
       u_upperHemisphere: () => snapshot.light.upperHemisphere,
@@ -662,6 +663,8 @@ class LumenGpuWorld {
         (this._jobOptions ?? this.options).visibilityMode === "optimized",
       u_queryAnyHit: () => this._diagnosticAnyHit ?? false,
       u_queryStats: () => this._diagnosticStats ?? false,
+      u_contactTransport: () =>
+        (this._jobOptions ?? this.options).contactTransport === true,
       u_transportPart: () => this._transportPart ?? 0,
       u_neutral: () => this._lighting.neutral,
       u_lumenProbeIrradiance: () =>
@@ -1588,7 +1591,9 @@ class LumenGpuWorld {
     );
   }
   diagnoseTransport(rays, { snapshot = this.finalGatherSnapshot } = {}) {
-    if (!snapshot) throw Error("FG snapshot required for transport diagnostic");
+    if (!snapshot) {
+      throw Error("FG snapshot required for transport diagnostic");
+    }
     snapshot.assertAlive();
     this._fgInput = snapshot.retain();
     try {
@@ -1607,11 +1612,13 @@ class LumenGpuWorld {
         names.map((name, part) => {
           this._transportPart = part;
           const values = this._query("queryTransport", rays);
-          if (name === "hit" || name === "solarHit")
+          if (name === "hit" || name === "solarHit") {
             for (const h of values) {
-              if (Math.abs(h[0]) > 1)
+              if (Math.abs(h[0]) > 1) {
                 h[0] = Math.sign(h[0]) * (this._order[Math.abs(h[0]) - 2] + 2);
+              }
             }
+          }
           return [name, values];
         }),
       );

@@ -425,6 +425,8 @@ async function rebuild(captured, own) {
       maxBatch: 128,
       targetGpuMilliseconds: 3,
       captureFinalGather: true,
+      contactTransport:
+        new URLSearchParams(location.search).get("transport") !== "legacy",
       ...lighting,
     });
     w._ballpoolGeneration = own;

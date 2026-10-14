@@ -3,6 +3,7 @@
 import { materialAt, accepts } from "./gltf.js";
 import { completeTraceDistance } from "./trace-domain.js";
 import { normalize, cross, dot, add, mul } from "./math.js";
+import { referenceSpawn } from "./ray-spawn.js";
 export function referenceIrradiance(
   bvh,
   position,
@@ -13,6 +14,7 @@ export function referenceIrradiance(
   geometricNormal = normal,
 ) {
   const geometry = bvh.geometry,
+    physical = lighting.rayOriginPolicy !== "legacy-15mm",
     sun = normalize(lighting.sunDirection),
     counts = { rays: 0, solar: 0, unknown: 0 };
   const accept = (t, u, v) => accepts(geometry, t, u, v);
@@ -51,6 +53,7 @@ export function referenceIrradiance(
       const h = bvh.trace(origin, direction, {
         accept,
         ignore,
+        ...(physical && ignore >= 0 ? { tMin: 0 } : {}),
         maxDistance: completeTraceDistance(geometry.bounds, origin),
       });
       if (h.status === "Unknown") {
@@ -77,13 +80,16 @@ export function referenceIrradiance(
         ),
         n = h.backface ? mul(m.normal, -1) : m.normal;
       const c = Math.max(0, dot(n, sun)),
-        solarOrigin = add(p, mul(n, 0.015));
+        solarOrigin = physical
+          ? referenceSpawn(geometry.positions, h.triangle, h.u, h.v, n, sun)
+          : add(p, mul(n, 0.015));
       let visible = false;
       if (c > 0 && lighting.sunRadiance.some((v) => v > 0)) {
         counts.solar++;
         const s = bvh.trace(solarOrigin, sun, {
           accept,
           ignore: h.triangle,
+          ...(physical ? { tMin: 0 } : {}),
           maxDistance: completeTraceDistance(geometry.bounds, solarOrigin),
         });
         if (s.status === "Unknown") throw Error("Unknown reference sun ray");
@@ -97,8 +103,10 @@ export function referenceIrradiance(
               Math.PI);
         throughput[k] *= m.albedo[k];
       }
-      origin = add(p, mul(n, 0.0002));
       direction = cosine(n);
+      origin = physical
+        ? referenceSpawn(geometry.positions, h.triangle, h.u, h.v, n, direction)
+        : add(p, mul(n, 0.0002));
       ignore = h.triangle;
     }
     for (let k = 0; k < 3; k++) {
