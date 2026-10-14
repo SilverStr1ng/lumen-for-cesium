@@ -1,0 +1,161 @@
+{
+  "source": "c0f2ed8aed8cd106b170f765c82ff490ba08afc5",
+  "verifier": "c3ba35c628609b7753e8a6f786313726091d3995",
+  "status": "failed",
+  "recommended": false,
+  "states": {
+    "regression": "passed",
+    "ray-origin": "passed",
+    "attribution": "passed",
+    "contact-query": "passed",
+    "contact-image": "passed",
+    "temporal": "passed",
+    "surface-cache": "failed",
+    "lifecycle": "passed",
+    "resource": "passed",
+    "fixed32-performance": "failed",
+    "interactive-performance": "failed",
+    "rebuild-latency": "passed",
+    "showcase": "passed"
+  },
+  "anchor": [
+    {
+      "region": "foregroundContour",
+      "before": 0.27740040582803455,
+      "instant": 0.27438026647890895,
+      "image": 0.026026511725625253,
+      "query": 0.010404264515571644,
+      "absolute": 0.01421219091529614,
+      "legacyImage": 0.023584331596580403,
+      "legacyQuery": 0.00979797404719076,
+      "coverage": 0.7714285714285715
+    },
+    {
+      "region": "ballFloorContact",
+      "before": 3.446532219260461,
+      "instant": 3.390280825352273,
+      "image": 0.036139890939545144,
+      "query": 0.041008915973472664,
+      "absolute": 0.0035168997265320797,
+      "legacyImage": 0.03814280456954568,
+      "legacyQuery": 0.033145764815654816,
+      "coverage": 0.896551724137931
+    }
+  ],
+  "costs": [
+    {
+      "quality": "auto",
+      "activity": "static",
+      "before": 9.240746666666666,
+      "after": 6.609066666666667,
+      "shadeReduction": 0.9327037146607119,
+      "sameSamples": true,
+      "cpuBefore": 2.7000000029802322,
+      "cpuAfter": 2.7000000004967055
+    },
+    {
+      "quality": "auto",
+      "activity": "moving",
+      "before": 9.616672,
+      "after": 6.309226666666667,
+      "shadeReduction": 0.939578821585714,
+      "sameSamples": true,
+      "cpuBefore": 2.7000000004967055,
+      "cpuAfter": 2.76666667064031
+    },
+    {
+      "quality": "interactive16",
+      "activity": "static",
+      "before": 5.005375999999999,
+      "after": 5.021642666666666,
+      "shadeReduction": 0.9203794740090796,
+      "sameSamples": true,
+      "cpuBefore": 3.0000000024835267,
+      "cpuAfter": 2.5333333338300386
+    },
+    {
+      "quality": "interactive16",
+      "activity": "moving",
+      "before": 5.096096,
+      "after": 4.996224000000001,
+      "shadeReduction": 0.9287756909732542,
+      "sameSamples": true,
+      "cpuBefore": 2.7000000004967055,
+      "cpuAfter": 2.600000001490116
+    }
+  ],
+  "device": {
+    "browser": "155.0.8059.40",
+    "headless": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "visibility": "visible",
+    "resolution": [
+      1280,
+      800
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+  },
+  "hardware": {
+    "captured": "2026-10-14T11:57:30.3728307Z",
+    "cpu": {
+      "Name": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+      "NumberOfCores": 8,
+      "NumberOfLogicalProcessors": 16
+    },
+    "machine": {
+      "TotalPhysicalMemory": 50634604544
+    },
+    "os": {
+      "Caption": "Microsoft Windows 11 专业版",
+      "Version": "10.0.26200"
+    },
+    "scope": "host identity after acceptance; not runtime heap peak or driver VRAM"
+  },
+  "quality": {
+    "instantFailures": 48,
+    "cacheFailures": 0,
+    "cases": 60
+  },
+  "supplementary": {
+    "oneRound": "measured",
+    "actualPixels": "failed",
+    "actualPixelFailures": 18
+  },
+  "peakAdditionalBytes": 61294938,
+  "peakOverallAdditionalBytes": 64596075,
+  "finiteFailures": [
+    {
+      "count": 1,
+      "depth": 1,
+      "field": 0.0003956506217068521,
+      "regions": {
+        "foregroundContour": 0.0131884569621352,
+        "ballFloorContact": 0.12413774762303476
+      }
+    },
+    {
+      "count": 2,
+      "depth": 1,
+      "field": 0.00039419478746472076,
+      "regions": {
+        "foregroundContour": 0.14527913909478413,
+        "ballFloorContact": 0.09561501506196592,
+        "ballBallContact": 0.035534856763020185
+      }
+    }
+  ],
+  "sourceUse": {
+    "scheduled": 30720,
+    "knownZero": 115,
+    "executed": 30605,
+    "cachedHits": 29375,
+    "missOrKnownBlack": 1230,
+    "unsupported": 0,
+    "invalidCached": 0,
+    "unknown": 0,
+    "fallback": 0
+  }
+}

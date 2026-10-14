@@ -1,0 +1,53 @@
+RUN verify-contact-origins origin
+DONE verify-contact-origins exit 0
+RUN verify-contact-geometry geometry
+DONE verify-contact-geometry exit 0
+RUN diagnose-contact-transport root-legacy
+DONE diagnose-contact-transport exit 0
+RUN diagnose-contact-transport root-physical
+DONE diagnose-contact-transport exit 0
+RUN verify-surface-layout surface-layout
+DONE verify-surface-layout exit 0
+RUN verify-contact-cache surface-finite
+DONE verify-contact-cache exit 1
+RUN verify-curved-receivers quality-immediate
+DONE verify-curved-receivers exit 1
+RUN verify-curved-receivers quality-cache
+DONE verify-curved-receivers exit 0
+RUN verify-curved-temporal temporal
+DONE verify-curved-temporal exit 0
+RUN verify-contact-lifecycle cache-lifecycle
+DONE verify-contact-lifecycle exit 0
+RUN verify-ballpool ballpool-lifecycle
+DONE verify-ballpool exit 0
+RUN verify-ballpool-desktop desktop
+DONE verify-ballpool-desktop exit 0
+RUN verify-r8 regression
+DONE verify-r8 exit 1
+RUN benchmark-fg-runtime performance-original-high-static
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-original-high-moving
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-original-high-relight
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-gallery-high-static
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-gallery-high-moving
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-gallery-high-relight
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-original-interactive16-static
+DONE benchmark-fg-runtime exit 0
+RUN benchmark-fg-runtime performance-original-interactive16-moving
+DONE benchmark-fg-runtime exit 0
+RUN benchmark-fg-runtime performance-original-interactive16-relight
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-fg-runtime performance-gallery-interactive16-static
+DONE benchmark-fg-runtime exit 0
+RUN benchmark-fg-runtime performance-gallery-interactive16-moving
+DONE benchmark-fg-runtime exit 0
+RUN benchmark-fg-runtime performance-gallery-interactive16-relight
+DONE benchmark-fg-runtime exit 1
+RUN benchmark-contact-cache cache-cost
+DONE benchmark-contact-cache exit 1
+{"states":{"regression":"passed","ray-origin":"passed","attribution":"passed","contact-query":"passed","contact-image":"passed","temporal":"passed","surface-cache":"failed","lifecycle":"passed","resource":"passed","fixed32-performance":"failed","interactive-performance":"failed","rebuild-latency":"passed","showcase":"passed"},"status":"failed","recommended":false}

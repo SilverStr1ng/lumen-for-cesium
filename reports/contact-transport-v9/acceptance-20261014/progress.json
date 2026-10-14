@@ -1,0 +1,359 @@
+[
+  {
+    "name": "verify-contact-origins",
+    "group": "ray-origin",
+    "dir": "origin",
+    "arguments": [],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 46.025000000000006,
+    "log": "reports/contact-transport-v9/acceptance-20261014/origin/verify-contact-origins.log"
+  },
+  {
+    "name": "verify-contact-geometry",
+    "group": "ray-origin",
+    "dir": "geometry",
+    "arguments": [],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 29924.9414,
+    "log": "reports/contact-transport-v9/acceptance-20261014/geometry/verify-contact-geometry.log"
+  },
+  {
+    "name": "diagnose-contact-transport",
+    "group": "root-cause",
+    "dir": "root-legacy",
+    "arguments": [],
+    "environment": {
+      "LUMEN_CONTACT_POLICY": "legacy-15mm"
+    },
+    "exitCode": 0,
+    "milliseconds": 135827.2069,
+    "log": "reports/contact-transport-v9/acceptance-20261014/root-legacy/diagnose-contact-transport.log"
+  },
+  {
+    "name": "diagnose-contact-transport",
+    "group": "root-cause",
+    "dir": "root-physical",
+    "arguments": [],
+    "environment": {
+      "LUMEN_CONTACT_POLICY": "physical"
+    },
+    "exitCode": 0,
+    "milliseconds": 151318.93230000001,
+    "log": "reports/contact-transport-v9/acceptance-20261014/root-physical/diagnose-contact-transport.log"
+  },
+  {
+    "name": "verify-surface-layout",
+    "group": "surface-cache",
+    "dir": "surface-layout",
+    "arguments": [],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 647.0599999999977,
+    "log": "reports/contact-transport-v9/acceptance-20261014/surface-layout/verify-surface-layout.log"
+  },
+  {
+    "name": "verify-contact-cache",
+    "group": "surface-cache",
+    "dir": "surface-finite",
+    "arguments": [],
+    "environment": {
+      "LUMEN_CACHE_COUNTS": "1,2,16,64"
+    },
+    "exitCode": 1,
+    "milliseconds": 55898.72730000003,
+    "log": "reports/contact-transport-v9/acceptance-20261014/surface-finite/verify-contact-cache.log"
+  },
+  {
+    "name": "verify-curved-receivers",
+    "group": "control-quality",
+    "dir": "quality-immediate",
+    "arguments": [],
+    "environment": {
+      "LUMEN_CONTACT_TRANSPORT": "1",
+      "LUMEN_CURVE_QUICK": "0",
+      "LUMEN_RADIANCE_SOURCE": "immediate"
+    },
+    "exitCode": 1,
+    "milliseconds": 253981.353,
+    "log": "reports/contact-transport-v9/acceptance-20261014/quality-immediate/verify-curved-receivers.log"
+  },
+  {
+    "name": "verify-curved-receivers",
+    "group": "contact-quality",
+    "dir": "quality-cache",
+    "arguments": [],
+    "environment": {
+      "LUMEN_CONTACT_TRANSPORT": "1",
+      "LUMEN_CURVE_QUICK": "0",
+      "LUMEN_RADIANCE_SOURCE": "cache"
+    },
+    "exitCode": 0,
+    "milliseconds": 259815.32699999993,
+    "log": "reports/contact-transport-v9/acceptance-20261014/quality-cache/verify-curved-receivers.log"
+  },
+  {
+    "name": "verify-curved-temporal",
+    "group": "temporal",
+    "dir": "temporal",
+    "arguments": [],
+    "environment": {
+      "LUMEN_RADIANCE_SOURCE": "cache"
+    },
+    "exitCode": 0,
+    "milliseconds": 47179.96100000001,
+    "log": "reports/contact-transport-v9/acceptance-20261014/temporal/verify-curved-temporal.log"
+  },
+  {
+    "name": "verify-contact-lifecycle",
+    "group": "lifecycle",
+    "dir": "cache-lifecycle",
+    "arguments": [],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 36760.18689999997,
+    "log": "reports/contact-transport-v9/acceptance-20261014/cache-lifecycle/verify-contact-lifecycle.log"
+  },
+  {
+    "name": "verify-ballpool",
+    "group": "lifecycle",
+    "dir": "ballpool-lifecycle",
+    "arguments": [],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 48762.29460000002,
+    "log": "reports/contact-transport-v9/acceptance-20261014/ballpool-lifecycle/verify-ballpool.log"
+  },
+  {
+    "name": "verify-ballpool-desktop",
+    "group": "resource",
+    "dir": "desktop",
+    "arguments": [],
+    "environment": {
+      "LUMEN_RADIANCE_SOURCE": "cache"
+    },
+    "exitCode": 0,
+    "milliseconds": 42965.9142,
+    "log": "reports/contact-transport-v9/acceptance-20261014/desktop/verify-ballpool-desktop.log"
+  },
+  {
+    "name": "verify-r8",
+    "group": "regression",
+    "dir": "regression",
+    "arguments": [
+      "--without-performance",
+      "--output=reports/contact-transport-v9/acceptance-20261014/regression"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 2685081.8307,
+    "log": "reports/contact-transport-v9/acceptance-20261014/regression/verify-r8.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "fixed32-performance",
+    "dir": "performance-original-high-static",
+    "arguments": [
+      "--scene=original",
+      "--quality=high",
+      "--activity=static",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 42608.39729999984,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-original-high-static/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "fixed32-performance",
+    "dir": "performance-original-high-moving",
+    "arguments": [
+      "--scene=original",
+      "--quality=high",
+      "--activity=moving",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 42482.5439000004,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-original-high-moving/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "fixed32-performance",
+    "dir": "performance-original-high-relight",
+    "arguments": [
+      "--scene=original",
+      "--quality=high",
+      "--activity=relight",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 42523.84959999984,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-original-high-relight/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "fixed32-performance",
+    "dir": "performance-gallery-high-static",
+    "arguments": [
+      "--scene=gallery",
+      "--quality=high",
+      "--activity=static",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 67258.8805999998,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-gallery-high-static/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "fixed32-performance",
+    "dir": "performance-gallery-high-moving",
+    "arguments": [
+      "--scene=gallery",
+      "--quality=high",
+      "--activity=moving",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 67123.82290000003,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-gallery-high-moving/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "fixed32-performance",
+    "dir": "performance-gallery-high-relight",
+    "arguments": [
+      "--scene=gallery",
+      "--quality=high",
+      "--activity=relight",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 67068.29350000015,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-gallery-high-relight/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "interactive-performance",
+    "dir": "performance-original-interactive16-static",
+    "arguments": [
+      "--scene=original",
+      "--quality=interactive16",
+      "--activity=static",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 35571.85970000038,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-original-interactive16-static/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "interactive-performance",
+    "dir": "performance-original-interactive16-moving",
+    "arguments": [
+      "--scene=original",
+      "--quality=interactive16",
+      "--activity=moving",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 35724.10010000039,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-original-interactive16-moving/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "interactive-performance",
+    "dir": "performance-original-interactive16-relight",
+    "arguments": [
+      "--scene=original",
+      "--quality=interactive16",
+      "--activity=relight",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 35976.0597000001,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-original-interactive16-relight/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "interactive-performance",
+    "dir": "performance-gallery-interactive16-static",
+    "arguments": [
+      "--scene=gallery",
+      "--quality=interactive16",
+      "--activity=static",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 55972.24120000005,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-gallery-interactive16-static/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "interactive-performance",
+    "dir": "performance-gallery-interactive16-moving",
+    "arguments": [
+      "--scene=gallery",
+      "--quality=interactive16",
+      "--activity=moving",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 0,
+    "milliseconds": 55556.29420000035,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-gallery-interactive16-moving/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-fg-runtime",
+    "group": "interactive-performance",
+    "dir": "performance-gallery-interactive16-relight",
+    "arguments": [
+      "--scene=gallery",
+      "--quality=interactive16",
+      "--activity=relight",
+      "--azimuth",
+      "--lazy"
+    ],
+    "environment": {},
+    "exitCode": 1,
+    "milliseconds": 56511.150799999945,
+    "log": "reports/contact-transport-v9/acceptance-20261014/performance-gallery-interactive16-relight/benchmark-fg-runtime.log"
+  },
+  {
+    "name": "benchmark-contact-cache",
+    "group": "cache-cost",
+    "dir": "cache-cost",
+    "arguments": [],
+    "environment": {
+      "LUMEN_COST_QUALITIES": "auto,interactive16",
+      "LUMEN_COST_ACTIVITIES": "static,moving",
+      "LUMEN_COST_ROUNDS": "3"
+    },
+    "exitCode": 1,
+    "milliseconds": 172016.86070000008,
+    "log": "reports/contact-transport-v9/acceptance-20261014/cache-cost/benchmark-contact-cache.log"
+  }
+]

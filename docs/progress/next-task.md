@@ -1,22 +1,17 @@
-# R9 后续执行摘要
+# R10 后续执行摘要
 
-本轮分支 `feat/ballpool-curved-receivers-v8`，审查基线 `818ef240debddf322dd4be7ec504e5709b2a8b8e`。
-本轮最终测试源码 `93b5f2260593ca1348a034a10fb0027958ca0f46`，完整验收目录
-`reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe/`。
-接手时首先核对实际 HEAD，保留后续提交和工作区。不要回退 main、自动合并或覆写历史报告。
+分支 `feat/contact-transport-v9`；基线 `522201e5f6bd6e1b751eacfa8ae3afc4a8f3daf2`；测试源码 `c0f2ed8aed8cd106b170f765c82ff490ba08afc5`。
+接手先核对实际 HEAD，保留后续提交与工作区，不回退 main、不自动合并、不覆写历史报告。
 
-读取 `docs/progress/latest.md` 与最终版本化用户报告，以及该报告所指的不可变验收目录。
-`docs/curved-receivers.md` 规定接收侧 Ns 余弦 / Ng 半球合同；命中侧仍是宏观三角形 Ng Lambert。
+先读 `latest.md`、不可变版本和 `reports/contact-transport-v9/acceptance-20261014/test-suite.json`。
+机制见 `docs/contact-transport.md`、`docs/curved-receivers.md`；原 R8/R9 失败记录仍有效。
 
-优先处理：
+1. 收口有限轮次与最终像素：原三轮60案例缓存矩阵全部通过，但一轮单球球地和双球轮廓 query 仍超12%。同方向即时/缓存及独立实际像素补充证据位于 `one-round-control`、`final-pixel-reference-reviewed`。区分采样、空间微片元近似与接收重建问题；保留原点集、区域分母、physical/legacy、SE、绝对误差、Unknown和回退。不扩大历史、提高反弹或修改门限。
+2. 降低 primary trace 与更新成本：静态缓存减少 secondary shade，仍需满足原32r持续活动相对DDGI<=3ms、相对raw<=1ms，以及移动/改灯门限。稳态帧、GPU各代预计算、worker布局、GL提交CPU、完整改灯/定格延迟分别计账。16r仍是独立质量档，不能替代32r。同source/receiver/epoch/快照不一致的窗口不能称纯开销优化。
+3. 64MiB和覆盖：保持CPU临时克隆、缓存代际GPU、快照lease、附件、查询计账；128球候选拒绝后显式即时回退，原压力覆盖失败保留。当前球面半径/拓扑受控；推广前新增实际几何参考，不跨owner/薄墙借用。
 
-1. 近接触输入偏差：本轮 60 个单/双球、两机位、五照明、三 seeds 案例中 48 个失败。单球 day/contact/seed0 的球地区域 E NRMSE 344.65%，绝对 RMSE 0.33086；同点 1024r query 343.41%，应先定位命中侧 DDGI 输入与可见性。维持 2m 网格、128 探针射线、3 次反弹和曝光1，对独立 8192 路径比较。完成定义仍为区域重建 <=20%、query <=12%，原点集与机位全部保留；不能以增加历史或新去噪器解释为解决。
-2. 固定质量持续成本：保留原 32r、相同 receiver/相机/灯光/epoch 及旧 <=1ms / <=3ms 关卡。以 primary trace / secondary shade 为热点，保留 before 开关与当前构建对照。Interactive16 是新质量档；它的收益不能替代 32r 的失败账。
-3. 128 球压力档与曲面验证范围：64 球桌面预算与覆盖通过；128 球保持 64MiB 后 receiver 降低、球面权重约92.6–92.9%，画质失败保留。提升覆盖时不能跨球借用、扩大薄墙门限、提高预算或停止采样。推广半径/拓扑前先扩展真实几何参考与 Ng/Ns 压缩误差验证。
+候选仍显式 experimental，默认即时 fgRadiance 保留。必需关卡失败/未运行阻止recommended，新模块通过不代表R8全系统通过。
 
-每轮必须维护用户进度报告和不可变版本。各关卡分开报告；失败非零，未运行 not-run。
-Interactive16 不能写作同质量 32r 加速；推荐状态必须来自全部公开必需关卡。
+播放销毁旧world/缓存/FG快照/历史；暂停后定格只建一次静态世界。source token、generation、requested/settled revision和最后yield检查不得移除。完整运动多反弹GI、动态BVH、反射和Tiles GI需另立任务。
 
-运动中完整 GI 仍未实现。当前播放先销毁旧 world、FG快照和历史；暂停不自动重建，定格建立一次新静态世界，generation token 保证新旧结果不混用。冷启动 dispose/reset、16→64→128→16、快速定格、改灯竞态与失败重试已验证；不要回退这些保护。
-
-新增动态 GI 必须另立运动查询、缓存失效、历史及异步生命周期里程碑，不能把物理交互通过当成动态多反弹 GI 完成。
+每轮维护2–4页用户报告、不可变版本与template；详细矩阵链接到证据，失败返回非零，not-run不能冒充零成本。

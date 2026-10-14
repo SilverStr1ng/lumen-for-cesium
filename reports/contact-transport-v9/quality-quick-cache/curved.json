@@ -1,0 +1,4263 @@
+{
+  "version": {
+    "head": "fa85dc881e99c3b1d1f58a591c0f3f78a0021c42",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "bcc802dc41f40ae80c35685433071331a4fe06aeaea8b6d58375a30e3219fb0e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "2dcd285a77860ad221ea651e1c065c61c7617fc2c279599a043f8b4a4ec1a2d6",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "223acc914daa74e4819fd6f2b429cbb663e5348938b5ac1539bfb48e7d772635",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LightingStageFS.glsl": "ee3e7c66e7b3a304c54b485a09e3c05dd0de1d9e592ee5c2769735011abf3632",
+      "lumen/gpu-worker.js": "90a989baf48ca645876a453c13fd3d86befa41bdd032850a28120b1cc62abd70",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "2fb28405fc30ddc04f0d9775df43a905c82daea7de810999a4295512056ec755",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "6b80dede18b2e7fac5aee087fa0af91a0a5f0ab7735769a4355406bceb43de7e",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "7de70d30b88568e2973227b74113231219a45cb152e4982997a08a3aa0d5a047",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "f0818953eb1d825908b2199d1d27cd4879525062135d1241f300d9f542edc278",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "c2d2dbcdda6c0f50a20b2ae8fd87a9d0855c1388391e1f9735e23f0500297aa1",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "73f085adde3dc67ea865c3d561848670adc575436542abfa2b7f70a9873ad6d0",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "84150ffb71a896377bd01d75b99fb666028f5ebdfa46cc59158648f98ab19e74",
+      "demo/globe.js": "ecc157495f108fe37bb3fe210eba1cdb6dfdcbd4ced582b775f85a84517d5b38",
+      "demo/benchmark.js": "37eb0139789add19b4c9a3646e2b2f5fa59bfc08dfd62aafa2f12d2e0382c7c6",
+      "scripts/browser-tools.mjs": "06006211ea804a293654fadef1eaa0140bbb068f62308f80f84f1bb18329c29e",
+      "demo/fg-reconstruction-diagnostics.js": "47963b9208cb6054d688ef62a58d94a1f46868993e65e86c123ff98fa23db6fb",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "0e69c36286724a54246e4852c216b423b775c4f89115ca3aec576451c85e8e22",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "248328dd3aa76359572f49d229f3be5aea67d4592faf1120bb6ddaa3b2813794",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "cesium-1.146/packages/engine/Source/Scene/Scene.js": "0f794344b8699510ecaddfa40c3675856a29ef87ffc4f25aaff9439ebce9c2fc",
+      "cesium-1.146/packages/engine/Source/Scene/GBuffer.js": "d2bf883b7bd5229d0771324da06536b32f25492cf039894a5beba93fc77a4453",
+      "scripts/r8-acceptance.mjs": "d58bde75a7806315c2b346d44ac7655742bbb18cc0b6a864af3daba1ac6f9d1a",
+      "lumen/ballpool-scene.js": "4e749f065362dcc4dac5d4086a52a2406ddc6b740af88b09f0416be8fcd29751",
+      "lumen/bvh.js": "23611ed70c2d60600464f5a18179820f7c90a68ec36f6de728390380736438b8",
+      "lumen/contact-transport.js": "d9aece373e24998bf1eba915af93d75cb04091110c731b3539f92c0a960e93a5",
+      "lumen/ddgi.js": "b90701c431aedb3124852a690dcfe9d30e6d43d5d56c369d6ccc8aa1786009c6",
+      "lumen/fg-sampling.js": "44ce89c085b15d50cb61a86efa74e7e8c0507ba83ff0255b43bc2f12d50688a0",
+      "lumen/ray-spawn.js": "ae2d63caa7eed08727d0a195c3be28cab1ebb39dbd9a88314316f44445074fff",
+      "lumen/surface-cache.js": "f29b468eec48611f9891985a22a31db0184cd5c582c419288d342609abff4dfb",
+      "lumen/surface-radiance-layout.js": "112ae86503637fad8d8464d3fdcb217dec96ecd503d4f1bef951539c167e191d",
+      "lumen/trace-domain.js": "2c71e5fa34862770e46371bfc2795c2968994fea983916be06d78a89b3a579d5",
+      "lumen/worker.js": "bfa0bb17475adfba88490151d0b6e004218774f1a3d741bd3f7e228c0ff6e629",
+      "demo/ballpool-physics.js": "985c77de1d2e8f9e6222fee31a262e83d558930fb608e9655c0e18ad6ce90e5d",
+      "demo/ballpool.css": "56bdc5129d84e8fa77ee2ad70eb862aa0fae5afbf6511bdaf1b56934ce8705c3",
+      "demo/ballpool.html": "04f802ae2d06e9be86103f760bb10955c7589a40be15884d225623fc4d53d3ff",
+      "demo/ballpool.js": "363aa1fdae7ed6ce94eb08764195753c22b1b1eadddb27a1629a11c06102ba28",
+      "demo/curved-diagnostics.js": "edf232cb14b43c3e887457c5d3d9aed0b56b2c4ba0c64029e0555c300a42115d",
+      "demo/gallery.css": "381e05c01ebe059bc5481f80f8fdbdfd4fadef2fe0e6d91a8ded3bab75bae3a2",
+      "demo/gallery.html": "32f91af40035bf7a20541b648de66dfcfbdfc7bc32bf06d453cbf96d2b71d940",
+      "demo/globe.css": "1fd71e3cf90a9f29deb3cd1dec9b58ba32aaa3e98e2328dde19f0b0074f9f3b2",
+      "demo/globe.html": "8ec5dd59e783cdb4c3a62700329e10f7dd8621468a29a6935ff1a8d859c86fff",
+      "demo/index.html": "ecd7ea1d2ff093ba6b9ef9925ea090c645a4a34f2f02a59e81e1cd3b86483a88",
+      "demo/lighting-environment.js": "ebece9c8ee7d2dd6abc80ac647afc92ecb9527ff6694781c4bea1001841f76e8",
+      "demo/main.js": "4a88afd279448579ebf1abfff1df1cd52a39219ed95e91dc1e25564ce589141c",
+      "demo/regression.html": "e9f112cc511e95be1819f4673fe27682cf8abcbc96ed456057a847483b4df4d6",
+      "demo/regression.js": "7a0c48abd9d6ea9ee434740dc7f4d11290018bf408ae5ae8ffd56fda593d2548",
+      "cesium-1.146/packages/engine/Source/Scene/Lumen.js": "709d5971135ed740ac1fbd9ac16f8b7b6fe5ffdef75708b1957c01f21ef1ff2d",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherNormals.js": "fb9d819af06946a95db311d373dfd196bdf877d79c3cbb25520ecf49cac994bf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSnapshot.js": "ddbe2a71ce760260c155e0fe7a3fd7916e1de8bc5e8daa1c3320c97256642abb",
+      "cesium-1.146/packages/engine/Source/Scene/LumenProbeDisplay.js": "f5d66883dc3bf9a9d67c7c8208721d03eb95558c9547a20245cb1266e1b4526b",
+      "cesium-1.146/packages/engine/Source/Scene/LumenSurfaceRadianceCache.js": "7b62461942e44a1a019491a25d0b265fc694affd37e304a97170dd05da1b4317",
+      "cesium-1.146/packages/engine/Source/Scene/LumenWorld.js": "f79f3b718584fd50ada9bc45c8694a3f534c5e0002e113bccb9d394f4704e579",
+      "scripts/verify-curved-receivers.mjs": "2db7c145cae49a45089e735e317785622a669f629ca45723883ad6d6324718d0"
+    },
+    "compiledBundle": "c3837a103743329f1a8f801fd69a8e0d7aa125d23d8104e60eed46a84a084a69",
+    "assets": {
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_0.json": "eacde1b661c07ae81779214f2ee1c840dd24ea56cdba38735d9f63bb51d3f534",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_1.json": "687cb449340f43ed67ccdb59e009c76642ec4a7dda63504c537f6c8b03371632",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_10.json": "3337da09252e812c2609fe17966824d9387600b16b5faeca3b279121ce951a55",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_11.json": "1213a76851024f19bedb1f1177099cc867876c9477214ce25c4aca5922ae0c59",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_12.json": "ecea15bed860ca0dd962e427ddc929c356c8de4f5ea0599dd4a4d117c9ba5fdc",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_13.json": "a7f459cda58803d906bb3e63d98f250c9211c16e99a964b39cab1af20c3c54a7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_14.json": "051627ca694ce9a0585eea402b11a7e74b70c4a941863ee731e1537da77354b8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_15.json": "ef41a0fb36667716e1aac3ed84c1e92fc0b80697a11434a08dfec80c10fa3b38",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_16.json": "17c2ec764a2b2d4a93558009e1eb02912757999f3dedea775c961d689bec6155",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_17.json": "95bbcd68070cff4725867054f6da18e6d79d1e7876efd116f046f6d99b6ffec7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_18.json": "19ec8e50b7a8604bcd93bf20850f033e153242663107f372e3af09194f903497",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_19.json": "9d33b633af09f381d2aeabf1c08a80b327fea00105145310f706a7a2f3f3b395",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_2.json": "79e5007d0f7d284035286ff31e7959f1d8c5654261ffb5a01ec298fc7ecfdaf2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_20.json": "d4a6ee787228e9ca38799199a6d69aaaf1a2401d0bad5f9b3ff30c30a6e35685",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_21.json": "deab5998d0e85929227c82fd4267f179940b77ac9fe3d9da51ee222745658773",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_22.json": "cbc988d6f44052aae9bea4d437b74f97a9a11d1370137cf3944d7a3dfdb00c28",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_23.json": "fe1cbcb3177839ba821ae202184f4862a17321525556c06e3c000ab02d449645",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_24.json": "336a61b2b5c63a31b169f19c95dfa4607874f2a2cdca3f5f6b995a2526e8090f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_25.json": "7b9d89953db4bb5d4d51b287cbf01b2c1c0a4d1d2fcf3696b4682f77cb9a12c5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_26.json": "03c47eff883b79a9863011ba286dea815320f274049ec9f71649c9a45b52db95",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_27.json": "d9d755dd689d6af3d117c82e5e07c2f9986e43fe966cd3520d4a8e28201d7c6e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_3.json": "2c9ad7c9ca22e45f93354a078be51e63579cc67d960df3fb9cddd237a0fa7d05",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_4.json": "2019a8459a5795b4203d58cedc5ab54e0ab17c66084198106da4755ccd89321e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_5.json": "b5cd2ed128bb530e920633cee2f9131687dc46673116fa482a59916945ab5e5e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_6.json": "775adc76b9497c0abfb6a71ec77149abf1f160aeb6dd1380056391916dc9d3c6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_7.json": "f3e330690aad3c977a66f3bb98952bcedd3c73886502e9477df9fe27855dd0cd",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_8.json": "5da58dafb2a105234978e29f659dbb75ca716222cdf35dae975a9f380fa97fb6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_9.json": "36dc6631c6018fc9cd3df3f649b74308bb5c6a3303ac7b59067c4b4fe1e564c0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/bing_maps_credit.png": "e5c3467a2532a0986ca0f90189e9bdae3222d3f1580d2e8c0261fb2bc2b4417f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/cesium_credit.png": "20dadec44d030ec7de6193b0ee98329a896c4dcb4ed8f7a26d4781127b6fa989",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/google_earth_credit.png": "d4c3719a707ca487d847d7c8ea8ffc590f1297f987e95d1acf88d433b92c1c3f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Images/ion-credit.png": "721870c1417e20d25e2d1b834e80c66908418e459dcf76c95bf2997dc0733289",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/LensFlare/DirtMask.jpg": "3d06a15d04154f027e0b2b110c7c9952329b385682c327cdeb71e0e3c720f3d4",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/LensFlare/StarBurst.jpg": "c42ecef9345e34549fb9528e25cac8f38c9f8c43f73d812c2ccaf5909ab249a5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/0/0/0.jpg": "919864197d2f27a165420331d47458614a056c36dcdf306ce89ed2248bd0041d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/0/1/0.jpg": "f336509772ab57ee14e15c72579dd9fb0297c779c853d4c65db04bef78305b48",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/0/0.jpg": "3f40b94a0adb4efe212899374d3dd2bc7abe0491ce3a30d89f4392f498a328cf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/0/1.jpg": "76393f9322c791564a9dc9529822637fdcc8b63418be502f4ef0ab9ca2708664",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/1/0.jpg": "cec03089c65ac612ef0655739fd1c66e068a98739aec325ba8743aca7338e6f1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/1/1.jpg": "b1b860b99fd3fdc1a91eb09576563efd5cc91d95f4e869fb436a35c4ff8994c6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/2/0.jpg": "7c59ff20319379afea17d029fca11ea497fd16a4f9da574137948b0631c71c63",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/2/1.jpg": "ed0209ef589d9cc34a26663f8c9ecdd63de705482692290328cfd2fff984451d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/3/0.jpg": "d7fa5cd581a7b1d004d6dfcf329a09cd51859dd503f864a85756a35a456a0030",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/1/3/1.jpg": "8637acf2981f7209ec449a5812c855650a7eeeca5bd8a9d328310bb2a5295b39",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/0.jpg": "d12e2e52ae4d2e0c23ec15de8a1e006ccae0d3142b286578670cb4a8fd3f2311",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/1.jpg": "87a7ea00d62fe0517680cb58953e46faf9b325b9ce8e982c5a68b7e6c6c46822",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/2.jpg": "eecc7078cc54ec05f96cdf472519d5f159797015afaad23c2e56bed2fb79b481",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/0/3.jpg": "3d4dc525adaed0c3ddf5e5047bd1b348f2df473449c50b6b8175d5d073e7d88b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/0.jpg": "e586e2884f6fe3a78291776b5bd4b190ffa0c9129c146ef78c7918e570e40e07",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/1.jpg": "bd0b39a8e734b137e8017cb02f1bae541452bea034be5bc7e2bf8a6cb8a220ae",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/2.jpg": "af8eb0a43423d28c7cb3a92553967205d9e3ced5738bd75f773d653fa5849c90",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/1/3.jpg": "48450e09b99e3283945bda85be1513a5ed28a4b1e58cd0b299c295d16c25935c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/0.jpg": "4615813c56a8ee304d78d3768c489a4e00a5c4542f2d937b6be7db7c12b42b28",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/1.jpg": "66df8171de54015866691a00fd03ad8c5c11dc75466a70d11a43b2020eb63dba",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/2.jpg": "669649edf6e1e0e66ee03224a792d5fb09e8aef7a7a187697a3c10f9a7904c5c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/2/3.jpg": "21585c5a2551120948ec5d0f04a533805b2ba63b7a5b961ad722fca25cf6299f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/0.jpg": "640f7fd8fd3e5923ef1b021476f13c1e6919f339b17e539b9e20fe6bc16240f7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/1.jpg": "e418706ca6c844a67aa71e448ef97e703d5c3a9e3791db255366dad49b4adeb9",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/2.jpg": "79d04283b385d193bbf5bd84d40744c8f5bc8d6f52dfab8d965b647fdb61d72f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/3/3.jpg": "4e693d36407dab81266071edbca5915872284532498dfa29472cc71b2810482d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/0.jpg": "46e6a0608fc8261bbeaad8fffa995ee3c85fddebb3b463f3e391634ea8a2a9ec",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/1.jpg": "0f341c2ace1b0b1803aa22c09c2ab8fde4c3a1a7cb013a963e750997deb6b1c2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/2.jpg": "13a22c18a223ba4d8c2689793a5dff83e4e50b3790ddcb2a32ac5a97b8e1e0c8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/4/3.jpg": "93c5f45d481111b4cd2d38792cfb049e5176be566b622028e0704151c0c23aaf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/0.jpg": "7fbb096ff03dd162ae965a6c7e1c47e29599e7f3f1031ce59fb07ff669ca3995",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/1.jpg": "70b04e7e362cb4c80d8c7cce1a9401ef9c7606bb2c4b9de011dea58d79b8b4e6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/2.jpg": "8d03e07689c97fff91497250f1cbeb19fbe5331f38bd91b38a44bb69745bb29b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/5/3.jpg": "17b46ab558da6e9fa715a8ab365109bd808d897c53a9f5401da55dd6b9566a7a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/0.jpg": "e25e95c8a6dcb21f6668541c925ee670c42fdc0c0d409c520bf29542a2b3fc52",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/1.jpg": "0a57813b25a70cf86a09bb251018e488b87e795cd2dbcaee7f8a9e80e7c449bf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/2.jpg": "f0e9d28b216838c7c30375bb50a7c285203d4bad20eb581c2ee0b2468da20f8a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/6/3.jpg": "c2a663dcf812d9a7034d48707a33a2f341d22a99aa277f69b0e06f064de26fab",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/0.jpg": "65c1f1b10a04387f2f64b3c4bc111803ddbf32dd2708f02eabca048e88e8edf3",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/1.jpg": "11ac8ae6af861b966d25ed660549d2a9ce164cb9e327a247655e949f967fbc2b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/2.jpg": "59ca5b5264df0421c42cc9d3e6369d91ff9f5f387fc8fd578c25b113cae52b78",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/NaturalEarthII/2/7/3.jpg": "7064a9817de3f19fbfc66c36d575fdd10a8d976a93f655b7b1bee591b07314b7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_mx.jpg": "7eb5dfe95bebe58aaeff1a29f1e435e2e9985c7007d32397f63f1aa798062435",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_my.jpg": "ee944d55d7abe7799f54768f59d6a3da6b802fabd50d20d3ceb898e888b6ca7a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_mz.jpg": "958b3d7779bf39e93dbb3373379a696c1b1d5660535d2ff963ab3c7f86d8042e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_px.jpg": "075509b5c76a3db76baf219c71d1156c90bd87a201e4402e80d4fb1f16b526da",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_py.jpg": "62404c604baff09b6293e79d83a6c851428452a07568aca2f4b69cfd67c8a25a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_pz.jpg": "8a367b21469de9c3d41dec0a9b1aaf80472b5945e7f6827fb3a403707333e13b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/airfield.png": "9607228765a05a29c5feb0ded034ee7f2aa2e9641faf512fb122fba03e443b29",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/airport.png": "fbdde1b757753fbf54811a7733e78d43af43ffee204fa8169b295a3610e889fa",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/alcohol-shop.png": "920cc1449428757a73aee044d07e72a9c5e17535feb5754cfc43b4a1e6652cf6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/america-football.png": "ed7a66dc97a71fb689cb1b5c1f5d2832644152668be8d011aee23310e34bbd3b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/art-gallery.png": "b57e75127fe217af9fc0b9cfc67f53b3db7aa72b06b30ce443be89c0764b2b4a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bakery.png": "7f8fa5241c76569cee88f34bd21afc54d1cdcbffe8a1633fe91df23b28a3486a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bank.png": "fcb114b2229e1c2b01a21032958c49f405ef04e106b27cf91512852944b610d4",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bar.png": "be2709f48516f1b4203d3f10a9a24159e7761d91fe8f2276f860259d0ea73851",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/baseball.png": "24db293dfeabe9e77c3e1cd2f5ca26b61b8919961cf3415880d017be1aa0d3b3",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/basketball.png": "96bae0a41bccd20ccd8b496376df9415364dfc008b8eb6aaddff68371b5d0e96",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/beer.png": "8ad8f0c1414f5574103cb7e0d14c136292e847583ef06154c27f7765b6208474",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bicycle.png": "d998b6e08bbcaa658ae6679e7197349518cf4cfd610ec1f69c8643a4f007186d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/building.png": "d4375df9fc15b0eeb0b54680e27423a2d6d60ad17f515f99236510dbc246c6af",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/bus.png": "834a867a10afd8078f3ddee6d4231bf136b46c603afe31f6c089dfb55e47a9de",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cafe.png": "07ff7a0dd1da1496aeff569291ae3add49ede31dd35674858bf5fcf9d21d5728",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/camera.png": "c6dfe806ebed73bd168fbace390d6402a64c54bb7cdccd17ba5813d4469f90d6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/campsite.png": "e3ed13ecf426166fded98e86057423ca2333ce3c3795a0efa5f8c3b8063475cb",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/car.png": "189c871c1ed9a60000276fcc375b368f06d0a72b2c1de1032ba1caddbc04f8f6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cemetery.png": "d066f21dea8cb8e667326b5c7399bc55c293881cc8b731acdc621b804a508d79",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cesium.png": "d5857cc955c248b95c0c12f2c533629e9c83f324b89eb56aa1b12a68a1f64256",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/chemist.png": "d4852a72e3baaa9efd61293963db89a72d4d0c910aec0419e92af630a1cd6390",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cinema.png": "eba78ccef08d317d931b796b5630db396a4c6647f8d4b57764357e5e24d2599b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/circle-stroked.png": "4a609e3399a2fad31b9e75bfdd17c4cc95e5b2f260f1d902aa1cb5b040c66523",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/circle.png": "05b7a313a6d4e47d7e13591f06dae1c4fc706146632fc7d9758d59f687d84ea9",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/city.png": "92539b16e075cb79b26daffffbff2bafaf1f09c91d5cda5b6a9ef8cbb4327341",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/clothing-store.png": "34a527cd4f0d4ae5759e98921dbfe23699b4708288985f85b64ff75353b3ca97",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/college.png": "26a9bd248ba058414c36f7d140ff148c513b72170432b892c3ec5ce0f12bd146",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/commercial.png": "0deb24e319298a2d2890e76b44c4120c29ec89f6daf73cc2151bf28dbd960946",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cricket.png": "07cc9f8540e7574d426cdd05fdab1bb71cdbe3b22c59f88ce6c9f20929d8ecaf",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/cross.png": "fb878dd32c44ca83370a944d766b0e992ee5a01accb54d81b19867beef03a2d0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/dam.png": "2ab3ed160681f8894b76e6640de3c103caedb65f14e4565dcf123ed413502345",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/danger.png": "c268ee6d675c9db3562f44aaa7b46bca2815124f520365d3f517ccf3430e9e43",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/disability.png": "b2293d6411ae95ed7113bb6b7de19b5863164a697212d9642ddddef23634da45",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/dog-park.png": "6b3b662c50623e31e69e44b6ab80aad116a9cbe406814acc60920e7bb8b46c31",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/embassy.png": "83c902b90a4f5de175631f7b91ec2b1c3f461e0395f34507cb007572e1550137",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/emergency-telephone.png": "2b374c00679109719202b61c5f1ca4b108ba859318e4a12d27d9d65081491b5c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/entrance.png": "ee93d08539b460126b32691e71781e26585003390dbab05ff9037d2b41722edc",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/farm.png": "a1ea51ae83cb6db984bda6f451de81b232cf1c193176142cb44f0664692f0772",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/fast-food.png": "24d42a6409ff1f518c776997ef7b07ecb76c4cf446248551f22814d8bbf4e99b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/ferry.png": "97fcf2915ffe3ef62e8ee5a05672ae6dbdabd24d6aa1b4cb709302487ee06b2a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/fire-station.png": "9e17c8f458a6e7a525eace12875c4f16acd4e6750a19271448bd0e926da860b2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/fuel.png": "9e59bcba3f758998a6a55bf15174727e779207abf5a4f324c2cf5593fbac983a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/garden.png": "9c860cde4e54fbec8709b243052f37700e0d64fb9aa61f33818b0fe838b7a8ae",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/gift.png": "4814551df01639c36c1333de3a99fb9b5a9d758dab186fc7132579d984ebcf96",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/golf.png": "9e447b620baddad979776dc4fa4634f6cc96c0e00682282e008f2041c6f98e57",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/grocery.png": "6970b52af4509ab118d1d898a959bf631ae21e457803214fa9fab337770e8ca5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/hairdresser.png": "ea92df398c4ced256fa144958d3a8b7d60ece46c226dcb8832868ffb1df7f7d5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/harbor.png": "506545526fcfa6655206d840da1392b14d8a53ed63bb40ba907c1e503834fd90",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/heart.png": "f648f8d38ae47696c6596c106c6ef4b3984cfbbab2a83a82b911f5be7621067f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/heliport.png": "4c5ec82bae0ef3ed3b38bd8089ce0ae64b4a9a2de6202855b22c736281f65440",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/hospital.png": "0ba68595b4d670a16c953894b2c1a0c342c072a2003cec4dbe630aa10efa1568",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/ice-cream.png": "9ee2b16f1ae408f624d79cdbde704284579238c9daadda5938382abe1c4d543e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/industrial.png": "4bc573a1d392c228c94d8a397a830cbb7093cb969469eda44019634e3885d5a1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/land-use.png": "261d7de6098521628cc6c6bfa02a47d17931fe521cc8e47dc56bc5d83aa28443",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/laundry.png": "303c0bd8319b88b139997cabfba201eccb5afd1f7d5401eabd90c2c66ca2a43b",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/library.png": "511b7f8d3b1a2ea2205d8466b5d5129855a12af6cf1f5baba2f4b8a4dd5e562c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/lighthouse.png": "dbccce865f1789f5326566145401366fa94913b6462672c5f252be803014c714",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/lodging.png": "02c1d81ef957255d27cb5fce70ef4f3bee79f4f8ec3b222f559f4375ef7ea6ac",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/logging.png": "056e8893c58ba30f5a0d9905194b0e60e4f31d9c1a59b5711d53647e4749528c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/london-underground.png": "f8a41f09994d53d27335bbc70aab29a3d042583bb6b4520afaaffd0dd3f8e2fa",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/marker-stroked.png": "e21d955606f5911a981e4674ba1a491b68bdf37c7ed698be2bc210d7e86c9bc1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/marker.png": "f8fcf45e3b3355ed9fba1050a26380927732300b54d8bb00b80fecf7bdcfc7d7",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/minefield.png": "aa1634ca37adee2849fba655285fed160763f53b7c5163f2753609c506312d64",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/mobilephone.png": "07e26f366da18b3fdeb53b6f29ff5bacdab5513758bbd6217ac41ebe5fdc104e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/monument.png": "707a32e0c3b943941c396b18d6caa08fb0620a0ed07d84496ffad42cdb2d57e6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/museum.png": "384ccd2fe0977c7b7a51635c6a16e81f6c906a355635ccda2ff33d897c16bd93",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/music.png": "c6bd30e02b950aeb2f5da711011d9b0bd5dbec687adc39a2f8f27025c8fb8508",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/oil-well.png": "f0c99b3662e9f1abe63a387c1da5cadd5336b155650d3daf678a8f18401c2fd5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/park.png": "b5ee53a16dd03e32630218a2453065f3f6435ec9246028fa08785eb1d52ef54a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/park2.png": "7fd262afad32b6d2aabeb0839b746468671e131b234a6265b40cb284a4003c4f",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/parking-garage.png": "251d73325620f24a16357f542967dc0112dce10679b27db3e7f489fd05ab9ded",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/parking.png": "3e62ecf1573c7b13d7be9cc28ffe9576e6e30963fb5d1df6dace01acd72dd447",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/pharmacy.png": "d382d9b8a06ac3a089b35a8137848c74fd41bf465b5d4b1a975ecebe4a992163",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/pitch.png": "abe872e09e244eab94237c254926b866dc1685a999833d95f443ac013fc976f3",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/place-of-worship.png": "03755fe12b0b412835dc807fde64973e6316df623d6a6e81ca052d750d85d344",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/playground.png": "0fac0aa78869da09e39e88632af82177d98723dd38141e81ab6b09a29129a7d8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/police.png": "51592091904f75f4a25e37f87b326dc576bfacac9317aa6dfae2d0e0a8f117ba",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/polling-place.png": "0c4c8a5d1bbc1cc0f137cc1a357d418a442ad0bd3074a32819e9704fcbb265be",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/post.png": "cff1c2c20e77dece1eecf3dfb0fe10f139309ac78a2523bc9f01b4279e98e291",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/prison.png": "64636c8abe45f5cb8c3dc9ab73111683c4aa345691a5f17c327f909c774c0a0e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-above.png": "1b4555bb2169307c5ee1bc8afbd9ad97cfb36121e87e6413ae6ae137fb501109",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-light.png": "e989ebe529a979dd7600f5a6c8039c32972bf424b70558baf134f779901f1703",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-metro.png": "b89c202b5fdea739ce812932a22a3a15ab921a1aa2ceb0d801d4913f763095a5",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail-underground.png": "2be6c183a1b8604551a8c88d6437e826680da8b5fc75237b5e7108f38f347e11",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rail.png": "4965beb812449d4abc1cdb9e30a3d1a5f7c18999571794e38eb92c8ad98cb048",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/religious-christian.png": "a74c5e18bacf1469c22e6ff84736a63187b0c21048799885acabd5fac25d5cc0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/religious-jewish.png": "fe5d53b2f1cc5e80a2e2fb6b9163ca27748c2a031ea2df4d0c614ffd338adba1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/religious-muslim.png": "5b06c277d3638ee79172fb4ff89d84f1e475a1b25434953f19cb343e2b7c9fd1",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/restaurant.png": "85031df6b2174e72ec76dc0de6f4e54ab348426c7f738b11d8b7eb22bb72722e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/roadblock.png": "d455530701e372698538f32a4d71029897e297e6124fb68550e5f323fee40bb0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/rocket.png": "a167e92802b80e5bc5f78bea77d051007524782979a1b89eab9288d1e80ff5db",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/school.png": "1cc6087b652577de5e60525b5daa20c07cc126b526fd461f04381ae586a7025d",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/scooter.png": "4aa704ae97edb9bc514c0fc0ebe7adf2aa3f515ba3a15c6c17c25e17c8c1b8d6",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/shop.png": "1742dceb33d3ecd6dc66e5f5f1e637c65da7f4d92b066a2379dcb7e7e642ffc0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/skiing.png": "576d29be1492b2973ffbaf688c7e8b8044f350c29317ad29060e3db29c3dc751",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/slaughterhouse.png": "69a20fc6dff36897cf3152a525d36752799d5805bf5f01ae5bcdeaa55abdd84c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/soccer.png": "34308b14fe61df1608ddae5a8cd42e246487f11368f91867cb80e43590bfd4a0",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/square-stroked.png": "2b48882145df7a64dcfa5f94789875a3818eb5976494198a72dcfbd2ecc2984c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/square.png": "68ba096d343037fed0dd1271ef8cc0bad600a134ec6082ff613f1a340f3c0ed8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/star-stroked.png": "41f15812c35881118eee7b8eb3487538f2617ef8523f22ca738e2901e5752469",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/star.png": "58e516f3e338a1784198a5d3c05a486d41b55dca4122bf5c40986a9e0528460a",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/suitcase.png": "066e75d3303b4edf97086acd70e6e9aebf1165faf9c40adbf58f6585bc04552c",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/swimming.png": "3e7e12dc1197399ee43900a77444e7d8cfeba04732a7547f5b13d0e99fe70b63",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/telephone.png": "3d6da688ab5735a1137207e041fb0023dbb1d6d40e328c63664c8a2c737c5391",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/tennis.png": "7138863b8e10b5e78f5f0a02cf78b5f1f8912a97da433fe2df2c60f3b18ed556",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/theatre.png": "cb45d9d94385e3d164fddceb40c00cd6f3654de4fd44df0fa9d539ce1f68fecd",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/toilets.png": "e08a3ff947299d4f110fd7fd4ff30719d433d95cd52337341915f0e06c2f2f74",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/town-hall.png": "33b7f1bcd10f771f821de464367d785c20545075142bf341b250e5822124795e",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/town.png": "1402be94a92ac7884d0e0b0344db84f1b74170ed7012b7d95982e072b38eab59",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/triangle-stroked.png": "880ea63998f0cbe79730df17e22d2b6f87941a535408b06d5ef62df4b3d6fdba",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/triangle.png": "6ccfb06da43d5969424510d418e75b18c9c06fbbac2c6531105ccee98d26c551",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/village.png": "3e73ebd0f5c2bfa83764a1fd74a4e4de855e43a38acc9b75aaf423a8a63342d2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/warehouse.png": "90fe8a1799906e59ed8fe7e0b35ca2ec66a39a592c3a8e5c8fe8f93a06eef387",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/waste-basket.png": "5ef33ea09aaf66f1f429efb735cd0b2fcc7b8372305f9acdc2d27f621b8fb889",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/water.png": "a1b40fc3d50e119865ed8b98fccee6b0d2d1da2133731074d3df8f1f5f5b38c9",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/wetland.png": "bdbb392ad5fd31edcc9973f72e1ebc03911204d98c2e786b07bb4adae65ca7b2",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/maki/zoo.png": "3c8d46e2412476547805180fb62d0c5fc23d7cbd65c71a6738ecb668effbcdcb",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/moonSmall.jpg": "380fa69424e1cd2268816e346dc56393bd1c809b8e0cb078e705ec469a5847db",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/waterNormals.jpg": "9ab17625d9a2b0541c14a1b24ae8e3e192b40882cc77729c46b5de5648a991a8",
+      "cesium-1.146/Build/CesiumUnminified/Assets/Textures/waterNormalsSmall.jpg": "ef35a21e3cbff36032d118ff1df951ad88c023c39562c44f5b2d46f308e98858",
+      "cesium-1.146/Build/CesiumUnminified/Assets/approximateTerrainHeights.json": "6dbd104a916bb05d0f5103f46fb1c36d9966947a74984b5614607edda9325e57",
+      "fixtures/alpha-mask.bin": "f9c9cee34b6407e5842d4f4fdebea2802b3b98f36de8ff0789ec6d8ad623a807",
+      "fixtures/alpha-mask.gltf": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "fixtures/alpha-mask.json": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "fixtures/alpha-mask.png": "5a173415420a42b3b032ef3729c61268b04ac67b01cbe2fd7b241b87dcee3de4",
+      "fixtures/earth-gi-gallery-off.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery-off.gltf": "ac88919b7c261d998d7c82a0691e4c04eca422b423248c38c40a43a459c2230d",
+      "fixtures/earth-gi-gallery-off.json": "04c4a3576e1ca7546cda3ebcc17264c6a485e7942ac504156f64db31416351b3",
+      "fixtures/earth-gi-gallery.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery.gltf": "60fb80a3cc64244c5e3a0c34e370f9869435ce5f14293ffd116680bb088f18b5",
+      "fixtures/earth-gi-gallery.json": "feef0fd8d9a23a6e121fcbb48cce8ae188394674107aac24be99d0dbad26b297",
+      "fixtures/earth-pavilion-held-out.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion-held-out.gltf": "6bf0fd7ab3a5bb28a4a7daee047c9a7a8903b5203a8a3e0a2cbdd8de5e5c6f4a",
+      "fixtures/earth-pavilion-held-out.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/earth-pavilion-presentation.bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "fixtures/earth-pavilion-presentation.gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "fixtures/earth-pavilion-presentation.json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "fixtures/earth-pavilion.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion.gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/far-blocker.gltf": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "fixtures/far-blocker.json": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "fixtures/fg-slanted-barrier.bin": "8b07bba2e4c8c7aaa0b0e6cd20c44091cf4d0723ca3305fa8e9ed6d311ad64af",
+      "fixtures/fg-slanted-barrier.gltf": "82e17c00914c35bdd35ca5364635a6a311f50b39932c22386398e3bfac366074",
+      "fixtures/fg-slanted-barrier.json": "1cb69fdeb7abae75d67a9db5b79f8ecb745834a05a243e213536532b2ef7cc2b",
+      "fixtures/gallery-mineral.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/pavilion-detail.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/two-rooms.bin": "679eca85743630fa20c6e458c33e6b507ab386d1a66c39aa759c6ff0d75cbd19",
+      "fixtures/two-rooms.gltf": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "fixtures/two-rooms.json": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "fixtures/untextured.bin": "4f25e6c38fe7ccf71da9835afcf488a1f33ea7a3d94c45aaae7f2e03b0a81679",
+      "fixtures/untextured.gltf": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "fixtures/untextured.json": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa"
+    },
+    "modifiedSources": [
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
+      "demo/ballpool.html",
+      "demo/ballpool.js",
+      "lumen/gpu-worker.js",
+      "scripts/verify-curved-receivers.mjs"
+    ]
+  },
+  "limits": {
+    "coverage": 0.95,
+    "historyNormalDegrees": 0.25,
+    "linearNRMSE": 0.2,
+    "queryNRMSE": 0.12,
+    "backendDelta": 0.00001
+  },
+  "rows": [
+    {
+      "count": 1,
+      "scenario": "day",
+      "seed": 0,
+      "view": "contact",
+      "geometry": 588,
+      "generation": 1,
+      "revision": 2,
+      "round": 3,
+      "epoch": 31,
+      "receiver": [
+        480,
+        300
+      ],
+      "samples": 32,
+      "resolution": [
+        960,
+        600
+      ],
+      "pixels": 29406,
+      "insideVolumePixels": 29406,
+      "meanWeight": 0.9957831735020064,
+      "unsupportedPixels": 0,
+      "edgePixels": 548,
+      "edgeMeanWeight": 0.7846715328467153,
+      "contactPixels": 0,
+      "contactMeanWeight": 0,
+      "regions": {
+        "foregroundContour": {
+          "pixels": 490,
+          "meanWeight": 0.7714285714285715,
+          "status": "measured"
+        },
+        "ballFloorContact": {
+          "pixels": 58,
+          "meanWeight": 0.896551724137931,
+          "status": "measured"
+        },
+        "ballBallContact": {
+          "pixels": 0,
+          "meanWeight": null,
+          "status": "not-run"
+        }
+      },
+      "regionDefinition": "foreground projected contour excluding floor-contact band; ball-floor boundary within 4cm of floor; boundary against a different ball owner. Reference points use actual low receiver Ng/Ns, within 4cm of floor/other sphere; invalid samples retained.",
+      "regionPoints": {
+        "foregroundContour": [
+          {
+            "pixel": [
+              255,
+              124
+            ],
+            "position": [
+              0.10620584338903427,
+              -0.1270771026611328,
+              0.04526674747467041
+            ],
+            "geometricNormal": [
+              0.2346709117494099,
+              -0.3058342477793649,
+              -0.922710667578917
+            ],
+            "normal": [
+              0.313338890607054,
+              -0.37491273215123033,
+              -0.8725016807456822
+            ],
+            "owner": 4097,
+            "raw": [
+              0.22015468776226044,
+              0.28883183002471924,
+              0.3500351309776306
+            ],
+            "E": [
+              0.2188720703125,
+              0.276611328125,
+              0.32470703125
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              258,
+              125
+            ],
+            "position": [
+              0.12703481316566467,
+              -0.11982536315917969,
+              0.05056273937225342
+            ],
+            "geometricNormal": [
+              0.485578878879685,
+              -0.37259278012259056,
+              -0.7908146259310503
+            ],
+            "normal": [
+              0.3748501363432492,
+              -0.3535769592899674,
+              -0.8570126656839488
+            ],
+            "owner": 4097,
+            "raw": [
+              0.24053144454956055,
+              0.29592418670654297,
+              0.338119775056839
+            ],
+            "E": [
+              0.2391357421875,
+              0.302490234375,
+              0.355712890625
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              261,
+              126
+            ],
+            "position": [
+              0.14905187487602234,
+              -0.09202742576599121,
+              0.05098450183868408
+            ],
+            "geometricNormal": [
+              0.48557400000365203,
+              -0.3725934131327335,
+              -0.7908173234132858
+            ],
+            "normal": [
+              0.43992327714468504,
+              -0.27161724523133346,
+              -0.8559740546998037
+            ],
+            "owner": 4097,
+            "raw": [
+              0.1717345118522644,
+              0.24346323311328888,
+              0.3132975101470947
+            ],
+            "E": [
+              0.213623046875,
+              0.278076171875,
+              0.335693359375
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              264,
+              128
+            ],
+            "position": [
+              0.16923990845680237,
+              -0.09967565536499023,
+              0.06698375940322876
+            ],
+            "geometricNormal": [
+              0.48557087998008014,
+              -0.3725933273421704,
+              -0.7908192795673742
+            ],
+            "normal": [
+              0.5019893787217884,
+              -0.29565290688499263,
+              -0.8127705840524536
+            ],
+            "owner": 4097,
+            "raw": [
+              0.3008427023887634,
+              0.37135666608810425,
+              0.4287174642086029
+            ],
+            "E": [
+              0.26611328125,
+              0.34423828125,
+              0.41162109375
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              267,
+              130
+            ],
+            "position": [
+              0.19051936268806458,
+              -0.08908891677856445,
+              0.07871991395950317
+            ],
+            "geometricNormal": [
+              0.5654624574334773,
+              -0.2342219718248777,
+              -0.7908174739772503
+            ],
+            "normal": [
+              0.5666974211401543,
+              -0.2649942187402227,
+              -0.780148765882096
+            ],
+            "owner": 4097,
+            "raw": [
+              0.3244830369949341,
+              0.4018983840942383,
+              0.46470609307289124
+            ],
+            "E": [
+              0.308349609375,
+              0.39111328125,
+              0.46142578125
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              268,
+              131
+            ],
+            "position": [
+              0.1950829178094864,
+              -0.12147378921508789,
+              0.09312188625335693
+            ],
+            "geometricNormal": [
+              0.4855786393574698,
+              -0.37259141688687697,
+              -0.7908154152910639
+            ],
+            "normal": [
+              0.577136026204639,
+              -0.3593700970465024,
+              -0.7333260806800108
+            ],
+            "owner": 4097,
+            "raw": [
+              0.3946111500263214,
+              0.48208722472190857,
+              0.549530565738678
+            ],
+            "E": [
+              0.365478515625,
+              0.457763671875,
+              0.53271484375
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              209,
+              132
+            ],
+            "position": [
+              -0.21327005326747894,
+              -0.06053566932678223,
+              0.08653062582015991
+            ],
+            "geometricNormal": [
+              -0.565462487270654,
+              -0.23422207898513386,
+              -0.7908174209041978
+            ],
+            "normal": [
+              -0.6319193460937502,
+              -0.17936835174938467,
+              -0.7539926620486144
+            ],
+            "owner": 4097,
+            "raw": [
+              1.1480528116226196,
+              1.2375987768173218,
+              1.2356092929840088
+            ],
+            "E": [
+              1.1435546875,
+              1.2333984375,
+              1.236328125
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              270,
+              132
+            ],
+            "position": [
+              0.21327315270900726,
+              -0.06049919128417969,
+              0.08652204275131226
+            ],
+            "geometricNormal": [
+              0.565463372162179,
+              -0.23422222617653435,
+              -0.7908167445798586
+            ],
+            "normal": [
+              0.6319249965053187,
+              -0.17925847677268206,
+              -0.7540140564319013
+            ],
+            "owner": 4097,
+            "raw": [
+              0.2701825201511383,
+              0.36908265948295593,
+              0.46336987614631653
+            ],
+            "E": [
+              0.339111328125,
+              0.431396484375,
+              0.5068359375
+            ],
+            "valid": true
+          }
+        ],
+        "ballFloorContact": [
+          {
+            "pixel": [
+              235,
+              121
+            ],
+            "position": [
+              -0.03137985244393349,
+              -0.08204102516174316,
+              0.012818694114685059
+            ],
+            "geometricNormal": [
+              -0.14752352577715697,
+              -0.3561528992402392,
+              -0.9227090124763324
+            ],
+            "normal": [
+              -0.09236622970812952,
+              -0.24148601266083497,
+              -0.9659984395943277
+            ],
+            "owner": 4097,
+            "raw": [
+              0.07581596076488495,
+              0.09087412059307098,
+              0.10010573267936707
+            ],
+            "E": [
+              0.06964111328125,
+              0.0845947265625,
+              0.09564208984375
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              236,
+              121
+            ],
+            "position": [
+              -0.024333365261554718,
+              -0.09040141105651855,
+              0.014919102191925049
+            ],
+            "geometricNormal": [
+              -0.1475225404647351,
+              -0.3561534584378342,
+              -0.9227089541657221
+            ],
+            "normal": [
+              -0.0717261223028121,
+              -0.266470371281509,
+              -0.9611705907946293
+            ],
+            "owner": 4097,
+            "raw": [
+              0.06451093405485153,
+              0.07852210849523544,
+              0.09471345692873001
+            ],
+            "E": [
+              0.0765380859375,
+              0.093505859375,
+              0.1064453125
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              237,
+              121
+            ],
+            "position": [
+              -0.017365776002407074,
+              -0.09280514717102051,
+              0.015523195266723633
+            ],
+            "geometricNormal": [
+              -0.05032102179258245,
+              -0.3821990473615661,
+              -0.9227088831054255
+            ],
+            "normal": [
+              -0.05124240987315337,
+              -0.27384603455632783,
+              -0.9604074993398198
+            ],
+            "owner": 4097,
+            "raw": [
+              0.05175163224339485,
+              0.06352762132883072,
+              0.07651028782129288
+            ],
+            "E": [
+              0.07763671875,
+              0.09515380859375,
+              0.10845947265625
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              238,
+              121
+            ],
+            "position": [
+              -0.010410836897790432,
+              -0.09512996673583984,
+              0.016106903553009033
+            ],
+            "geometricNormal": [
+              -0.05032185185092448,
+              -0.3821987319043563,
+              -0.9227089685036098
+            ],
+            "normal": [
+              -0.030738182239552075,
+              -0.28087249980654355,
+              -0.9592527315598487
+            ],
+            "owner": 4097,
+            "raw": [
+              0.08830425888299942,
+              0.10745355486869812,
+              0.12102194875478745
+            ],
+            "E": [
+              0.08203125,
+              0.10101318359375,
+              0.1153564453125
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              239,
+              121
+            ],
+            "position": [
+              -0.0034674082417041063,
+              -0.09745097160339355,
+              0.016689658164978027
+            ],
+            "geometricNormal": [
+              -0.05032185185092448,
+              -0.3821987319043563,
+              -0.9227089685036098
+            ],
+            "normal": [
+              -0.010238812247472414,
+              -0.2877602820752949,
+              -0.9576477362703406
+            ],
+            "owner": 4097,
+            "raw": [
+              0.06549139320850372,
+              0.08666165173053741,
+              0.10587377101182938
+            ],
+            "E": [
+              0.084228515625,
+              0.10418701171875,
+              0.119140625
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              240,
+              121
+            ],
+            "position": [
+              0.0034679172094911337,
+              -0.09744739532470703,
+              0.016688168048858643
+            ],
+            "geometricNormal": [
+              0.050315984338984515,
+              -0.38219840600437177,
+              -0.9227094234739972
+            ],
+            "normal": [
+              0.010240329361326891,
+              -0.2877485699450605,
+              -0.95765123930852
+            ],
+            "owner": 4097,
+            "raw": [
+              0.1722477674484253,
+              0.1971375197172165,
+              0.20977936685085297
+            ],
+            "E": [
+              0.08392333984375,
+              0.104248046875,
+              0.11956787109375
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              241,
+              121
+            ],
+            "position": [
+              0.010411519557237625,
+              -0.09512495994567871,
+              0.016104817390441895
+            ],
+            "geometricNormal": [
+              0.050318274256565605,
+              -0.38219971799887403,
+              -0.9227087551537714
+            ],
+            "normal": [
+              0.030740162071271365,
+              -0.2808571104671806,
+              -0.9592571740340846
+            ],
+            "owner": 4097,
+            "raw": [
+              0.06307731568813324,
+              0.08267165720462799,
+              0.10098345577716827
+            ],
+            "E": [
+              0.07958984375,
+              0.09942626953125,
+              0.11474609375
+            ],
+            "valid": true
+          },
+          {
+            "pixel": [
+              242,
+              121
+            ],
+            "position": [
+              0.017366357147693634,
+              -0.09280085563659668,
+              0.015521466732025146
+            ],
+            "geometricNormal": [
+              0.050317262372666,
+              -0.38219939479651144,
+              -0.9227089442096573
+            ],
+            "normal": [
+              0.05124401838065413,
+              -0.27383313050864583,
+              -0.960411092822255
+            ],
+            "owner": 4097,
+            "raw": [
+              0.09185757488012314,
+              0.12100473046302795,
+              0.14648093283176422
+            ],
+            "E": [
+              0.07525634765625,
+              0.09423828125,
+              0.1092529296875
+            ],
+            "valid": true
+          }
+        ],
+        "ballBallContact": []
+      },
+      "rayCounts": {
+        "actualPrimaryRays": 4453828,
+        "knownZeroDirections": 572,
+        "supportedReceiverSlots": 4454400,
+        "plannedSlots": 4608000,
+        "solarRayUpperBound": 4453828,
+        "scratchBytes": 7680,
+        "method": "same production GPU sampler, normals, pixel/epoch and Ng gate; counts every scheduled primary direction"
+      },
+      "angleBins5Degrees": [
+        12010,
+        17328,
+        68,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fallback": {
+        "0": 29282,
+        "7": 71,
+        "8": 53
+      },
+      "receivers": 7354,
+      "validRawFraction": 1,
+      "maxHistoryNormalDegrees": 0.13156756738698408,
+      "points": [
+        {
+          "pixel": [
+            231,
+            126
+          ],
+          "position": [
+            -0.056629784405231476,
+            -0.20171213150024414,
+            0.0771094560623169
+          ],
+          "geometricNormal": [
+            -0.2342304187130384,
+            -0.5654576360781256,
+            -0.7908184195821776
+          ],
+          "normal": [
+            -0.16806760687922875,
+            -0.5986474175917057,
+            -0.7831823216395214
+          ],
+          "owner": 4097,
+          "raw": [
+            0.5383481383323669,
+            0.6228597164154053,
+            0.6766409277915955
+          ],
+          "E": [
+            0.5595703125,
+            0.63818359375,
+            0.677734375
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            252,
+            126
+          ],
+          "position": [
+            0.083798348903656,
+            -0.18482661247253418,
+            0.07308250665664673
+          ],
+          "geometricNormal": [
+            0.2342005757953046,
+            -0.5654617742776458,
+            -0.7908242991511606
+          ],
+          "normal": [
+            0.24932604310802875,
+            -0.5499169570249122,
+            -0.7971372934473423
+          ],
+          "owner": 4097,
+          "raw": [
+            0.3455723226070404,
+            0.41176745295524597,
+            0.45686835050582886
+          ],
+          "E": [
+            0.327392578125,
+            0.400634765625,
+            0.457275390625
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            210,
+            144
+          ],
+          "position": [
+            -0.1923362910747528,
+            -0.2386941909790039,
+            0.20637166500091553
+          ],
+          "geometricNormal": [
+            -0.5631183662940316,
+            -0.7338884979769571,
+            -0.37987547707040376
+          ],
+          "normal": [
+            -0.5744764627217451,
+            -0.7129393464631076,
+            -0.40211227542002287
+          ],
+          "owner": 4097,
+          "raw": [
+            1.0093401670455933,
+            1.085602879524231,
+            1.1125080585479736
+          ],
+          "E": [
+            1.0478515625,
+            1.1220703125,
+            1.142578125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            231,
+            144
+          ],
+          "position": [
+            -0.05398506298661232,
+            -0.3074941635131836,
+            0.21965277194976807
+          ],
+          "geometricNormal": [
+            -0.12074851153008292,
+            -0.9171167590222347,
+            -0.3798903095418753
+          ],
+          "normal": [
+            -0.16117303676719466,
+            -0.9180271122143513,
+            -0.36228369195786214
+          ],
+          "owner": 4097,
+          "raw": [
+            0.9837191104888916,
+            1.0776766538619995,
+            1.1180251836776733
+          ],
+          "E": [
+            0.96484375,
+            1.046875,
+            1.0849609375
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            252,
+            144
+          ],
+          "position": [
+            0.07950415462255478,
+            -0.30384278297424316,
+            0.2189483642578125
+          ],
+          "geometricNormal": [
+            0.12074359663067796,
+            -0.9171180095139457,
+            -0.3798888528212776
+          ],
+          "normal": [
+            0.2359497959492626,
+            -0.9017337411062761,
+            -0.3622208634824622
+          ],
+          "owner": 4097,
+          "raw": [
+            0.8480023741722107,
+            0.9374238848686218,
+            0.9892639517784119
+          ],
+          "E": [
+            0.80615234375,
+            0.9033203125,
+            0.96240234375
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            273,
+            144
+          ],
+          "position": [
+            0.22055833041667938,
+            -0.21257281303405762,
+            0.20133376121520996
+          ],
+          "geometricNormal": [
+            0.7338843689391144,
+            -0.5631241232057409,
+            -0.3798749200600159
+          ],
+          "normal": [
+            0.6551372741155583,
+            -0.6314169803365878,
+            -0.41485870969169875
+          ],
+          "owner": 4097,
+          "raw": [
+            0.6195521354675293,
+            0.7428465485572815,
+            0.8447554111480713
+          ],
+          "E": [
+            0.6337890625,
+            0.74462890625,
+            0.83251953125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            210,
+            162
+          ],
+          "position": [
+            -0.18794463574886322,
+            -0.2790248394012451,
+            0.33094263076782227
+          ],
+          "geometricNormal": [
+            -0.6036362751601985,
+            -0.786687860165066,
+            -0.12940424251016971
+          ],
+          "normal": [
+            -0.5584125000844258,
+            -0.8290250566714853,
+            -0.02988202068639075
+          ],
+          "owner": 4097,
+          "raw": [
+            0.8936841487884521,
+            0.965671956539154,
+            1.0148524045944214
+          ],
+          "E": [
+            0.88427734375,
+            0.95068359375,
+            0.9931640625
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            231,
+            162
+          ],
+          "position": [
+            -0.053051531314849854,
+            -0.33274221420288086,
+            0.33892324566841125
+          ],
+          "geometricNormal": [
+            -0.12943160108717125,
+            -0.9831009244243507,
+            -0.12946054625251094
+          ],
+          "normal": [
+            -0.1574456962590104,
+            -0.9875084126667408,
+            -0.00616341154958603
+          ],
+          "owner": 4097,
+          "raw": [
+            0.8548503518104553,
+            0.9396721124649048,
+            0.995992124080658
+          ],
+          "E": [
+            0.869140625,
+            0.95263671875,
+            1.0048828125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            252,
+            162
+          ],
+          "position": [
+            0.07811921089887619,
+            -0.3293769359588623,
+            0.3384276330471039
+          ],
+          "geometricNormal": [
+            0.12942182379758205,
+            -0.9831079337175012,
+            -0.12941708614635347
+          ],
+          "normal": [
+            0.2307644292474697,
+            -0.97297997802219,
+            -0.0075987210784398945
+          ],
+          "owner": 4097,
+          "raw": [
+            0.8824307918548584,
+            0.975043773651123,
+            1.038527250289917
+          ],
+          "E": [
+            0.830078125,
+            0.9296875,
+            0.99951171875
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            273,
+            162
+          ],
+          "position": [
+            0.21517418324947357,
+            -0.25760841369628906,
+            0.32776814699172974
+          ],
+          "geometricNormal": [
+            0.6036420776513706,
+            -0.7866784620255324,
+            -0.12943430562984373
+          ],
+          "normal": [
+            0.6405666254481853,
+            -0.7668916313905478,
+            -0.03939065961707765
+          ],
+          "owner": 4097,
+          "raw": [
+            0.7021989226341248,
+            0.8258835077285767,
+            0.9359126687049866
+          ],
+          "E": [
+            0.76611328125,
+            0.88427734375,
+            0.98095703125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            210,
+            180
+          ],
+          "position": [
+            -0.1879633367061615,
+            -0.25852179527282715,
+            0.4438056945800781
+          ],
+          "geometricNormal": [
+            -0.5631328978972029,
+            -0.7338789353509095,
+            0.3798724095721007
+          ],
+          "normal": [
+            -0.559819059158842,
+            -0.7699674997849232,
+            0.3061905783616853
+          ],
+          "owner": 4097,
+          "raw": [
+            0.7112997770309448,
+            0.7791763544082642,
+            0.8508086800575256
+          ],
+          "E": [
+            0.7080078125,
+            0.771484375,
+            0.83837890625
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            231,
+            180
+          ],
+          "position": [
+            -0.05303973704576492,
+            -0.3129429817199707,
+            0.449491947889328
+          ],
+          "geometricNormal": [
+            -0.12072128836004956,
+            -0.9171177668169517,
+            0.3798965284460721
+          ],
+          "normal": [
+            -0.15812180008925408,
+            -0.9329451784734644,
+            0.32343591374436076
+          ],
+          "owner": 4097,
+          "raw": [
+            0.7475340962409973,
+            0.8238640427589417,
+            0.8961780667304993
+          ],
+          "E": [
+            0.71142578125,
+            0.7939453125,
+            0.8720703125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            252,
+            180
+          ],
+          "position": [
+            0.07809438556432724,
+            -0.3097817897796631,
+            0.4491617679595947
+          ],
+          "geometricNormal": [
+            0.12075204626936926,
+            -0.9171178825266546,
+            0.3798864736623103
+          ],
+          "normal": [
+            0.23153708807102505,
+            -0.9184517329089593,
+            0.32068207178468794
+          ],
+          "owner": 4097,
+          "raw": [
+            0.6931413412094116,
+            0.7968673706054688,
+            0.9054027199745178
+          ],
+          "E": [
+            0.7109375,
+            0.8115234375,
+            0.9033203125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            273,
+            180
+          ],
+          "position": [
+            0.21504294872283936,
+            -0.23881077766418457,
+            0.44174331426620483
+          ],
+          "geometricNormal": [
+            0.5631355585674712,
+            -0.733854680679613,
+            0.37991531993527894
+          ],
+          "normal": [
+            0.6385194374660687,
+            -0.7090925123991891,
+            0.2991333094749247
+          ],
+          "owner": 4097,
+          "raw": [
+            0.6148159503936768,
+            0.7484030723571777,
+            0.8866539597511292
+          ],
+          "E": [
+            0.6962890625,
+            0.81689453125,
+            0.93115234375
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            210,
+            198
+          ],
+          "position": [
+            -0.192323237657547,
+            -0.17653560638427734,
+            0.5529066920280457
+          ],
+          "geometricNormal": [
+            -0.6314075207037194,
+            -0.48449178305552176,
+            0.6054686242494017
+          ],
+          "normal": [
+            -0.5719814430325303,
+            -0.525028504631031,
+            0.6302240063273756
+          ],
+          "owner": 4097,
+          "raw": [
+            0.5926847457885742,
+            0.6522220969200134,
+            0.7373777031898499
+          ],
+          "E": [
+            0.55419921875,
+            0.61669921875,
+            0.70654296875
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            231,
+            198
+          ],
+          "position": [
+            -0.053890325129032135,
+            -0.2516655921936035,
+            0.5575101971626282
+          ],
+          "geometricNormal": [
+            -0.1038830743154372,
+            -0.7890476898270344,
+            0.6054849709525357
+          ],
+          "normal": [
+            -0.16023167194765758,
+            -0.7482744350307374,
+            0.6437477620809947
+          ],
+          "owner": 4097,
+          "raw": [
+            0.5180026888847351,
+            0.5782502293586731,
+            0.6693940162658691
+          ],
+          "E": [
+            0.56591796875,
+            0.6484375,
+            0.74755859375
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            252,
+            198
+          ],
+          "position": [
+            0.079445481300354,
+            -0.24511098861694336,
+            0.5571040511131287
+          ],
+          "geometricNormal": [
+            0.30456504733767004,
+            -0.7352910268306836,
+            0.6054644810411935
+          ],
+          "normal": [
+            0.23623999980585353,
+            -0.7288646084377438,
+            0.6426095587980504
+          ],
+          "owner": 4097,
+          "raw": [
+            0.5387054085731506,
+            0.635001540184021,
+            0.7441456913948059
+          ],
+          "E": [
+            0.56689453125,
+            0.66748046875,
+            0.7822265625
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            273,
+            198
+          ],
+          "position": [
+            0.22121134400367737,
+            -0.14156460762023926,
+            0.550764799118042
+          ],
+          "geometricNormal": [
+            0.6314137777862532,
+            -0.48449170309238937,
+            0.6054621630261697
+          ],
+          "normal": [
+            0.6581329398145634,
+            -0.421174078383517,
+            0.6240780634094065
+          ],
+          "owner": 4097,
+          "raw": [
+            0.5026299953460693,
+            0.6167818307876587,
+            0.7517886757850647
+          ],
+          "E": [
+            0.56494140625,
+            0.6875,
+            0.8251953125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            231,
+            216
+          ],
+          "position": [
+            -0.05707727000117302,
+            -0.07381892204284668,
+            0.6668809056282043
+          ],
+          "geometricNormal": [
+            -0.23466835497321537,
+            -0.30583114865526495,
+            0.9227123450384557
+          ],
+          "normal": [
+            -0.16838100721496596,
+            -0.2177688305267087,
+            0.961365993189016
+          ],
+          "owner": 4097,
+          "raw": [
+            0.46589645743370056,
+            0.558073878288269,
+            0.6810329556465149
+          ],
+          "E": [
+            0.463134765625,
+            0.54541015625,
+            0.66455078125
+          ],
+          "valid": true
+        },
+        {
+          "pixel": [
+            252,
+            216
+          ],
+          "position": [
+            0.08485360443592072,
+            -0.04263758659362793,
+            0.6662958264350891
+          ],
+          "geometricNormal": [
+            0.35615585262285193,
+            -0.14751842394833012,
+            0.9227086881775256
+          ],
+          "normal": [
+            0.25039892202612135,
+            -0.12582057991851658,
+            0.9599320608861466
+          ],
+          "owner": 4097,
+          "raw": [
+            0.46266311407089233,
+            0.574976921081543,
+            0.7216325998306274
+          ],
+          "E": [
+            0.464111328125,
+            0.5654296875,
+            0.701171875
+          ],
+          "valid": true
+        }
+      ],
+      "reference": [
+        {
+          "irradiance": [
+            0.5541688287720172,
+            0.6329704694046625,
+            0.6733933680108909
+          ],
+          "standardError": [
+            0.006024799924561345,
+            0.006265159435746671,
+            0.006072462214987782
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 19578,
+            "solar": 10804,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3019
+        },
+        {
+          "irradiance": [
+            0.3309578181823483,
+            0.40354285852997285,
+            0.4592168030677955
+          ],
+          "standardError": [
+            0.004471454893451999,
+            0.004767326114109176,
+            0.0049014884821983315
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 19866,
+            "solar": 11367,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3020
+        },
+        {
+          "irradiance": [
+            1.0715403520499323,
+            1.1454628886735412,
+            1.1661767910677883
+          ],
+          "standardError": [
+            0.0051543797850647985,
+            0.005536510530252706,
+            0.0051620103114897965
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 16267,
+            "solar": 7270,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3021
+        },
+        {
+          "irradiance": [
+            0.9661942899169619,
+            1.0523847054228777,
+            1.0898890766836336
+          ],
+          "standardError": [
+            0.005511485938040521,
+            0.0056385124447367605,
+            0.005100620130831414
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 15377,
+            "solar": 6798,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3022
+        },
+        {
+          "irradiance": [
+            0.8090594688415099,
+            0.9071993231870914,
+            0.96640347834993
+          ],
+          "standardError": [
+            0.005770756800595866,
+            0.0057863261530874364,
+            0.0053174960644784474
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 15552,
+            "solar": 7189,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3023
+        },
+        {
+          "irradiance": [
+            0.6372913260836656,
+            0.749318836496943,
+            0.837814031663759
+          ],
+          "standardError": [
+            0.005549454247762055,
+            0.005588394661373508,
+            0.005408754651843984
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 16498,
+            "solar": 8234,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3024
+        },
+        {
+          "irradiance": [
+            0.8791649006886643,
+            0.9448748578053571,
+            0.9894834248589732
+          ],
+          "standardError": [
+            0.005505112253030325,
+            0.00581928610699019,
+            0.005364902546950157
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 13833,
+            "solar": 4887,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3025
+        },
+        {
+          "irradiance": [
+            0.8724875650090638,
+            0.9560967244668975,
+            1.0115923309370605
+          ],
+          "standardError": [
+            0.005459550954933126,
+            0.005583141274036219,
+            0.005007776527789463
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 13396,
+            "solar": 4901,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3026
+        },
+        {
+          "irradiance": [
+            0.8311143727095719,
+            0.9301421384410967,
+            1.0021124432306532
+          ],
+          "standardError": [
+            0.005465321543424996,
+            0.005446194275167298,
+            0.0048788150534289036
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 13420,
+            "solar": 5177,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3027
+        },
+        {
+          "irradiance": [
+            0.769799308867548,
+            0.8868702932339823,
+            0.9829333023016773
+          ],
+          "standardError": [
+            0.005427317558452228,
+            0.005326413013731391,
+            0.004846997018380327
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 14039,
+            "solar": 5859,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3028
+        },
+        {
+          "irradiance": [
+            0.7031312620453216,
+            0.7671189264947647,
+            0.836072846943815
+          ],
+          "standardError": [
+            0.0049901914616919466,
+            0.005233631442822341,
+            0.004836113610583932
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 12071,
+            "solar": 3140,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3029
+        },
+        {
+          "irradiance": [
+            0.7262597772417168,
+            0.8083472404636622,
+            0.8849639039022684
+          ],
+          "standardError": [
+            0.005029412964581787,
+            0.005131665369643315,
+            0.0046258694350178224
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 11731,
+            "solar": 3264,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3030
+        },
+        {
+          "irradiance": [
+            0.7158165072023481,
+            0.8174768984593733,
+            0.9118041532975645
+          ],
+          "standardError": [
+            0.0049880306964627105,
+            0.004990480286084964,
+            0.004498562707210009
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 11698,
+            "solar": 3527,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3031
+        },
+        {
+          "irradiance": [
+            0.6929545265788334,
+            0.8133216676617777,
+            0.9300247331579422
+          ],
+          "standardError": [
+            0.004901153375807009,
+            0.0048212879561918285,
+            0.004395210862252276
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 12244,
+            "solar": 4128,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3032
+        },
+        {
+          "irradiance": [
+            0.5619614917817579,
+            0.624079694307691,
+            0.7139707730974105
+          ],
+          "standardError": [
+            0.00373179115631311,
+            0.003948572823820207,
+            0.003769030737223232
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10697,
+            "solar": 1677,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3033
+        },
+        {
+          "irradiance": [
+            0.5636060701479606,
+            0.6454796463892654,
+            0.7453847104039623
+          ],
+          "standardError": [
+            0.003701636081309907,
+            0.0038298646395300067,
+            0.003575112875958985
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10052,
+            "solar": 1604,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3034
+        },
+        {
+          "irradiance": [
+            0.571537083626472,
+            0.6724020564472358,
+            0.7873323599910719
+          ],
+          "standardError": [
+            0.00379826158971538,
+            0.003843475373048611,
+            0.0035893543144818445
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10088,
+            "solar": 1900,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3035
+        },
+        {
+          "irradiance": [
+            0.5726085498247585,
+            0.6960353416287439,
+            0.8354260483271967
+          ],
+          "standardError": [
+            0.003780901745202317,
+            0.00377505987869944,
+            0.00366314634257823
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10951,
+            "solar": 2787,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3036
+        },
+        {
+          "irradiance": [
+            0.4660199362313927,
+            0.5501451138699489,
+            0.6692751469093585
+          ],
+          "standardError": [
+            0.001092942344652368,
+            0.0012930401642538961,
+            0.0015034123495351558
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 8637,
+            "solar": 204,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3037
+        },
+        {
+          "irradiance": [
+            0.4647396285602192,
+            0.5685376019134487,
+            0.7038333408006213
+          ],
+          "standardError": [
+            0.0009810608619609511,
+            0.0010852539752052796,
+            0.0014909083874826666
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 8801,
+            "solar": 574,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3038
+        }
+      ],
+      "query": [
+        {
+          "irradiance": [
+            0.5587151050567627,
+            0.6371951103210449,
+            0.6769821643829346
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.33548790216445923,
+            0.40859097242355347,
+            0.46403515338897705
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            1.057665228843689,
+            1.1317795515060425,
+            1.1534802913665771
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.9687497019767761,
+            1.0551798343658447,
+            1.09275221824646
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.8138918280601501,
+            0.9112303256988525,
+            0.9705225229263306
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.635259747505188,
+            0.7470604181289673,
+            0.8355793952941895
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.8894659280776978,
+            0.9563890099525452,
+            0.9999527931213379
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.8763577342033386,
+            0.9601588845252991,
+            1.0153627395629883
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.8316895961761475,
+            0.9307776689529419,
+            1.002306580543518
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.7682424187660217,
+            0.8872246742248535,
+            0.9850510954856873
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.711409330368042,
+            0.774945080280304,
+            0.8420053124427795
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.7206348180770874,
+            0.8032144904136658,
+            0.880916178226471
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.7216021418571472,
+            0.8219589591026306,
+            0.9142289757728577
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.6996327042579651,
+            0.820113480091095,
+            0.9358565807342529
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.5594257116317749,
+            0.6223755478858948,
+            0.7119424343109131
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.5667491555213928,
+            0.6497388482093811,
+            0.7498555183410645
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.5767689943313599,
+            0.6788063645362854,
+            0.7945578098297119
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.572016179561615,
+            0.6948197484016418,
+            0.8333966135978699
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.46280011534690857,
+            0.5469297766685486,
+            0.6662142872810364
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        },
+        {
+          "irradiance": [
+            0.4674288332462311,
+            0.5723882913589478,
+            0.7085708975791931
+          ],
+          "valid": true,
+          "unknown": false,
+          "revision": 2,
+          "round": 3,
+          "samples": 1024
+        }
+      ],
+      "linearNRMSE": 0.009520512848436413,
+      "rawNRMSE": 0.04767386962144026,
+      "queryNRMSE": 0.006945144151169598,
+      "regionErrors": {
+        "foregroundContour": {
+          "status": "measured",
+          "points": [
+            {
+              "pixel": [
+                255,
+                124
+              ],
+              "position": [
+                0.10620584338903427,
+                -0.1270771026611328,
+                0.04526674747467041
+              ],
+              "geometricNormal": [
+                0.2346709117494099,
+                -0.3058342477793649,
+                -0.922710667578917
+              ],
+              "normal": [
+                0.313338890607054,
+                -0.37491273215123033,
+                -0.8725016807456822
+              ],
+              "owner": 4097,
+              "raw": [
+                0.22015468776226044,
+                0.28883183002471924,
+                0.3500351309776306
+              ],
+              "E": [
+                0.2188720703125,
+                0.276611328125,
+                0.32470703125
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                258,
+                125
+              ],
+              "position": [
+                0.12703481316566467,
+                -0.11982536315917969,
+                0.05056273937225342
+              ],
+              "geometricNormal": [
+                0.485578878879685,
+                -0.37259278012259056,
+                -0.7908146259310503
+              ],
+              "normal": [
+                0.3748501363432492,
+                -0.3535769592899674,
+                -0.8570126656839488
+              ],
+              "owner": 4097,
+              "raw": [
+                0.24053144454956055,
+                0.29592418670654297,
+                0.338119775056839
+              ],
+              "E": [
+                0.2391357421875,
+                0.302490234375,
+                0.355712890625
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                261,
+                126
+              ],
+              "position": [
+                0.14905187487602234,
+                -0.09202742576599121,
+                0.05098450183868408
+              ],
+              "geometricNormal": [
+                0.48557400000365203,
+                -0.3725934131327335,
+                -0.7908173234132858
+              ],
+              "normal": [
+                0.43992327714468504,
+                -0.27161724523133346,
+                -0.8559740546998037
+              ],
+              "owner": 4097,
+              "raw": [
+                0.1717345118522644,
+                0.24346323311328888,
+                0.3132975101470947
+              ],
+              "E": [
+                0.213623046875,
+                0.278076171875,
+                0.335693359375
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                264,
+                128
+              ],
+              "position": [
+                0.16923990845680237,
+                -0.09967565536499023,
+                0.06698375940322876
+              ],
+              "geometricNormal": [
+                0.48557087998008014,
+                -0.3725933273421704,
+                -0.7908192795673742
+              ],
+              "normal": [
+                0.5019893787217884,
+                -0.29565290688499263,
+                -0.8127705840524536
+              ],
+              "owner": 4097,
+              "raw": [
+                0.3008427023887634,
+                0.37135666608810425,
+                0.4287174642086029
+              ],
+              "E": [
+                0.26611328125,
+                0.34423828125,
+                0.41162109375
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                267,
+                130
+              ],
+              "position": [
+                0.19051936268806458,
+                -0.08908891677856445,
+                0.07871991395950317
+              ],
+              "geometricNormal": [
+                0.5654624574334773,
+                -0.2342219718248777,
+                -0.7908174739772503
+              ],
+              "normal": [
+                0.5666974211401543,
+                -0.2649942187402227,
+                -0.780148765882096
+              ],
+              "owner": 4097,
+              "raw": [
+                0.3244830369949341,
+                0.4018983840942383,
+                0.46470609307289124
+              ],
+              "E": [
+                0.308349609375,
+                0.39111328125,
+                0.46142578125
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                268,
+                131
+              ],
+              "position": [
+                0.1950829178094864,
+                -0.12147378921508789,
+                0.09312188625335693
+              ],
+              "geometricNormal": [
+                0.4855786393574698,
+                -0.37259141688687697,
+                -0.7908154152910639
+              ],
+              "normal": [
+                0.577136026204639,
+                -0.3593700970465024,
+                -0.7333260806800108
+              ],
+              "owner": 4097,
+              "raw": [
+                0.3946111500263214,
+                0.48208722472190857,
+                0.549530565738678
+              ],
+              "E": [
+                0.365478515625,
+                0.457763671875,
+                0.53271484375
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                209,
+                132
+              ],
+              "position": [
+                -0.21327005326747894,
+                -0.06053566932678223,
+                0.08653062582015991
+              ],
+              "geometricNormal": [
+                -0.565462487270654,
+                -0.23422207898513386,
+                -0.7908174209041978
+              ],
+              "normal": [
+                -0.6319193460937502,
+                -0.17936835174938467,
+                -0.7539926620486144
+              ],
+              "owner": 4097,
+              "raw": [
+                1.1480528116226196,
+                1.2375987768173218,
+                1.2356092929840088
+              ],
+              "E": [
+                1.1435546875,
+                1.2333984375,
+                1.236328125
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                270,
+                132
+              ],
+              "position": [
+                0.21327315270900726,
+                -0.06049919128417969,
+                0.08652204275131226
+              ],
+              "geometricNormal": [
+                0.565463372162179,
+                -0.23422222617653435,
+                -0.7908167445798586
+              ],
+              "normal": [
+                0.6319249965053187,
+                -0.17925847677268206,
+                -0.7540140564319013
+              ],
+              "owner": 4097,
+              "raw": [
+                0.2701825201511383,
+                0.36908265948295593,
+                0.46336987614631653
+              ],
+              "E": [
+                0.339111328125,
+                0.431396484375,
+                0.5068359375
+              ],
+              "valid": true
+            }
+          ],
+          "reference": [
+            {
+              "irradiance": [
+                0.19923267578008066,
+                0.25341048128909727,
+                0.29835747367417503
+              ],
+              "standardError": [
+                0.0034042209280516103,
+                0.0038106529650462433,
+                0.004166325313775945
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 21407,
+                "solar": 13029,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5019
+            },
+            {
+              "irradiance": [
+                0.21912075821469204,
+                0.2801340536442477,
+                0.3314793481411876
+              ],
+              "standardError": [
+                0.0034955979651194275,
+                0.00390688060543012,
+                0.004289172004014797
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 21027,
+                "solar": 12644,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5020
+            },
+            {
+              "irradiance": [
+                0.21591052539067396,
+                0.2813787859026638,
+                0.3378845994141731
+              ],
+              "standardError": [
+                0.0034020763392665103,
+                0.003853052667635244,
+                0.0043334576525087985
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 21128,
+                "solar": 12723,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5021
+            },
+            {
+              "irradiance": [
+                0.26988266731199845,
+                0.34855581577373423,
+                0.416670498287246
+              ],
+              "standardError": [
+                0.0037715541610507533,
+                0.004195972566107678,
+                0.004671829828430182
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 20406,
+                "solar": 12007,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5022
+            },
+            {
+              "irradiance": [
+                0.3094791173401431,
+                0.39538141096845897,
+                0.4688731015529504
+              ],
+              "standardError": [
+                0.004082733497988982,
+                0.004465004131957595,
+                0.004894936054298893
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 20128,
+                "solar": 11684,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5023
+            },
+            {
+              "irradiance": [
+                0.3515417716991352,
+                0.44304197315500016,
+                0.5205502249238569
+              ],
+              "standardError": [
+                0.004352678392322749,
+                0.004672142624790783,
+                0.004999696306545019
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 19454,
+                "solar": 10994,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5024
+            },
+            {
+              "irradiance": [
+                1.1566617041428742,
+                1.2507972248869814,
+                1.2569609262183823
+              ],
+              "standardError": [
+                0.004464975129898329,
+                0.005049238276628038,
+                0.005007898496758993
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 19825,
+                "solar": 10720,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5025
+            },
+            {
+              "irradiance": [
+                0.34701834073884297,
+                0.43722868514485946,
+                0.5124736960914809
+              ],
+              "standardError": [
+                0.004427392766861766,
+                0.004755105277352386,
+                0.005072989248393531
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 19747,
+                "solar": 11230,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5026
+            }
+          ],
+          "legacyReference": [
+            {
+              "irradiance": [
+                0.1991759326983001,
+                0.253270693632388,
+                0.2981722437556131
+              ],
+              "standardError": [
+                0.0034044026350975843,
+                0.003810522873602509,
+                0.004166369445957055
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 21408,
+                "solar": 13027,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5019
+            },
+            {
+              "irradiance": [
+                0.21962733315762864,
+                0.2807041088833296,
+                0.3320477703693536
+              ],
+              "standardError": [
+                0.0035045121577706576,
+                0.003915904154160972,
+                0.00429709313501342
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 21030,
+                "solar": 12646,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5020
+            },
+            {
+              "irradiance": [
+                0.21634904259722398,
+                0.2818205292637885,
+                0.3382913091487711
+              ],
+              "standardError": [
+                0.003413784775500264,
+                0.0038645921285208606,
+                0.004343388312074579
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 21130,
+                "solar": 12724,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5021
+            },
+            {
+              "irradiance": [
+                0.2711744522649618,
+                0.3499460383390952,
+                0.41804866228522564
+              ],
+              "standardError": [
+                0.0037968543794731245,
+                0.004220106701112806,
+                0.004691833370117057
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 20408,
+                "solar": 12009,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5022
+            },
+            {
+              "irradiance": [
+                0.31069363891708074,
+                0.3966527792926288,
+                0.4700517010294685
+              ],
+              "standardError": [
+                0.004102497919505486,
+                0.00448312611591453,
+                0.004908457519860573
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 20130,
+                "solar": 11685,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5023
+            },
+            {
+              "irradiance": [
+                0.35407074273069744,
+                0.4455560525760463,
+                0.5228796295530179
+              ],
+              "standardError": [
+                0.004383211287758295,
+                0.004701412280188847,
+                0.0050233659688396015
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 19453,
+                "solar": 10992,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5024
+            },
+            {
+              "irradiance": [
+                1.137118516416917,
+                1.2283240734209078,
+                1.2340620479825657
+              ],
+              "standardError": [
+                0.004685038750087949,
+                0.005244820319327766,
+                0.005187163003738967
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 19827,
+                "solar": 10721,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5025
+            },
+            {
+              "irradiance": [
+                0.3478890875147241,
+                0.43808179044612694,
+                0.5132694253018829
+              ],
+              "standardError": [
+                0.004439305349438275,
+                0.004767361616913875,
+                0.005084483642750082
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 19750,
+                "solar": 11227,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5026
+            }
+          ],
+          "linearNRMSE": 0.026026511725625253,
+          "query": [
+            {
+              "irradiance": [
+                0.20031218230724335,
+                0.25655364990234375,
+                0.30385586619377136
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.2213946282863617,
+                0.2846967279911041,
+                0.3389175832271576
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.22213114798069,
+                0.2876546084880829,
+                0.34399786591529846
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.27631813287734985,
+                0.3521939814090729,
+                0.4167230725288391
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.30957460403442383,
+                0.39409130811691284,
+                0.4658786952495575
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.35924243927001953,
+                0.4490984380245209,
+                0.5245952010154724
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                1.1474440097808838,
+                1.2395707368850708,
+                1.2451881170272827
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.3468966484069824,
+                0.43850794434547424,
+                0.5152573585510254
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            }
+          ],
+          "queryNRMSE": 0.010404264515571644,
+          "absoluteRMSE": 0.01421219091529614
+        },
+        "ballFloorContact": {
+          "status": "measured",
+          "points": [
+            {
+              "pixel": [
+                235,
+                121
+              ],
+              "position": [
+                -0.03137985244393349,
+                -0.08204102516174316,
+                0.012818694114685059
+              ],
+              "geometricNormal": [
+                -0.14752352577715697,
+                -0.3561528992402392,
+                -0.9227090124763324
+              ],
+              "normal": [
+                -0.09236622970812952,
+                -0.24148601266083497,
+                -0.9659984395943277
+              ],
+              "owner": 4097,
+              "raw": [
+                0.07581596076488495,
+                0.09087412059307098,
+                0.10010573267936707
+              ],
+              "E": [
+                0.06964111328125,
+                0.0845947265625,
+                0.09564208984375
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                236,
+                121
+              ],
+              "position": [
+                -0.024333365261554718,
+                -0.09040141105651855,
+                0.014919102191925049
+              ],
+              "geometricNormal": [
+                -0.1475225404647351,
+                -0.3561534584378342,
+                -0.9227089541657221
+              ],
+              "normal": [
+                -0.0717261223028121,
+                -0.266470371281509,
+                -0.9611705907946293
+              ],
+              "owner": 4097,
+              "raw": [
+                0.06451093405485153,
+                0.07852210849523544,
+                0.09471345692873001
+              ],
+              "E": [
+                0.0765380859375,
+                0.093505859375,
+                0.1064453125
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                237,
+                121
+              ],
+              "position": [
+                -0.017365776002407074,
+                -0.09280514717102051,
+                0.015523195266723633
+              ],
+              "geometricNormal": [
+                -0.05032102179258245,
+                -0.3821990473615661,
+                -0.9227088831054255
+              ],
+              "normal": [
+                -0.05124240987315337,
+                -0.27384603455632783,
+                -0.9604074993398198
+              ],
+              "owner": 4097,
+              "raw": [
+                0.05175163224339485,
+                0.06352762132883072,
+                0.07651028782129288
+              ],
+              "E": [
+                0.07763671875,
+                0.09515380859375,
+                0.10845947265625
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                238,
+                121
+              ],
+              "position": [
+                -0.010410836897790432,
+                -0.09512996673583984,
+                0.016106903553009033
+              ],
+              "geometricNormal": [
+                -0.05032185185092448,
+                -0.3821987319043563,
+                -0.9227089685036098
+              ],
+              "normal": [
+                -0.030738182239552075,
+                -0.28087249980654355,
+                -0.9592527315598487
+              ],
+              "owner": 4097,
+              "raw": [
+                0.08830425888299942,
+                0.10745355486869812,
+                0.12102194875478745
+              ],
+              "E": [
+                0.08203125,
+                0.10101318359375,
+                0.1153564453125
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                239,
+                121
+              ],
+              "position": [
+                -0.0034674082417041063,
+                -0.09745097160339355,
+                0.016689658164978027
+              ],
+              "geometricNormal": [
+                -0.05032185185092448,
+                -0.3821987319043563,
+                -0.9227089685036098
+              ],
+              "normal": [
+                -0.010238812247472414,
+                -0.2877602820752949,
+                -0.9576477362703406
+              ],
+              "owner": 4097,
+              "raw": [
+                0.06549139320850372,
+                0.08666165173053741,
+                0.10587377101182938
+              ],
+              "E": [
+                0.084228515625,
+                0.10418701171875,
+                0.119140625
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                240,
+                121
+              ],
+              "position": [
+                0.0034679172094911337,
+                -0.09744739532470703,
+                0.016688168048858643
+              ],
+              "geometricNormal": [
+                0.050315984338984515,
+                -0.38219840600437177,
+                -0.9227094234739972
+              ],
+              "normal": [
+                0.010240329361326891,
+                -0.2877485699450605,
+                -0.95765123930852
+              ],
+              "owner": 4097,
+              "raw": [
+                0.1722477674484253,
+                0.1971375197172165,
+                0.20977936685085297
+              ],
+              "E": [
+                0.08392333984375,
+                0.104248046875,
+                0.11956787109375
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                241,
+                121
+              ],
+              "position": [
+                0.010411519557237625,
+                -0.09512495994567871,
+                0.016104817390441895
+              ],
+              "geometricNormal": [
+                0.050318274256565605,
+                -0.38219971799887403,
+                -0.9227087551537714
+              ],
+              "normal": [
+                0.030740162071271365,
+                -0.2808571104671806,
+                -0.9592571740340846
+              ],
+              "owner": 4097,
+              "raw": [
+                0.06307731568813324,
+                0.08267165720462799,
+                0.10098345577716827
+              ],
+              "E": [
+                0.07958984375,
+                0.09942626953125,
+                0.11474609375
+              ],
+              "valid": true
+            },
+            {
+              "pixel": [
+                242,
+                121
+              ],
+              "position": [
+                0.017366357147693634,
+                -0.09280085563659668,
+                0.015521466732025146
+              ],
+              "geometricNormal": [
+                0.050317262372666,
+                -0.38219939479651144,
+                -0.9227089442096573
+              ],
+              "normal": [
+                0.05124401838065413,
+                -0.27383313050864583,
+                -0.960411092822255
+              ],
+              "owner": 4097,
+              "raw": [
+                0.09185757488012314,
+                0.12100473046302795,
+                0.14648093283176422
+              ],
+              "E": [
+                0.07525634765625,
+                0.09423828125,
+                0.1092529296875
+              ],
+              "valid": true
+            }
+          ],
+          "reference": [
+            {
+              "irradiance": [
+                0.06556874928725238,
+                0.08048622490386134,
+                0.0925912151050688
+              ],
+              "standardError": [
+                0.002205801413168941,
+                0.0024812066027876836,
+                0.0026643984670389944
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23630,
+                "solar": 15248,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5019
+            },
+            {
+              "irradiance": [
+                0.07750010773055618,
+                0.09541892741031419,
+                0.10956527760838757
+              ],
+              "standardError": [
+                0.002399102445723118,
+                0.002695077365364528,
+                0.0028931026533728903
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23445,
+                "solar": 15074,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5020
+            },
+            {
+              "irradiance": [
+                0.08027790239159552,
+                0.09893058390753623,
+                0.11406342892886275
+              ],
+              "standardError": [
+                0.0024590408094542124,
+                0.0027631450953036806,
+                0.002961577421469135
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23419,
+                "solar": 15038,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5021
+            },
+            {
+              "irradiance": [
+                0.07938674096655683,
+                0.0992752740541394,
+                0.11526119946348605
+              ],
+              "standardError": [
+                0.0023646819855048466,
+                0.002681478059197837,
+                0.0029011819054372803
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23386,
+                "solar": 15050,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5022
+            },
+            {
+              "irradiance": [
+                0.08035375952440156,
+                0.10145471497614011,
+                0.1184938789752847
+              ],
+              "standardError": [
+                0.0024241998264543747,
+                0.0027583075392030236,
+                0.002998281987067882
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23386,
+                "solar": 15065,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5023
+            },
+            {
+              "irradiance": [
+                0.08123857271611705,
+                0.10289502067124631,
+                0.1208164779625713
+              ],
+              "standardError": [
+                0.0023482335504821424,
+                0.0026865741111802514,
+                0.0029518729914125327
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23334,
+                "solar": 14987,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5024
+            },
+            {
+              "irradiance": [
+                0.07711276370250578,
+                0.09864948961239225,
+                0.11640742433416641
+              ],
+              "standardError": [
+                0.002309498464408224,
+                0.002652440875298641,
+                0.002927253143478978
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23374,
+                "solar": 15074,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5025
+            },
+            {
+              "irradiance": [
+                0.0790547982834611,
+                0.100425409708798,
+                0.11827426273151344
+              ],
+              "standardError": [
+                0.00236403821116294,
+                0.002699387011721433,
+                0.0029618140674957764
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23411,
+                "solar": 15120,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5026
+            }
+          ],
+          "legacyReference": [
+            {
+              "irradiance": [
+                0.06410623084291332,
+                0.07830480277026892,
+                0.08997513590834154
+              ],
+              "standardError": [
+                0.0021718539020185368,
+                0.0024402608067030707,
+                0.002619111660088875
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23639,
+                "solar": 15258,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5019
+            },
+            {
+              "irradiance": [
+                0.07569182673371466,
+                0.0931592688292501,
+                0.10712435415477523
+              ],
+              "standardError": [
+                0.002351841477548278,
+                0.002644307240622001,
+                0.002844931328060105
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23448,
+                "solar": 15074,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5020
+            },
+            {
+              "irradiance": [
+                0.07991424246762839,
+                0.09816895924421111,
+                0.1129755641382443
+              ],
+              "standardError": [
+                0.0024677495505942477,
+                0.0027683020982570286,
+                0.0029599123412152734
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23424,
+                "solar": 15045,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5021
+            },
+            {
+              "irradiance": [
+                0.07856093448854207,
+                0.09804942604869064,
+                0.11382208243085927
+              ],
+              "standardError": [
+                0.002350251368421855,
+                0.0026632587034333306,
+                0.0028818939523351126
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23390,
+                "solar": 15054,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5022
+            },
+            {
+              "irradiance": [
+                0.07929190996219254,
+                0.10024241976864857,
+                0.11726644550084636
+              ],
+              "standardError": [
+                0.002395264261113638,
+                0.002729802340734044,
+                0.0029733289733955286
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23390,
+                "solar": 15069,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5023
+            },
+            {
+              "irradiance": [
+                0.08040505213138606,
+                0.10190340530701769,
+                0.11977046175840282
+              ],
+              "standardError": [
+                0.0023249669687342334,
+                0.0026613714174746096,
+                0.0029286089906962027
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23336,
+                "solar": 14988,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5024
+            },
+            {
+              "irradiance": [
+                0.07636731838337939,
+                0.09764583257497285,
+                0.11523129206029685
+              ],
+              "standardError": [
+                0.0022912650289407576,
+                0.0026323980665572976,
+                0.0029060002194525414
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23374,
+                "solar": 15076,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5025
+            },
+            {
+              "irradiance": [
+                0.07798261379334025,
+                0.0990387633783879,
+                0.11664788991700656
+              ],
+              "standardError": [
+                0.002342255165711237,
+                0.002677028064038144,
+                0.0029391378496238805
+              ],
+              "valid": true,
+              "counts": {
+                "rays": 23418,
+                "solar": 15127,
+                "unknown": 0
+              },
+              "samples": 8192,
+              "seed": 5026
+            }
+          ],
+          "linearNRMSE": 0.036139890939545144,
+          "query": [
+            {
+              "irradiance": [
+                0.06444074958562851,
+                0.0772576853632927,
+                0.08635485917329788
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.07455601543188095,
+                0.09071056544780731,
+                0.10292534530162811
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.07646220922470093,
+                0.09411145746707916,
+                0.10763167589902878
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.08207184821367264,
+                0.10153794288635254,
+                0.11654049158096313
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.08271504938602448,
+                0.1032610684633255,
+                0.11927678436040878
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.08142922818660736,
+                0.10147467255592346,
+                0.11711277812719345
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.07701829075813293,
+                0.09658997505903244,
+                0.11220122873783112
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            },
+            {
+              "irradiance": [
+                0.0753801167011261,
+                0.09450095146894455,
+                0.11003880202770233
+              ],
+              "valid": true,
+              "unknown": false,
+              "revision": 2,
+              "round": 3,
+              "samples": 1024
+            }
+          ],
+          "queryNRMSE": 0.041008915973472664,
+          "absoluteRMSE": 0.00351689972653208
+        },
+        "ballBallContact": {
+          "status": "not-run",
+          "points": [],
+          "reference": [],
+          "legacyReference": [],
+          "linearNRMSE": null,
+          "query": [],
+          "queryNRMSE": null,
+          "absoluteRMSE": null
+        }
+      },
+      "lighting": {
+        "sunDirection": [
+          -0.8,
+          0.6,
+          1.1
+        ],
+        "sunRadiance": [
+          2,
+          2,
+          2
+        ],
+        "skyRadiance": [
+          0.15,
+          0.18,
+          0.22
+        ],
+        "bounces": 3,
+        "environmentMode": "upper-hemisphere",
+        "rayOriginPolicy": "physical"
+      },
+      "resource": {
+        "modelGpuBytes": 14208,
+        "worldGeometryBytes": 100420,
+        "environmentGpuBytes": 229376,
+        "assetCpuBytes": 24253,
+        "workerCpuBytes": 54256,
+        "mainWorldCpuBytes": 4464,
+        "physicsWasmReservedBytes": 1245184,
+        "surfaceCacheBytes": 2303168,
+        "surfaceCache": {
+          "status": "ready",
+          "gpuBytes": 2303168,
+          "cpuBytes": 0,
+          "peakBytes": 3459456,
+          "submittedMilliseconds": 471.1000000014901,
+          "round": 2,
+          "experimental": true,
+          "gpuMillisecondsByRound": {
+            "0": 0.6476799999999999,
+            "1": 107.06809600000003,
+            "2": 113.38988799999998
+          },
+          "missingQueries": 0,
+          "disjoint": 0,
+          "pendingQueries": 0,
+          "count": 70944,
+          "spacing": 0.08,
+          "samples": 256,
+          "unsupported": 0,
+          "identity": {
+            "revision": 2,
+            "round": 3,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 2
+            }
+          }
+        },
+        "sceneBytes": 3975329,
+        "fgBytes": 33984000,
+        "snapshots": 405312,
+        "totalAdditionalBytes": 38364641,
+        "peakAdditionalBytes": 38365281,
+        "peakSceneBytes": 3976225,
+        "worldGpuBytes": 4457988,
+        "driverVram": "not-run",
+        "wasmHeap": "measured reserved linear memory",
+        "workerJsHeap": "not-run"
+      },
+      "legacyReference": [
+        {
+          "irradiance": [
+            0.5375488704021151,
+            0.6153266006133999,
+            0.6564024404424031
+          ],
+          "standardError": [
+            0.005960792395203798,
+            0.006198065227330897,
+            0.006012893475398085
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 19578,
+            "solar": 10804,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3019
+        },
+        {
+          "irradiance": [
+            0.33092755424305914,
+            0.40351288013964376,
+            0.4592289769923915
+          ],
+          "standardError": [
+            0.004469214706739381,
+            0.0047635661023217625,
+            0.004896969185865815
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 19865,
+            "solar": 11365,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3020
+        },
+        {
+          "irradiance": [
+            1.069817490984002,
+            1.1434773441075965,
+            1.164217829418055
+          ],
+          "standardError": [
+            0.005166376567285226,
+            0.005547834333004281,
+            0.005173589265000026
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 16268,
+            "solar": 7271,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3021
+        },
+        {
+          "irradiance": [
+            0.9645100852119216,
+            1.0504963505684042,
+            1.0880451696858067
+          ],
+          "standardError": [
+            0.0055200689441374014,
+            0.005645988430535191,
+            0.005107632131871011
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 15377,
+            "solar": 6798,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3022
+        },
+        {
+          "irradiance": [
+            0.813268313313839,
+            0.9114938485522911,
+            0.9703655256251301
+          ],
+          "standardError": [
+            0.005775664868142537,
+            0.005791090674389817,
+            0.005318254941585375
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 15549,
+            "solar": 7187,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3023
+        },
+        {
+          "irradiance": [
+            0.6422043742576985,
+            0.7543103891333335,
+            0.8424897193102759
+          ],
+          "standardError": [
+            0.005567298856410327,
+            0.005602959728612176,
+            0.005415551664786531
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 16498,
+            "solar": 8234,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3024
+        },
+        {
+          "irradiance": [
+            0.8793468869264423,
+            0.9450045279676335,
+            0.9895918687129914
+          ],
+          "standardError": [
+            0.005505292129973826,
+            0.005819582020109032,
+            0.005364974963292768
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 13833,
+            "solar": 4887,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3025
+        },
+        {
+          "irradiance": [
+            0.8736446414213022,
+            0.9572384635617106,
+            1.0126687172094633
+          ],
+          "standardError": [
+            0.005457938370707437,
+            0.0055819115856609765,
+            0.005005782855338597
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 13396,
+            "solar": 4901,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3026
+        },
+        {
+          "irradiance": [
+            0.8343507797987835,
+            0.9333849664559954,
+            1.005143031178209
+          ],
+          "standardError": [
+            0.005462831286063566,
+            0.005442119542390812,
+            0.004871370923072781
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 13420,
+            "solar": 5178,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3027
+        },
+        {
+          "irradiance": [
+            0.7742850413690086,
+            0.8914173286004302,
+            0.9871946409505489
+          ],
+          "standardError": [
+            0.00543466623729221,
+            0.005332118934273122,
+            0.0048473194783346125
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 14040,
+            "solar": 5859,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3028
+        },
+        {
+          "irradiance": [
+            0.7033844478417163,
+            0.7673592734484272,
+            0.8362866739565821
+          ],
+          "standardError": [
+            0.004992300882428038,
+            0.005235409147183924,
+            0.0048370468929371455
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 12071,
+            "solar": 3139,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3029
+        },
+        {
+          "irradiance": [
+            0.7265937673516496,
+            0.8086877205566924,
+            0.8852724211931529
+          ],
+          "standardError": [
+            0.005030671256186162,
+            0.005132777099734438,
+            0.004626338949648621
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 11731,
+            "solar": 3265,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3030
+        },
+        {
+          "irradiance": [
+            0.7167396257997733,
+            0.8184126625170368,
+            0.9126766900540342
+          ],
+          "standardError": [
+            0.004992099751488674,
+            0.004993945397883918,
+            0.004500030086575157
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 11698,
+            "solar": 3527,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3031
+        },
+        {
+          "irradiance": [
+            0.6936841727056468,
+            0.8140632740455344,
+            0.9307073186625284
+          ],
+          "standardError": [
+            0.004906028113025923,
+            0.004826149952456224,
+            0.004398085327606769
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 12244,
+            "solar": 4128,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3032
+        },
+        {
+          "irradiance": [
+            0.5620933658671045,
+            0.6242133748873572,
+            0.7140954212054778
+          ],
+          "standardError": [
+            0.003732779954928152,
+            0.00394953592283651,
+            0.003769537687221691
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10697,
+            "solar": 1677,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3033
+        },
+        {
+          "irradiance": [
+            0.5636060701479606,
+            0.6454796463892654,
+            0.7453847104039623
+          ],
+          "standardError": [
+            0.003701636081309907,
+            0.0038298646395300067,
+            0.003575112875958985
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10052,
+            "solar": 1604,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3034
+        },
+        {
+          "irradiance": [
+            0.5716333517087749,
+            0.6725009800761889,
+            0.7874183671856381
+          ],
+          "standardError": [
+            0.0038003126483757486,
+            0.003845484797348315,
+            0.0035906730793657284
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10088,
+            "solar": 1900,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3035
+        },
+        {
+          "irradiance": [
+            0.5726322871601209,
+            0.6960848034432204,
+            0.8354995907109563
+          ],
+          "standardError": [
+            0.0037805569054108206,
+            0.0037744449705150846,
+            0.0036624705595976214
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 10951,
+            "solar": 2787,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3036
+        },
+        {
+          "irradiance": [
+            0.4660199362313927,
+            0.5501451138699489,
+            0.6692751469093585
+          ],
+          "standardError": [
+            0.001092942344652368,
+            0.0012930401642538961,
+            0.0015034123495351558
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 8637,
+            "solar": 204,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3037
+        },
+        {
+          "irradiance": [
+            0.4647223003054046,
+            0.5685010001707361,
+            0.7037825965558271
+          ],
+          "standardError": [
+            0.0009814920404275338,
+            0.0010853378609786447,
+            0.0014903305828985601
+          ],
+          "valid": true,
+          "counts": {
+            "rays": 8801,
+            "solar": 574,
+            "unknown": 0
+          },
+          "samples": 8192,
+          "seed": 3038
+        }
+      ],
+      "source": {
+        "requested": "cache",
+        "actual": "cache",
+        "cache": {
+          "status": "ready",
+          "gpuBytes": 2303168,
+          "cpuBytes": 0,
+          "peakBytes": 3459456,
+          "submittedMilliseconds": 471.1000000014901,
+          "round": 2,
+          "experimental": true,
+          "gpuMillisecondsByRound": {
+            "0": 0.6476799999999999,
+            "1": 107.06809600000003,
+            "2": 113.38988799999998
+          },
+          "missingQueries": 0,
+          "disjoint": 0,
+          "pendingQueries": 0,
+          "count": 70944,
+          "spacing": 0.08,
+          "samples": 256,
+          "unsupported": 0,
+          "identity": {
+            "revision": 2,
+            "round": 3,
+            "versions": {
+              "geometry": 1,
+              "rayLayout": 1,
+              "material": 1,
+              "sunVisibility": 1,
+              "lighting": 2
+            }
+          }
+        },
+        "resource": {
+          "modelGpuBytes": 14208,
+          "worldGeometryBytes": 100420,
+          "environmentGpuBytes": 229376,
+          "assetCpuBytes": 24253,
+          "workerCpuBytes": 54256,
+          "mainWorldCpuBytes": 4464,
+          "physicsWasmReservedBytes": 1245184,
+          "surfaceCacheBytes": 2303168,
+          "surfaceCache": {
+            "status": "ready",
+            "gpuBytes": 2303168,
+            "cpuBytes": 0,
+            "peakBytes": 3459456,
+            "submittedMilliseconds": 471.1000000014901,
+            "round": 2,
+            "experimental": true,
+            "gpuMillisecondsByRound": {
+              "0": 0.6476799999999999,
+              "1": 107.06809600000003,
+              "2": 113.38988799999998
+            },
+            "missingQueries": 0,
+            "disjoint": 0,
+            "pendingQueries": 0,
+            "count": 70944,
+            "spacing": 0.08,
+            "samples": 256,
+            "unsupported": 0,
+            "identity": {
+              "revision": 2,
+              "round": 3,
+              "versions": {
+                "geometry": 1,
+                "rayLayout": 1,
+                "material": 1,
+                "sunVisibility": 1,
+                "lighting": 2
+              }
+            }
+          },
+          "sceneBytes": 3975329,
+          "fgBytes": 33984000,
+          "snapshots": 405312,
+          "totalAdditionalBytes": 38364641,
+          "peakAdditionalBytes": 38365281,
+          "peakSceneBytes": 3976225,
+          "worldGpuBytes": 4457988,
+          "driverVram": "not-run",
+          "wasmHeap": "measured reserved linear memory",
+          "workerJsHeap": "not-run"
+        }
+      },
+      "status": "passed"
+    }
+  ],
+  "configuration": {
+    "contact": true,
+    "quick": true,
+    "source": "cache",
+    "referencePolicy": "physical",
+    "legacyComparison": true
+  },
+  "failures": [],
+  "errors": [],
+  "renderErrors": [],
+  "environment": {
+    "browser": "155.0.8059.40",
+    "headless": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "visibility": "visible",
+    "resolution": [
+      960,
+      600
+    ],
+    "shadowSize": 2048,
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+  },
+  "backends": [
+    [
+      {
+        "execution": "split",
+        "delta": 0,
+        "invalid": 0,
+        "samples": 32,
+        "epoch": 5,
+        "receiver": [
+          480,
+          300
+        ]
+      },
+      {
+        "execution": "fused4",
+        "delta": 0,
+        "invalid": 0,
+        "samples": 32,
+        "epoch": 5,
+        "receiver": [
+          480,
+          300
+        ]
+      },
+      {
+        "execution": "fused8",
+        "delta": 0,
+        "invalid": 0,
+        "samples": 32,
+        "epoch": 5,
+        "receiver": [
+          480,
+          300
+        ]
+      }
+    ]
+  ],
+  "status": "passed"
+}

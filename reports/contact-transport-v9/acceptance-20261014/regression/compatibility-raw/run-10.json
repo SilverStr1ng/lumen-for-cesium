@@ -1,0 +1,10 @@
+{
+  "name": "verify-progressive",
+  "args": [],
+  "environment": {},
+  "exitCode": 0,
+  "milliseconds": 23256.256999999998,
+  "status": "passed",
+  "stdout": "PASS first complete round is usable before completed resolves\nPASS forward HDR uses the new first-round texture without old-field warm start\nPASS each completed progressive round is displayed in a distinct frame\nPASS published/read/write ownership refers only to completed reads and separate writes\nPASS same N-bounce progressive and snapshot E/moments/final HDR agree\nPASS rapid requests publish during input and settle the newest revision\nPASS superseded promises reject and obsolete deeper rounds are skipped\nPASS publication versions are monotonic and pending work is bounded\nPASS on-demand rendering stops GI submissions and frames after settling\nPASS actual GL texture/FBO resources remain stable and shader cache does not grow\nPASS destroy rejects both lighting promises and pending worker requests\nPASS initialization failure rejects preview/final and releases resources\nPASS reload restores all rounds without GL feedback, errors or blocking waits\nPASS no unexpected render/worker/browser errors\n",
+  "stderr": ""
+}

@@ -1,0 +1,17 @@
+warning: in the working copy of 'cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cesium-1.146/packages/engine/Source/Scene/LumenSurfaceRadianceCache.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/ballpool.js', LF will be replaced by CRLF the next time Git touches it
+page.evaluate: TypeError: Cannot read properties of undefined (reading 'world')
+    at get additionalOwnedBytes (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:247865:38)
+    at destroyLumenResource (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:143469:52)
+    at LumenFinalGather.destroy (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:248594:14)
+    at Lumen.destroy (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:248709:22)
+    at Scene4.destroy (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:272089:46)
+    at CesiumWidget.destroy (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:275142:33)
+    at Object.dispose (http://localhost:8090/demo/ballpool.js:782:10)
+    at eval (eval at evaluate (:370:30), <anonymous>:2:14)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at D:\Nothing\lumen-for-cesium\scripts\verify-contact-lifecycle.mjs:173:28 {
+  log: []
+}

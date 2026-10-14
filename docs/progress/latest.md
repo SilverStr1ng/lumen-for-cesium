@@ -1,150 +1,85 @@
-# R9 实现进度 · 2026-10-14
+# R10 实现进度 · 2026-10-14
 
-Ball Pool 已能播放、暂停、投球并定格重算 GI；受控曲面接收已接通，近接触画质仍不达标。固定 32r 和新档性能按原门限分别记录，整体 `recommended=false`。
+静态表面缓存改善了原接收纹理的输入，并降低命中着色成本；最终显示像素仍有18/60案例失败，一轮缓存和完整性能也未达标。完整验收 **failed / recommended=false**。缓存保持显式实验候选。
 
-分支：`feat/ballpool-curved-receivers-v8`。最终测试源码：`93b5f2260593ca1348a034a10fb0027958ca0f46`。
-审查基线 `818ef240debddf322dd4be7ec504e5709b2a8b8e` 保留；已完成八个阶段代码/测试提交。此文的报告提交可在本文件 Git 历史查询。
+分支 `feat/contact-transport-v9`；测试源码 `c0f2ed8aed8cd106b170f765c82ff490ba08afc5`。基线 `522201e5` / 原被测源码 `93b5f22` 保留。汇总器在 `c3ba35c` 补充真实子进程失败与完整性门禁；[更正记录](../../reports/contact-transport-v9/acceptance-20261014/rechecked-verification.json)核对其余源码、构建、资产和证据未变，GPU未重跑。原汇总不覆写。实际交付提交见此文 Git 历史。
 
-## 现在可以打开
+## 现在可以使用
 
 `npm run setup` → `npm run build` → `npm start`。
-[Ball Pool](http://localhost:8090/demo/ballpool.html) 默认64球；[Gallery](http://localhost:8090/demo/gallery.html) 有入口。[证据展示页](http://localhost:8090/reports/ballpool-curved-receivers-v8/index.html) 可比较成本、桌面配置与三阶段截图。
+[Ball Pool](http://localhost:8090/demo/ballpool.html) 仍默认即时参考；在“命中光照来源”选择“静态表面缓存”。也可[直接打开候选](http://localhost:8090/demo/ballpool.html?radianceSource=cache)。等待静态 GI 就绪后操作；播放/投球会失效旧局部 GI，暂停后点击“定格并更新 GI”。改灯和定格都需重新计算缓存。
 
-点击“播放物理”或“投球”开始运动；“暂停”只停止物理；点击“定格并更新 GI”后等待“静态 GI 就绪”。运动和重建期间显示预览，旧球位置的局部 GI 与历史已失效。太阳/天空可以调整；同机位可比较 DDGI、重建 FG、仅移除局部间接光。曝光固定1。
+[证据展示页](http://localhost:8090/reports/contact-transport-v9/index.html) · [完整矩阵](../../reports/contact-transport-v9/acceptance-20261014/quality-cache/curved.json) · [总验收](../../reports/contact-transport-v9/acceptance-20261014/test-suite.json)。复现用 `npm run test:r10 -- --output=reports/contact-transport-v9/<新目录>`；失败非零，旧目录不可覆写。
 
-## 能力边界
+## 已完成与边界
 
-| 能力                    | 状态   | 当前验证范围                                                                                    |
-| ----------------------- | ------ | ----------------------------------------------------------------------------------------------- |
-| 静态局部DDGI + FG       | 已实现 | 原展馆、held-out、Gallery、受控球池                                                             |
-| 改灯重算                | 已实现 | 太阳/天空；重建采用最新输入，revision/round快照对应                                             |
-| 光滑曲面接收            | 部分   | 不透明基础PBR球，半径0.34m；Ng/Ns与球体身份分开，近接触独立误差失败；命中侧仍为三角形Ng Lambert |
-| 时空重建                | 已实现 | 线性E、二维采样、原平面/薄墙几何保护；同球曲面邻域受限                                          |
-| 桌面资源规划            | 已实现 | Auto32 / Interactive16；64MiB附加预算含曲面指南、快照、已知场景CPU/GPU及WASM资源                |
-| 物理播放/暂停/投球/重置 | 已实现 | 本地Rapier 0.18.0确定性构建、固定步长；运动为基础照明预览                                       |
-| 运动中连续完整GI        | 未实现 | 定格重建静态世界；无通用动态BVH                                                                 |
-| 地形/Tiles GI           | 未实现 | Globe提供背景，未参加局部GI                                                                     |
-| 局部追踪镜面反射        | 未实现 | 高光来自Cesium环境IBL                                                                           |
+| 能力 | 状态与限制 |
+| --- | --- |
+| 同方向源项归因 | 原单/双球 day 接触点，1/2/3轮；天空/自发光/太阳/上一轮DDGI分开，独立路径余项替换；不是全部案例唯一根因证明 |
+| 受控起点修复 | 局部三角形误差包络、外扩ULP、仅排除源三角形；解析窄缝/斜面及真实GPU球地/双球通过；不声称任意退化几何证明 |
+| 静态表面候选 | 真实表面生成 S0/S1/S2，独立原 triangle+bary微片元；不复制DDGI，不提高3轮、不跨owner/面借用；有限空间/采样近似仍需验收 |
+| 生命周期与Auto | source token、geometry generation、requested/settled revision、最终分块取消、资源与销毁保护；总附加预算64MiB |
+| 既有渲染与采样 | Ng/Ns、线性E、历史失效、几何壁垒、IBL policy及生产无同步读回保留；未新增去噪器 |
+| 运动中完整多反弹GI | 未实现；播放仍为明确标注的物理预览，定格后一次静态世界重建 |
 
-## 分项验收
+## 原接触点与全部关卡
 
-| 关卡                   | 最终状态 |
-| ---------------------- | -------- |
-| 既有局部GI/R8回归      | passed   |
-| 既有固定质量           | passed   |
-| 既有桌面Auto质量       | passed   |
-| 既有时间质量           | passed   |
-| 曲面静态及区域独立误差 | failed   |
-| 曲面时间质量           | passed   |
-| Ball Pool冻结GI        | passed   |
-| 物理交互               | passed   |
-| 快照一致性             | passed   |
-| 资源预算               | passed   |
-| 固定32r持续性能        | failed   |
-| 新16r档持续性能        | failed   |
-| 球池静态持续性能       | failed   |
-| 物理预览性能           | passed   |
-| 定格更新延迟记录       | passed   |
-| Gallery与球池展示      | passed   |
+原单球 day/contact/seed0 球地区域，旧接收纹理重建误差 344.65%；受控起点+即时余项 339.03%；候选 physical 接收纹理重建 **3.61%**、query **4.10%**，绝对E RMSE **0.00352**。对同一 legacy 参考候选重建为 3.81%、query 3.31%；两种基准和原始点集都保留。这个接收尺寸结果不能代表主画面每个像素。
 
-完整命令与 cached 都返回1；失败未隐藏。原R8历史持续性能14/18失败与 `recommended=false` 保留。球池单项通过不表示R8全系统性能通过。完整Cesium测试总集不在本轮这组局部GI回归范围内。
+归因限定原单/双球 day、同128方向：单球球地3轮即时误差338.56%，只替换相同第一命中的DDGI余项后6.46%；1轮20.32%不变，2轮430.95%→7.50%。这支持命中侧余项是这些点的主要限制，不证明全部案例只有这一原因。[源项与余项对照](../../reports/contact-transport-v9/acceptance-20261014/root-physical/root-cause-summary.json)保留天空、太阳、自发光、上一轮DDGI及独立路径。
 
-## 实际质量与一致性
+原三轮接收纹理全部60案例：即时控制 48 个失败，候选 0 个失败。query12%、重建20%、原曝光/反弹/采样与区域分母不放宽。轮廓、球地、球球最差query分别8.62%、7.27%、3.97%，重建7.70%、7.29%、6.45%；区域平均FG权重最低77.14%、75.00%、85.81%。这不是区域全部覆盖；原分母保留，未用整体覆盖替代区域误差。Unknown/缺失缓存/即时回退计数均0；使用缓存命中29375，真实miss/已知黑1230。[区域矩阵](../../reports/contact-transport-v9/acceptance-20261014/quality-cache/curved.json)还记录绝对/最大误差与参考SE。
 
-64球运动后定格：球面FG平均权重 **98.34%**，独立8192路径参考E NRMSE **10.10%**。屏外彩球移除颜色后，同一冻结接收点E差模长 0.03357，证明屏外因果贡献。
-生命周期45项通过：冷启动销毁/重置、16→64→128→16、20次重算、快速请求、改灯竞态、失败重试和完整自有GL资源释放；生产同步读回为0。显示、物理、GI来自同一描述。
+| 必需关卡 | 结果 |
+| --- | --- |
+| regression | passed |
+| ray-origin | passed |
+| attribution | passed |
+| contact-query | passed |
+| contact-image | passed |
+| temporal | passed |
+| surface-cache | failed |
+| lifecycle | passed |
+| resource | passed |
+| fixed32-performance | failed |
+| interactive-performance | failed |
+| rebuild-latency | passed |
+| showcase | passed |
 
-曲面矩阵全部60案例已运行，48失败。单球day/close/seed0轮廓E NRMSE 31.27%；day/contact/seed0球地区域 344.65%，绝对RMSE 0.33086线性E。该案例区域FG权重仅轮廓77.14%、球地89.66%，不能用整体99%替代边缘结论。
-同点1024r query的球地NRMSE 343.41%，与重建偏差接近。由此推断现有稀疏DDGI命中侧输入是主要限制；这不是新输入算法已验证。原close机位、低位contact机位、失败边缘和测点都保留，区域门限仍20%。
-区域完整统计（各列极值可能来自不同案例；原点集未删除）：
+有限轮次与缓存本身 2/12 项未通过，详见[独立表面与接收查询](../../reports/contact-transport-v9/acceptance-20261014/surface-finite/surface-cache.json)。未通过项保留 experimental；新模块通过不使R8全系统通过。
 
-| 区域     | 已测案例 | 最小FG权重 | 最大E NRMSE | 最大绝对RMSE |
-| -------- | -------: | ---------: | ----------: | -----------: |
-| 前景轮廓 |       60 |     77.14% |     172.90% |       1.3381 |
-| 球-地面  |       30 |     75.00% |     595.07% |       1.8172 |
-| 球-球    |       30 |     85.81% |     126.57% |       0.6546 |
+额外[一轮同方向对照](../../reports/contact-transport-v9/one-round-control/query.json)完成：单球球地即时10.60%→缓存12.41%，双球轮廓2.15%→14.53%，支持空间近似是剩余限制，不能仅归为统计噪声。[实际显示像素的独立几何/线性E参考](../../reports/contact-transport-v9/final-pixel-reference-reviewed/used.json)：**failed，18/60 案例未通过，最差25.53%**。原表contact-image的passed仅指原接收纹理；真实显示接触区仍失败，位置/法线随投影采样变化，需要单独解决。所有原点/新像素与失败保留。
 
-Ng/Ns压缩历史指南最大角误差 0.132°，受0.25°门限验证；局部位置保留FLOAT32。32r×32有效帧误差 3.50–3.53%；16r×64有效帧 3.49–3.60%。另有24个冷启动100/250/500/1000ms窗口；这个受控16球时间质量通过不能覆盖接触区静态失败。
+## 实际设备与总成本
 
-## 成本与资源
+ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)；Chrome 155.0.8059.40，WebGL2 / headless，页面visibility=visible。本机实测不是独占GPU或手动FPS。1280×800，主画面尺度1、阴影2048、曝光1、2m/128探针射线/3轮保持；AMD Ryzen 7 9800X3D 8-Core Processor（主机身份在验收后独立采集，非运行heap峰值）。
 
-实际设备：AMD Ryzen 7 9800X3D（8核/16线程）/ RTX 5080 / Chrome155 / ANGLE Direct3D11 / WebGL2。使用本地资产、无token、headless浏览器可见页面；这是实验窗口，未宣称独占GPU或手工前台帧率。
+| 持续活动窗口 | 即时 GPU P95 | 缓存 GPU P95 | CPU提交P95 即时→缓存 | shade改善 | 条件 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| auto/static | 9.24ms | 6.61ms | 2.70→2.70ms | 93.27% | 同receiver/样本/快照 |
+| auto/moving | 9.62ms | 6.31ms | 2.70→2.77ms | 93.96% | 同receiver/样本/快照 |
+| interactive16/static | 5.01ms | 5.02ms | 3.00→2.53ms | 92.04% | 同receiver/样本/快照 |
+| interactive16/moving | 5.10ms | 5.00ms | 2.70→2.60ms | 92.88% | 同receiver/样本/快照 |
 
-1280×800、曝光1、2048阴影、2m DDGI网格/128探针射线/3反弹不变。表中P95是三轮P95的算术平均；每轮100个持续绘制帧，前20帧预热排除，GPU统计80帧；分组件60帧另外计时。16r属于不同质量/收敛取舍。
+值为三个窗口各自P95的均值；moving是相机移动、球堆几何冻结，物理播放仍无完整局部GI。全帧和60帧组件分开。32r和16r仍为不同档。缓存减少secondary shade，primary trace未消失；原相对DDGI<=3ms、相对原raw<=1ms及移动/改灯失败继续保留。
 
-| 静态场景 | 32r接收纹理   | GPU P95 ms | 16r接收纹理   | GPU P95 ms | CPU提交P95 32r/16r ms |
-| -------- | ------------- | ---------: | ------------- | ---------: | --------------------: |
-| original | 640×400 / 32r |       6.51 | 640×400 / 16r |       5.18 |           3.50 / 3.40 |
-| gallery  | 640×400 / 32r |       8.66 | 640×400 / 16r |       5.64 |           3.53 / 3.60 |
-| ballpool | 576×360 / 32r |       9.25 | 576×360 / 16r |       5.02 |           2.97 / 2.90 |
+64球首次缓存：提交墙钟 3090.90ms，worker布局 31.40ms，GL提交CPU 1183.20ms，GPU各代合计 1943.32ms；这些不能藏在稳态收益后。
 
-球池同构建A/B/C/D：
+| 更新与收敛 | 完整墙钟 | 缓存构建GPU合计 |
+| --- | ---: | ---: |
+| immediate/relight | 1355.62ms | 不使用缓存 |
+| immediate/freeze-and-converge | 1054.61ms | 不使用缓存 |
+| cache/relight | 3499.59ms | 1911.65ms |
+| cache/freeze-and-converge | 3498.87ms | 1941.86ms |
 
-| 档位          | DDGI A | fixed raw B | 去相关raw C | reconstructed D |  D−B |  D−A |
-| ------------- | -----: | ----------: | ----------: | --------------: | ---: | ---: |
-| auto          |   2.08 |        8.66 |        8.97 |            9.25 | 0.59 | 7.17 |
-| interactive16 |   3.32 |        4.77 |        5.09 |            5.02 | 0.24 | 1.69 |
+改灯包含150帧忙窗口，冻结包含新世界/缓存与目标样本收敛；不能把墙钟当单次API耗时。细分见[完整成本账](../../reports/contact-transport-v9/acceptance-20261014/cache-cost/contact-cost.json)。忙帧时间不包含跨帧缓存GPU提交，后者单列；pending/missing/disjoint非零时GPU合计标incomplete。无同source/revision的改灯窗口不称纯开销优化。
 
-旧门限仍为D−B≤1ms、D−A≤3ms；Auto32球池结果 failed，Interactive16球池结果 passed。持续窗口启用continuousSampling；实际FG帧、epoch和回退逐窗口保存，未以停止采样或全部DDGI回退计作收益。原展馆/Gallery的moving与relight完整矩阵见证据页。
-球池32r组件均值：primary trace 4.80ms、secondary shade 2.70ms、forward 0.32ms；重建temporal+filter1+filter2合计 0.20ms。它们是另一计时窗口，不能直接相加冒充整帧P95。
+所有正式球池资源/更新/生命周期测得的已知附加峰值 **61.60MiB /64MiB**；其中桌面1920×1080/2560×1440 Auto峰值 58.46MiB。64球缓存驻留GPU 6.78MiB、单候选已知临时+GPU峰值 10.95MiB。CPU/GPU/快照/物理WASM分别见[桌面资源](../../reports/contact-transport-v9/acceptance-20261014/desktop/desktop.json)与[完整更新](../../reports/contact-transport-v9/acceptance-20261014/cache-cost/contact-cost.json)。128球缓存拒绝不提高上限；即时安全回退和压力覆盖仍单列。驱动物理VRAM、worker JS allocator开销为not-run，不能把拥有资源合计称实际VRAM。
 
-同序列匹配失败的配置：gallery/high/relight、original/high/relight、original/interactive16/relight。这些改灯窗口也作为失败保留，不能用其中C↔D时间差声明同样本收益。
+## 下一里程碑
 
-运动后定格64球的重建至照明CPU提交 405.20ms，至目标32个有效FG帧 700.80ms；墙钟及CPU发布记录，不代表GPU fence确认。该姿态实际primary 1,782,151、Ng背面已知零 1,145；solar记录为上界。诊断scratch 9216B。
-已知拥有附加资源峰值 54.77MiB：FG 46.67、快照 0.39、球池场景 7.71MiB；场景包括GPU几何/环境、CPU Blob/BVH/顺序及物理WASM保留量。不是整个Cesium、JavaScript堆或驱动显存。
+1. 优先修复实际显示接触区18项失败及一轮缓存空间误差，保留全部点、physical/legacy与SE；不增加历史掩盖输入。
+2. 在同质量同receiver下处理primary trace成本及缓存冷启动/改灯摊销，原32r和完整性能门限继续独立验收。
+3. 先收口静态缓存质量、预算与更新成本，再另立受限运动GI任务；当前不做动态BVH、Tiles GI或反射。
 
-| 拥有资源分类（冻结64球）              |   MiB |
-| ------------------------------------- | ----: |
-| FG附件/历史（GPU）                    | 46.67 |
-| round/material快照（GPU）             |  0.39 |
-| 新增球池模型/环境/world几何（GPU）    |  2.83 |
-| Blob/Worker几何/BVH/主线程顺序（CPU） |  3.14 |
-| 物理WASM保留线性内存（CPU）           |  1.75 |
-
-完整局部world的GPU资源另记录 4.56MiB，含上表已经计入的几何；不能重复相加。既有DDGI探针资源不冒充新增FG预算。
-
-CPU表值为preRender→postRender提交，物理步进单列，未包含更早的所有更新与节点同步开销。
-
-单窗补充测量（正式性能套件结束后，同一初始64球姿态）：
-
-| 模式            | GPU P95 ms | Scene.render调用CPU墙钟P95 ms | 实际primary/帧 | FG帧/绘制帧 |
-| --------------- | ---------: | ----------------------------: | -------------: | ----------- |
-| auto            |       9.54 |                          3.10 |      1,782,155 | 120/120     |
-| interactive16   |       5.58 |                          2.80 |        891,119 | 212/212     |
-| physics-preview |       2.94 |                          2.10 |       0 · 预览 | 0/237       |
-
-CPU范围包含preUpdate、物理、节点同步和渲染提交，排除widget resize/RAF/输入回调。计数覆盖全部接收表面（含地板/容器），不是仅球面。单窗GPU值有时序/预热差异，不替代正式三轮门限；solar仍只报上界。原始数据见[补充测量](../../reports/ballpool-curved-receivers-v8/supplementary/owned-costs.json)。
-
-| 物理预览球数 | GPU P95 ms | CPU提交P95 ms | 实际物理步数 |
-| ------------ | ---------: | ------------: | -----------: |
-| 16           |       3.19 |          1.30 |           59 |
-| 64           |       1.13 |          1.70 |           59 |
-| 128          |       2.46 |          2.30 |           60 |
-
-预览窗口至少1秒、120绘制帧；局部GI为预览0r，这些值不属于FG加速成果。不同球数独立窗口有调度/预热差异，不以其中高球数更低的数值推断性能趋势。
-
-| 球数 | 实际drawing buffer | Auto receiver/32r | 球面FG权重 | 附加峰值MiB | 压力质量 |
-| ---- | ------------------ | ----------------- | ---------: | ----------: | -------- |
-| 16   | 1920×1080          | 640×360 / 32r     |     99.82% |       55.15 | passed   |
-| 16   | 2560×1440          | 640×360 / 32r     |     99.79% |       55.15 | passed   |
-| 64   | 1920×1080          | 640×360 / 32r     |     99.54% |       59.45 | passed   |
-| 64   | 2560×1440          | 640×360 / 32r     |     99.48% |       59.45 | passed   |
-| 128  | 1920×1080          | 576×324 / 32r     |     92.61% |       55.38 | failed   |
-| 128  | 2560×1440          | 512×288 / 32r     |     92.85% |       46.57 | failed   |
-
-128球的640×360候选需要68,404,276B，超64MiB而被拒；更大候选还超primary+几何查询预算。Auto只调整FG接收纹理，主画面、阴影、DDGI网格及反弹保持公开值。资源通过不表示128球画质通过。
-
-## 当前建议与下一里程碑
-
-默认Auto适合查看受控静态演示；Interactive16用于比较较低每帧样本与更长收敛。两者都保留实验标记；128球为显式压力档。当前不推荐为全系统性能已达标的配置。
-
-1. 先解决近接触命中侧输入偏差，以同点query≤12%、重建区域≤20%验证，不修改原测点/门限。
-2. 降低固定32r的primary trace与secondary shade成本，继续使用原≤1ms/≤3ms门限和持续采样窗口。
-3. 提升128球压力档覆盖，维持64MiB与跨球/薄墙保护；推广曲面半径或拓扑前扩展独立几何参考。
-
-完整运动GI另需独立的运动查询、缓存失效、历史和异步生命周期设计，本轮未实现。
-
-来源：[最终严格总表](../../reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe/test-suite.json)、[交互与冻结证据](../../reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe/ballpool.json)、[曲面独立参考](../../reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe/curved.json)、[时间质量](../../reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe/curved-temporal.json)、[桌面Auto](../../reports/ballpool-curved-receivers-v8/acceptance-20261014-final-safe/desktop.json)、[双轴审查](review.md)。截图元数据保留相机、灯光、曝光、几何generation、world/FG revision与round、设备及源码/构建/资产指纹。
-重跑：`node scripts/verify-r9.mjs --output=reports/ballpool-curved-receivers-v8/<新的批次名>`；cached附加`--cached`并使用原批次名。阶段脚本需设置新的`LUMEN_REPORT_DIRECTORY`，不要覆盖已有证据。
-
-未测量（not-run）：驱动物理VRAM、GPU汇编/寄存器、Worker JavaScript堆总开销、认证ion/World Terrain、完整运动中多反弹GI；Standards冷启动增量代理复查因服务容量错误not-run，Spec复查与生命周期实测已完成。
+详细机制：[传输合同](../contact-transport.md)。审查：[Standards / Spec](review-r10.md)。模板：[template.md](template.md)。必需失败/未运行均阻止推荐。
