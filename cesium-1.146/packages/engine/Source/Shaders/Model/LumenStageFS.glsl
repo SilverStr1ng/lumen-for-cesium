@@ -83,6 +83,15 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     vec3 ngEC=lumen_triangleNormal(positionEC);
     if(!u_lumenFgEnabled||dot(ngEC,ns)<0.999)return baseline;
     vec3 p=(u_lumenEyeToLocal*vec4(positionEC,1.0)).xyz,ng=normalize(mat3(u_lumenEyeToLocal)*ngEC);
+    #ifdef LUMEN_WORLD_SUPPORTED
+    // Resident volume ownership applies equally to eager and lazy FG. Ng was
+    // evaluated above, before this per-fragment bounds branch.
+    vec3 volumeQ=((u_lumenLegacyKernel?p:p+ng*u_lumenNormalBias)-u_lumenProbeOrigin)/u_lumenProbeSpacing;
+    if(any(lessThan(volumeQ,vec3(0.0)))||any(greaterThan(volumeQ,u_lumenProbeCounts-1.0))) {
+        lumen_fgFallbackReason=9.0;
+        return baseline;
+    }
+    #endif
     vec2 q=gl_FragCoord.xy/u_lumenFgSceneSize*u_lumenReceiverSize-u_lumenFgOffset-0.5;
     // Full-resolution ROI is an exact current-pixel lookup, including at wall edges.
     if(all(equal(u_lumenReceiverSize,u_lumenFgSceneSize)))q=floor(gl_FragCoord.xy)-u_lumenFgOffset;

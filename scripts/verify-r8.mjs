@@ -1,6 +1,7 @@
 import { spawnSync, execFileSync } from "node:child_process";
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { sourceVersion } from "./browser-tools.mjs";
 import {
@@ -67,6 +68,7 @@ const regressions = [
   "fg-runtime-window",
   "fg-order",
   "fg-execution",
+  "fg-ownership",
   "fg-desktop",
 ];
 const scriptNames = [
@@ -151,6 +153,26 @@ const run = (name, args = [], extra = {}) => {
   );
   inputs[out + "/compatibility-raw/run-" + report.tests.length + ".json"] =
     JSON.stringify({ ...row, stdout: r.stdout, stderr: r.stderr }, null, 2);
+  writeFileSync(
+    out + "/compatibility-raw/run-" + report.tests.length + ".json",
+    inputs[out + "/compatibility-raw/run-" + report.tests.length + ".json"],
+  );
+  writeFileSync(
+    out + "/progress.json",
+    JSON.stringify(
+      {
+        version: current,
+        configuration: report.configuration,
+        started: report.started,
+        tests: report.tests,
+        states: report.states,
+        status: "running",
+        recommended: false,
+      },
+      null,
+      2,
+    ),
+  );
   return row;
 };
 const envFor = (c) => ({
@@ -451,6 +473,20 @@ try {
   Object.assign(report, aggregate(report.states));
   report.finished = new Date().toISOString();
   await writeFile(out + "/test-suite.json", JSON.stringify(report, null, 2));
+  await writeFile(
+    out + "/progress.json",
+    JSON.stringify(
+      {
+        status: report.status,
+        recommended: report.recommended,
+        finished: report.finished,
+        states: report.states,
+        tests: report.tests,
+      },
+      null,
+      2,
+    ),
+  );
   if (!cached && !onlyQuality) {
     const requiredFiles = (await readdir(out, { recursive: true }))
       .map((f) => out + "/" + f.replaceAll("\\", "/"))

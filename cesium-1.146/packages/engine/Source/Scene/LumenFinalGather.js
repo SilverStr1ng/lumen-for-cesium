@@ -53,6 +53,7 @@ class LumenFinalGather {
     this.sampling = "fixed-reference";
     this.reconstructionEnabled = true;
     this.execution = "split";
+    this.rayLayout = "interleaved";
     this.rayOrder = "azimuth";
     this.lazyFallback = true;
     this.sequenceEpoch = undefined;
@@ -108,6 +109,7 @@ class LumenFinalGather {
     sampling = this.sampling,
     reconstruction = this.reconstructionEnabled,
     execution = this.execution,
+    rayLayout = this.rayLayout,
     rayOrder = this.rayOrder,
     lazyFallback = this.lazyFallback,
     seed = this.seed,
@@ -140,11 +142,15 @@ class LumenFinalGather {
       this.sampling !== sampling ||
       this.reconstructionEnabled !== reconstruction ||
       this.execution !== execution ||
+      this.rayLayout !== rayLayout ||
       this.rayOrder !== rayOrder ||
       this.seed !== seed ||
       this.sequenceEpoch !== sequenceEpoch;
     if (!["split", "fused4", "fused8"].includes(execution)) {
       throw new DeveloperError("Invalid FG execution backend");
+    }
+    if (!["interleaved", "planar"].includes(rayLayout)) {
+      throw new DeveloperError("Invalid FG hit layout");
     }
     if (!["original", "azimuth"].includes(rayOrder)) {
       throw new DeveloperError("Invalid FG ray ordering");
@@ -160,6 +166,7 @@ class LumenFinalGather {
     this.lazyFallback = lazyFallback;
     this.rayOrder = rayOrder;
     this.execution = execution;
+    this.rayLayout = rayLayout;
     this.reconstructionEnabled = reconstruction;
     this.sampling = sampling;
     this.seed = seed;
@@ -455,6 +462,7 @@ class LumenFinalGather {
         u_receiverNormal: () => this.receiver.normal,
         u_receiverOffset: () => this.offset,
         u_fgStart: () => this._start,
+        u_fgWidth: () => this.resultSize.x,
         u_receiverHits: () => this.hits?.texture ?? c.defaultTexture,
         u_fgAccumulation: () => this._accumulation,
         u_fgRaw: () => this.texture,
@@ -475,13 +483,15 @@ class LumenFinalGather {
         u_budget: () => this.traversalBudget,
         u_fgPreviousEnabled: () => this._input.round > 1,
       });
+      const layoutDefine =
+        this.rayLayout === "planar" ? "#define LUMEN_FG_PLANAR\n" : "";
       this._commands[name] = c.createViewportQuadCommand(
         name.startsWith("receiverFused")
           ? receiverFused(Number(name.slice(-1)))
           : name === "receiverTrace"
-            ? receiverTrace
+            ? layoutDefine + receiverTrace
             : name === "receiverShade"
-              ? receiverShade
+              ? layoutDefine + receiverShade
               : receiverNeighborhood,
         { uniformMap, owner: this },
       );
@@ -790,6 +800,7 @@ class LumenFinalGather {
         fallbackReason: "none",
         effectiveQuality: l.effectiveQuality,
         execution: this.execution,
+        rayLayout: this.rayLayout,
         rayOrder: this.rayOrder,
         reconstructionEnabled: this.reconstructionEnabled,
         lazyFallback: this.lazyFallback,

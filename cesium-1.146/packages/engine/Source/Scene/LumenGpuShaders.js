@@ -367,18 +367,30 @@ ${common + worldUniforms + exactGather}
 uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
 void main(){ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
 export const receiverTrace = `${common + gather + finalGather}
-uniform sampler2D u_receiverPosition,u_receiverNormal;uniform ivec2 u_receiverOffset;uniform int u_fgStart;
-void main(){ivec2 c=ivec2(gl_FragCoord.xy),p=ivec2(c.x/4,c.y),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);int i=u_fgStart+c.x%4;
+uniform sampler2D u_receiverPosition,u_receiverNormal;uniform ivec2 u_receiverOffset;uniform int u_fgStart,u_fgWidth;
+void main(){ivec2 c=ivec2(gl_FragCoord.xy);
+#ifdef LUMEN_FG_PLANAR
+ ivec2 p=ivec2(c.x%u_fgWidth,c.y);int lane=c.x/u_fgWidth;
+#else
+ ivec2 p=ivec2(c.x/4,c.y);int lane=c.x%4;
+#endif
+ ivec2 r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);int i=u_fgStart+lane;
  if(x.a<0.5||i>=u_fgSamples){out_FragColor=vec4(0);return;}
  vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz),o=x.xyz+ng*u_fgRayBias,d=fgDirection(ng,i,r+u_fgPixelOffset);
  out_FragColor=trace(o,d,completeDistance(o),-1,false);
 }`;
 export const receiverShade = `${common + gather + finalGather}
-uniform sampler2D u_receiverPosition,u_receiverNormal,u_receiverHits,u_fgAccumulation;uniform ivec2 u_receiverOffset;uniform int u_fgStart;
+uniform sampler2D u_receiverPosition,u_receiverNormal,u_receiverHits,u_fgAccumulation;uniform ivec2 u_receiverOffset;uniform int u_fgStart,u_fgWidth;
 void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);
  if(x.a<0.5){out_FragColor=vec4(0);return;}
  vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);
- for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec4 h=texelFetch(u_receiverHits,ivec2(p.x*4+j,p.y),0),L=fgRadiance(h,fgDirection(ng,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
+ for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;
+#ifdef LUMEN_FG_PLANAR
+  ivec2 hitPixel=ivec2(p.x+j*u_fgWidth,p.y);
+#else
+  ivec2 hitPixel=ivec2(p.x*4+j,p.y);
+#endif
+  vec4 h=texelFetch(u_receiverHits,hitPixel,0),L=fgRadiance(h,fgDirection(ng,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
  out_FragColor=sum;
 }`;
 export function receiverFused(batch) {
