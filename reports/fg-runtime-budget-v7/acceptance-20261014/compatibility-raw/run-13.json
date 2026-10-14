@@ -1,0 +1,10 @@
+{
+  "name": "verify-visibility-domain",
+  "args": [],
+  "environment": {},
+  "exitCode": 0,
+  "milliseconds": 6977.444000000003,
+  "status": "passed",
+  "stdout": "{\n  grid: {\n    origin: [ -1.5, -1.5, -0.5 ],\n    counts: [ 4, 4, 152 ],\n    total: 2432,\n    spacing: 1,\n    normalBias: 0.02,\n    rays: 128,\n    width: 160,\n    height: 1520\n  },\n  checked: 523,\n  leaks: 0,\n  short: [\n    {\n      status: 'Miss',\n      triangle: undefined,\n      gpuTriangle: -2,\n      u: 0,\n      v: 0,\n      distance: 100,\n      backface: false\n    }\n  ],\n  complete: [\n    {\n      status: 'Hit',\n      triangle: 3,\n      gpuTriangle: 3,\n      u: 0.550000011920929,\n      v: 0.050000011920928955,\n      distance: 149.97999572753906,\n      backface: true\n    }\n  ]\n}\n",
+  "stderr": ""
+}

@@ -1,0 +1,1038 @@
+{
+  "version": {
+    "head": "0f035390d118e1021c42b9fd8844c6564aae3123",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4cedbcd4929d3db78927db08d1899ef873cdf5785761624c44f8523eadf5b837",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "27877e0dd5617f8d565ad63105e86c26b47a7f85f9d8af4c15feb8f5f8281c08",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "0fc728a42ef6e8df9edaa069abaf06a21e935c415436c6a713d83bb473ee27d0",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "b3e3545d21d2f87f4dd101d374043517f2b1bdad42c9d8f13cb36fa7b1a30eb7",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "df0f679d79f823a46f953a7f7316382ee813378cc228ef75894db9e85f9c7c02",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "26b9435ee9b44830a7701cfa5d8d903a30bab507d9190dcfe855ee21518ea00a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "6e5cd4257607c427793c76a0b61026e98a31a5054769fb37b36cdd10b63124da",
+      "demo/globe.js": "f45f07e6be8df466ec53b9dc7874f4da076b350a500bd364b2228292f7f86c07",
+      "demo/benchmark.js": "df74768e374181839acf71cabf67d113e3eca99b0530faf40500707ab4128f89",
+      "scripts/browser-tools.mjs": "afba46cbdf83f4fa4aa0fc136f6f9558272be79fdffc7bcc7d01d1ffb2ca1c47",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "1f0d19b5313a7fb35bae8ba65e7014cd664c85ddaf66b9c5baea702ed9facb18",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "scripts/lint-r6.mjs": "617e572321d81dcdf06bcd8dbf5330b5cfbb1b1396873823bbd62559f3e81152",
+      "scripts/verify-pipeline.mjs": "ab050db9046171c394de7e42461a374a87165e6ac473ac34b625bbf9f93ccc1c",
+      "scripts/verify-transport.mjs": "1d7fd4c420acc4cf64d88c0703b587e003d9bdfe26f814e7a91ae102b32618bc",
+      "scripts/verify-environment.mjs": "22513c68c5ff29a7bf86e1e6b1199bbba54bfb038c2a81e66181e7481118bf18",
+      "scripts/verify-globe-controls.mjs": "b725dd637fb00c9aa4debcb76650932ad5e09b52e053e4fb6dbf3b2a32b73e29",
+      "scripts/verify-visibility.mjs": "1e68c96ef675daadaf390ea0e2227689537c8165a44e260f4472ebd4e52282e3",
+      "scripts/verify-fixtures.mjs": "169462b521cd9fc52fe5db691ac38cc1f79af750d85d7082e64424d84e0dd8ce",
+      "scripts/verify-relighting.mjs": "8efdcf55d549cd0f4d114e2c9bfd9665f7b158085cb1a29930fa8d6e923eea89",
+      "scripts/verify-integration.mjs": "ad2c5c7c268d2fbca197c945cdb03aac3f2bdbe64392471a5b90e453dfd83afe",
+      "scripts/verify-progressive.mjs": "f9d9a096649c6b5750e35c5a3beae7faf61f279ad70a5e4ef8f6e35bcd365651",
+      "scripts/verify-publication-lifecycle.mjs": "8e4df63c48021b70ee8ba19ac886070500605c8f97b8394b1bd8365957430a19",
+      "scripts/verify-visibility-gpu.mjs": "6b69ac1467290f7bfb2ecb1189bd208a56c7183659a7610fe10522d863d56d33",
+      "scripts/verify-visibility-domain.mjs": "641e97fbaf625cf914197a2cf7d4ff2e6674f34b1a15b6540f727379e127f1af",
+      "scripts/verify-visibility-edges.mjs": "9368f8a64446e65c93516b1f5190eead9027317259630a4fc4e3519f7b93fc8e",
+      "scripts/verify-globe.mjs": "2dbb84932fb9c615bef75d90fe3ee66f96aab04c443f9f5736ca203645d11821",
+      "scripts/verify-solid-probes.mjs": "982e8f7d525d7358141c6f4c2cf82d788020f2a6cf4beecf71329d577aa8e08f",
+      "scripts/verify-spatial-kernel.mjs": "96e4fed88ebbe8929f2166305d8e509f78c5a4937e3f84f86dd657149ef7ccc4",
+      "scripts/verify-spatial-gpu.mjs": "4aa52ac384bae0db9dd8536fed6d582f6d5dafcd167440215fad4d64598ae4aa",
+      "scripts/verify-pbr-environment.mjs": "52f0a84903655a09260d48896564db4d99c182f6d678746e3be68dc14b81c02d",
+      "scripts/verify-display-presets.mjs": "b4110383b21e5a37efe44c6d313d8a9d33ae292e9f7251e899aaece65dbf668b",
+      "scripts/verify-probe-display.mjs": "d1fccbff53ad20ee469f35148223f0565cd048504453dedb0c02ea046122c789",
+      "scripts/verify-ibl-policy.mjs": "29bb3521682e30f0884c3b65a94f6f61b91ff950448a0eb3bfcc5aeb7854855a",
+      "scripts/verify-final-gather.mjs": "135da13c00eec2ca38904a57b6457b0502ef8dd2fa6a518772dfe36c26738e3b",
+      "scripts/verify-receiver.mjs": "43ec9a67d10f53b39e3368afc3731b747983c4d355d21a235410d10e73d86291",
+      "scripts/verify-reconstruction.mjs": "82d820020182cc372b3693c19162a2434027c63bd422fb9ea2716683f4278131",
+      "scripts/verify-resource-lifecycle.mjs": "58669f110d12b47372ae4dc7c7419c2e532c19b533c1a26c7d947c2d785d59c4",
+      "scripts/verify-r7-acceptance.mjs": "dfad814ae1115fab2a429f046b8a9198236766504281b22e889309eddf86edcf",
+      "scripts/verify-r7-timers.mjs": "5ff07731b013b468748eb41bfc079eb0b3440d1a26c7d533cb5f67beb9651bff",
+      "scripts/verify-fg-sampling.mjs": "232554ce92f1996703351e0c251f630d0057400f0583fe888ee0e46dad5121eb",
+      "scripts/verify-fg-history.mjs": "260a385567ac70239e41dd279a0115aaa9c427484d1a112906f704513d7152d7",
+      "scripts/verify-fg-barriers.mjs": "d075a9d17fe8223a06434a104b5ffb42e31b5cf52450bbf8156557254f89af99",
+      "scripts/verify-fg-statistics.mjs": "41a3a837161553752d84617118f1365d3b7dd1695b302cd74dd8619087cd6cd3",
+      "scripts/verify-fg-lifecycle.mjs": "9859e6083aa026011585bcafc20eb118c56594e5ab09981f637351b15e74ee18",
+      "scripts/verify-gallery.mjs": "15c93810177a7d0c6807521dc0536873bc0ed3a48f599175c30e89e64dc3cbe3",
+      "scripts/verify-r8-acceptance.mjs": "72eef0b4c2dec3fba5dc22f302351f4d5bad9187c93cd42b602ce591d2a50911",
+      "scripts/verify-fg-budget.mjs": "23dcf761c56e8c7a2091ec7851eccea431c2526bb2d9ffb3cb166ece13a41493",
+      "scripts/verify-fg-order.mjs": "4f7d54a05d8aac805694832a85fbdf031d50610b0c404353bf224fa36b5ff1ad",
+      "scripts/verify-fg-execution.mjs": "3fc673b2ecab3e7cb4a95b6cce3462b01ca53f24648e08be51d35d0b5800ef22",
+      "scripts/verify-fg-desktop.mjs": "d1603314482dbd567e30a2863590300c1cce73d80f5b15419f3ce737d464cf21",
+      "scripts/verify-r8.mjs": "b8d1f23e15280588328cf143e7e910d908e6c8ce46abc166e2715394ca3cb0b6",
+      "scripts/verify-fg-temporal.mjs": "dd4dd7b30e2527982e5c3d79e65681dd25fc94ea196b40ea17daf552ff2ba069",
+      "scripts/measure-fg-milliseconds.mjs": "666d5eca743fe2cdecc8113732ce26b1da4e3cc8d289e2c212fd77664c43adf1",
+      "scripts/verify-fg-quality.mjs": "15ea6706acb574d23b47422797fe1e27fb0fc9a61a4d836ece170d92f0df8218",
+      "scripts/benchmark-fg-runtime.mjs": "01e863fc073d248cf36285fc78b118ab16fc687858e99025c4ed3371edc8ce07",
+      "scripts/verify-export-patch.mjs": "2dafc2f6667e5b354465513b62962b97912885fae30ee810a08e0fd316c22f8a",
+      "scripts/r8-acceptance.mjs": "520c02f80fa0346e57d3cddb86bea238e0bd3c67e94673d6c0f9652242662da9"
+    },
+    "compiledBundle": "dc8e7e2b93213ab28feb1d29e1dd837270a5603a5e04b412d8094d695e376f0f",
+    "assets": {
+      "fixtures/alpha-mask.bin": "f9c9cee34b6407e5842d4f4fdebea2802b3b98f36de8ff0789ec6d8ad623a807",
+      "fixtures/alpha-mask.gltf": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "fixtures/alpha-mask.json": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "fixtures/alpha-mask.png": "5a173415420a42b3b032ef3729c61268b04ac67b01cbe2fd7b241b87dcee3de4",
+      "fixtures/earth-gi-gallery-off.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery-off.gltf": "ac88919b7c261d998d7c82a0691e4c04eca422b423248c38c40a43a459c2230d",
+      "fixtures/earth-gi-gallery-off.json": "04c4a3576e1ca7546cda3ebcc17264c6a485e7942ac504156f64db31416351b3",
+      "fixtures/earth-gi-gallery.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery.gltf": "60fb80a3cc64244c5e3a0c34e370f9869435ce5f14293ffd116680bb088f18b5",
+      "fixtures/earth-gi-gallery.json": "feef0fd8d9a23a6e121fcbb48cce8ae188394674107aac24be99d0dbad26b297",
+      "fixtures/earth-pavilion-held-out.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion-held-out.gltf": "6bf0fd7ab3a5bb28a4a7daee047c9a7a8903b5203a8a3e0a2cbdd8de5e5c6f4a",
+      "fixtures/earth-pavilion-held-out.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/earth-pavilion-presentation.bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "fixtures/earth-pavilion-presentation.gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "fixtures/earth-pavilion-presentation.json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "fixtures/earth-pavilion.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion.gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/far-blocker.gltf": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "fixtures/far-blocker.json": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "fixtures/fg-slanted-barrier.bin": "8b07bba2e4c8c7aaa0b0e6cd20c44091cf4d0723ca3305fa8e9ed6d311ad64af",
+      "fixtures/fg-slanted-barrier.gltf": "82e17c00914c35bdd35ca5364635a6a311f50b39932c22386398e3bfac366074",
+      "fixtures/fg-slanted-barrier.json": "1cb69fdeb7abae75d67a9db5b79f8ecb745834a05a243e213536532b2ef7cc2b",
+      "fixtures/gallery-mineral.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/pavilion-detail.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/two-rooms.bin": "679eca85743630fa20c6e458c33e6b507ab386d1a66c39aa759c6ff0d75cbd19",
+      "fixtures/two-rooms.gltf": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "fixtures/two-rooms.json": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "fixtures/untextured.bin": "4f25e6c38fe7ccf71da9835afcf488a1f33ea7a3d94c45aaae7f2e03b0a81679",
+      "fixtures/untextured.gltf": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "fixtures/untextured.json": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa"
+    },
+    "modifiedSources": []
+  },
+  "configuration": {
+    "configs": [
+      {
+        "id": "fixed",
+        "auto": false,
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      {
+        "id": "auto-1920",
+        "auto": true,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      {
+        "id": "auto-2560",
+        "auto": true,
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      }
+    ],
+    "execution": "split",
+    "rayOrder": "azimuth",
+    "lazyFallback": true,
+    "budget": 67108864
+  },
+  "started": "2026-10-13T14:29:56.551Z",
+  "tests": [
+    {
+      "name": "lint-r6",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1505.8735000000001,
+      "status": "passed"
+    },
+    {
+      "name": "verify-pipeline",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1276.168,
+      "status": "passed"
+    },
+    {
+      "name": "verify-transport",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 173.8788000000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-environment",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 153.95560000000023,
+      "status": "passed"
+    },
+    {
+      "name": "verify-globe-controls",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 46.4042000000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1926.3319000000006,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fixtures",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 32848.566100000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-relighting",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18338.6432,
+      "status": "passed"
+    },
+    {
+      "name": "verify-integration",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 16524.0947,
+      "status": "passed"
+    },
+    {
+      "name": "verify-progressive",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 17557.10560000001,
+      "status": "passed"
+    },
+    {
+      "name": "verify-publication-lifecycle",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 25199.272899999996,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility-gpu",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 31199.494800000015,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility-domain",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 8757.945100000012,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility-edges",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18753.20569999999,
+      "status": "passed"
+    },
+    {
+      "name": "verify-globe",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 20918.6268,
+      "status": "passed"
+    },
+    {
+      "name": "verify-solid-probes",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1597.8632999999973,
+      "status": "passed"
+    },
+    {
+      "name": "verify-spatial-kernel",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 46.92840000000433,
+      "status": "passed"
+    },
+    {
+      "name": "verify-spatial-gpu",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 14124.963999999978,
+      "status": "passed"
+    },
+    {
+      "name": "verify-pbr-environment",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 28159.91749999998,
+      "status": "passed"
+    },
+    {
+      "name": "verify-display-presets",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 67032.66259999998,
+      "status": "passed"
+    },
+    {
+      "name": "verify-probe-display",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 14904.472799999989,
+      "status": "passed"
+    },
+    {
+      "name": "verify-ibl-policy",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 15081.00159999996,
+      "status": "passed"
+    },
+    {
+      "name": "verify-final-gather",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18150.94219999999,
+      "status": "passed"
+    },
+    {
+      "name": "verify-receiver",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 31346.92849999998,
+      "status": "passed"
+    },
+    {
+      "name": "verify-reconstruction",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 19889.784400000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-resource-lifecycle",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 257.90889999998035,
+      "status": "passed"
+    },
+    {
+      "name": "verify-r7-acceptance",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 42.839099999982864,
+      "status": "passed"
+    },
+    {
+      "name": "verify-r7-timers",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 362.63400000002,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-sampling",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18293.17200000002,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-history",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 29472.046499999997,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-barriers",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 16396.37050000002,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-statistics",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 45.99839999998221,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-lifecycle",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 43.585900000005495,
+      "status": "failed"
+    },
+    {
+      "name": "verify-gallery",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 44.0460000000312,
+      "status": "failed"
+    },
+    {
+      "name": "verify-r8-acceptance",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 45.35590000002412,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-budget",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 44.729799999971874,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-order",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 46.82639999996172,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-execution",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 44.44939999998314,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-desktop",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 42.59350000001723,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-canonical",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.680799999972805,
+      "status": "failed"
+    },
+    {
+      "name": "capture-fg-reconstruction",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 47.73439999995753,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-temporal",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.47079999995185,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-milliseconds",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.09679999999935,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-canonical",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 41.95219999999972,
+      "status": "failed"
+    },
+    {
+      "name": "capture-fg-reconstruction",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 46.06239999999525,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-temporal",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.249199999962,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-milliseconds",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 41.853000000002794,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-canonical",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 41.09009999997215,
+      "status": "failed"
+    },
+    {
+      "name": "capture-fg-reconstruction",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.62339999998221,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-temporal",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.04550000000745,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-milliseconds",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.4484999999986,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 44.83299999998417,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.42749999999069,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 51.021100000012666,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.55770000000484,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.14260000002105,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.87800000002608,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.978899999987334,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 44.884699999995064,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 44.633900000015274,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.58429999998771,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.211999999999534,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.757900000025984,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 49.54680000001099,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.837100000004284,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 46.01480000000447,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.944799999997485,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.70319999998901,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 47.572299999999814,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--activity=pause"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 46.676900000020396,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--activity=pause"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 47.54300000000512,
+      "status": "failed"
+    },
+    {
+      "name": "verify-export-patch",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1065.198299999989,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-quality",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800",
+        "LUMEN_QUALITY_REPORT": "reports/fg-runtime-budget-v7/fixed/quality.json"
+      },
+      "exitCode": 1,
+      "milliseconds": 48.07530000002589,
+      "status": "failed"
+    }
+  ],
+  "states": {
+    "regression": "failed",
+    "resource": "failed",
+    "showcase": "failed",
+    "temporal": "passed",
+    "fixed-quality": "not-run",
+    "auto-quality": "not-run",
+    "performance": "not-run"
+  },
+  "notRun": [
+    {
+      "name": "authenticated ion / World Terrain",
+      "reason": "no token supplied; local Globe retained"
+    },
+    {
+      "name": "shader assembly/register pressure",
+      "reason": "not exposed by WebGL/ANGLE"
+    }
+  ],
+  "error": "Error: ENOENT: no such file or directory, open 'D:\\Nothing\\lumen-for-cesium\\reports\\fg-runtime-budget-v7\\fixed\\quality.json'\n    at async open (node:internal/fs/promises:697:25)\n    at async readFile (node:internal/fs/promises:1348:14)\n    at async json (file:///D:/Nothing/lumen-for-cesium/scripts/verify-r8.mjs:108:38)\n    at async file:///D:/Nothing/lumen-for-cesium/scripts/verify-r8.mjs:267:21",
+  "restorationErrors": [],
+  "status": "failed",
+  "recommended": false,
+  "exitCode": 1,
+  "finished": "2026-10-13T14:37:50.597Z"
+}

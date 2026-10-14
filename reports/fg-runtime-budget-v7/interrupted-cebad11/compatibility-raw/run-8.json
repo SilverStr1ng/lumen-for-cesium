@@ -1,0 +1,10 @@
+{
+  "name": "verify-relighting",
+  "args": [],
+  "environment": {},
+  "exitCode": 1,
+  "milliseconds": 13610.0173,
+  "status": "failed",
+  "stdout": "PASS valid sun cache has no Unknown slots\nPASS skyOnly: zero new probe intersections, sun BVH work and moments\nPASS intensityOnly: zero new probe intersections, sun BVH work and moments\nPASS direction refreshes sun visibility without retracing probe hits\nPASS distance moments remain bit-identical through energy, direction and material changes\nPASS RGB/emission updates have independent material versions and reuse geometry and visibility\nPASS immutable jobs resist caller mutation and unsafe hit-semantic changes are rejected\n",
+  "stderr": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\npage.evaluate: TypeError: Failed to resolve module specifier \"@cesium/core\". Relative references must start with either \"/\", \"./\", or \"../\".\r\n    at D:\\Nothing\\lumen-for-cesium\\scripts\\verify-relighting.mjs:174:31 {\r\n  log: []\r\n}\r\n\r\nNode.js v24.19.0\r\n"
+}

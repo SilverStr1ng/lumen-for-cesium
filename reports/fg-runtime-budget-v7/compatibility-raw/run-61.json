@@ -1,0 +1,21 @@
+{
+  "name": "benchmark-fg-runtime",
+  "args": [
+    "--execution=split",
+    "--azimuth",
+    "--lazy",
+    "--scene=original",
+    "--width=1280",
+    "--height=800",
+    "--quality=high",
+    "--activity=pause"
+  ],
+  "environment": {
+    "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+  },
+  "exitCode": 0,
+  "milliseconds": 31554.683699999936,
+  "status": "passed",
+  "stdout": "{\"round\":0,\"mode\":\"ddgi\",\"gpu\":{\"mean\":3.260298399999999,\"p50\":3.702528,\"p95\":4.87472,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":0,\"mode\":\"fixed-raw\",\"gpu\":{\"mean\":6.564281600000001,\"p50\":6.654368,\"p95\":8.030048,\"samples\":80},\"actualFG\":100,\"means\":{}}\n{\"round\":0,\"mode\":\"decorrelated-raw\",\"gpu\":{\"mean\":8.081657199999999,\"p50\":8.100992,\"p95\":9.515808,\"samples\":80},\"actualFG\":100,\"means\":{}}\n{\"round\":0,\"mode\":\"reconstructed\",\"gpu\":{\"mean\":2.7342920000000004,\"p50\":2.649344,\"p95\":4.15888,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":1,\"mode\":\"reconstructed\",\"gpu\":{\"mean\":3.3500423999999995,\"p50\":3.52656,\"p95\":4.401696,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":1,\"mode\":\"decorrelated-raw\",\"gpu\":{\"mean\":9.407652000000002,\"p50\":9.138176,\"p95\":11.443072,\"samples\":80},\"actualFG\":100,\"means\":{}}\n{\"round\":1,\"mode\":\"fixed-raw\",\"gpu\":{\"mean\":4.997167199999999,\"p50\":4.601632,\"p95\":7.814336,\"samples\":80},\"actualFG\":100,\"means\":{}}\n{\"round\":1,\"mode\":\"ddgi\",\"gpu\":{\"mean\":3.5245843999999993,\"p50\":3.56112,\"p95\":5.034016,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":2,\"mode\":\"ddgi\",\"gpu\":{\"mean\":3.5801612,\"p50\":3.671072,\"p95\":4.981344,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"round\":2,\"mode\":\"fixed-raw\",\"gpu\":{\"mean\":6.382470000000002,\"p50\":6.41008,\"p95\":8.0072,\"samples\":80},\"actualFG\":100,\"means\":{}}\n{\"round\":2,\"mode\":\"decorrelated-raw\",\"gpu\":{\"mean\":8.389011200000002,\"p50\":8.481088,\"p95\":11.154464,\"samples\":80},\"actualFG\":100,\"means\":{}}\n{\"round\":2,\"mode\":\"reconstructed\",\"gpu\":{\"mean\":3.3843859999999983,\"p50\":3.638272,\"p95\":4.323808,\"samples\":80},\"actualFG\":0,\"means\":{}}\n{\"status\":\"passed\",\"targets\":{\"additionalReconstructionP95\":{\"value\":-3.655733333333334,\"limit\":1},\"sameSequenceReconstructionP95\":{\"value\":-6.409653333333332,\"scope\":\"additional ablation; does not replace original product target\"},\"completeFGP95\":{\"value\":-0.6685653333333335,\"limit\":3},\"memory\":{\"value\":63373760,\"limit\":67108864}},\"checks\":{\"sameSequence\":true,\"completeQueries\":true,\"activeFG\":true,\"resourceBudget\":true,\"productionReadback\":true,\"targetReconstruction\":true,\"targetCompleteFG\":true}}\n",
+  "stderr": ""
+}

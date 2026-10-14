@@ -1,0 +1,1164 @@
+{
+  "version": {
+    "head": "0f035390d118e1021c42b9fd8844c6564aae3123",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4cedbcd4929d3db78927db08d1899ef873cdf5785761624c44f8523eadf5b837",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "27877e0dd5617f8d565ad63105e86c26b47a7f85f9d8af4c15feb8f5f8281c08",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "0fc728a42ef6e8df9edaa069abaf06a21e935c415436c6a713d83bb473ee27d0",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "b3e3545d21d2f87f4dd101d374043517f2b1bdad42c9d8f13cb36fa7b1a30eb7",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "df0f679d79f823a46f953a7f7316382ee813378cc228ef75894db9e85f9c7c02",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "26b9435ee9b44830a7701cfa5d8d903a30bab507d9190dcfe855ee21518ea00a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "6e5cd4257607c427793c76a0b61026e98a31a5054769fb37b36cdd10b63124da",
+      "demo/globe.js": "f45f07e6be8df466ec53b9dc7874f4da076b350a500bd364b2228292f7f86c07",
+      "demo/benchmark.js": "df74768e374181839acf71cabf67d113e3eca99b0530faf40500707ab4128f89",
+      "scripts/browser-tools.mjs": "afba46cbdf83f4fa4aa0fc136f6f9558272be79fdffc7bcc7d01d1ffb2ca1c47",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "1f0d19b5313a7fb35bae8ba65e7014cd664c85ddaf66b9c5baea702ed9facb18",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99",
+      "scripts/lint-r6.mjs": "617e572321d81dcdf06bcd8dbf5330b5cfbb1b1396873823bbd62559f3e81152",
+      "scripts/verify-pipeline.mjs": "ab050db9046171c394de7e42461a374a87165e6ac473ac34b625bbf9f93ccc1c",
+      "scripts/verify-transport.mjs": "1d7fd4c420acc4cf64d88c0703b587e003d9bdfe26f814e7a91ae102b32618bc",
+      "scripts/verify-environment.mjs": "22513c68c5ff29a7bf86e1e6b1199bbba54bfb038c2a81e66181e7481118bf18",
+      "scripts/verify-globe-controls.mjs": "b725dd637fb00c9aa4debcb76650932ad5e09b52e053e4fb6dbf3b2a32b73e29",
+      "scripts/verify-visibility.mjs": "1e68c96ef675daadaf390ea0e2227689537c8165a44e260f4472ebd4e52282e3",
+      "scripts/verify-fixtures.mjs": "169462b521cd9fc52fe5db691ac38cc1f79af750d85d7082e64424d84e0dd8ce",
+      "scripts/verify-relighting.mjs": "8efdcf55d549cd0f4d114e2c9bfd9665f7b158085cb1a29930fa8d6e923eea89",
+      "scripts/verify-integration.mjs": "ad2c5c7c268d2fbca197c945cdb03aac3f2bdbe64392471a5b90e453dfd83afe",
+      "scripts/verify-progressive.mjs": "f9d9a096649c6b5750e35c5a3beae7faf61f279ad70a5e4ef8f6e35bcd365651",
+      "scripts/verify-publication-lifecycle.mjs": "8e4df63c48021b70ee8ba19ac886070500605c8f97b8394b1bd8365957430a19",
+      "scripts/verify-visibility-gpu.mjs": "6b69ac1467290f7bfb2ecb1189bd208a56c7183659a7610fe10522d863d56d33",
+      "scripts/verify-visibility-domain.mjs": "641e97fbaf625cf914197a2cf7d4ff2e6674f34b1a15b6540f727379e127f1af",
+      "scripts/verify-visibility-edges.mjs": "9368f8a64446e65c93516b1f5190eead9027317259630a4fc4e3519f7b93fc8e",
+      "scripts/verify-globe.mjs": "2dbb84932fb9c615bef75d90fe3ee66f96aab04c443f9f5736ca203645d11821",
+      "scripts/verify-solid-probes.mjs": "982e8f7d525d7358141c6f4c2cf82d788020f2a6cf4beecf71329d577aa8e08f",
+      "scripts/verify-spatial-kernel.mjs": "96e4fed88ebbe8929f2166305d8e509f78c5a4937e3f84f86dd657149ef7ccc4",
+      "scripts/verify-spatial-gpu.mjs": "4aa52ac384bae0db9dd8536fed6d582f6d5dafcd167440215fad4d64598ae4aa",
+      "scripts/verify-pbr-environment.mjs": "52f0a84903655a09260d48896564db4d99c182f6d678746e3be68dc14b81c02d",
+      "scripts/verify-display-presets.mjs": "b4110383b21e5a37efe44c6d313d8a9d33ae292e9f7251e899aaece65dbf668b",
+      "scripts/verify-probe-display.mjs": "d1fccbff53ad20ee469f35148223f0565cd048504453dedb0c02ea046122c789",
+      "scripts/verify-ibl-policy.mjs": "29bb3521682e30f0884c3b65a94f6f61b91ff950448a0eb3bfcc5aeb7854855a",
+      "scripts/verify-final-gather.mjs": "135da13c00eec2ca38904a57b6457b0502ef8dd2fa6a518772dfe36c26738e3b",
+      "scripts/verify-receiver.mjs": "43ec9a67d10f53b39e3368afc3731b747983c4d355d21a235410d10e73d86291",
+      "scripts/verify-reconstruction.mjs": "82d820020182cc372b3693c19162a2434027c63bd422fb9ea2716683f4278131",
+      "scripts/verify-resource-lifecycle.mjs": "58669f110d12b47372ae4dc7c7419c2e532c19b533c1a26c7d947c2d785d59c4",
+      "scripts/verify-r7-acceptance.mjs": "dfad814ae1115fab2a429f046b8a9198236766504281b22e889309eddf86edcf",
+      "scripts/verify-r7-timers.mjs": "5ff07731b013b468748eb41bfc079eb0b3440d1a26c7d533cb5f67beb9651bff",
+      "scripts/verify-fg-sampling.mjs": "232554ce92f1996703351e0c251f630d0057400f0583fe888ee0e46dad5121eb",
+      "scripts/verify-fg-history.mjs": "260a385567ac70239e41dd279a0115aaa9c427484d1a112906f704513d7152d7",
+      "scripts/verify-fg-barriers.mjs": "d075a9d17fe8223a06434a104b5ffb42e31b5cf52450bbf8156557254f89af99",
+      "scripts/verify-fg-statistics.mjs": "41a3a837161553752d84617118f1365d3b7dd1695b302cd74dd8619087cd6cd3",
+      "scripts/verify-fg-lifecycle.mjs": "9859e6083aa026011585bcafc20eb118c56594e5ab09981f637351b15e74ee18",
+      "scripts/verify-gallery.mjs": "15c93810177a7d0c6807521dc0536873bc0ed3a48f599175c30e89e64dc3cbe3",
+      "scripts/verify-r8-acceptance.mjs": "72eef0b4c2dec3fba5dc22f302351f4d5bad9187c93cd42b602ce591d2a50911",
+      "scripts/verify-fg-budget.mjs": "23dcf761c56e8c7a2091ec7851eccea431c2526bb2d9ffb3cb166ece13a41493",
+      "scripts/verify-fg-order.mjs": "4f7d54a05d8aac805694832a85fbdf031d50610b0c404353bf224fa36b5ff1ad",
+      "scripts/verify-fg-execution.mjs": "3fc673b2ecab3e7cb4a95b6cce3462b01ca53f24648e08be51d35d0b5800ef22",
+      "scripts/verify-fg-desktop.mjs": "d1603314482dbd567e30a2863590300c1cce73d80f5b15419f3ce737d464cf21",
+      "scripts/verify-r8.mjs": "b8d1f23e15280588328cf143e7e910d908e6c8ce46abc166e2715394ca3cb0b6",
+      "scripts/verify-fg-temporal.mjs": "dd4dd7b30e2527982e5c3d79e65681dd25fc94ea196b40ea17daf552ff2ba069",
+      "scripts/measure-fg-milliseconds.mjs": "666d5eca743fe2cdecc8113732ce26b1da4e3cc8d289e2c212fd77664c43adf1",
+      "scripts/verify-fg-quality.mjs": "15ea6706acb574d23b47422797fe1e27fb0fc9a61a4d836ece170d92f0df8218",
+      "scripts/benchmark-fg-runtime.mjs": "01e863fc073d248cf36285fc78b118ab16fc687858e99025c4ed3371edc8ce07",
+      "scripts/verify-export-patch.mjs": "2dafc2f6667e5b354465513b62962b97912885fae30ee810a08e0fd316c22f8a",
+      "scripts/r8-acceptance.mjs": "520c02f80fa0346e57d3cddb86bea238e0bd3c67e94673d6c0f9652242662da9"
+    },
+    "compiledBundle": "dc8e7e2b93213ab28feb1d29e1dd837270a5603a5e04b412d8094d695e376f0f",
+    "assets": {
+      "fixtures/alpha-mask.bin": "f9c9cee34b6407e5842d4f4fdebea2802b3b98f36de8ff0789ec6d8ad623a807",
+      "fixtures/alpha-mask.gltf": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "fixtures/alpha-mask.json": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "fixtures/alpha-mask.png": "5a173415420a42b3b032ef3729c61268b04ac67b01cbe2fd7b241b87dcee3de4",
+      "fixtures/earth-gi-gallery-off.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery-off.gltf": "ac88919b7c261d998d7c82a0691e4c04eca422b423248c38c40a43a459c2230d",
+      "fixtures/earth-gi-gallery-off.json": "04c4a3576e1ca7546cda3ebcc17264c6a485e7942ac504156f64db31416351b3",
+      "fixtures/earth-gi-gallery.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery.gltf": "60fb80a3cc64244c5e3a0c34e370f9869435ce5f14293ffd116680bb088f18b5",
+      "fixtures/earth-gi-gallery.json": "feef0fd8d9a23a6e121fcbb48cce8ae188394674107aac24be99d0dbad26b297",
+      "fixtures/earth-pavilion-held-out.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion-held-out.gltf": "6bf0fd7ab3a5bb28a4a7daee047c9a7a8903b5203a8a3e0a2cbdd8de5e5c6f4a",
+      "fixtures/earth-pavilion-held-out.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/earth-pavilion-presentation.bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "fixtures/earth-pavilion-presentation.gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "fixtures/earth-pavilion-presentation.json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "fixtures/earth-pavilion.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion.gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/far-blocker.gltf": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "fixtures/far-blocker.json": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "fixtures/fg-slanted-barrier.bin": "8b07bba2e4c8c7aaa0b0e6cd20c44091cf4d0723ca3305fa8e9ed6d311ad64af",
+      "fixtures/fg-slanted-barrier.gltf": "82e17c00914c35bdd35ca5364635a6a311f50b39932c22386398e3bfac366074",
+      "fixtures/fg-slanted-barrier.json": "1cb69fdeb7abae75d67a9db5b79f8ecb745834a05a243e213536532b2ef7cc2b",
+      "fixtures/gallery-mineral.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/pavilion-detail.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/two-rooms.bin": "679eca85743630fa20c6e458c33e6b507ab386d1a66c39aa759c6ff0d75cbd19",
+      "fixtures/two-rooms.gltf": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "fixtures/two-rooms.json": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "fixtures/untextured.bin": "4f25e6c38fe7ccf71da9835afcf488a1f33ea7a3d94c45aaae7f2e03b0a81679",
+      "fixtures/untextured.gltf": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "fixtures/untextured.json": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa"
+    },
+    "modifiedSources": []
+  },
+  "configuration": {
+    "configs": [
+      {
+        "id": "fixed",
+        "auto": false,
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      {
+        "id": "auto-1920",
+        "auto": true,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      {
+        "id": "auto-2560",
+        "auto": true,
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      }
+    ],
+    "execution": "split",
+    "rayOrder": "azimuth",
+    "lazyFallback": true,
+    "budget": 67108864
+  },
+  "inputs": {
+    "reports/fg-runtime-budget-v7/compatibility-raw\\acceptance-faults.json": "3560d04976710381c1a9eec55361042a729b4d5a717fdc1ac2c347873097ee81",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\budget-plan.json": "7a8f03772b23b6baa2f4914476c3085fbeb144e6eafe323b9352dbc1dd94d041",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\pbr-environment.json": "71b4ef5807c8a61cc3c2bab0c03a4ba937d7b0dfb2f109de69f18c742fea26d5",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-1.json": "8d393b029c05e588d1bba3fc735683779ccd17d748a5c1cd6ea13d5f4e190c47",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-10.json": "18a298861ef36a3a9a0c27bcf40f90ad3093e1cee6a03bfce1b5df497c67b860",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-11.json": "cc770da661fe0b7d2b620fa0a1a8e1a47b8507072b85693ee49a0a095bf258a5",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-12.json": "f6ffe18651ef1f17e87e198ee5546e50d8bb5c568dd3579d5a45a3f2d60f47b0",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-13.json": "ed2031fa9bdf98af97fcd62f5681d188e958c8bac71c2fdc35410edf06d8af79",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-14.json": "5679096801944f1b6dff5858fc2f5474f7f7cdf4e32aa5438d9d11693108cd20",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-15.json": "342fa9d7db97b965c43326f48557d247a411d123990eaed45cb9fabb5b035871",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-16.json": "2baa00ee805fbedf45e63a319a954fda896439983b62e6902d5502ab90c7380c",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-17.json": "17b86401cd33d7180095bdeba45214a8f79a2b17c66575b10f87a364a7e55585",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-18.json": "6025832ed7874c61bb55cef18a12428f27c94aa67e0e747292e50ddb4917f76e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-19.json": "cd82ed62e78036058b6f2f9fcc92fbbdb41c93282a7e21b3172d2cd5432eec9a",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-2.json": "c58c7d6119baec28458e933e822c3b7b83038a48d882908370af9cdc0441be8f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-20.json": "52c2ba7d7e23b30d7c11ce3f7b3e1f8488aff2d21e8df40219c578f2d1976974",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-21.json": "e8656d3b12c983d1a49984c653e016c7e8021f57a8cf91b6f47008069aaacf3c",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-22.json": "4198d394e8ad943a83eb5d6254a1e09266e108a8646d32eca845d1d2e99a4098",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-23.json": "48b74a39cef40a0e0ee4b2cca68c5e2cb39efe5836e97932eee9bcb222e4a9e5",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-24.json": "34a3e4783ae1f2423b612eef24f25b218d15aba557acca1d2d1250b647c1f92f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-25.json": "83a7ee1caaeec439d73540830d3abc552af3f5b63f095c7434869e38397fe5d2",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-26.json": "9691ecebe164793e7c6e34c3060cac05a32870e1538985614e2c92e822dcb786",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-27.json": "a230de32a73538332b13b6d9ac03977cfbd50d4c947aede4dbf612e9a656e166",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-28.json": "7b02cd381bb675c5ad1b6679117ab72004a7d106e552624466c81669c6e2fcff",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-29.json": "79f567714ac66fbc4f4771d6d090c28300be63a8248b687d8258f2d502650155",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-3.json": "4c362500fe3981bf5c3dbd6a98adfa77ddaa03674b8624343b66e8d6ecc3bab8",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-30.json": "af9b83b9074001aacdfe76055bbf350382102023cca7c8b6affae744cb9901ab",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-31.json": "ab6a64c68cbbd766af4fc39c366d9cdc99e1ce9c24ac34a0432b98f78eacd4be",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-32.json": "36d596518f068912f20beb5fd94ffb18fac35b6c9aba5fcd10440e5f437dbf41",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-33.json": "4cf3ddc87b2eb2a5fb92c3dacdd08cd2f4475ff8a65ecdcd996d19394ed4b381",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-34.json": "31041b3625038726f6bd9f53abc94a0fd2cba4fb2232d9cacab903a8f94195e6",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-35.json": "a5f4aaa313736a9d41bc3b4fdb69f836f9428b76bc16c05100c7960d11a51fd2",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-36.json": "2074da2fb673d55726a7a8f9bc21313f6b35e8e4cc349f888346366c734ff43c",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-37.json": "d52a97b9c1ba5ea22ef1695e423151c67735dd4d0b898e3bc1d3b9fdfb2ffaae",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-38.json": "83217202234e6b50f20439cfe6819278b106c9ae5a734d914445a8fdfe3849f7",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-39.json": "5152ed5921211f7762adee2399211278cd96d4b403c5ef24685fd3f9cf72108b",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-4.json": "b3c2a96c0287dcc0ff1866d3212a470c7f73d1c20f9dc2458626d9350dd16fd8",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-40.json": "2a2b764f277d388ae46a3ad09c579a45fc740c5a7c2d49aa087711d704e75c4f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-41.json": "cf8aec597da66f05493f93852470b453d4675376c27dbb354830d5408e243d16",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-42.json": "f232256273b7428380592c62a96c16c88bea60a916b7160e75a0c7546b335472",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-43.json": "91916244eb65a9429be20327d9d3c2d281e34cd5597715c32186a974ce6380e4",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-44.json": "2b42990a4d04029601bb6295d52bbb7584badd565f62efa52da176a409e2d869",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-45.json": "67cc46e9ca644a77642a91b53f025ad55281c2e810b163a0621c81c5c68f9bf2",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-46.json": "78b2dbbc3ce3779d7e1dad79264d700bd85af09c27c38118fdfa9b07d8110f42",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-47.json": "5c0bf1e2a9452ab68dae7d7a317a113eefe5f81cfe8a96ec89db53ad62b3dc3c",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-48.json": "57f63728a9cc8da72327b494b98c0e618c16f4b14a034b70ef7447c431e5fc51",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-49.json": "4571b5f48f4f552f6265b93df846d78ea138c748eecfee5186a7feaccb9451db",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-5.json": "9c2a22d93fffe6fde6d8e060120e13ceec8d3c0e8ad8a98c268978248d2a105f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-50.json": "c3688a860c75d118b45a54dcaf7865150360e80ee40e8fd0aeb27cfe68cfecad",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-51.json": "ef312c6f07b1bbe30d5edca0910a1e3c7e8a7d207d48c7c6baa928ee5392dfc2",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-52.json": "aa537f28f22f264189020031001cb0aaafafcd0c5431c3f7ac64c35c7e7f7529",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-53.json": "7388a1fc33ccc059676a2eaef2062f509f2cf2feb90cfba176c307fe7f3b408a",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-54.json": "27ed4c2c81b26d64fbc89e621c290eadb03af08fe603a1fc69db12be6c3560e5",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-55.json": "4674ca5b074e6cb8f7b4a6b1d3fce1d2a69b7e6877fcec5499117bc1aab5446e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-56.json": "64fb4b867a596602079d2c35e27ef0700922fa8735927f534b40c7a6b0f7cf29",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-57.json": "235f8e33bb3aaf375c0a1fe75de9569b14499ead685b016ef6ce5e86cb49eb0f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-58.json": "25b38e530e3957c248d20afd7ad820598d38dce58bae75149d602a34287bf959",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-59.json": "d8dbcf19301a9c437c492154486938e747eb4439baf1aa13bced43f457288d0e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-6.json": "7ad69c6975b84daced147d9ae2cf74f5da925e6b5eafc935e2bc449ec0369e19",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-60.json": "554660fcb4d0d62d51b9346579aa44c1166e7d69c6253e283fdc325e757805dd",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-61.json": "05e09bc38b73fb72ff57a9abf406685171d5f553a3ff91fbd3b60250a20a4270",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-62.json": "5b8f2c42857066d8a8798b9a38ee173dedcc285ff2104a3fb1eae0fba4a53517",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-63.json": "4bb5de9994ced893161a8137032917c6a9b81f5938e280d2e4ce1b885580a8bd",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-64.json": "8c14129efecc20691212c9ae6e9dce67ca154e4e3af35dd16dcb3545bb9a9885",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-65.json": "a38d3a61a9598f3f3e6267611e75a6b3d99e4a4fd9e05b07a714a9a4044cefd3",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-66.json": "fda83dc816f9d50e21381bc172a40cfd22de40a85f4efc9013bac2ab5ee8402d",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-67.json": "85e703ae850caa311e75babffbf6added7c1e89fc072a7ff3b07507998f9d6d2",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-68.json": "d55334e59de2e69f0b0b0893fc56c1ac94667b58dd9b775e389aae827e7065c9",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-69.json": "b877f6df33bef8f2f8da4c22c8631e3e6e326c23ba7562a3ffb45dfc97b69bce",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-7.json": "0e04ccd814085755c30f4ba6e956ce7451952b91df20b6716fef2421d468c296",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-70.json": "f198b4d54a7aad0413fd32922b4298545c4145f96c508ab40b357a3407e2ea7a",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-71.json": "b0969d40e91907907b7f4b1acbacb0cbcc5dd65022bc74cd6e4d6a03c3d34705",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-72.json": "3c0e6eda543eed212ee6247e4d2f6f433f6c3f360e501c306f13255b897649d5",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-73.json": "59f260add6381c21ee686ba18dccbbf8234671e55cead36f89f799b88f330836",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-8.json": "361ce37268d7fd5becc533dfbb5b410174c11e87bd4ee2ab615212045b059abb",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\run-9.json": "086d7f6a3634a69fdb7d058121e0726d1826b51a2bbeaddc250f586d8626e7f6",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\verify-fixtures.json": "11ac41c1f8af5c0f56bcf56cce640203451d87e7ea8ad94c760ed465c2f11b0e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\verify-integration.json": "7d57f7c33b131df4b481e640a5dabf1492d33204d137ec1cc61683989a2fa858",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\verify-progressive.json": "68538b56dec4d350150058a95bed194aabb7dffaf7d965662604882292b8e17e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\verify-relighting.json": "1c078fe45c30a7deee9747f8571d4a53014eb4273e03c5e658f109dcd2e5114e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\receiver-final-gather-v5\\export-patch.json": "0336209bd50a8ac858e252a71217bca003dce4bf0a7d7ef2c453754d99ead09e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\receiver-final-gather-v5\\fg-snapshot.json": "01b07e60ecd11ca9c0f14c701264f03d5232438a001a5181ddde98b0bcf63a81",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\receiver-final-gather-v5\\ibl-policy.json": "96ea87dcf710cf8f752860ef28f4fc480e9450ea9413720abdd2676fcdac1596",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\receiver-final-gather-v5\\receiver-regression.json": "e493a229b439acd31fc97dfbd03543de969f6662956278314f5621096fc12766",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\receiver-final-gather-v5\\reconstruction.json": "1a5f4a4750943552f1c102d7e44cad4ce98b203e3f0a3da9fcf8479178acb563",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-ab-off.png": "93e079cbe63a0c243bd0879342584f9d8469fe587102f1d04348d917690a8a03",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-ab-on.png": "af8130dfd232403ef569c0ec865b5c0a6abb237dab40280134721e7eab180cf3",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-antipode-narrow-globe-off-model-off.png": "869c0d4ad889051e899e0e9d4fbe480c0418d3306ac294c713ce9ff17fc82119",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-antipode-narrow-globe-off-model-on.png": "0fb19c8803f65e5fd14dd953d33cbab35d6db16f80ea70f4b93d0304005cbc12",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-antipode-narrow-globe-on-model-off.png": "1ee9a15881da9ab2c59045a30fbd442414abbd000598367226b6de69d9858e8f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-antipode-narrow-globe-on-model-on.png": "1ee9a15881da9ab2c59045a30fbd442414abbd000598367226b6de69d9858e8f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-bounce.png": "af8130dfd232403ef569c0ec865b5c0a6abb237dab40280134721e7eab180cf3",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-context.png": "b32833f4a6b68132c2e96d74584bae38fcf6efb73384260e8fbce9f311cc4e60",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-corridor.png": "0e3e3dbbbb42811cc847ad6c96cfe45c0b46c8f7761b17cc3fef49ce309ac9a1",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-earth.png": "30f54faca533b47be026d7c5fe76ba908b1dfd9ac30ab5ecd305fe4f047a9d53",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-indirect.png": "db179ddfd5e9adb108c91aa5283170ebc35a002c18fe6f1f12cdccec1e18412e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-inside.png": "b3b92588063f005509427c482467785c5eff797a9c3746f01e55aa708fc81137",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-overview.png": "6c22e3d026fd997074573cdf76eee08de0127c3a63e2b538ff6120e8c9f8dbc9",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-results-2026-10-13T14-32-51-145Z-passed.json": "3bcb9dd1e68e9fc17e3c323f0ed7c585a41ac72badef0b820c58562e6292cd83",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-results.json": "3bcb9dd1e68e9fc17e3c323f0ed7c585a41ac72badef0b820c58562e6292cd83",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\globe-top.png": "e90a9fc638f9e51b9735b72655e0cab68e08462b42ea3fe306d056e8fd6ea77e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\lifecycle-2026-10-13T14-31-27-336Z.json": "976813804821d3fdf55ee08b2e2c0bd33e55160ab0d8b0cf6564fe9716105bf4",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-cpu-2026-10-13T14-30-01-925Z.json": "462c4e8ef50a1adbefd5fa00c39fa38d60dc6f4233e4fb7692ed0aed7eb9c319",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-cpu.json": "462c4e8ef50a1adbefd5fa00c39fa38d60dc6f4233e4fb7692ed0aed7eb9c319",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-edges-2026-10-13T14-32-50-950Z.json": "cb31c64fe3838c97cd1fc6ba44fe73024934d3cc9a131c8ac8d76606a3465340",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-edges.json": "cb31c64fe3838c97cd1fc6ba44fe73024934d3cc9a131c8ac8d76606a3465340",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-far-blocker-2026-10-13T14-32-32-183Z.json": "cf590c6ee9f3a020cf27b9e404118114b13fd0195a3405ea582a86fc925cef34",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-far-blocker.json": "cf590c6ee9f3a020cf27b9e404118114b13fd0195a3405ea582a86fc925cef34",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-gpu-2026-10-13T14-32-23-359Z.json": "098828b09fb48b6b841e4bb0a9a25c3ae75da67dd8cacc3783cd73edb78571c1",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\visibility-gpu.json": "098828b09fb48b6b841e4bb0a9a25c3ae75da67dd8cacc3783cd73edb78571c1",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-ab-off.png": "93e079cbe63a0c243bd0879342584f9d8469fe587102f1d04348d917690a8a03",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-ab-on.png": "af8130dfd232403ef569c0ec865b5c0a6abb237dab40280134721e7eab180cf3",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-antipode-narrow-globe-off-model-off.png": "869c0d4ad889051e899e0e9d4fbe480c0418d3306ac294c713ce9ff17fc82119",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-antipode-narrow-globe-off-model-on.png": "0fb19c8803f65e5fd14dd953d33cbab35d6db16f80ea70f4b93d0304005cbc12",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-antipode-narrow-globe-on-model-off.png": "1ee9a15881da9ab2c59045a30fbd442414abbd000598367226b6de69d9858e8f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-antipode-narrow-globe-on-model-on.png": "1ee9a15881da9ab2c59045a30fbd442414abbd000598367226b6de69d9858e8f",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-bounce.png": "af8130dfd232403ef569c0ec865b5c0a6abb237dab40280134721e7eab180cf3",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-context.png": "b32833f4a6b68132c2e96d74584bae38fcf6efb73384260e8fbce9f311cc4e60",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-corridor.png": "0e3e3dbbbb42811cc847ad6c96cfe45c0b46c8f7761b17cc3fef49ce309ac9a1",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-earth.png": "30f54faca533b47be026d7c5fe76ba908b1dfd9ac30ab5ecd305fe4f047a9d53",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-indirect.png": "db179ddfd5e9adb108c91aa5283170ebc35a002c18fe6f1f12cdccec1e18412e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-inside.png": "b3b92588063f005509427c482467785c5eff797a9c3746f01e55aa708fc81137",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-overview.png": "6c22e3d026fd997074573cdf76eee08de0127c3a63e2b538ff6120e8c9f8dbc9",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\globe-visibility-v3\\runs\\2026-10-13T14-32-51-145Z\\globe-top.png": "e90a9fc638f9e51b9735b72655e0cab68e08462b42ea3fe306d056e8fd6ea77e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\fg-reconstruction-showcase-v6\\barriers.json": "03ef4edf8575586aef554d6d8e24cc3ca7da79b6cf1c4657aff8fdc58f309fde",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\fg-reconstruction-showcase-v6\\history.json": "d13cb22e3ac03eba2e709329b1161b3621b3a222d1f485ea0b041994fc5f251c",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\fg-reconstruction-showcase-v6\\sampling.json": "6f82aadee64e0025cd745ac8af1372244ee71e8c649851a1dd7893f29c8597c0",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\fg-reconstruction-showcase-v6\\timers.json": "a91af436e331fd7ea5e3be0cdae0703d5c101c2a1675d52b8524cb31bc6fb45e",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\display-presets.json": "331882d68923221d1efbb93a3a7d9899ab9bef29dd7d144a703347a2ccd44993",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\probe-display.json": "aa28f0edea9d1cd1855346d93b6d74b593ede5503f187a51aca2cee013cf854d",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\spatial-gpu.json": "68596735e32b6b2bca591598e3d2f4bdd5c46dcf410a909d83785219461bd9d9",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\materials-aa-fxaa.png": "f4a7a345d555b8cd3d5f4c117db5069bf16dd7e1cb2dabdfb2238155f2574e54",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\materials-aa-msaa4.png": "a551926dc3102a0a18c443ae2d0e68e693d3e6e82ceef5c73d0c35d0b9c46e69",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\materials-aa-off.png": "dadba4bd40c02fdedd7a840058610495933fcff6b03ab5ba1f73842a207de85b",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\materials-tone-ACES.png": "da1bc51aa39c21c84570800ee32fc8404e21fa1f8d7e269ca8e1d231804e6e34",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\materials-tone-PBR_NEUTRAL.png": "a551926dc3102a0a18c443ae2d0e68e693d3e6e82ceef5c73d0c35d0b9c46e69",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\shadow-contact.png": "30a65b0786ceec4dfadced5de11d081b853e46ed96238ff9595f8c0f1985ef86",
+    "reports/fg-runtime-budget-v7/compatibility-raw\\ddgi-visual-quality-v4\\presentation\\shadow-original.png": "92d441e2a03bb459ba4355ba572aabfdb5b655e4de136bc8e600c1242ec4f879",
+    "reports/receiver-final-gather-v5/abcd.json": "d7206dcd46a53938c106d1a9e2672710e3362d1f69048ad8cff9ada0f12f4173",
+    "reports/ddgi-visual-quality-v4/before/diagnostics.json": "2614d519a39d6d841ea2278e9907d7b1d08fd378f1e8f0c3d71d879ac018de5c",
+    "reports/ddgi-visual-quality-v4/independent-reference.json": "811f39f4bd29eeba70560e2eed854adda637fd0af554b01a82a402abeb1ed499"
+  },
+  "states": {
+    "regression": "failed",
+    "resource": "failed",
+    "showcase": "failed",
+    "temporal": "passed",
+    "fixed-quality": "not-run",
+    "auto-quality": "not-run",
+    "performance": "not-run"
+  },
+  "tests": [
+    {
+      "name": "lint-r6",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1505.8735000000001,
+      "status": "passed"
+    },
+    {
+      "name": "verify-pipeline",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1276.168,
+      "status": "passed"
+    },
+    {
+      "name": "verify-transport",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 173.8788000000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-environment",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 153.95560000000023,
+      "status": "passed"
+    },
+    {
+      "name": "verify-globe-controls",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 46.4042000000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1926.3319000000006,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fixtures",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 32848.566100000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-relighting",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18338.6432,
+      "status": "passed"
+    },
+    {
+      "name": "verify-integration",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 16524.0947,
+      "status": "passed"
+    },
+    {
+      "name": "verify-progressive",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 17557.10560000001,
+      "status": "passed"
+    },
+    {
+      "name": "verify-publication-lifecycle",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 25199.272899999996,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility-gpu",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 31199.494800000015,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility-domain",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 8757.945100000012,
+      "status": "passed"
+    },
+    {
+      "name": "verify-visibility-edges",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18753.20569999999,
+      "status": "passed"
+    },
+    {
+      "name": "verify-globe",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 20918.6268,
+      "status": "passed"
+    },
+    {
+      "name": "verify-solid-probes",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1597.8632999999973,
+      "status": "passed"
+    },
+    {
+      "name": "verify-spatial-kernel",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 46.92840000000433,
+      "status": "passed"
+    },
+    {
+      "name": "verify-spatial-gpu",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 14124.963999999978,
+      "status": "passed"
+    },
+    {
+      "name": "verify-pbr-environment",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 28159.91749999998,
+      "status": "passed"
+    },
+    {
+      "name": "verify-display-presets",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 67032.66259999998,
+      "status": "passed"
+    },
+    {
+      "name": "verify-probe-display",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 14904.472799999989,
+      "status": "passed"
+    },
+    {
+      "name": "verify-ibl-policy",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 15081.00159999996,
+      "status": "passed"
+    },
+    {
+      "name": "verify-final-gather",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18150.94219999999,
+      "status": "passed"
+    },
+    {
+      "name": "verify-receiver",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 31346.92849999998,
+      "status": "passed"
+    },
+    {
+      "name": "verify-reconstruction",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 19889.784400000004,
+      "status": "passed"
+    },
+    {
+      "name": "verify-resource-lifecycle",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 257.90889999998035,
+      "status": "passed"
+    },
+    {
+      "name": "verify-r7-acceptance",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 42.839099999982864,
+      "status": "passed"
+    },
+    {
+      "name": "verify-r7-timers",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 362.63400000002,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-sampling",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 18293.17200000002,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-history",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 29472.046499999997,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-barriers",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 16396.37050000002,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-statistics",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 45.99839999998221,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-lifecycle",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 43.585900000005495,
+      "status": "failed"
+    },
+    {
+      "name": "verify-gallery",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 44.0460000000312,
+      "status": "failed"
+    },
+    {
+      "name": "verify-r8-acceptance",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 45.35590000002412,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-budget",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 44.729799999971874,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-order",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 46.82639999996172,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-execution",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 44.44939999998314,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-desktop",
+      "args": [],
+      "environment": {},
+      "exitCode": 1,
+      "milliseconds": 42.59350000001723,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-canonical",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.680799999972805,
+      "status": "failed"
+    },
+    {
+      "name": "capture-fg-reconstruction",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 47.73439999995753,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-temporal",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.47079999995185,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-milliseconds",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.09679999999935,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-canonical",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 41.95219999999972,
+      "status": "failed"
+    },
+    {
+      "name": "capture-fg-reconstruction",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 46.06239999999525,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-temporal",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.249199999962,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-milliseconds",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-1920",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "1920",
+        "LUMEN_FG_HEIGHT": "1080"
+      },
+      "exitCode": 1,
+      "milliseconds": 41.853000000002794,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-canonical",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 41.09009999997215,
+      "status": "failed"
+    },
+    {
+      "name": "capture-fg-reconstruction",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.62339999998221,
+      "status": "failed"
+    },
+    {
+      "name": "verify-fg-temporal",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.04550000000745,
+      "status": "failed"
+    },
+    {
+      "name": "measure-fg-milliseconds",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/auto-2560",
+        "LUMEN_FG_AUTO": "1",
+        "LUMEN_FG_WIDTH": "2560",
+        "LUMEN_FG_HEIGHT": "1440"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.4484999999986,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 44.83299999998417,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.42749999999069,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 51.021100000012666,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.55770000000484,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.14260000002105,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.87800000002608,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.978899999987334,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 44.884699999995064,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 44.633900000015274,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 42.58429999998771,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.211999999999534,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1280",
+        "--height=800",
+        "--quality=high",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 43.757900000025984,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 49.54680000001099,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.837100000004284,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=1920",
+        "--height=1080",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 46.01480000000447,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=static"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.944799999997485,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=moving"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 45.70319999998901,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--width=2560",
+        "--height=1440",
+        "--quality=auto",
+        "--activity=relight"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 47.572299999999814,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=original",
+        "--activity=pause"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 46.676900000020396,
+      "status": "failed"
+    },
+    {
+      "name": "benchmark-fg-runtime",
+      "args": [
+        "--execution=split",
+        "--azimuth",
+        "--lazy",
+        "--scene=gallery",
+        "--activity=pause"
+      ],
+      "environment": {
+        "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+      },
+      "exitCode": 1,
+      "milliseconds": 47.54300000000512,
+      "status": "failed"
+    },
+    {
+      "name": "verify-export-patch",
+      "args": [],
+      "environment": {},
+      "exitCode": 0,
+      "milliseconds": 1065.198299999989,
+      "status": "passed"
+    },
+    {
+      "name": "verify-fg-quality",
+      "args": [],
+      "environment": {
+        "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+        "LUMEN_FG_AUTO": "0",
+        "LUMEN_FG_WIDTH": "1280",
+        "LUMEN_FG_HEIGHT": "800",
+        "LUMEN_QUALITY_REPORT": "reports/fg-runtime-budget-v7/fixed/quality.json"
+      },
+      "exitCode": 1,
+      "milliseconds": 48.07530000002589,
+      "status": "failed"
+    }
+  ]
+}

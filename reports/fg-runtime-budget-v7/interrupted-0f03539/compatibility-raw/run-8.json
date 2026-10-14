@@ -1,0 +1,10 @@
+{
+  "name": "verify-relighting",
+  "args": [],
+  "environment": {},
+  "exitCode": 0,
+  "milliseconds": 18338.6432,
+  "status": "passed",
+  "stdout": "PASS valid sun cache has no Unknown slots\nPASS skyOnly: zero new probe intersections, sun BVH work and moments\nPASS intensityOnly: zero new probe intersections, sun BVH work and moments\nPASS direction refreshes sun visibility without retracing probe hits\nPASS distance moments remain bit-identical through energy, direction and material changes\nPASS RGB/emission updates have independent material versions and reuse geometry and visibility\nPASS immutable jobs resist caller mutation and unsafe hit-semantic changes are rejected\nPASS distance moments match an independent CPU formula\nPASS Unknown sun visibility is retained as invalid lighting without changing geometry\nPASS actual foreground HDR responds to sky changes\nPASS no GL feedback or errors in dependency and HDR diagnostics\n",
+  "stderr": ""
+}

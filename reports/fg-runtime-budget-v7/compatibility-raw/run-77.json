@@ -1,0 +1,18 @@
+{
+  "name": "verify-fg-quality",
+  "args": [
+    "--inject-missing-line"
+  ],
+  "environment": {
+    "LUMEN_FG_REPORT": "reports/fg-runtime-budget-v7/fixed",
+    "LUMEN_FG_AUTO": "0",
+    "LUMEN_FG_WIDTH": "1280",
+    "LUMEN_FG_HEIGHT": "800",
+    "LUMEN_QUALITY_REPORT": "reports/fg-runtime-budget-v7/validation/fixed-line-injected.json"
+  },
+  "exitCode": 1,
+  "milliseconds": 2910.9196000001393,
+  "status": "failed",
+  "stdout": "{\"status\":\"failed\",\"checks\":654,\"failed\":[{\"name\":\"complete six canonical lines false/16/0\",\"actual\":1,\"threshold\":0,\"scope\":\"all six exact original/held-out scanlines required\",\"status\":\"failed\"}]}\n",
+  "stderr": ""
+}

@@ -1,0 +1,21 @@
+{
+  "name": "benchmark-fg-runtime",
+  "args": [
+    "--execution=split",
+    "--azimuth",
+    "--lazy",
+    "--scene=gallery",
+    "--width=1280",
+    "--height=800",
+    "--quality=high",
+    "--activity=relight"
+  ],
+  "environment": {
+    "LUMEN_REPORT_DIRECTORY": "reports/fg-runtime-budget-v7/active"
+  },
+  "exitCode": 1,
+  "milliseconds": 43.757900000025984,
+  "status": "failed",
+  "stdout": "",
+  "stderr": "file:///D:/Nothing/lumen-for-cesium/scripts/browser-tools.mjs:1\r\nthrow Error(\"R8 batch superseded by review fixes; no GPU evidence claimed\");\r\n      ^\r\n\r\nError: R8 batch superseded by review fixes; no GPU evidence claimed\r\n    at file:///D:/Nothing/lumen-for-cesium/scripts/browser-tools.mjs:1:7\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\r\n    at async node:internal/modules/esm/loader:643:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\r\n\r\nNode.js v24.19.0\r\n"
+}

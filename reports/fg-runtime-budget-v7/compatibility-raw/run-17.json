@@ -1,0 +1,10 @@
+{
+  "name": "verify-spatial-kernel",
+  "args": [],
+  "environment": {},
+  "exitCode": 0,
+  "milliseconds": 51.00960000001942,
+  "status": "passed",
+  "stdout": "{\"x\":0,\"actual\":[0,0,0],\"expected\":[0,0,0],\"weight\":1}\n{\"x\":0.01,\"actual\":[0.01,0.02,0.03],\"expected\":[0.01,0.02,0.03],\"weight\":1}\n{\"x\":0.25,\"actual\":[0.25,0.5,0.75],\"expected\":[0.25,0.5,0.75],\"weight\":1}\n{\"x\":0.5,\"actual\":[0.5,1,1.5],\"expected\":[0.5,1,1.5],\"weight\":1}\n{\"x\":0.75,\"actual\":[0.75,1.5,2.25],\"expected\":[0.75,1.5,2.25],\"weight\":1}\n{\"x\":0.99,\"actual\":[0.99,1.98,2.9699999999999998],\"expected\":[0.99,1.98,2.9699999999999998],\"weight\":1}\n{\"x\":1,\"actual\":[1,2,3],\"expected\":[1,2,3],\"weight\":1}\nPASS independent linear field / normalized trilinear kernel\nPASS constant field, low reliability, Ng/Ns, invalid data versus valid darkness\n",
+  "stderr": ""
+}

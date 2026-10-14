@@ -1,0 +1,507 @@
+{
+  "version": {
+    "head": "0f035390d118e1021c42b9fd8844c6564aae3123",
+    "sources": {
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js": "4cedbcd4929d3db78927db08d1899ef873cdf5785761624c44f8523eadf5b837",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js": "27877e0dd5617f8d565ad63105e86c26b47a7f85f9d8af4c15feb8f5f8281c08",
+      "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl": "0fc728a42ef6e8df9edaa069abaf06a21e935c415436c6a713d83bb473ee27d0",
+      "lumen/gpu-worker.js": "c0fb6bd01a0d0eb38ef9b1149274d01ea06b5c1994edab017f1725d1d3d9a16c",
+      "lumen/math.js": "ee962f85509b1ca8d65dc62b560283df2315e68ec2d769e6000c7ee5241c1041",
+      "lumen/gltf.js": "471e8e3c3156d7743e533ce4a21c35c795dda7b567df3a4ce7996ef06caab73f",
+      "cesium-1.146/packages/engine/Source/Scene/LumenGpuTimer.js": "028d7115f9acdbebe50725f65d0dcc4b61c22448da356c3ca55d8b980f453ad2",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js": "b3e3545d21d2f87f4dd101d374043517f2b1bdad42c9d8f13cb36fa7b1a30eb7",
+      "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js": "df0f679d79f823a46f953a7f7316382ee813378cc228ef75894db9e85f9c7c02",
+      "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js": "26b9435ee9b44830a7701cfa5d8d903a30bab507d9190dcfe855ee21518ea00a",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js": "50f9058e1f011311e7afb137eb946148e45b953763a58c22321e7a83ce0940cf",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js": "d76b84cbff0f99297a170c745870242d6d0e510638a76f07d2edd5b0dbd99c3e",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js": "962c2d573a9d4fb1732bf8df5e131944e5cf8a1670f0f9577f4e6b5ad830fd9c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstructionShaders.js": "baf62183d6d721297778fa08cef88822a0f2558dfca635461463d6ed8b487d0c",
+      "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherPlan.js": "6e5cd4257607c427793c76a0b61026e98a31a5054769fb37b36cdd10b63124da",
+      "demo/globe.js": "f45f07e6be8df466ec53b9dc7874f4da076b350a500bd364b2228292f7f86c07",
+      "demo/benchmark.js": "df74768e374181839acf71cabf67d113e3eca99b0530faf40500707ab4128f89",
+      "scripts/browser-tools.mjs": "afba46cbdf83f4fa4aa0fc136f6f9558272be79fdffc7bcc7d01d1ffb2ca1c47",
+      "demo/fg-reconstruction-diagnostics.js": "3f16e1a26c90bca5552c64e59275db928df90873fa0174aaa046b58987e3fef8",
+      "demo/receiver-diagnostics.js": "234ffca7c79306cb6e200ef241463fb1188ffbe08c8bce9521b962d72952f0a3",
+      "lumen/path-reference.js": "a503695b80c63101f5b4f02d5ba9a3394622aaf112a4ccf4f94cbb3f79d52985",
+      "scripts/cpu-image-fixtures.mjs": "26e30da6d060a2469a836505cf0ec1e917798830cdb69d81acf647011efa07cf",
+      "scripts/measure-fg-canonical.mjs": "56cd93ba98555ee8c521db6a7b8fac86645c873ed2bd69dd344e14b8790df695",
+      "scripts/capture-fg-reconstruction.mjs": "1f0d19b5313a7fb35bae8ba65e7014cd664c85ddaf66b9c5baea702ed9facb18",
+      "scripts/benchmark-fg-reconstruction.mjs": "8c578f090ced590c3b3abc6de63039b0993e2ec01cd8758f01c737214f4bfe99"
+    },
+    "compiledBundle": "dc8e7e2b93213ab28feb1d29e1dd837270a5603a5e04b412d8094d695e376f0f",
+    "assets": {
+      "fixtures/alpha-mask.bin": "f9c9cee34b6407e5842d4f4fdebea2802b3b98f36de8ff0789ec6d8ad623a807",
+      "fixtures/alpha-mask.gltf": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "fixtures/alpha-mask.json": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "fixtures/alpha-mask.png": "5a173415420a42b3b032ef3729c61268b04ac67b01cbe2fd7b241b87dcee3de4",
+      "fixtures/earth-gi-gallery-off.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery-off.gltf": "ac88919b7c261d998d7c82a0691e4c04eca422b423248c38c40a43a459c2230d",
+      "fixtures/earth-gi-gallery-off.json": "04c4a3576e1ca7546cda3ebcc17264c6a485e7942ac504156f64db31416351b3",
+      "fixtures/earth-gi-gallery.bin": "75482a71a9a079b8ed7f4bd96998270d1656916805ee3a9a9c5eace713d8af8a",
+      "fixtures/earth-gi-gallery.gltf": "60fb80a3cc64244c5e3a0c34e370f9869435ce5f14293ffd116680bb088f18b5",
+      "fixtures/earth-gi-gallery.json": "feef0fd8d9a23a6e121fcbb48cce8ae188394674107aac24be99d0dbad26b297",
+      "fixtures/earth-pavilion-held-out.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion-held-out.gltf": "6bf0fd7ab3a5bb28a4a7daee047c9a7a8903b5203a8a3e0a2cbdd8de5e5c6f4a",
+      "fixtures/earth-pavilion-held-out.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/earth-pavilion-presentation.bin": "14f2568dccc1627650e525638216f149b8051f6849ac4cd8790a4b5d33a3d3c1",
+      "fixtures/earth-pavilion-presentation.gltf": "e6ac75656603fee1a248fdfcd0beb34cf7a54040ec323a3197e659069fd23bf9",
+      "fixtures/earth-pavilion-presentation.json": "4fb50d422ccaa522b43a20989d2fc963b4e11ae65680c94be5f60a5f688aad4a",
+      "fixtures/earth-pavilion.bin": "9c47f296bd3334b3e2f13697d8f83394deb7df66772a0eb20e4d96ae12072d21",
+      "fixtures/earth-pavilion.gltf": "7d47fa652ec977c33e384fb236a410f3a3d0d816ad5fb41e365275be624d815a",
+      "fixtures/earth-pavilion.json": "55e93a2891fce51ce67c5c742506bd85f93bf1272401cf5f94aaaad525c8fdee",
+      "fixtures/far-blocker.gltf": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "fixtures/far-blocker.json": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "fixtures/fg-slanted-barrier.bin": "8b07bba2e4c8c7aaa0b0e6cd20c44091cf4d0723ca3305fa8e9ed6d311ad64af",
+      "fixtures/fg-slanted-barrier.gltf": "82e17c00914c35bdd35ca5364635a6a311f50b39932c22386398e3bfac366074",
+      "fixtures/fg-slanted-barrier.json": "1cb69fdeb7abae75d67a9db5b79f8ecb745834a05a243e213536532b2ef7cc2b",
+      "fixtures/gallery-mineral.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/pavilion-detail.png": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+      "fixtures/two-rooms.bin": "679eca85743630fa20c6e458c33e6b507ab386d1a66c39aa759c6ff0d75cbd19",
+      "fixtures/two-rooms.gltf": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "fixtures/two-rooms.json": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "fixtures/untextured.bin": "4f25e6c38fe7ccf71da9835afcf488a1f33ea7a3d94c45aaae7f2e03b0a81679",
+      "fixtures/untextured.gltf": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "fixtures/untextured.json": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa"
+    },
+    "modifiedSources": []
+  },
+  "checks": [],
+  "result": {
+    "points": [
+      {
+        "position": [
+          0,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.01,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.25,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.75,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          0.99999,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.00001,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.25,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          1.75,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "position": [
+          2,
+          0.5,
+          0.5
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ]
+      }
+    ],
+    "actual": [
+      {
+        "irradiance": [
+          2.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5099997520446777,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.75,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.25,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.4999899864196777,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5000100135803223,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.75,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.25,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "legacy": [
+      {
+        "irradiance": [
+          2.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5000014305114746,
+          1.9999998807907104,
+          3.999999761581421
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          2.5357141494750977,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.4642856121063232,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.5357141494750977,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.464285850524902,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          4.5,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "low": [
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          0,
+          0,
+          0
+        ],
+        "coverage": 1
+      }
+    ],
+    "separate": [
+      {
+        "irradiance": [
+          3.2249999046325684,
+          2,
+          4
+        ],
+        "coverage": 1
+      },
+      {
+        "irradiance": [
+          3.2249999046325684,
+          2,
+          4
+        ],
+        "coverage": 1
+      }
+    ],
+    "composed": [
+      1.0000001192092896,
+      1.0000001192092896,
+      1.0000001192092896,
+      0.8937500715255737
+    ],
+    "fallback": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "errors": []
+  },
+  "status": "passed"
+}

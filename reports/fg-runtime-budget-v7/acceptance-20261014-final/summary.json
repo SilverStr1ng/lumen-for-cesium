@@ -1,0 +1,2247 @@
+{
+  "measurementHead": "00d17714a3e275b5acde0dcb03f8706acb0fd282",
+  "states": {
+    "regression": "passed",
+    "resource": "passed",
+    "showcase": "passed",
+    "temporal": "passed",
+    "fixed-quality": "passed",
+    "auto-quality": "passed",
+    "performance": "failed"
+  },
+  "recommended": false,
+  "exitCode": 1,
+  "cache": {
+    "status": "verified",
+    "inputs": 831
+  },
+  "bundle": "fb530775f52aad0062934197c53b1dd9fadb8863984a83a53b42032021fd9282",
+  "sourcesDigest": "66f521d18fef7e32e7be954c1930409cc52f06926c366a5b0d9b017c5d173f3a",
+  "assetsDigest": "898111a206ed397b745d954aec5814949df57f35c7bb46e07d80624bdd1d5ce4",
+  "sourceFiles": 95,
+  "assetFiles": 235,
+  "comparison": [
+    {
+      "scene": "original",
+      "beforeFile": "../counterfactual-before/performance-split-eager.json",
+      "afterFile": "active/performance-split-azimuth-lazy.json",
+      "beforeP95": 9.441888,
+      "afterP95": 6.724608,
+      "reduction": 0.28778989964718926,
+      "scope": "same current source/build/device, 1280x800 half32r, seed/epochs; before disables R8 azimuth ordering and lazy DDGI; independent-window P95s"
+    },
+    {
+      "scene": "gallery",
+      "beforeFile": "../counterfactual-before/performance-split-eager-gallery-1280x800-high-static.json",
+      "afterFile": "active/performance-split-azimuth-lazy-gallery-1280x800-high-static.json",
+      "beforeP95": 12.552085333333332,
+      "afterP95": 9.179669333333333,
+      "reduction": 0.26867376299969914,
+      "scope": "same current source/build/device, 1280x800 half32r, seed/epochs; before disables R8 azimuth ordering and lazy DDGI; independent-window P95s"
+    }
+  ],
+  "performance": [
+    {
+      "file": "performance-split-azimuth-lazy.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.345749333333334,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.4829653333333326,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.5180266666666666,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": true
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 4.206581333333333,
+        "fixed-raw": 5.378858666666666,
+        "decorrelated-raw": 6.241642666666667,
+        "reconstructed": 6.724608
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 3.4597296000000006,
+        "shade": 1.5545260444444444,
+        "forward": 0.46941564444444445,
+        "connections": 0.10990257777777775,
+        "temporal": 0.11717066666666669,
+        "filter1": 0.04060124444444444,
+        "filter2": 0.013907911111111114
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-1280x800-high-moving.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "moving",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.7629973333333337,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.43874133333333365,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.169696000000001,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "status": "passed",
+      "p95": {
+        "ddgi": 4.234026666666666,
+        "fixed-raw": 5.640725333333333,
+        "decorrelated-raw": 5.964981333333333,
+        "reconstructed": 6.403722666666667
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.932950755555556,
+        "shade": 1.5526860444444448,
+        "forward": 0.552693511111111,
+        "connections": 0.11223573333333332,
+        "temporal": 0.13320497777777782,
+        "filter1": 0.0660055111111111,
+        "filter2": 0.01919288888888889
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-1280x800-high-relight.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "relight",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 2.4915093333333322,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 1.2251093333333314,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 3.959839999999999,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 4.3607466666666665,
+        "fixed-raw": 5.829077333333333,
+        "decorrelated-raw": 7.095477333333334,
+        "reconstructed": 8.320586666666665
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 3.2020712888888894,
+        "shade": 1.6739447111111108,
+        "forward": 0.5493450666666665,
+        "connections": 0.09243928888888887,
+        "temporal": 0.13324853333333334,
+        "filter1": 0.08035164444444444,
+        "filter2": 0.014510044444444441
+      },
+      "fallbackFrames": [
+        26,
+        18,
+        35
+      ],
+      "fallbackReasons": [
+        {
+          "DDGI fallback: waiting for matching revision": 26
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 18
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 35
+        }
+      ],
+      "fgFrames": [
+        74,
+        82,
+        65
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-1920x1080-auto-static.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "auto",
+        "activity": "static",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.5152533333333329,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.27081599999999906,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.150175999999999,
+          "limit": 3
+        },
+        "memory": {
+          "value": 57332160,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "status": "passed",
+      "p95": {
+        "ddgi": 4.328757333333334,
+        "fixed-raw": 5.96368,
+        "decorrelated-raw": 6.208117333333334,
+        "reconstructed": 6.478933333333333
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.4735831111111115,
+        "shade": 1.727311111111111,
+        "forward": 0.9866848,
+        "connections": 0.079888,
+        "temporal": 0.06537226666666666,
+        "filter1": 0.04026826666666668,
+        "filter2": 0.03605244444444445
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-1920x1080-auto-moving.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "auto",
+        "activity": "moving",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.5950719999999992,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.1454933333333317,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.1056746666666655,
+          "limit": 3
+        },
+        "memory": {
+          "value": 57332160,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "status": "passed",
+      "p95": {
+        "ddgi": 4.503253333333333,
+        "fixed-raw": 6.013856,
+        "decorrelated-raw": 6.463434666666667,
+        "reconstructed": 6.608927999999999
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.7171900444444437,
+        "shade": 1.666182933333334,
+        "forward": 0.8676494222222221,
+        "connections": 0.08403662222222223,
+        "temporal": 0.07690044444444442,
+        "filter1": 0.024447644444444444,
+        "filter2": 0.022870755555555556
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-1920x1080-auto-relight.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "auto",
+        "activity": "relight",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.6566400000000003,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.9127253333333343,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 3.736010666666666,
+          "limit": 3
+        },
+        "memory": {
+          "value": 57332160,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 4.398549333333334,
+        "fixed-raw": 6.47792,
+        "decorrelated-raw": 7.221834666666666,
+        "reconstructed": 8.13456
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.8571528888888884,
+        "shade": 1.792199644444444,
+        "forward": 1.035471111111111,
+        "connections": 0.08107413333333334,
+        "temporal": 0.07988284444444445,
+        "filter1": 0.03631502222222223,
+        "filter2": 0.03770275555555556
+      },
+      "fallbackFrames": [
+        65,
+        32,
+        39
+      ],
+      "fallbackReasons": [
+        {
+          "DDGI fallback: waiting for matching revision": 65
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 32
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 39
+        }
+      ],
+      "fgFrames": [
+        35,
+        68,
+        61
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-2560x1440-auto-static.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "auto",
+        "activity": "static",
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": -0.5129600000000014,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": -0.47600000000000087,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 2.0506346666666655,
+          "limit": 3
+        },
+        "memory": {
+          "value": 57332160,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "status": "passed",
+      "p95": {
+        "ddgi": 5.3133973333333335,
+        "fixed-raw": 7.876992,
+        "decorrelated-raw": 7.840032,
+        "reconstructed": 7.364031999999999
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.4648222222222222,
+        "shade": 1.7273237333333338,
+        "forward": 1.5202159999999996,
+        "connections": 0.0798750222222222,
+        "temporal": 0.0717504,
+        "filter1": 0.01276,
+        "filter2": 0.06986471111111113
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-2560x1440-auto-moving.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "auto",
+        "activity": "moving",
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.3313066666666664,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 1.168607999999999,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 3.006912,
+          "limit": 3
+        },
+        "memory": {
+          "value": 57332160,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.461621333333333,
+        "fixed-raw": 8.137226666666667,
+        "decorrelated-raw": 7.299925333333334,
+        "reconstructed": 8.468533333333333
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.490331555555555,
+        "shade": 1.8782120888888894,
+        "forward": 1.6202142222222227,
+        "connections": 0.07935253333333335,
+        "temporal": 0.07781137777777776,
+        "filter1": 0.03645831111111111,
+        "filter2": 0.05019999999999999
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-2560x1440-auto-relight.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "auto",
+        "activity": "relight",
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 0.2549333333333337,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.15276800000000001,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 3.916512000000001,
+          "limit": 3
+        },
+        "memory": {
+          "value": 57332160,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.503989333333333,
+        "fixed-raw": 9.165568,
+        "decorrelated-raw": 9.267733333333334,
+        "reconstructed": 9.420501333333334
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 2.951303822222222,
+        "shade": 2.043858844444444,
+        "forward": 1.732066666666667,
+        "connections": 0.08531555555555555,
+        "temporal": 0.0726999111111111,
+        "filter1": 0.05417031111111111,
+        "filter2": 0.049559288888888886
+      },
+      "fallbackFrames": [
+        20,
+        20,
+        22
+      ],
+      "fallbackReasons": [
+        {
+          "DDGI fallback: waiting for matching revision": 20
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 20
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 22
+        }
+      ],
+      "fgFrames": [
+        80,
+        80,
+        78
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-original-1280x800-high-pause.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "original",
+        "quality": "high",
+        "activity": "pause",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": -1.3045973333333327,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": -1.9130239999999992,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": -0.044618666666665696,
+          "limit": 3
+        },
+        "memory": {
+          "value": 63373760,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "status": "passed",
+      "p95": {
+        "ddgi": 4.198624,
+        "fixed-raw": 5.458602666666667,
+        "decorrelated-raw": 6.067029333333333,
+        "reconstructed": 4.154005333333334
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 0,
+        "shade": 0,
+        "forward": 0,
+        "connections": 0,
+        "temporal": 0,
+        "filter1": 0,
+        "filter2": 0
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        0,
+        0,
+        0
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-static.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "static",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.7354346666666665,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.1682666666666659,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 4.584832,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 4.594837333333333,
+        "fixed-raw": 7.4442346666666666,
+        "decorrelated-raw": 9.011402666666667,
+        "reconstructed": 9.179669333333333
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.993640355555556,
+        "shade": 1.972962311111111,
+        "forward": 0.9870620444444445,
+        "connections": 0.16397066666666668,
+        "temporal": 0.19346702222222223,
+        "filter1": 0.0685824,
+        "filter2": 0.015329422222222222
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-moving.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "moving",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.7997973333333341,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.14776533333333397,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 5.124085333333334,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 4.4015146666666665,
+        "fixed-raw": 7.725802666666667,
+        "decorrelated-raw": 9.377834666666667,
+        "reconstructed": 9.5256
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.746067555555555,
+        "shade": 1.997779022222223,
+        "forward": 1.0217196444444445,
+        "connections": 0.1666944,
+        "temporal": 0.22430702222222224,
+        "filter1": 0.08816711111111113,
+        "filter2": 0.01454737777777778
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-relight.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "relight",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 2.894154666666667,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.8479360000000007,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 7.547114666666667,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 4.609493333333333,
+        "fixed-raw": 9.262453333333333,
+        "decorrelated-raw": 11.308672,
+        "reconstructed": 12.156608
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 5.2088977777777785,
+        "shade": 2.107223466666667,
+        "forward": 1.0489898666666668,
+        "connections": 0.17532231111111107,
+        "temporal": 0.19027715555555555,
+        "filter1": 0.06472497777777776,
+        "filter2": 0.014334400000000002
+      },
+      "fallbackFrames": [
+        38,
+        36,
+        34
+      ],
+      "fallbackReasons": [
+        {
+          "DDGI fallback: waiting for matching revision": 38
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 36
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 34
+        }
+      ],
+      "fgFrames": [
+        62,
+        64,
+        66
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1920x1080-auto-static.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "auto",
+        "activity": "static",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.448319999999999,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.618133333333331,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 4.882986666666666,
+          "limit": 3
+        },
+        "memory": {
+          "value": 60020352,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.164128,
+        "fixed-raw": 8.598794666666667,
+        "decorrelated-raw": 9.428981333333335,
+        "reconstructed": 10.047114666666666
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.077710044444444,
+        "shade": 2.293773866666667,
+        "forward": 1.8443813333333334,
+        "connections": 0.12760888888888888,
+        "temporal": 0.12667342222222222,
+        "filter1": 0.026218488888888888,
+        "filter2": 0.12129102222222225
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1920x1080-auto-moving.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "auto",
+        "activity": "moving",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.6082986666666663,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.5489280000000019,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 5.032533333333333,
+          "limit": 3
+        },
+        "memory": {
+          "value": 60020352,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.0363093333333335,
+        "fixed-raw": 8.460544,
+        "decorrelated-raw": 9.519914666666665,
+        "reconstructed": 10.068842666666667
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 3.9754465777777774,
+        "shade": 2.3167946666666666,
+        "forward": 1.917150933333333,
+        "connections": 0.13227555555555556,
+        "temporal": 0.14805777777777782,
+        "filter1": 0.04531377777777778,
+        "filter2": 0.018090666666666665
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1920x1080-auto-relight.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "auto",
+        "activity": "relight",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 2.554304,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.3842880000000015,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 7.522976000000002,
+          "limit": 3
+        },
+        "memory": {
+          "value": 60020352,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": false,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.137173333333333,
+        "fixed-raw": 10.105845333333335,
+        "decorrelated-raw": 12.275861333333333,
+        "reconstructed": 12.660149333333335
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.281541511111111,
+        "shade": 2.393346488888889,
+        "forward": 1.850576,
+        "connections": 0.1479009777777778,
+        "temporal": 0.1277452444444444,
+        "filter1": 0.055104177777777784,
+        "filter2": 0.09865475555555554
+      },
+      "fallbackFrames": [
+        34,
+        36,
+        34
+      ],
+      "fallbackReasons": [
+        {
+          "DDGI fallback: waiting for matching revision": 34
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 36
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 34
+        }
+      ],
+      "fgFrames": [
+        66,
+        64,
+        66
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-2560x1440-auto-static.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "auto",
+        "activity": "static",
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.0813120000000005,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.3737919999999999,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 6.121472,
+          "limit": 3
+        },
+        "memory": {
+          "value": 60020352,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.504405333333334,
+        "fixed-raw": 10.544565333333333,
+        "decorrelated-raw": 11.252085333333333,
+        "reconstructed": 11.625877333333333
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.171596977777778,
+        "shade": 2.3106156444444443,
+        "forward": 3.0906995555555556,
+        "connections": 0.15747324444444447,
+        "temporal": 0.15062773333333335,
+        "filter1": 0.05174613333333333,
+        "filter2": 0.0391584
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-2560x1440-auto-moving.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "auto",
+        "activity": "moving",
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.3751893333333314,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.6303466666666662,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 6.875349333333332,
+          "limit": 3
+        },
+        "memory": {
+          "value": 60020352,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.000266666666667,
+        "fixed-raw": 10.500426666666668,
+        "decorrelated-raw": 11.245269333333333,
+        "reconstructed": 11.875615999999999
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.306787733333333,
+        "shade": 2.3797212444444447,
+        "forward": 3.072316444444445,
+        "connections": 0.15350506666666666,
+        "temporal": 0.14112586666666668,
+        "filter1": 0.05320035555555556,
+        "filter2": 0.06526275555555555
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        100,
+        100,
+        100
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-2560x1440-auto-relight.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "auto",
+        "activity": "relight",
+        "viewport": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": 1.140224,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": 0.07323733333333493,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 6.164469333333334,
+          "limit": 3
+        },
+        "memory": {
+          "value": 60020352,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": false,
+        "targetCompleteFG": false
+      },
+      "status": "failed",
+      "p95": {
+        "ddgi": 5.776319999999999,
+        "fixed-raw": 10.800565333333333,
+        "decorrelated-raw": 11.867551999999998,
+        "reconstructed": 11.940789333333333
+      },
+      "receiver": [
+        640,
+        360
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 4.3716896,
+        "shade": 2.4229029333333334,
+        "forward": 3.091228444444445,
+        "connections": 0.14537599999999998,
+        "temporal": 0.14031324444444446,
+        "filter1": 0.0528167111111111,
+        "filter2": 0.059578311111111094
+      },
+      "fallbackFrames": [
+        70,
+        34,
+        34
+      ],
+      "fallbackReasons": [
+        {
+          "DDGI fallback: waiting for matching revision": 70
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 34
+        },
+        {
+          "DDGI fallback: waiting for matching revision": 34
+        }
+      ],
+      "fgFrames": [
+        30,
+        66,
+        66
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    },
+    {
+      "file": "performance-split-azimuth-lazy-gallery-1280x800-high-pause.json",
+      "configuration": {
+        "execution": "split",
+        "rayOrder": "azimuth",
+        "lazyFallback": true,
+        "sceneName": "gallery",
+        "quality": "high",
+        "activity": "pause",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "targets": {
+        "additionalReconstructionP95": {
+          "value": -3.3158933333333334,
+          "limit": 1
+        },
+        "sameSequenceReconstructionP95": {
+          "value": -4.287871999999999,
+          "scope": "additional ablation; does not replace original product target"
+        },
+        "completeFGP95": {
+          "value": 0.04606933333333352,
+          "limit": 3
+        },
+        "memory": {
+          "value": 66061952,
+          "limit": 67108864,
+          "scope": "peak owned attachments plus all live round/material snapshots"
+        }
+      },
+      "checks": {
+        "sameSequence": true,
+        "boundedWindow": true,
+        "completeQueries": true,
+        "activeFG": true,
+        "resourceBudget": true,
+        "productionReadback": true,
+        "targetReconstruction": true,
+        "targetCompleteFG": true
+      },
+      "status": "passed",
+      "p95": {
+        "ddgi": 4.486357333333333,
+        "fixed-raw": 7.84832,
+        "decorrelated-raw": 8.820298666666666,
+        "reconstructed": 4.532426666666667
+      },
+      "receiver": [
+        640,
+        400
+      ],
+      "samples": 32,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "units": 16,
+        "timer": true
+      },
+      "components": {
+        "trace": 0,
+        "shade": 0,
+        "forward": 0,
+        "connections": 0,
+        "temporal": 0,
+        "filter1": 0,
+        "filter2": 0
+      },
+      "fallbackFrames": [
+        0,
+        0,
+        0
+      ],
+      "fallbackReasons": [
+        {},
+        {},
+        {}
+      ],
+      "fgFrames": [
+        0,
+        0,
+        0
+      ],
+      "querySamples": [
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80
+      ]
+    }
+  ],
+  "quality": [
+    {
+      "id": "fixed",
+      "status": "passed",
+      "checks": 660,
+      "roi": [
+        {
+          "name": "original-boxFoot-high-s0",
+          "raw": 0.02615426164015287,
+          "filtered": 0.0051980102717282435,
+          "reduction": 0.8012557057337039,
+          "total": 0.02128428118937845,
+          "A": 0.07334131943177429,
+          "coverage": 0.9997783203125
+        },
+        {
+          "name": "gallery-courtyard-high-s0",
+          "raw": 0.0214079217774709,
+          "filtered": 0.004453024042274341,
+          "reduction": 0.7919917641440292,
+          "total": 0.02295718809077732,
+          "A": 0.08231097832770959,
+          "coverage": 0.990765380859375
+        },
+        {
+          "name": "gallery-skylight-high-s0",
+          "raw": 0.04673227805210487,
+          "filtered": 0.003606581855752792,
+          "reduction": 0.9228246084701547,
+          "total": 0.04763545419128451,
+          "A": 0.12549963123955393,
+          "coverage": 0.9935063488971912
+        },
+        {
+          "name": "gallery-emitter-high-s0",
+          "raw": 0.06961852055298463,
+          "filtered": 0.0076797611726386415,
+          "reduction": 0.8896879578646921,
+          "total": 0.06764354350603119,
+          "A": 0.1839643034804917,
+          "coverage": 0.989187744140625
+        }
+      ],
+      "timeWindows": 36,
+      "targets": [
+        100,
+        250,
+        500,
+        1000
+      ]
+    },
+    {
+      "id": "auto-1920",
+      "status": "passed",
+      "checks": 369,
+      "roi": [
+        {
+          "name": "original-boxFoot-auto-s0",
+          "raw": 0.025933113463581445,
+          "filtered": 0.00515925312964893,
+          "reduction": 0.8010553905571652,
+          "total": 0.022123361078638725,
+          "A": 0.07970580668661328,
+          "coverage": 0.9997796103395061
+        },
+        {
+          "name": "gallery-courtyard-auto-s0",
+          "raw": 0.021724516392844416,
+          "filtered": 0.0043961522693687916,
+          "reduction": 0.7976409605685497,
+          "total": 0.02180956231361508,
+          "A": 0.07821341907573899,
+          "coverage": 0.9779035252700617
+        },
+        {
+          "name": "gallery-skylight-auto-s0",
+          "raw": 0.043178233158399956,
+          "filtered": 0.0037272986670293658,
+          "reduction": 0.9136764430967863,
+          "total": 0.04508461439497675,
+          "A": 0.09239476061281598,
+          "coverage": 0.9846233906796362
+        },
+        {
+          "name": "gallery-emitter-auto-s0",
+          "raw": 0.0670280739630447,
+          "filtered": 0.007086197693415164,
+          "reduction": 0.8942801534574591,
+          "total": 0.06288296555881563,
+          "A": 0.18592142859312505,
+          "coverage": 0.9916321855709876
+        }
+      ],
+      "timeWindows": 36,
+      "targets": [
+        100,
+        250,
+        500,
+        1000
+      ]
+    },
+    {
+      "id": "auto-2560",
+      "status": "passed",
+      "checks": 369,
+      "roi": [
+        {
+          "name": "original-boxFoot-auto-s0",
+          "raw": 0.025933113463581445,
+          "filtered": 0.00515925312964893,
+          "reduction": 0.8010553905571652,
+          "total": 0.02209500599489612,
+          "A": 0.07978864259013245,
+          "coverage": 0.9997856987847222
+        },
+        {
+          "name": "gallery-courtyard-auto-s0",
+          "raw": 0.021724516392844416,
+          "filtered": 0.0043961522693687916,
+          "reduction": 0.7976409605685497,
+          "total": 0.024353492406539487,
+          "A": 0.07785228654948527,
+          "coverage": 0.973759019639757
+        },
+        {
+          "name": "gallery-skylight-auto-s0",
+          "raw": 0.043178233158399956,
+          "filtered": 0.0037269304552536926,
+          "reduction": 0.913684970814313,
+          "total": 0.044275004074416,
+          "A": 0.09269242068137078,
+          "coverage": 0.9801938418601465
+        },
+        {
+          "name": "gallery-emitter-auto-s0",
+          "raw": 0.0670280739630447,
+          "filtered": 0.007086804065476087,
+          "reduction": 0.8942711069188214,
+          "total": 0.061846704741160365,
+          "A": 0.18607589494822094,
+          "coverage": 0.9926643202039931
+        }
+      ],
+      "timeWindows": 36,
+      "targets": [
+        100,
+        250,
+        500,
+        1000
+      ]
+    }
+  ],
+  "notRun": [
+    {
+      "name": "authenticated ion / World Terrain",
+      "reason": "no token supplied; local Globe retained"
+    },
+    {
+      "name": "shader assembly/register pressure",
+      "reason": "not exposed by WebGL/ANGLE"
+    },
+    {
+      "name": "driver physical VRAM and FG-exclusive residency",
+      "reason": "only logical owned texture/attachment bytes are measurable here"
+    }
+  ]
+}

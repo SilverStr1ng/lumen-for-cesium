@@ -1,0 +1,10 @@
+{
+  "name": "verify-receiver",
+  "args": [],
+  "environment": {},
+  "exitCode": 0,
+  "milliseconds": 26235.340199999977,
+  "status": "passed",
+  "stdout": "PASS full-resolution ROI production equals fixed point FG\nPASS same-frame E replaces complete DDGI; direct and emitter unchanged\nPASS ordinary/log depth and forced multiframe-frustum receiver ownership\nUnknown evidence {\"max\":0.00830078125,\"roiMax\":0,\"locations\":[{\"x\":486,\"y\":217,\"channel\":0,\"a\":0.422607421875,\"b\":0.430908203125}],\"unknown\":65536,\"valid\":65536}\nPASS Unknown does not become sky; invalid FG uses DDGI\nPASS memory and ray budgets reject atomically\nPASS new revision and material do not reuse old FG input\nPASS resize, AA, no history and camera movements retain static BVH\nPASS FG off restores raw solver and releases resources over 20 cycles\nPASS no production readback, feedback or nested timer queries\nPASS static requestRenderMode sleeps; camera requests FG frame\ndestroy evidence {\"restored\":{\"mode\":\"fg\",\"quality\":\"fast\",\"ready\":true},\"active\":true,\"oldDestroyed\":true,\"ownedTextures\":0,\"ownedFramebuffers\":0,\"worldTextures\":0,\"live\":{\"textures\":9,\"framebuffers\":1,\"queries\":0,\"programs\":0,\"syncs\":0}}\nPASS saved view restores FG mode and settings; reload and destroy release\npassed\n",
+  "stderr": ""
+}
