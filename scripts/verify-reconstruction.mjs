@@ -43,12 +43,15 @@ try {
         O = w._texture(1, 1),
         fb = w._framebuffer([O]);
       let ns = new C.Cartesian3(0, 0, 1);
+      const {declarations:normalDeclarations,functions:normalFunctions}=await import("/cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherNormals.js");
       const cmd = earthLab.scene.context.createViewportQuadCommand(
-        "#define LUMEN_RECEIVER_COMPOSITE\nprecision highp float;uniform bool u_lumenFgEnabled;uniform float u_lumenWorldGain,u_lumenFgSurfaceId;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenReceiverPosition,u_lumenReceiverNormal;uniform vec3 u_ns;\n" +
+        "#define LUMEN_RECEIVER_COMPOSITE\nprecision highp float;uniform bool u_lumenFgEnabled,u_lumenFgCurved;uniform float u_lumenWorldGain,u_lumenFgSurfaceId;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenReceiverPosition,u_lumenReceiverNormal;uniform vec3 u_ns;\n" + normalDeclarations + normalFunctions +
           helper +
           "\nvoid main(){vec3 used=lumen_reconstructFg(vec3(gl_FragCoord.xy,-10),u_ns,vec3(.1,.2,.3));out_FragColor=vec4(used,lumen_fgWeight);}",
         {
           uniformMap: {
+            u_lumenFgPackedNormals: () => false,
+            u_lumenFgCurved: () => false,
             u_lumenFgEnabled: () => true,
             u_lumenWorldGain: () => 1,
             u_lumenFgSurfaceId: () => 3,
@@ -181,6 +184,7 @@ try {
           u_budget: () => 256,
           u_receiverPosition: () => P,
           u_receiverNormal: () => N,
+          u_lumenFgPackedNormals: () => false,
           u_fgRaw: () => E,
           u_receiverOffset: () => C.Cartesian2.ZERO,
           u_fgLocalToEye: () => C.Matrix4.IDENTITY,

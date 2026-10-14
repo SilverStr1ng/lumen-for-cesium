@@ -138,7 +138,7 @@ export async function launchBrowser() {
 }
 
 // Observes actual GL calls. It is installed before any context is created.
-export function installGlObserver() {
+export function installGlObserver(options = {}) {
   const states = new WeakMap(),
     all = [];
   const state = (gl) => {
@@ -173,6 +173,7 @@ export function installGlObserver() {
         },
         elapsed: new Map(),
         labels: new Map(),
+        origins: {},
       };
       states.set(gl, s);
       all.push(s);
@@ -220,11 +221,12 @@ export function installGlObserver() {
         alive.add(r);
         s.live[key]++;
         s.peak[key] = Math.max(s.peak[key], s.live[key]);
+        if(options.resourceStacks){(s.origins[key]??=new Map()).set(r,new Error().stack.split("\n").slice(2,10));}
       }
       return r;
     });
     wrap(remove, function (original, s, a) {
-      if (a[0] && alive.delete(a[0])) s.live[key]--;
+      if (a[0] && alive.delete(a[0])) {s.live[key]--;s.origins[key]?.delete(a[0]);}
       return original.apply(this, a);
     });
   }
@@ -336,6 +338,7 @@ export function installGlObserver() {
         errors: structuredClone(s.errors),
         live: { ...s.live },
         peak: { ...s.peak },
+        remainingOrigins: options.resourceStacks?Object.fromEntries(Object.entries(s.origins).map(([k,m])=>[k,[...m.values()]])):undefined,
       }));
     },
   };

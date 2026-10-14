@@ -44,13 +44,15 @@ try {
       O = w._texture(1, 1),
       fb = w._framebuffer([O]);
     const cmd = w.scene.context.createViewportQuadCommand(
-      "#define LUMEN_RECEIVER_COMPOSITE\n#define LUMEN_FG_REASONS\n#define LUMEN_FG_RECONSTRUCTION\nprecision highp float;precision highp sampler2D;uniform bool u_lumenFgEnabled,u_lumenFgHistory;uniform float u_lumenWorldGain,u_lumenFgSurfaceId,u_lumenFgFallbackCode;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenFgFiltered,u_lumenReceiverPosition,u_lumenReceiverNormal;\n" +
+      "#define LUMEN_RECEIVER_COMPOSITE\n#define LUMEN_FG_REASONS\n#define LUMEN_FG_RECONSTRUCTION\nprecision highp float;precision highp sampler2D;uniform bool u_lumenFgEnabled,u_lumenFgHistory,u_lumenFgCurved;uniform float u_lumenWorldGain,u_lumenFgSurfaceId,u_lumenFgFallbackCode;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenFgFiltered,u_lumenReceiverPosition,u_lumenReceiverNormal;\n" +
         declarations +
         helper +
         functions +
         "\nvoid main(){vec3 used=lumen_reconstructFg(vec3(gl_FragCoord.xy,-10),vec3(0,0,1),vec3(.1,.2,.3));out_FragColor=vec4(used,lumen_fgWeight);}",
       {
         uniformMap: {
+          u_lumenFgPackedNormals: () => false,
+          u_lumenFgCurved: () => false,
           u_lumenFgEnabled: () => true,
           u_lumenFgHistory: () => true,
           u_lumenWorldGain: () => 1,

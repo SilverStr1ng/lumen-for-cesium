@@ -96,8 +96,8 @@ Object.defineProperties(Lumen.prototype, {
       return this._debugMode;
     },
     set(value) {
-      if (!Number.isInteger(value) || value < 0 || value > 19) {
-        throw new DeveloperError("debugMode must be an integer in [0, 19].");
+      if (!Number.isInteger(value) || value < 0 || value > 20) {
+        throw new DeveloperError("debugMode must be an integer in [0, 20].");
       }
       this._debugMode = value;
       this._scene.requestRender();
