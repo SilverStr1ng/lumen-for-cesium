@@ -337,6 +337,7 @@ void main(){ivec2 c=ivec2(gl_FragCoord.xy);vec3 o=texelFetch(u_queryOrigin,c,0).
  vec4 h=trace(o,d,completeDistance(o),-1,false);if(u_transportPart==0){out_FragColor=h;return;}
  if(h.x==-1.0){out_FragColor=vec4(0,0,0,-1);return;}
  if(h.x==0.0){out_FragColor=vec4(u_transportPart==1&&(u_upperHemisphere==0||d.z>=0.0)?u_skyRadiance:vec3(0),1);return;}
+ if(u_transportPart==1){out_FragColor=vec4(0,0,0,1);return;}
  vec3 p,n,rho,emission;int t;bool black;surface(h,p,n,rho,emission,t,black);
  if(u_transportPart==5){out_FragColor=vec4(p,black?0.0:1.0);return;}
  if(u_transportPart==6){out_FragColor=vec4(n,1);return;}
