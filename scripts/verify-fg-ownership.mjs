@@ -22,6 +22,7 @@ try {
       w = earthLab.world,
       { default: generated } =
         await import("/cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.js");
+    const {functions:normalFunctions} = await import("/cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherNormals.js");
     earthLab.widget.useDefaultRenderLoop = false;
     const textures = [],
       make = (width, height, pixel) => {
@@ -52,6 +53,7 @@ precision highp float;precision highp sampler2D;
 uniform sampler2D u_lumenProbePositions,u_lumenProbeIrradiance,u_lumenProbeDistances;
 uniform sampler2D u_lumenFgTexture,u_lumenFgFiltered,u_lumenFgNeighborhood,u_lumenReceiverPosition,u_lumenReceiverNormal;
 uniform bool u_lumenFgEnabled,u_lumenFgHistory,u_lumenWorldEnabled,u_lumenFgLazyFallback,u_lumenLegacyKernel,u_lumenLinearAtlas;
+uniform bool u_lumenFgPackedNormals,u_lumenFgCurved;
 uniform vec3 u_lumenProbeOrigin,u_lumenProbeCounts,u_lumenIrradiance,u_ns;
 uniform float u_lumenProbeSpacing,u_lumenNormalBias,u_lumenWorldGain,u_lumenCoverage,u_lumenFgSurfaceId;
 uniform mat4 u_lumenEyeToLocal;
@@ -70,7 +72,7 @@ bool lumen_fgSegment(vec3 p,vec3 q,vec3 ng){return false;}
       throw Error("DDGI instrumentation anchor missing");
     const cmd = earthLab.scene.context.createViewportQuadCommand(
       prefix +
-        source +
+        normalFunctions + source +
         `
 void main(){vec3 light=lumen_irradiance(vec3(gl_FragCoord.xy,-10),u_ns,vec3(0,0,1));
  if(u_view==0)out_FragColor=vec4(light,lumen_fgWeight);
@@ -78,6 +80,8 @@ void main(){vec3 light=lumen_irradiance(vec3(gl_FragCoord.xy,-10),u_ns,vec3(0,0,
  else out_FragColor=vec4(lumen_dataCoverage,lumen_fgFallbackReason,0,0);}`,
       {
         uniformMap: {
+          u_lumenFgPackedNormals: () => false,
+          u_lumenFgCurved: () => false,
           u_lumenProbePositions: () => probes,
           u_lumenProbeIrradiance: () => irradiance,
           u_lumenProbeDistances: () => moments,

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { writeFile } from "node:fs/promises";
+import { mkdir,writeFile } from "node:fs/promises";
 import { fgSquare } from "../lumen/fg-sampling.js";
 import { launchBrowser, sourceVersion } from "./browser-tools.mjs";
 const report = { version: sourceVersion(), checks: [], rows: [], errors: [] };
@@ -212,8 +212,9 @@ try {
   process.exitCode = 1;
 } finally {
   await b.close();
-  await writeFile(
-    "reports/fg-reconstruction-showcase-v6/sampling.json",
+  const out=process.env.LUMEN_REPORT_DIRECTORY??"reports/fg-reconstruction-showcase-v6";
+  await mkdir(out,{recursive:true});await writeFile(
+    out+"/sampling.json",
     JSON.stringify(report, null, 2),
   );
 }

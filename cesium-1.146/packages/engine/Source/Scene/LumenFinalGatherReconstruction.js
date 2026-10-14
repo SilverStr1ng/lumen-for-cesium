@@ -168,6 +168,7 @@ class LumenFinalGatherReconstruction {
         u_rRaw: () => this._state.raw,
         u_rPosition: () => this._state.receiver.position,
         u_rNormal: () => this._state.receiver.normal,
+        u_lumenFgPackedNormals: () => this.controller.smoothReceivers,
         u_rNeighborhood: () => this._state.neighborhood,
         u_rHistoryE: () => this.history[this._index].e,
         u_rHistoryM: () => this.history[this._index].m,

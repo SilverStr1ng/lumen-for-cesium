@@ -1,5 +1,6 @@
 import DeveloperError from "../../../core/Source/DeveloperError.js";
 import finalGatherSampling from "./LumenFinalGatherSampling.js";
+import receiverNormals from "./LumenFinalGatherNormals.js";
 import LumenStageFS from "../Shaders/Model/LumenStageFS.js";
 
 const worldUniforms = `
@@ -347,9 +348,10 @@ vec4 fgRadiance(vec4 h,vec3 d){
  return vec4(L,1);
 }
 vec4 receiverFinalGather(vec3 p,vec3 ng,vec3 ns){
- if(dot(ng,ns)<0.999)return vec4(0);
+ if(dot(ng,ns)<0.8660253)return vec4(0);
  vec3 origin=p+ng*u_fgRayBias,sum=vec3(0);
- for(int i=0;i<1024;i++){if(i>=u_fgSamples)break;vec3 d=fgDirection(ng,i,ivec2(gl_FragCoord.xy)+u_fgPixelOffset);
+ for(int i=0;i<1024;i++){if(i>=u_fgSamples)break;vec3 d=fgDirection(ns,i,ivec2(gl_FragCoord.xy)+u_fgPixelOffset);
+  if(dot(ng,d)<=0.0)continue;
   vec4 L=fgRadiance(trace(origin,d,completeDistance(origin),-1,false),d);
   if(L.a<=0.0)return vec4(0,0,0,L.a);sum+=L.rgb;
  }
@@ -366,7 +368,7 @@ export const queryExactProbeVisibility = `#define LUMEN_WORLD_SUPPORTED
 ${common + worldUniforms + exactGather}
 uniform sampler2D u_queryOrigin,u_queryDirection,u_queryGeometricNormal;
 void main(){ivec2 c=ivec2(gl_FragCoord.xy);out_FragColor=lumen_worldIrradianceWithNormals(texelFetch(u_queryOrigin,c,0).xyz,texelFetch(u_queryGeometricNormal,c,0).xyz,texelFetch(u_queryDirection,c,0).xyz);}`;
-export const receiverTrace = `${common + gather + finalGather}
+export const receiverTrace = `${common + gather + finalGather + receiverNormals.declarations + receiverNormals.functions}
 uniform sampler2D u_receiverPosition,u_receiverNormal;uniform ivec2 u_receiverOffset;uniform int u_fgStart,u_fgWidth;
 void main(){ivec2 c=ivec2(gl_FragCoord.xy);
 #ifdef LUMEN_FG_PLANAR
@@ -376,21 +378,22 @@ void main(){ivec2 c=ivec2(gl_FragCoord.xy);
 #endif
  ivec2 r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);int i=u_fgStart+lane;
  if(x.a<0.5||i>=u_fgSamples){out_FragColor=vec4(0);return;}
- vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz),o=x.xyz+ng*u_fgRayBias,d=fgDirection(ng,i,r+u_fgPixelOffset);
+ vec4 n=texelFetch(u_receiverNormal,r,0);vec3 ng=lumen_fgNg(n),ns=lumen_fgNs(n),o=x.xyz+ng*u_fgRayBias,d=fgDirection(ns,i,r+u_fgPixelOffset);
+ if(dot(ng,d)<=0.0){out_FragColor=vec4(-3,0,0,0);return;}
  out_FragColor=trace(o,d,completeDistance(o),-1,false);
 }`;
-export const receiverShade = `${common + gather + finalGather}
+export const receiverShade = `${common + gather + finalGather + receiverNormals.declarations + receiverNormals.functions}
 uniform sampler2D u_receiverPosition,u_receiverNormal,u_receiverHits,u_fgAccumulation;uniform ivec2 u_receiverOffset;uniform int u_fgStart,u_fgWidth;
 void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);
  if(x.a<0.5){out_FragColor=vec4(0);return;}
- vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);
+ vec3 ns=lumen_fgNs(texelFetch(u_receiverNormal,r,0));vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);
  for(int j=0;j<4;j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;
 #ifdef LUMEN_FG_PLANAR
   ivec2 hitPixel=ivec2(p.x+j*u_fgWidth,p.y);
 #else
   ivec2 hitPixel=ivec2(p.x*4+j,p.y);
 #endif
-  vec4 h=texelFetch(u_receiverHits,hitPixel,0),L=fgRadiance(h,fgDirection(ng,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
+  vec4 h=texelFetch(u_receiverHits,hitPixel,0);if(h.x==-3.0)continue;vec4 L=fgRadiance(h,fgDirection(ns,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
  out_FragColor=sum;
 }`;
 export function receiverFused(batch) {
@@ -399,23 +402,26 @@ export function receiverFused(batch) {
   }
   return (
     `${
-      common + gather + finalGather
+      common + gather + finalGather + receiverNormals.declarations + receiverNormals.functions
     }uniform sampler2D u_receiverPosition,u_receiverNormal,u_fgAccumulation;uniform ivec2 u_receiverOffset;uniform int u_fgStart;\n` +
-    `void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);if(x.a<0.5){out_FragColor=vec4(0);return;}vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz),o=x.xyz+ng*u_fgRayBias;float distance=completeDistance(o);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);for(int j=0;j<${
+    `void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);if(x.a<0.5){out_FragColor=vec4(0);return;}vec4 n=texelFetch(u_receiverNormal,r,0);vec3 ng=lumen_fgNg(n),ns=lumen_fgNs(n),o=x.xyz+ng*u_fgRayBias;float distance=completeDistance(o);vec4 sum=u_fgStart==0?vec4(0,0,0,1):texelFetch(u_fgAccumulation,p,0);for(int j=0;j<${
       batch
-    };j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec3 d=fgDirection(ng,i,r+u_fgPixelOffset);vec4 h=trace(o,d,distance,-1,false),L=fgRadiance(h,d);if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}out_FragColor=sum;}`
+    };j++){int i=u_fgStart+j;if(i>=u_fgSamples)break;vec3 d=fgDirection(ns,i,r+u_fgPixelOffset);if(dot(ng,d)<=0.0)continue;vec4 h=trace(o,d,distance,-1,false),L=fgRadiance(h,d);if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}out_FragColor=sum;}`
   );
 }
 // Conservative spatial support: a low-resolution cell cannot borrow light across
 // any non-coplanar world triangle in its reconstruction neighborhood. Triangle
 // AABBs and planes may reject extra cells; they never invent receiver geometry.
-export const receiverNeighborhood = `${common}
+export const receiverNeighborhood = `${common + receiverNormals.declarations + receiverNormals.functions}
  uniform sampler2D u_receiverPosition,u_receiverNormal,u_fgRaw;uniform ivec2 u_receiverOffset;
  uniform mat4 u_fgLocalToEye;uniform float u_fgNeighborhoodScale;uniform bool u_fgNeedsNeighborhood;
  void main(){ivec2 c=ivec2(gl_FragCoord.xy),r=c+u_receiverOffset;vec4 p=texelFetch(u_receiverPosition,r,0),E=texelFetch(u_fgRaw,c,0);
   if(p.a<0.5||E.a<0.5){out_FragColor=vec4(0);return;}
+  // Curved borrowing must pass per-pair convex-sphere guides; this is never a
+  // planar free-space neighborhood, even when its raw result is complete.
+  if(lumen_fgCurve(p)){out_FragColor=vec4(0);return;}
   if(!u_fgNeedsNeighborhood){out_FragColor=vec4(1);return;}
-  vec3 ng=normalize(texelFetch(u_receiverNormal,r,0).xyz);
+  vec3 ng=lumen_fgNg(texelFetch(u_receiverNormal,r,0));
   float radius=max(0.04,6.0*czm_metersPerPixel(u_fgLocalToEye*vec4(p.xyz,1.0),1.0)*u_fgNeighborhoodScale);
   int node=0;bool safe=false;
   for(int visit=0;visit<4096;visit++){

@@ -4,6 +4,7 @@ const presets = Object.freeze({
   high: { scale: 0.5, samples: 32 },
   fast: { scale: 0.25, samples: 16 },
   roi: { scale: 1, samples: 64, roi: 256 },
+  interactive16: { scale: .5, samples: 16 },
 });
 const autoScales = Object.freeze([
   0.5,
@@ -23,6 +24,7 @@ function planFinalGather({
   execution = "split",
   reconstruction = true,
   snapshotBytes = 0,
+  additionalSceneBytes = 0,
   memoryBudget = 64 * 1048576,
   invocationBudget = 16 * 1048576,
   maximumTextureSize = 16384,
@@ -42,7 +44,7 @@ function planFinalGather({
       requiredSamplers,
       colorAttachments,
     ].every((n) => Number.isInteger(n) && n > 0) ||
-    ![snapshotBytes, memoryBudget, invocationBudget].every(
+    ![snapshotBytes, additionalSceneBytes, memoryBudget, invocationBudget].every(
       (n) => Number.isSafeInteger(n) && n >= 0,
     ) ||
     !["split", "fused4", "fused8"].includes(execution) ||
@@ -57,10 +59,11 @@ function planFinalGather({
   }
   // Auto keeps one receiver choice across A/B/C/D: raw ablations reserve
   // reconstruction capacity without allocating history, preserving same-size inputs.
-  const planReconstruction = reconstruction || quality === "auto";
+  const automatic = quality === "auto" || quality === "interactive16";
+  const planReconstruction = reconstruction || automatic;
   const p = quality === "auto" ? presets.high : presets[quality],
     rejected = [];
-  for (const scale of quality === "auto" ? autoScales : [p.scale]) {
+  for (const scale of automatic ? autoScales : [p.scale]) {
     const rw = Math.max(1, Math.ceil(width * scale)),
       rh = Math.max(1, Math.ceil(height * scale)),
       w = p.roi ? Math.min(rw, p.roi) : rw,
@@ -92,7 +95,7 @@ function planFinalGather({
     ) {
       reasons.push("texture/renderbuffer dimensions");
     }
-    if (bytes + reservedHistoryBytes + snapshotBytes > memoryBudget) {
+    if (bytes + reservedHistoryBytes + snapshotBytes + additionalSceneBytes > memoryBudget) {
       reasons.push("additional memory budget");
     }
     if (slots + geometrySlots + reservedGeometrySlots > invocationBudget) {
@@ -106,10 +109,10 @@ function planFinalGather({
           ? "Auto reduced receiver to fit budgets"
           : "requested receiver fits"),
       requestedQuality: quality,
-      effectiveQuality: quality === "auto" ? `auto@${scale}` : quality,
+      effectiveQuality: automatic ? `${quality}@${scale}` : quality,
       scale,
       samples: p.samples,
-      targetFrames: 32,
+      targetFrames: quality === "interactive16" ? 64 : 32,
       execution,
       reconstruction,
       rw,
@@ -120,10 +123,11 @@ function planFinalGather({
       oy: Math.floor((rh - h) / 2),
       bytes,
       snapshotBytes,
-      totalBytes: bytes + snapshotBytes,
+      additionalSceneBytes,
+      totalBytes: bytes + snapshotBytes + additionalSceneBytes,
       reservedHistoryBytes,
       reservedGeometrySlots,
-      planningBytes: bytes + snapshotBytes + reservedHistoryBytes,
+      planningBytes: bytes + snapshotBytes + additionalSceneBytes + reservedHistoryBytes,
       slots,
       geometrySlots,
       checkedInvocations: slots + geometrySlots,
@@ -140,7 +144,7 @@ function planFinalGather({
       checkedInvocations: plan.checkedInvocations,
       reasons,
     });
-    if (quality !== "auto") {
+    if (!automatic) {
       return { ...plan, rejections: rejected };
     }
   }

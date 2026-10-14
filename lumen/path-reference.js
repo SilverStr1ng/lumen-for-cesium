@@ -10,6 +10,7 @@ export function referenceIrradiance(
   lighting,
   samples = 8192,
   seed = 543190,
+  geometricNormal = normal,
 ) {
   const geometry = bvh.geometry,
     sun = normalize(lighting.sunDirection),
@@ -37,12 +38,15 @@ export function referenceIrradiance(
   const sum = [0, 0, 0],
     squares = [0, 0, 0];
   for (let sample = 0; sample < samples; sample++) {
-    let origin = add(position, mul(normal, 0.0002)),
+    let origin = add(position, mul(geometricNormal, 0.0002)),
       direction = cosine(normal),
       ignore = -1;
     const value = [0, 0, 0],
-      throughput = [1, 1, 1];
-    for (let bounce = 0; bounce < lighting.bounces; bounce++) {
+      throughput = [1, 1, 1],
+      receiverValid = dot(direction, geometricNormal) > 0;
+    // Receiver-only Ns cosine PDF with Ng's true hemisphere. Known-zero samples
+    // remain in the sample count, without renormalization or rejection sampling.
+    for (let bounce = 0; bounce < lighting.bounces && receiverValid; bounce++) {
       counts.rays++;
       const h = bvh.trace(origin, direction, {
         accept,

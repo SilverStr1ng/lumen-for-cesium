@@ -115,13 +115,19 @@ LightingPipelineStage.process = function (
       if (!owners.map.has(ownerKey)) {
         owners.map.set(ownerKey, owners.next++);
       }
-      const id = owners.map.get(ownerKey),
+      const registered = model._lumenCurvedSurfaces?.get(renderResources.runtimeNode?.node?.name);
+      // Caller registers a descriptor ball, never a material. A separate owner
+      // namespace lets every neighbor reject other balls and container patches.
+      const curved = !!registered && !defined(primitive.material.normalTexture) && primitive.material.alphaMode !== "MASK";
+      const id = curved ? 4096 + registered.ballId : owners.map.get(ownerKey),
         fg = () => frameState.lumen?.finalGather,
         source = () => {
           const world = frameState.lumen?.world;
           return world?.ready && !world.isDestroyed() ? world : undefined;
         };
       const uniforms = {
+        u_lumenFgPackedNormals: ["bool", () => !!fg()?.smoothReceivers],
+        u_lumenFgCurved: ["bool", () => curved && !!fg()?.smoothReceivers],
         u_lumenFgLazyFallback: [
           "bool",
           () =>

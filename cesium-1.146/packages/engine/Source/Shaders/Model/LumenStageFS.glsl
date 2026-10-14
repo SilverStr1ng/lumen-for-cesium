@@ -74,6 +74,9 @@ vec3 lumen_triangleNormal(vec3 p) {
 #ifdef LUMEN_FG_RECONSTRUCTION
 bool lumen_fgSegment(vec3 p,vec3 q,vec3 ng);
 #endif
+vec4 lumen_fgPack(vec3 ng,vec3 ns,float owner);
+bool lumen_fgCurve(vec4 p);
+bool lumen_fgCompatible(vec4 p,vec4 n,vec4 q,vec4 hn,float footprint);
 vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     lumen_rawFg=vec3(0.0);lumen_filteredFg=vec3(0.0);lumen_fgWeight=0.0;
     lumen_fgFallbackReason=1.0;
@@ -81,8 +84,9 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
     if(!u_lumenFgEnabled)lumen_fgFallbackReason=u_lumenFgFallbackCode;
     #endif
     vec3 ngEC=lumen_triangleNormal(positionEC);
-    if(!u_lumenFgEnabled||dot(ngEC,ns)<0.999)return baseline;
+    if(!u_lumenFgEnabled||dot(ngEC,ns)<(u_lumenFgCurved?0.8660253:0.999))return baseline;
     vec3 p=(u_lumenEyeToLocal*vec4(positionEC,1.0)).xyz,ng=normalize(mat3(u_lumenEyeToLocal)*ngEC);
+    vec4 currentP=vec4(p,u_lumenFgSurfaceId),currentN=lumen_fgPack(ng,normalize(mat3(u_lumenEyeToLocal)*ns),u_lumenFgSurfaceId);
     #ifdef LUMEN_WORLD_SUPPORTED
     // Resident volume ownership applies equally to eager and lazy FG. Ng was
     // evaluated above, before this per-fragment bounds branch.
@@ -113,14 +117,14 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
             if(any(lessThan(c,ivec2(0)))||any(greaterThanEqual(c,size))){lumen_fgFallbackReason=9.0;continue;}
             vec4 raw=texelFetch(u_lumenFgTexture,c,0),r=texelFetch(u_lumenReceiverPosition,c+ivec2(u_lumenFgOffset),0),n=texelFetch(u_lumenReceiverNormal,c+ivec2(u_lumenFgOffset),0);
             if(raw.a<.5){lumen_fgFallbackReason=raw.a==-2.0?4.0:raw.a<0.0?3.0:5.0;continue;}
-            if(abs(r.a-u_lumenFgSurfaceId)>.1||dot(ng,n.xyz)<.995){lumen_fgFallbackReason=7.0;continue;}
+            if(abs(r.a-u_lumenFgSurfaceId)>.1){lumen_fgFallbackReason=7.0;continue;}
             vec3 delta=r.xyz-p;float distance=length(delta);
-            if(abs(dot(delta,ng))>.005||distance>footprint){lumen_fgFallbackReason=8.0;continue;}
+            if(!lumen_fgCompatible(currentP,currentN,r,n,footprint)||abs(dot(delta,u_lumenEyeToLocal[2].xyz))>footprint){lumen_fgFallbackReason=8.0;continue;}
             if(distance<nearestDistance){best=c;nearestDistance=distance;bestPosition=r.xyz;bestE=texelFetch(u_lumenFgFiltered,c,0);if(bestE.a<.5)bestE=raw;}
         }
         if(best.x<0)return baseline;
         bool safe=texelFetch(u_lumenFgNeighborhood,best,0).r>.5;
-        if(!safe&&!lumen_fgSegment(p,bestPosition,ng)){lumen_fgFallbackReason=6.0;return baseline;}
+        if(!lumen_fgCurve(currentP)&&!safe&&!lumen_fgSegment(p,bestPosition,ng)){lumen_fgFallbackReason=6.0;return baseline;}
         // A valid, connected center supplies a complete E estimate. The source's
         // discarded interpolation neighbors do not darken it or blend in DDGI.
         lumen_filteredFg=bestE.rgb;lumen_fgWeight=1.0;lumen_fgFallbackReason=0.0;
@@ -135,9 +139,9 @@ vec3 lumen_reconstructFg(vec3 positionEC,vec3 ns,vec3 baseline) {
         if(u_lumenFgHistory){vec4 h=texelFetch(u_lumenFgFiltered,c,0);if(h.a>.5)E=h;}
         #endif
         // Reject Unknown and other surfaces. Never average foreground/background positions.
-        if(texelFetch(u_lumenFgNeighborhood,c,0).r<0.5||E.a<0.5||abs(r.a-u_lumenFgSurfaceId)>0.1||abs(n.a-r.a)>0.1||dot(ng,n.xyz)<0.995)continue;
+        if((!lumen_fgCurve(currentP)&&texelFetch(u_lumenFgNeighborhood,c,0).r<0.5)||E.a<0.5||!lumen_fgCompatible(currentP,currentN,r,n,footprint))continue;
         vec3 delta=r.xyz-p;
-        if(abs(dot(delta,ng))>0.005||length(delta)>footprint)continue;
+        if(!u_lumenFgPackedNormals&&abs(n.a-r.a)>.1)continue;
         vec2 a=mix(1.0-f,f,vec2(x,y));float w=a.x*a.y;sum+=E.rgb*w;weight+=w;
     }
     if(weight>0.0001){lumen_filteredFg=sum/weight;lumen_fgWeight=clamp(weight,0.0,1.0);if(weight>0.999)lumen_fgFallbackReason=0.0;}

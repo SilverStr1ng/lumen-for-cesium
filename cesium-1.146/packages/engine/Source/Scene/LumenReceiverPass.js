@@ -14,8 +14,8 @@ import {
 const samplerRequirements = new WeakMap();
 const output =
   /layout\s*\(location\s*=\s*\d+\)\s*out\s+vec4\s+out_Frag(?:Color|Data_\d+)\s*;|\bout\s+vec4\s+out_Frag(?:Color|Data_\d+)\s*;/g;
-/** Two float attachments: local surface P+ownership, true triangle Ng+ownership.
- * Normals which differ from Ns are unsupported. Replays only prepared opaque
+/** Two float attachments: local surface P+ownership and normal guides. Scoped
+ * curved receivers pack octahedral Ng/Ns; planes retain Ng+ownership. Replays only prepared opaque
  * commands; no second Scene update/render lifecycle. @private */
 class LumenReceiverPass {
   constructor() {

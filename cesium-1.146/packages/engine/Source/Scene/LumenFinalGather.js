@@ -48,6 +48,7 @@ class LumenFinalGather {
     this.quality = "balanced";
     this.model = undefined;
     this.maxMemoryBytes = 64 * 1048576;
+    this.additionalSceneBytes = 0;
     this.maxRayInvocations = 16 * 1048576;
     this.traversalBudget = 256;
     this.seed = 0;
@@ -57,6 +58,7 @@ class LumenFinalGather {
     this.rayLayout = "interleaved";
     this.rayOrder = "azimuth";
     this.lazyFallback = true;
+    this.smoothReceivers = false; // only explicitly registered convex spheres
     this.sequenceEpoch = undefined;
     this._sampleEpoch = 0;
     this.freezeSampling = false; // explicit image diagnostics only
@@ -113,6 +115,7 @@ class LumenFinalGather {
     rayLayout = this.rayLayout,
     rayOrder = this.rayOrder,
     lazyFallback = this.lazyFallback,
+    smoothReceivers = this.smoothReceivers,
     seed = this.seed,
     sequenceEpoch = this.sequenceEpoch,
   } = {}) {
@@ -145,6 +148,7 @@ class LumenFinalGather {
       this.execution !== execution ||
       this.rayLayout !== rayLayout ||
       this.rayOrder !== rayOrder ||
+      this.smoothReceivers !== smoothReceivers ||
       this.seed !== seed ||
       this.sequenceEpoch !== sequenceEpoch;
     if (!["split", "fused4", "fused8"].includes(execution)) {
@@ -158,6 +162,7 @@ class LumenFinalGather {
     }
     if (
       typeof reconstruction !== "boolean" ||
+      typeof smoothReceivers !== "boolean" ||
       typeof lazyFallback !== "boolean"
     ) {
       throw new DeveloperError(
@@ -165,6 +170,7 @@ class LumenFinalGather {
       );
     }
     this.lazyFallback = lazyFallback;
+    this.smoothReceivers = smoothReceivers;
     this.rayOrder = rayOrder;
     this.execution = execution;
     this.rayLayout = rayLayout;
@@ -247,6 +253,7 @@ class LumenFinalGather {
       reconstruction:
         this.sampling === "reconstructed" && this.reconstructionEnabled,
       snapshotBytes,
+      additionalSceneBytes: this.additionalSceneBytes,
       memoryBudget: this.maxMemoryBytes,
       invocationBudget: this.maxRayInvocations,
       maximumTextureSize: ContextLimits.maximumTextureSize,
@@ -317,6 +324,7 @@ class LumenFinalGather {
       if (this.sampling === "reconstructed" && this.reconstructionEnabled) {
         this.reconstruction = new LumenFinalGatherReconstruction(this);
         this.reconstruction.update(l.width, l.height);
+        this.reconstruction.targetFrames = l.targetFrames;
       }
       const c = this.scene.context,
         gl = c._gl,
@@ -461,6 +469,7 @@ class LumenFinalGather {
       Object.assign(uniformMap, {
         u_receiverPosition: () => this.receiver.position,
         u_receiverNormal: () => this.receiver.normal,
+        u_lumenFgPackedNormals: () => this.smoothReceivers,
         u_receiverOffset: () => this.offset,
         u_fgStart: () => this._start,
         u_fgWidth: () => this.resultSize.x,
@@ -578,7 +587,7 @@ class LumenFinalGather {
         ContextLimits.maximumTextureSize ||
       l.rw > ContextLimits.maximumTextureSize ||
       l.rh > ContextLimits.maximumTextureSize ||
-      l.bytes + snapshotBytes > this.maxMemoryBytes ||
+      l.totalBytes > this.maxMemoryBytes ||
       l.slots + l.geometrySlots > this.maxRayInvocations ||
       !Number.isInteger(this.traversalBudget) ||
       this.traversalBudget < 1 ||
@@ -813,10 +822,11 @@ class LumenFinalGather {
         traversalBudget: this.traversalBudget,
         geometryRayUpperBound: l.geometrySlots,
         snapshotBytes,
-        totalAdditionalBytes: l.bytes + snapshotBytes,
+        additionalSceneBytes: this.additionalSceneBytes,
+        totalAdditionalBytes: l.totalBytes,
         peakAdditionalBytes: Math.max(
           this.metrics.peakAdditionalBytes ?? 0,
-          l.bytes + snapshotBytes,
+          l.totalBytes,
         ),
       });
     } catch (error) {
@@ -868,7 +878,7 @@ class LumenFinalGather {
     this.metrics.accumulationPasses = 0;
     this.metrics.memoryBytes = 0;
     this.metrics.snapshotBytes = finalGatherSnapshotBytes(this.lumen.world);
-    this.metrics.totalAdditionalBytes = this.metrics.snapshotBytes;
+    this.metrics.totalAdditionalBytes = this.metrics.snapshotBytes + this.additionalSceneBytes;
   }
   isDestroyed() {
     return this._destroyed === true;

@@ -16,7 +16,7 @@ float rLuma(vec3 x){return dot(x,vec3(.2126,.7152,.0722));}
 void main(){
  ivec2 c=ivec2(gl_FragCoord.xy),size=textureSize(u_rRaw,0),r=c+u_rOffset;
  vec4 raw=texelFetch(u_rRaw,c,0),p=texelFetch(u_rPosition,r,0),n=texelFetch(u_rNormal,r,0);
- out_FragData_2=p;out_FragData_3=vec4(n.xyz,0);
+ out_FragData_2=p;out_FragData_3=u_lumenFgPackedNormals?n:vec4(n.xyz,0);
  out_FragData_0=vec4(0);out_FragData_1=vec4(0,0,0,4);
  if(raw.a<.5||p.a<.5)return;
  float l=rLuma(raw.rgb);
@@ -35,8 +35,8 @@ void main(){
    vec4 e=texelFetch(u_rHistoryE,q,0),hp=texelFetch(u_rHistoryP,q,0),hn=texelFetch(u_rHistoryN,q,0);
    vec3 delta=hp.xyz-p.xyz;
    reason=3.0;
-   if(e.a<.5||abs(hp.a-p.a)>.1||dot(hn.xyz,n.xyz)<.995||abs(dot(delta,n.xyz))>.005||length(delta)>footprint)continue;
-   if(texelFetch(u_rNeighborhood,c,0).r<.5&&!lumen_fgSegment(p.xyz,hp.xyz,n.xyz))continue;
+   if(e.a<.5||!lumen_fgCompatible(p,n,hp,hn,footprint))continue;
+   if(!lumen_fgCurve(p)&&texelFetch(u_rNeighborhood,c,0).r<.5&&!lumen_fgSegment(p.xyz,hp.xyz,lumen_fgNg(n)))continue;
    vec2 a=mix(1.0-fraction,fraction,vec2(x,y));float w=a.x*a.y;
    oldE+=e.rgb*w;oldM+=texelFetch(u_rHistoryM,q,0).xy*w;oldLength+=e.a*w;total+=w;
   }
@@ -69,11 +69,11 @@ void main(){
   ivec2 dir=i==0?ivec2(1,0):i==1?ivec2(-1,0):i==2?ivec2(0,1):ivec2(0,-1),q=c+dir;
   if(any(lessThan(q,ivec2(0)))||any(greaterThanEqual(q,size)))continue;
   vec4 hp=texelFetch(u_rPosition,q+u_rOffset,0),hn=texelFetch(u_rNormal,q+u_rOffset,0);
-  if(texelFetch(u_rRaw,q,0).a<.5||abs(hp.a-p.a)>.1||dot(hn.xyz,n.xyz)<.995||abs(dot(hp.xyz-p.xyz,n.xyz))>.005)continue;
-  links[i]=lumen_fgSegment(p.xyz,hp.xyz,n.xyz)?1.0:0.0;
+  if(texelFetch(u_rRaw,q,0).a<.5||!lumen_fgCompatible(p,n,hp,hn,lumen_fgCurve(p)?.05:1e20))continue;
+  links[i]=(lumen_fgCurve(p)||lumen_fgSegment(p.xyz,hp.xyz,lumen_fgNg(n)))?1.0:0.0;
  }out_FragColor=links;
 }`;
-export const spatial = `
+export const spatial = `${geometry}
 precision highp float;precision highp sampler2D;
 uniform sampler2D u_rInput,u_rMoments,u_rPosition,u_rNormal,u_rConnections;
 uniform ivec2 u_rOffset;
@@ -90,7 +90,7 @@ void main(){
   bool connected=true;for(int j=0;j<2;j++){if(j>=u_rStep)break;if(texelFetch(u_rConnections,c+dir*j,0)[i]<.5)connected=false;}
   if(!connected)continue;
   vec4 a=texelFetch(u_rInput,q,0),hp=texelFetch(u_rPosition,q+u_rOffset,0),hn=texelFetch(u_rNormal,q+u_rOffset,0),hm=texelFetch(u_rMoments,q,0);
-  if(a.a<.5||abs(hp.a-p.a)>.1||dot(hn.xyz,n.xyz)<.995||abs(dot(hp.xyz-p.xyz,n.xyz))>.005)continue;
+  if(a.a<.5||!lumen_fgCompatible(p,n,hp,hn,lumen_fgCurve(p)?.05:1e20))continue;
   float sigma=sqrt(variance+max(hm.z,.0001));
   // Wide uncertainty for fresh histories; mature estimates preserve E gradients.
   if(min(a.a,e.a)<4.0)sigma=max(sigma,.25*max(lum,rLuma(a.rgb))+.02);

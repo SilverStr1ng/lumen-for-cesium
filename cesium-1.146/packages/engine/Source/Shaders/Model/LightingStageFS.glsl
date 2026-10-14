@@ -127,6 +127,11 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         if(u_lumenDebugMode==15)color=vec3(lumen_fgWeight);
         if(u_lumenDebugMode==16){ivec2 c=ivec2(gl_FragCoord.xy/u_lumenFgSceneSize*u_lumenReceiverSize-u_lumenFgOffset);color=(all(greaterThanEqual(c,ivec2(0)))&&all(lessThan(c,ivec2(u_lumenFgSize))))?texelFetch(u_lumenFgNeighborhood,c,0).rrr:vec3(0);}
         if(u_lumenDebugMode==17)color=vec3(lumen_fgFallbackReason);
+        // Mask every visible registered ball, including receivers rejected by
+        // the support gate. Diagnostics must not remove failures from coverage.
+        if(u_lumenDebugMode==18)color=vec3(u_lumenFgCurved?1.0:0.0,acos(clamp(dot(lumen_triangleNormal(position),material.normalEC),-1.0,1.0)),lumen_volumeCoverage);
+        // Small integer IDs remain exact in the HDR half-float scene target.
+        if(u_lumenDebugMode==19)color=vec3(u_lumenFgCurved?128.0+u_lumenFgSurfaceId-4096.0:0.0,u_lumenFgCurved?1.0:0.0,0);
         #endif
     }
     #endif
@@ -147,9 +152,10 @@ void lightingStage(inout czm_modelMaterial material, ProcessedAttributes attribu
     #ifdef LUMEN_RECEIVER_PASS
         #if defined(LUMEN_MODEL_LIGHTING) && defined(LUMEN_RECEIVER_COMPOSITE)
         vec3 ng=lumen_triangleNormal(attributes.positionEC);
-        if(u_lumenReceiverSupported&&dot(ng,material.normalEC)>=0.999) {
+        float alignment=dot(ng,material.normalEC);
+        if(u_lumenReceiverSupported&&alignment>=(u_lumenFgCurved?0.8660253:0.999)) {
             lumen_receiverPosition=vec4((u_lumenEyeToLocal*vec4(attributes.positionEC,1.0)).xyz,u_lumenFgSurfaceId);
-            lumen_receiverNormal=vec4(normalize(mat3(u_lumenEyeToLocal)*ng),u_lumenFgSurfaceId);
+            lumen_receiverNormal=lumen_fgPack(normalize(mat3(u_lumenEyeToLocal)*ng),normalize(mat3(u_lumenEyeToLocal)*material.normalEC),u_lumenFgSurfaceId);
         }
         #endif
         // Remaining alpha/clipping/log-depth stages still execute in the original main.
