@@ -4,6 +4,11 @@ import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
 import { appendFileSync } from "node:fs";
 import path from "node:path";
 import { sourceVersion } from "./browser-tools.mjs";
+import {
+  requiredStates,
+  summarize,
+  sharedReferences,
+} from "./r9-acceptance.mjs";
 const args = process.argv,
   explicit = args.find((a) => a.startsWith("--output="))?.slice(9),
   out =
@@ -13,22 +18,10 @@ const args = process.argv,
   root = path.resolve("reports");
 if (!path.resolve(out).startsWith(root + path.sep))
   throw Error("R9 output must be inside reports");
-const scripts = [
-    "verify-r9",
-    "verify-ballpool",
-    "verify-ballpool-descriptor",
-    "verify-ballpool-desktop",
-    "verify-curved-receivers",
-    "verify-curved-contract",
-    "verify-curved-topology",
-    "verify-curved-temporal",
-    "benchmark-ballpool-preview",
-    "benchmark-fg-runtime",
-    "benchmark-ballpool",
-    "verify-r8",
-  ],
-  current = sourceVersion([
-    ...scripts.map((n) => `scripts/${n}.mjs`),
+const current = sourceVersion([
+    ...(await readdir("scripts"))
+      .filter((n) => n.endsWith(".mjs"))
+      .map((n) => `scripts/${n}`),
     "package.json",
     "package-lock.json",
     "node_modules/@dimforge/rapier3d-deterministic-compat/rapier.mjs",
@@ -59,9 +52,21 @@ if (cached) {
     )
       throw Error("cached source/build/assets/config mismatch");
     for (const [file, digest] of Object.entries(report.inputs)) {
+      if (
+        !path.resolve(file).startsWith(path.resolve(out) + path.sep) &&
+        !sharedReferences.includes(file)
+      )
+        throw Error(`cached evidence outside run: ${file}`);
       if (sha(await readFile(file)) !== digest)
         throw Error(`cached evidence mismatch: ${file}`);
     }
+    const result = await summarize(report, out, true);
+    if (
+      JSON.stringify(result.states) !== JSON.stringify(report.states) ||
+      result.recommended !== report.recommended ||
+      result.status !== report.status
+    )
+      throw Error("cached aggregate contradicts mandatory evidence");
     report.cachedVerification = {
       verified: true,
       at: new Date().toISOString(),
@@ -91,7 +96,7 @@ if (cached) {
     configuration,
     started: new Date().toISOString(),
     tests: [],
-    states: {},
+    states: Object.fromEntries(requiredStates.map((s) => [s, "not-run"])),
     inputs: {},
     recommended: false,
     notRun: [],
@@ -138,82 +143,91 @@ if (cached) {
       if ((await run(name, parameters)).exitCode !== 0)
         report.states[label] = "failed";
   };
-  await group("curved-quality", [
-    ["verify-curved-contract"],
-    ["verify-curved-topology"],
-    ["verify-curved-receivers"],
-  ]);
-  await group("curved-temporal", [["verify-curved-temporal"]]);
-  await group("ballpool-frozen-GI", [
-    ["verify-ballpool-descriptor"],
-    ["verify-ballpool"],
-  ]);
-  for (const state of ["physics-interaction", "snapshot-consistency"])
-    report.states[state] = report.states["ballpool-frozen-GI"];
-  await group("resource", [["verify-ballpool-desktop"]]);
-  await group("physics-preview-performance", [["benchmark-ballpool-preview"]]);
-  const regression = await run(
-    "verify-r8",
-    ["--quality-only", `--output=${out}/regression`],
-    out + "/regression",
-  );
   try {
-    const r = JSON.parse(
-      await readFile(out + "/regression/test-suite.json", "utf8"),
+    await run("verify-r9-acceptance");
+    await group("curved-quality", [
+      ["verify-curved-contract"],
+      ["verify-curved-topology"],
+      ["verify-curved-receivers"],
+    ]);
+    await group("curved-temporal", [["verify-curved-temporal"]]);
+    await group("ballpool-frozen-GI", [
+      ["verify-ballpool-descriptor"],
+      ["verify-ballpool"],
+    ]);
+    for (const state of ["physics-interaction", "snapshot-consistency"])
+      report.states[state] = report.states["ballpool-frozen-GI"];
+    await group("resource", [["verify-ballpool-desktop"]]);
+    await group("physics-preview-performance", [
+      ["benchmark-ballpool-preview"],
+    ]);
+    const regression = await run(
+      "verify-r8",
+      ["--without-performance", `--output=${out}/regression`],
+      out + "/regression",
     );
-    report.states.regression = r.states.regression;
-    report.states["fixed-quality-regression"] = r.states["fixed-quality"];
-    report.states["Auto-quality-regression"] = r.states["auto-quality"];
-    report.states["temporal-regression"] = r.states.temporal;
-    report.states.showcase = r.states.showcase;
-  } catch (e) {
-    report.states.regression = "failed";
-    report.regressionError = String(e);
-  }
-  const performances = {
-    "fixed32-performance": [],
-    "interactive-performance": [],
-    "ballpool-static-performance": [],
-  };
-  for (const quality of ["high", "interactive16"])
-    for (const scene of ["original", "gallery"])
-      for (const activity of ["static", "moving", "relight"]) {
-        const row = await run("benchmark-fg-runtime", [
-          `--scene=${scene}`,
+    try {
+      const r = JSON.parse(
+        await readFile(out + "/regression/test-suite.json", "utf8"),
+      );
+      report.states.regression = r.states.regression;
+      report.states["fixed-quality-regression"] = r.states["fixed-quality"];
+      report.states["Auto-quality-regression"] = r.states["auto-quality"];
+      report.states["temporal-regression"] = r.states.temporal;
+      report.states.showcase = r.states.showcase;
+    } catch (e) {
+      report.states.regression = "failed";
+      report.regressionError = String(e);
+    }
+    const performances = {
+      "fixed32-performance": [],
+      "interactive-performance": [],
+      "ballpool-static-performance": [],
+    };
+    for (const quality of ["high", "interactive16"])
+      for (const scene of ["original", "gallery"])
+        for (const activity of ["static", "moving", "relight"]) {
+          const row = await run("benchmark-fg-runtime", [
+            `--scene=${scene}`,
+            `--quality=${quality}`,
+            `--activity=${activity}`,
+            "--azimuth",
+            "--lazy",
+          ]);
+          performances[
+            quality === "high"
+              ? "fixed32-performance"
+              : "interactive-performance"
+          ].push(row);
+        }
+    for (const quality of ["auto", "interactive16"])
+      performances["ballpool-static-performance"].push(
+        await run("benchmark-fg-runtime", [
+          "--scene=ballpool",
           `--quality=${quality}`,
-          `--activity=${activity}`,
+          "--activity=static",
           "--azimuth",
           "--lazy",
-        ]);
-        performances[
-          quality === "high" ? "fixed32-performance" : "interactive-performance"
-        ].push(row);
-      }
-  for (const quality of ["auto", "interactive16"])
-    performances["ballpool-static-performance"].push(
-      await run("benchmark-fg-runtime", [
-        "--scene=ballpool",
-        `--quality=${quality}`,
-        "--activity=static",
-        "--azimuth",
-        "--lazy",
-      ]),
+        ]),
+      );
+    for (const [name, rows] of Object.entries(performances))
+      report.states[name] = rows.every((r) => r.exitCode === 0)
+        ? "passed"
+        : "failed";
+    const history = JSON.parse(
+      await readFile(
+        "reports/fg-runtime-budget-v7/acceptance-20261014-final/test-suite.json",
+        "utf8",
+      ),
     );
-  for (const [name, rows] of Object.entries(performances))
-    report.states[name] = rows.every((r) => r.exitCode === 0)
-      ? "passed"
-      : "failed";
-  const history = JSON.parse(
-    await readFile(
-      "reports/fg-runtime-budget-v7/acceptance-20261014-final/test-suite.json",
-      "utf8",
-    ),
-  );
-  report.r8Historical = {
-    head: history.version.head,
-    states: history.states,
-    recommended: history.recommended,
-  };
+    report.r8Historical = {
+      head: history.version.head,
+      states: history.states,
+      recommended: history.recommended,
+    };
+  } catch (e) {
+    report.error = e.stack;
+  }
   for (const row of report.tests)
     report.inputs[row.log] = sha(await readFile(row.log));
   const collect = async (dir) => {
@@ -221,20 +235,16 @@ if (cached) {
       const file = dir + "/" + entry.name;
       if (entry.isDirectory()) await collect(file);
       else if (
-        ![
-          "progress.json",
-          "test-suite.json",
-          "cached-verification.json",
-        ].includes(entry.name)
+        file !== out + "/test-suite.json" &&
+        !["progress.json", "cached-verification.json"].includes(entry.name)
       )
         report.inputs[file] = sha(await readFile(file));
     }
   };
   await collect(out);
-  report.recommended =
-    Object.values(report.states).every((v) => v === "passed") &&
-    !report.notRun.length;
-  report.status = report.recommended ? "passed" : "failed";
+  for (const file of sharedReferences)
+    report.inputs[file] = sha(await readFile(file));
+  Object.assign(report, await summarize(report, out));
   report.finished = new Date().toISOString();
   report.unmeasured = [
     "physical driver VRAM",

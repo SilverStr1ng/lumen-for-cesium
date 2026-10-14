@@ -208,7 +208,7 @@ export async function sampleComposite(lab, points) {
   ];
   const fb = w._framebuffer(outputs);
   const code =
-    "#define LUMEN_RECEIVER_COMPOSITE\n#define LUMEN_FG_REASONS\n#define LUMEN_FG_RECONSTRUCTION\nprecision highp float;precision highp sampler2D;vec2 diagPixel;vec3 diagNg;float diagMetersPerPixel;uniform vec2 u_diagUnitPixel;uniform bool u_diagOrthographic;uniform sampler2D u_diag;uniform bool u_lumenFgEnabled,u_lumenFgHistory;uniform float u_lumenWorldGain,u_lumenFgFallbackCode;float u_lumenFgSurfaceId;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenFgFiltered,u_lumenReceiverPosition,u_lumenReceiverNormal;\n" +
+    "#define LUMEN_RECEIVER_COMPOSITE\n#define LUMEN_FG_REASONS\n#define LUMEN_FG_RECONSTRUCTION\nprecision highp float;precision highp sampler2D;vec2 diagPixel;vec3 diagNg;float diagMetersPerPixel;uniform vec2 u_diagUnitPixel;uniform bool u_diagOrthographic;uniform sampler2D u_diag;uniform bool u_lumenFgEnabled,u_lumenFgHistory,u_lumenFgCurved;uniform float u_lumenWorldGain,u_lumenFgFallbackCode;float u_lumenFgSurfaceId;uniform mat4 u_lumenEyeToLocal;uniform vec2 u_lumenFgSceneSize,u_lumenReceiverSize,u_lumenFgSize,u_lumenFgOffset;uniform sampler2D u_lumenFgNeighborhood,u_lumenFgTexture,u_lumenFgFiltered,u_lumenReceiverPosition,u_lumenReceiverNormal;\n" +
     declarations +
     helper +
     functions +
@@ -227,6 +227,8 @@ export async function sampleComposite(lab, points) {
       u_diagOrthographic: () =>
         lab.scene.camera.frustum.projectionMatrix[15] !== 0,
       u_lumenFgEnabled: () => true,
+      u_lumenFgPackedNormals: () => false,
+      u_lumenFgCurved: () => false,
       u_lumenFgHistory: () => true,
       u_lumenWorldGain: () => w.gain,
       u_lumenFgFallbackCode: () => f.fallbackReason,

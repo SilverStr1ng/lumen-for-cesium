@@ -75,6 +75,16 @@ try {
   await page.goto(
     "http://localhost:8090/demo/ballpool.html?diagnostic=1&count=64",
   );
+  await page.waitForFunction(() => !!window.ballPool);
+  report.startup = await page.evaluate(() => {
+    const s = ballPool.snapshot();
+    if (!ballPool.physics) ballPool.toss();
+    return {
+      physicsReady: !!ballPool.physics,
+      tossEnabled: !document.getElementById("toss").disabled,
+      phase: s.phase,
+    };
+  });
   await ready();
   report.environment = await environment(page, browser);
   report.initial = await page.evaluate(async () => {
@@ -340,6 +350,36 @@ try {
   await page.evaluate(() => glObserver.phase("production"));
   await page.evaluate(() => ballPool.reset(16));
   await ready();
+  report.countTransitions = [];
+  for (const count of [64, 128, 16]) {
+    const row = await page.evaluate(async (count) => {
+      const old = ballPool.model;
+      await ballPool.reset(count);
+      const s = ballPool.snapshot();
+      return {
+        count,
+        state: s,
+        oldDestroyed: old.isDestroyed(),
+        nodes: s.descriptor.balls.every(
+          (b) => !!ballPool.model.getNode(`ball-${b.ballId}`),
+        ),
+        workers: workerAudit(),
+      };
+    }, count);
+    await ready();
+    report.countTransitions.push(row);
+    check(
+      `count switch to ${count} preserves descriptor/model/world`,
+      row.oldDestroyed &&
+        row.nodes &&
+        row.state.descriptor.balls.length === count &&
+        row.state.generation === row.state.modelGeneration &&
+        row.state.generation === row.state.worldGeneration &&
+        row.workers.localWorldWorkers === 1 &&
+        row.state.resources.peakAdditionalBytes <= 64 * 1048576,
+      row,
+    );
+  }
   report.cycles = [];
   for (let cycle = 0; cycle < 20; cycle++) {
     const row = await page.evaluate(async (cycle) => {

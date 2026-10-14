@@ -115,10 +115,18 @@ LightingPipelineStage.process = function (
       if (!owners.map.has(ownerKey)) {
         owners.map.set(ownerKey, owners.next++);
       }
-      const registered = model._lumenCurvedSurfaces?.get(renderResources.runtimeNode?.node?.name);
+      const registered = model._lumenCurvedSurfaces?.get(
+        renderResources.runtimeNode?.node?.name,
+      );
       // Caller registers a descriptor ball, never a material. A separate owner
       // namespace lets every neighbor reject other balls and container patches.
-      const curved = registered?.radius===.34 && Number.isInteger(registered.ballId) && registered.ballId>0 && registered.ballId<4096 && !defined(primitive.material.normalTexture) && primitive.material.alphaMode !== "MASK";
+      const curved =
+        registered?.radius === 0.34 &&
+        Number.isInteger(registered.ballId) &&
+        registered.ballId > 0 &&
+        registered.ballId < 4096 &&
+        !defined(primitive.material.normalTexture) &&
+        primitive.material.alphaMode !== "MASK";
       const id = curved ? 4096 + registered.ballId : owners.map.get(ownerKey),
         fg = () => frameState.lumen?.finalGather,
         source = () => {
@@ -126,6 +134,17 @@ LightingPipelineStage.process = function (
           return world?.ready && !world.isDestroyed() ? world : undefined;
         };
       const uniforms = {
+        u_lumenDiagnosticFloorZ: [
+          "float",
+          () => model._lumenDiagnosticFloorZ ?? 0,
+        ],
+        u_lumenDiagnosticSurface: [
+          "float",
+          () =>
+            model._lumenDiagnosticSurfaces?.get(
+              renderResources.runtimeNode?.node?.name,
+            ) ?? 0,
+        ],
         u_lumenFgPackedNormals: ["bool", () => !!fg()?.smoothReceivers],
         u_lumenFgCurved: ["bool", () => curved && !!fg()?.smoothReceivers],
         u_lumenFgLazyFallback: [

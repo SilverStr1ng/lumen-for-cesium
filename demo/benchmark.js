@@ -3,7 +3,13 @@
 export async function measureFrames(
   scene,
   frames = 150,
-  { warmup = 20, requireFG = false, beforeFrame, afterFrame } = {},
+  {
+    warmup = 20,
+    requireFG = false,
+    beforeFrame,
+    afterFrame,
+    minimumMilliseconds = 0,
+  } = {},
 ) {
   const intervals = [],
     cpu = [],
@@ -41,7 +47,11 @@ export async function measureFrames(
     }
   };
   const before = () => {
-    if (rendered >= frames) return;
+    if (
+      rendered >= frames &&
+      performance.now() - started >= minimumMilliseconds
+    )
+      return;
     beforeFrame?.(rendered);
     active = {
       queries: [],
@@ -90,7 +100,10 @@ export async function measureFrames(
   scene.postRender.addEventListener(after);
   const started = performance.now();
   try {
-    while (rendered < frames) {
+    while (
+      rendered < frames ||
+      performance.now() - started < minimumMilliseconds
+    ) {
       await new Promise(requestAnimationFrame);
       raf++;
       poll();

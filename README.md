@@ -20,6 +20,11 @@ npm start
 
 无需 token 或 Sponza 服务可直接打开 [Earth GI Lab](http://localhost:8090/demo/globe.html)：真实 Cesium Globe、本地 NaturalEarthII 与椭球地形，以及同一 glTF 驱动显示/GI 的原创展馆。设置面板可选填仅保存在内存中的 ion token。外围地形只作为背景，不参与完整 GI。见[页面与配置说明](demo/globe-README.md)、[本轮截图和验证记录](reports/globe-visibility-v3/README.md)。
 
+[Ball Pool](http://localhost:8090/demo/ballpool.html) 提供默认 64 球的静态曲面漫反射 GI、本地 Rapier 物理播放/暂停/投球，以及“定格并更新 GI”。运动期间使用明确的基础照明预览，定格后从同一姿态重建显示与 GI。Gallery 也有入口。
+新增 Interactive16 是独立质量与收敛取舍，固定 32r 的旧性能门限保持不变。当前能力、验收失败和后续工作见[用户进度报告](docs/progress/latest.md)，曲面子集合同见[曲面接收说明](docs/curved-receivers.md)。根目录 `npm run setup` 会安装锁定的物理依赖及本地内嵌 WASM；许可见[第三方通知](docs/third-party/README.md)。
+
+R9 命令：`npm run test:curved-receivers`、`npm run test:ballpool`、`npm run benchmark:ballpool`、`npm run test:r9`。总验收使用新的证据目录，失败返回非零；完整记录和图像见[球池验收页](http://localhost:8090/reports/ballpool-curved-receivers-v8/index.html)。
+
 发布回调采用[渲染事务后的通知合同](docs/publication-lifecycle.md)；太阳查询的 SAH、精确 any-hit 与 median 参考开关见[查询说明](docs/visibility-query.md)。验收命令为 `npm run test:publication-lifecycle`、`npm run test:globe`、`npm run test:visibility`；同质量计时使用 `npm run benchmark:visibility`。
 
 默认模型是你提供的 [Sponza](http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf)，直接从现有资产服务加载，未修改模型文件。资产服务必须继续运行并允许跨端口访问；当前已验证它返回 CORS `*`。

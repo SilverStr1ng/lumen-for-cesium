@@ -70,6 +70,10 @@ const pendingModels = new Set(),
   latencies = [],
   errors = [],
   resources = { peakAdditionalBytes: 0, peakSceneBytes: 0 };
+const displayTransforms = new WeakMap(),
+  displayPosition = new C.Cartesian3(),
+  displayRotation = new C.Quaternion(),
+  displayScale = new C.Cartesian3();
 const labels = {
   "static-ready": "静态 GI 就绪",
   "physics-preview": "物理预览：局部 GI 暂停",
@@ -200,13 +204,32 @@ function invalidate() {
 }
 function syncDisplay() {
   if (!model?.ready) return;
+  let transforms = displayTransforms.get(model);
+  if (!transforms) {
+    transforms = new Map(
+      descriptor.balls.map((b) => [
+        b.ballId,
+        { node: model.getNode(`ball-${b.ballId}`), matrix: new C.Matrix4() },
+      ]),
+    );
+    displayTransforms.set(model, transforms);
+  }
   for (const b of descriptor.balls) {
-    const node = model.getNode(`ball-${b.ballId}`);
+    const { node, matrix } = transforms.get(b.ballId) ?? {};
     if (!node) throw Error("Missing shared descriptor node");
+    C.Cartesian3.fromArray(b.position, 0, displayPosition);
+    [
+      displayRotation.x,
+      displayRotation.y,
+      displayRotation.z,
+      displayRotation.w,
+    ] = b.rotation;
+    displayScale.x = displayScale.y = displayScale.z = b.radius;
     node.matrix = C.Matrix4.fromTranslationQuaternionRotationScale(
-      C.Cartesian3.fromArray(b.position),
-      new C.Quaternion(...b.rotation),
-      new C.Cartesian3(b.radius, b.radius, b.radius),
+      displayPosition,
+      displayRotation,
+      displayScale,
+      matrix,
     );
   }
   scene.requestRender();
@@ -224,6 +247,7 @@ function play() {
   setPhase("physics-preview");
 }
 function toss() {
+  if (disposed || !physics) return;
   if (!playing) play();
   physics.toss(descriptor.balls[tossId++ % descriptor.balls.length].ballId);
   syncDisplay();
@@ -266,10 +290,18 @@ function camera(name, fly = false) {
     return;
   }
   const eye = C.Cartesian3.fromArray(
-      name === "close" ? [-1.8, -2.9, 1.6] : [8, -10, 8],
+      name === "contact"
+        ? [0, -2.9, 0.72]
+        : name === "close"
+          ? [-1.8, -2.9, 1.6]
+          : [8, -10, 8],
     ),
     target = C.Cartesian3.fromArray(
-      name === "close" ? [0, 0, 0.65] : [0, 0, 0.4],
+      name === "contact"
+        ? [0, 0, 0.2]
+        : name === "close"
+          ? [0, 0, 0.65]
+          : [0, 0, 0.4],
     ),
     d = C.Cartesian3.normalize(
       C.Cartesian3.subtract(target, eye, new C.Cartesian3()),
@@ -323,6 +355,15 @@ async function rebuild(captured, own) {
     fresh._lumenCurvedSurfaces = new Map(
       captured.balls.map((b) => [`ball-${b.ballId}`, b]),
     );
+    fresh._lumenDiagnosticSurfaces = new Map(
+      captured.container.map((p) => [
+        `pool-${p.name}`,
+        p.name === "floor" ? 1 : 2,
+      ]),
+    );
+    fresh._lumenDiagnosticFloorZ = captured.container.find(
+      (p) => p.name === "floor",
+    ).hi[2];
     fresh._ballpoolGeneration = own;
     fresh.imageBasedLighting.imageBasedLightingFactor = new C.Cartesian2(1, 1);
     if (own !== generation || disposed) {
@@ -449,6 +490,7 @@ async function rebuild(captured, own) {
 }
 function freeze() {
   if (disposed) return Promise.reject(Error("Ball Pool disposed"));
+  if (!physics) return Promise.reject(Error("Ball Pool physics is preparing"));
   pause();
   physics.capture();
   syncDisplay();
@@ -474,15 +516,21 @@ function freeze() {
   return request;
 }
 async function reset(count = Number($("count").value)) {
-  pause();
-  invalidate();
-  physics?.destroy();
-  physics = undefined;
-  descriptor = createBallPool({
+  // Validate before retiring the visible descriptor/model pair.
+  const replacement = createBallPool({
     count,
     seed: descriptor.seed,
     segments: descriptor.segments,
   });
+  pause();
+  invalidate();
+  physics?.destroy();
+  physics = undefined;
+  if (model && !model.isDestroyed()) scene.primitives.remove(model);
+  model = undefined;
+  releaseAsset(asset);
+  asset = undefined;
+  descriptor = replacement;
   const own = generation,
     freshPhysics = await BallPoolPhysics.create(descriptor);
   if (own !== generation || disposed) {
@@ -554,6 +602,26 @@ async function descriptorHash(d = descriptor) {
 function snapshot() {
   return {
     phase,
+    camera: {
+      position: [
+        scene.camera.positionWC.x,
+        scene.camera.positionWC.y,
+        scene.camera.positionWC.z,
+      ],
+      direction: [
+        scene.camera.directionWC.x,
+        scene.camera.directionWC.y,
+        scene.camera.directionWC.z,
+      ],
+      up: [scene.camera.upWC.x, scene.camera.upWC.y, scene.camera.upWC.z],
+    },
+    lighting: structuredClone(lighting),
+    display: {
+      exposure: scene.postProcessStages.exposure,
+      debugMode: scene.lumen.debugMode,
+      shadowSize: scene.shadowMap.size,
+      resolutionScale: widget.resolutionScale,
+    },
     generation,
     playing,
     dirty,
@@ -564,6 +632,7 @@ function snapshot() {
     modelGeneration: model?._ballpoolGeneration ?? null,
     worldRevision: scene.lumen.world?.requestedRevision ?? null,
     snapshotRevision: scene.lumen.world?.finalGatherSnapshot?.revision ?? null,
+    snapshotRound: scene.lumen.world?.finalGatherSnapshot?.round ?? null,
     historyFrames: fg.reconstruction?.frames ?? 0,
     fg: { ...fg.metrics },
     resources: resourceMetrics(),
@@ -612,6 +681,8 @@ scene.postRender.addEventListener(() => {
     `${labels[phase]} · 几何 ${generation}${scene.lumen.enabled ? ` · ${fg.quality} / ${fg.ready ? fg.samples : 0}r` : ""}`;
   $("debug").disabled = !scene.lumen.enabled;
   $("capture").disabled = !fg.ready;
+  for (const id of ["play", "pause", "toss", "freeze"])
+    $(id).disabled = !physics;
   if (
     phase === "converging" &&
     fg.ready &&
@@ -635,7 +706,7 @@ const catchUI = (f) => () =>
     });
 $("play").onclick = play;
 $("pause").onclick = pause;
-$("toss").onclick = toss;
+$("toss").onclick = catchUI(toss);
 $("freeze").onclick = catchUI(freeze);
 $("reset").onclick = catchUI(() => reset());
 $("count").onchange = catchUI(() => reset());

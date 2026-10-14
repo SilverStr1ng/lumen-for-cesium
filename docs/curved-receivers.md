@@ -53,3 +53,14 @@ R8 fixed32 thresholds and its failed recommendation remain in force. A separate
 interactive16 preset trades rays per frame for convergence time; it is not a
 same-quality acceleration. All additional FG resources, normal guides, geometry
 and replacement peaks are reported within the unchanged 64MiB budget.
+
+The shared normal/sampling contract and sphere coverage do not guarantee that
+the inherited sparse DDGI hit-side input is accurate at every contact. The
+dedicated foreground, floor-contact and dual-ball regions retain their actual
+independent finite-path errors, including failures, without excluding unsupported
+receiver pixels from coverage. The full-resolution diagnostic owner marks floor
+identity and the 4cm near-floor band from the fragment position, independently
+of the low receiver validity. A separate low contact camera supplements the
+original close view; both remain in acceptance. High-sample query evidence can
+distinguish inherited input bias from reconstruction error. See the user progress
+report for the tested limits; this adapter is experimental while those gates fail.

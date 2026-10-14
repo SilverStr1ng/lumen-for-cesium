@@ -47,7 +47,7 @@ export function createBallPool({ count = 64, seed = 19, segments = 24 } = {}) {
   }
   if (count <= 2)
     balls.forEach((b, i) => {
-      b.position = [(i - (count - 1) / 2) * 0.72, 0, radius + 0.001];
+      b.position = [(i - (count - 1) / 2) * (pitch + 0.002), 0, radius + 0.001];
     });
   // The dual-ball fixture deliberately shares its material and mesh. Surface
   // ownership must still distinguish both rigid bodies.

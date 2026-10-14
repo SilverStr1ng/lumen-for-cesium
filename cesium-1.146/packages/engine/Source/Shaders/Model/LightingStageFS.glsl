@@ -131,7 +131,7 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         // the support gate. Diagnostics must not remove failures from coverage.
         if(u_lumenDebugMode==18)color=vec3(u_lumenFgCurved?1.0:0.0,acos(clamp(dot(lumen_triangleNormal(position),material.normalEC),-1.0,1.0)),lumen_volumeCoverage);
         // Small integer IDs remain exact in the HDR half-float scene target.
-        if(u_lumenDebugMode==19)color=vec3(u_lumenFgCurved?128.0+u_lumenFgSurfaceId-4096.0:0.0,u_lumenFgCurved?1.0:0.0,0);
+        if(u_lumenDebugMode==19)color=vec3(u_lumenFgCurved?128.0+u_lumenFgSurfaceId-4096.0:u_lumenDiagnosticSurface,u_lumenFgCurved?1.0:0.0,u_lumenFgCurved&&((u_lumenEyeToLocal*vec4(position,1.0)).z<=u_lumenDiagnosticFloorZ+0.04)?8.0:u_lumenDiagnosticSurface>0.0?4.0:0.0);
         if(u_lumenDebugMode==20){float angle=clamp(acos(clamp(dot(lumen_triangleNormal(position),material.normalEC),-1.0,1.0))/(czm_pi/6.0),0.0,1.0);color=u_lumenFgCurved?vec3(angle,0,1.0-angle):vec3(0);}
         #endif
     }

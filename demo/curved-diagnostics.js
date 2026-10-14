@@ -147,7 +147,21 @@ export function captureCurved(lab, { primary = true } = {}) {
       unsupported = 0;
     const angleBins = Array(7).fill(0),
       fallback = {},
-      points = [];
+      points = [],
+      regionPoints = {
+        foregroundContour: [],
+        ballFloorContact: [],
+        ballBallContact: [],
+      },
+      regions = Object.fromEntries(
+        Object.keys(regionPoints).map((name) => [
+          name,
+          { pixels: 0, weight: 0 },
+        ]),
+      ),
+      regionMask = new Uint8Array(width * height),
+      balls = lab.descriptor.balls,
+      floorZ = lab.descriptor.container.find((p) => p.name === "floor").hi[2];
     for (let y = 0; y < height; y++)
       for (let x = 0; x < width; x++) {
         const i = (y * width + x) * 4;
@@ -160,7 +174,8 @@ export function captureCurved(lab, { primary = true } = {}) {
         const reason = Math.round(reasons[i]);
         fallback[reason] = (fallback[reason] ?? 0) + 1;
         let boundary = false,
-          other = false;
+          other = false,
+          floor = false;
         for (const [dx, dy] of [
           [1, 0],
           [-1, 0],
@@ -173,8 +188,9 @@ export function captureCurved(lab, { primary = true } = {}) {
           }
           const j = ((y + dy) * width + x + dx) * 4;
           if (owners[j] < 128) boundary = true;
-          if (owners[j] > 0.5 && Math.abs(owners[i] - owners[j]) > 0.1)
+          if (owners[j] >= 128 && Math.abs(owners[i] - owners[j]) > 0.1)
             other = true;
+          if (owners[j] === 1 && owners[j + 2] === 4) floor = true;
         }
         if (boundary) {
           edge++;
@@ -184,6 +200,16 @@ export function captureCurved(lab, { primary = true } = {}) {
           contact++;
           contactWeight += weights[i];
         }
+        // Full-resolution owner/position tag includes unsupported edge pixels.
+        // Receiver validity must not determine this coverage denominator.
+        const ground = floor && owners[i + 2] === 8;
+        const memberships = [boundary && !ground, ground, other];
+        Object.keys(regions).forEach((name, k) => {
+          if (!memberships[k]) return;
+          regions[name].pixels++;
+          regions[name].weight += weights[i];
+          regionMask[y * width + x] |= 1 << k;
+        });
       }
     let receivers = 0,
       valid = 0,
@@ -218,20 +244,50 @@ export function captureCurved(lab, { primary = true } = {}) {
             angle(ns, hns),
           );
         }
+        const point = () => ({
+          pixel: [x, y],
+          position: Array.from(p.slice(r, r + 3)),
+          geometricNormal: ng,
+          normal: ns,
+          owner: p[r + 3],
+          raw: Array.from(raw.slice(i, i + 3)),
+          E: Array.from(E.slice(i, i + 3)),
+          valid: raw[i + 3] > 0.5,
+        });
         if (
           x % Math.max(1, Math.floor(fw / 22)) === 0 &&
           y % Math.max(1, Math.floor(fh / 16)) === 0
         )
-          points.push({
-            pixel: [x, y],
-            position: Array.from(p.slice(r, r + 3)),
-            geometricNormal: ng,
-            normal: ns,
-            owner: p[r + 3],
-            raw: Array.from(raw.slice(i, i + 3)),
-            E: Array.from(E.slice(i, i + 3)),
-            valid: raw[i + 3] > 0.5,
-          });
+          points.push(point());
+        const hx = Math.min(
+            width - 1,
+            Math.floor(((x + fg.offset.x + 0.5) * width) / rw),
+          ),
+          hy = Math.min(
+            height - 1,
+            Math.floor(((y + fg.offset.y + 0.5) * height) / rh),
+          ),
+          ownBall = balls.find((b) => b.ballId === p[r + 3] - 4096),
+          nearGround = p[r + 2] <= floorZ + 0.04,
+          nearBall = balls.some(
+            (b) =>
+              b !== ownBall &&
+              Math.hypot(
+                p[r] - b.position[0],
+                p[r + 1] - b.position[1],
+                p[r + 2] - b.position[2],
+              ) <=
+                b.radius + 0.04,
+          ),
+          memberships = [
+            !!(regionMask[hy * width + hx] & 1),
+            nearGround,
+            nearBall,
+          ];
+        Object.keys(regionPoints).forEach((name, k) => {
+          if (memberships[k] && regionPoints[name].length < 8)
+            regionPoints[name].push(point());
+        });
       }
     return {
       generation: lab.snapshot().generation,
@@ -250,6 +306,19 @@ export function captureCurved(lab, { primary = true } = {}) {
       edgeMeanWeight: edge ? edgeWeight / edge : 0,
       contactPixels: contact,
       contactMeanWeight: contact ? contactWeight / contact : 0,
+      regions: Object.fromEntries(
+        Object.entries(regions).map(([name, r]) => [
+          name,
+          {
+            pixels: r.pixels,
+            meanWeight: r.pixels ? r.weight / r.pixels : null,
+            status: r.pixels ? "measured" : "not-run",
+          },
+        ]),
+      ),
+      regionDefinition:
+        "foreground projected contour excluding floor-contact band; ball-floor boundary within 4cm of floor; boundary against a different ball owner. Reference points use actual low receiver Ng/Ns, within 4cm of floor/other sphere; invalid samples retained.",
+      regionPoints,
       rayCounts: primary ? primaryCounts(lab) : undefined,
       angleBins5Degrees: angleBins,
       fallback,

@@ -19,6 +19,7 @@ const browser = await launchBrowser(),
       backendDelta: 0.00001,
     },
     rows: [],
+    failures: [],
     errors: [],
     renderErrors: [],
   };
@@ -88,136 +89,261 @@ try {
         return ballPool.relight(changes);
       }, light);
       for (const seed of [0, 5, 19]) {
-        const capture = await page.evaluate(async (seed) => {
-            const f = ballPool.scene.lumen.finalGather;
-            ballPool.widget.useDefaultRenderLoop = false;
-            await f.configure({
+        for (const view of ["close", "contact"]) {
+          const capture = await page.evaluate(
+              async ({ seed, view }) => {
+                const f = ballPool.scene.lumen.finalGather;
+                ballPool.widget.useDefaultRenderLoop = false;
+                ballPool.camera(view);
+                await f.configure({
+                  seed,
+                  sequenceEpoch: null,
+                  model: ballPool.model,
+                  execution: "split",
+                  sampling: "reconstructed",
+                  quality: "auto",
+                  smoothReceivers: true,
+                });
+                f._sampleEpoch = 0;
+                for (let i = 0; i < 32; i++) ballPool.widget.render();
+                const { captureCurved } =
+                    await import("/demo/curved-diagnostics.js"),
+                  c = captureCurved(ballPool);
+                c.points = c.points.slice(0, 32);
+                const query = await ballPool.world.sampleFinalGather(c.points, {
+                  samples: 1024,
+                  seed,
+                  sampling: "reconstructed",
+                  epoch: 31,
+                });
+                const regionQueries = Object.fromEntries(
+                  await Promise.all(
+                    Object.entries(c.regionPoints).map(
+                      async ([name, points]) => [
+                        name,
+                        points.length
+                          ? await ballPool.world.sampleFinalGather(points, {
+                              samples: 1024,
+                              seed,
+                              sampling: "reconstructed",
+                              epoch: 31,
+                            })
+                          : [],
+                      ],
+                    ),
+                  ),
+                );
+                return {
+                  capture: c,
+                  query,
+                  regionQueries,
+                  lighting: { ...ballPool.lighting },
+                  state: ballPool.snapshot(),
+                };
+              },
+              { seed, view },
+            ),
+            c = capture.capture;
+          assert(c.points.length >= 6, "must sample actual curved receivers");
+          const reference = c.points.map((p, i) =>
+              referenceIrradiance(
+                bvh,
+                p.position,
+                p.normal,
+                capture.lighting,
+                8192,
+                3019 + i,
+                p.geometricNormal,
+              ),
+            ),
+            refs = reference.map((r) => r.irradiance),
+            row = {
+              count,
+              scenario,
               seed,
-              sequenceEpoch: null,
-              model: ballPool.model,
-              execution: "split",
-              sampling: "reconstructed",
-              quality: "auto",
-              smoothReceivers: true,
-            });
-            f._sampleEpoch = 0;
-            for (let i = 0; i < 32; i++) ballPool.widget.render();
-            const { captureCurved } =
-                await import("/demo/curved-diagnostics.js"),
-              c = captureCurved(ballPool);
-            c.points = c.points.slice(0, 32);
-            const query = await ballPool.world.sampleFinalGather(c.points, {
-              samples: 1024,
-              seed,
-              sampling: "reconstructed",
-              epoch: 31,
-            });
-            return {
-              capture: c,
-              query,
-              lighting: { ...ballPool.lighting },
-              state: ballPool.snapshot(),
+              view,
+              geometry: geometry.positions.length / 9,
+              ...c,
+              reference,
+              query: capture.query,
+              linearNRMSE: nrmse(
+                c.points.map((p) => p.E),
+                refs,
+              ),
+              rawNRMSE: nrmse(
+                c.points.map((p) => p.raw),
+                refs,
+              ),
+              queryNRMSE: nrmse(
+                capture.query.map((p) => p.irradiance),
+                refs,
+              ),
+              regionErrors: Object.fromEntries(
+                Object.entries(c.regionPoints).map(([name, points]) => {
+                  const reference = points.map((p, i) =>
+                    referenceIrradiance(
+                      bvh,
+                      p.position,
+                      p.normal,
+                      capture.lighting,
+                      8192,
+                      5019 + i,
+                      p.geometricNormal,
+                    ),
+                  );
+                  return [
+                    name,
+                    {
+                      status: points.length ? "measured" : "not-run",
+                      points,
+                      reference,
+                      linearNRMSE: points.length
+                        ? nrmse(
+                            points.map((p) => p.E),
+                            reference.map((p) => p.irradiance),
+                          )
+                        : null,
+                      query: capture.regionQueries[name],
+                      queryNRMSE: points.length
+                        ? nrmse(
+                            capture.regionQueries[name].map(
+                              (p) => p.irradiance,
+                            ),
+                            reference.map((p) => p.irradiance),
+                          )
+                        : null,
+                      absoluteRMSE: points.length
+                        ? Math.sqrt(
+                            points.reduce(
+                              (sum, p, i) =>
+                                sum +
+                                p.E.reduce(
+                                  (s, x, k) =>
+                                    s + (x - reference[i].irradiance[k]) ** 2,
+                                  0,
+                                ),
+                              0,
+                            ) /
+                              (3 * points.length),
+                          )
+                        : null,
+                    },
+                  ];
+                }),
+              ),
+              lighting: capture.lighting,
+              resource: capture.state.resources,
             };
-          }, seed),
-          c = capture.capture;
-        assert(c.points.length >= 6, "must sample actual curved receivers");
-        const reference = c.points.map((p, i) =>
-            referenceIrradiance(
-              bvh,
-              p.position,
-              p.normal,
-              capture.lighting,
-              8192,
-              3019 + i,
-              p.geometricNormal,
-            ),
-          ),
-          refs = reference.map((r) => r.irradiance),
-          row = {
-            count,
-            scenario,
-            seed,
-            geometry: geometry.positions.length / 9,
-            ...c,
-            reference,
-            query: capture.query,
-            linearNRMSE: nrmse(
-              c.points.map((p) => p.E),
-              refs,
-            ),
-            rawNRMSE: nrmse(
-              c.points.map((p) => p.raw),
-              refs,
-            ),
-            queryNRMSE: nrmse(
-              capture.query.map((p) => p.irradiance),
-              refs,
-            ),
-            lighting: capture.lighting,
-            resource: capture.state.resources,
-          };
-        report.rows.push(row);
-        await writeFile(
-          out + "/curved.json",
-          JSON.stringify({ ...report, status: "running" }, null, 2),
-        );
-        assert(
-          c.meanWeight >= report.limits.coverage,
-          `curved coverage ${count}/${scenario}/${seed}: ${c.meanWeight}`,
-        );
-        assert(c.maxHistoryNormalDegrees <= report.limits.historyNormalDegrees);
-        assert(capture.query.every((p) => p.valid && !p.unknown));
-        assert(
-          row.linearNRMSE <= report.limits.linearNRMSE,
-          `curve display E NRMSE ${row.linearNRMSE}`,
-        );
-        assert(
-          row.queryNRMSE <= report.limits.queryNRMSE,
-          `independent curve query NRMSE ${row.queryNRMSE}`,
-        );
-        if (scenario === "black")
-          assert(
-            c.points.every(
-              (p) => p.raw.every((x) => x === 0) && p.E.every((x) => x === 0),
-            ),
+          report.rows.push(row);
+          await writeFile(
+            out + "/curved.json",
+            JSON.stringify({ ...report, status: "running" }, null, 2),
           );
-        if (seed === 0) {
-          await page.screenshot({
-            path: `${out}/curve-${count}-${scenario}.png`,
-          });
-          if (scenario === "day") {
-            for (const [mode, label] of [
-              [13, "raw-E"],
-              [14, "filtered-E"],
-              [20, "Ng-Ns-angle"],
-              [15, "FG-weight"],
-              [17, "fallback"],
-            ]) {
-              await page.evaluate((mode) => {
-                ballPool.scene.lumen.finalGather.freezeSampling = true;
-                ballPool.scene.lumen.debugMode = mode;
-                ballPool.widget.render();
-              }, mode);
-              await page.screenshot({
-                path: `${out}/curve-${count}-${label}.png`,
-              });
+          try {
+            assert(
+              c.meanWeight >= report.limits.coverage,
+              `curved coverage ${count}/${scenario}/${seed}: ${c.meanWeight}`,
+            );
+            assert(
+              c.maxHistoryNormalDegrees <= report.limits.historyNormalDegrees,
+            );
+            for (const [name, region] of Object.entries(row.regionErrors)) {
+              if (region.points.length)
+                assert(
+                  region.linearNRMSE <= report.limits.linearNRMSE,
+                  `${name} independent E NRMSE ${region.linearNRMSE}`,
+                );
             }
-            await page.evaluate(() => {
-              ballPool.scene.lumen.finalGather.freezeSampling = false;
-              ballPool.scene.lumen.debugMode = 0;
+            if (view === "contact")
+              assert(
+                c.regions.ballFloorContact.pixels > 0,
+                "ground-contact pixels must be measured",
+              );
+            assert(
+              c.regions.foregroundContour.pixels > 0,
+              "foreground contour must be measured",
+            );
+            if (count === 2 && view === "contact")
+              assert(
+                c.regions.ballBallContact.pixels > 0,
+                "dual-ball contact pixels must be measured",
+              );
+            if (view === "contact")
+              assert(
+                row.regionErrors.ballFloorContact.points.length > 0,
+                "ground-contact reference must run",
+              );
+            if (count === 2 && view === "contact")
+              assert(
+                row.regionErrors.ballBallContact.points.length > 0,
+                "dual-ball contact reference must run",
+              );
+            assert(capture.query.every((p) => p.valid && !p.unknown));
+            assert(
+              row.linearNRMSE <= report.limits.linearNRMSE,
+              `curve display E NRMSE ${row.linearNRMSE}`,
+            );
+            assert(
+              row.queryNRMSE <= report.limits.queryNRMSE,
+              `independent curve query NRMSE ${row.queryNRMSE}`,
+            );
+            if (scenario === "black")
+              assert(
+                c.points.every(
+                  (p) =>
+                    p.raw.every((x) => x === 0) && p.E.every((x) => x === 0),
+                ),
+              );
+            row.status = "passed";
+          } catch (e) {
+            row.status = "failed";
+            row.error = String(e);
+            report.failures.push({
+              count,
+              scenario,
+              seed,
+              view,
+              error: String(e),
             });
           }
+          if (seed === 0) {
+            await page.screenshot({
+              path: `${out}/curve-${count}-${view}-${scenario}.png`,
+            });
+            if (scenario === "day") {
+              for (const [mode, label] of [
+                [13, "raw-E"],
+                [14, "filtered-E"],
+                [20, "Ng-Ns-angle"],
+                [15, "FG-weight"],
+                [17, "fallback"],
+              ]) {
+                await page.evaluate((mode) => {
+                  ballPool.scene.lumen.finalGather.freezeSampling = true;
+                  ballPool.scene.lumen.debugMode = mode;
+                  ballPool.widget.render();
+                }, mode);
+                await page.screenshot({
+                  path: `${out}/curve-${count}-${view}-${label}.png`,
+                });
+              }
+              await page.evaluate(() => {
+                ballPool.scene.lumen.finalGather.freezeSampling = false;
+                ballPool.scene.lumen.debugMode = 0;
+              });
+            }
+          }
+          console.log(
+            JSON.stringify({
+              count,
+              scenario,
+              seed,
+              coverage: c.meanWeight,
+              E: row.linearNRMSE,
+              query: row.queryNRMSE,
+            }),
+          );
         }
-        console.log(
-          JSON.stringify({
-            count,
-            scenario,
-            seed,
-            coverage: c.meanWeight,
-            E: row.linearNRMSE,
-            query: row.queryNRMSE,
-          }),
-        );
       }
     }
     report.backends ??= [];
@@ -273,6 +399,10 @@ try {
   }
   assert.deepEqual(report.errors, []);
   assert.deepEqual(report.renderErrors, []);
+  assert(
+    report.failures.length === 0,
+    `${report.failures.length}/${report.rows.length} curved cases failed; full region and original point data retained`,
+  );
   report.status = "passed";
 } catch (e) {
   report.status = "failed";

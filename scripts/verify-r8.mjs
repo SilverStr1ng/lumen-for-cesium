@@ -22,7 +22,9 @@ const out =
       .find((a) => a.startsWith("--output="))
       ?.slice("--output=".length) ?? "reports/fg-runtime-budget-v7",
   cached = process.argv.includes("--cached"),
-  onlyQuality = process.argv.includes("--quality-only");
+  onlyQuality = process.argv.includes("--quality-only"),
+  withoutPerformance =
+    onlyQuality || process.argv.includes("--without-performance");
 const outputRoot = path.resolve("reports"),
   outputPath = path.resolve(out);
 if (!outputPath.startsWith(outputRoot + path.sep)) {
@@ -294,7 +296,7 @@ try {
       run("verify-fg-temporal", [], envFor(c));
       run("measure-fg-milliseconds", [], envFor(c));
     }
-    if (!onlyQuality) {
+    if (!withoutPerformance) {
       for (const c of performanceConfigurations())
         run("benchmark-fg-runtime", performanceArguments(c), {
           LUMEN_REPORT_DIRECTORY: out + "/active",
@@ -390,7 +392,7 @@ try {
     missingLine.exitCode !== 1
   )
     report.states.regression = "failed";
-  if (onlyQuality) report.states.performance = "not-run";
+  if (withoutPerformance) report.states.performance = "not-run";
   else {
     report.states.performance = "passed";
     report.performance = [];

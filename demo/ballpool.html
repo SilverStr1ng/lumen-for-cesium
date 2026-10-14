@@ -20,9 +20,16 @@
       <div class="eyebrow">EARTH · DIFFUSE · MOTION</div>
       <h1>Ball Pool</h1>
       <p>日光下的彩球与颜色传递。<br />先看静态 GI，再播放、定格与重算。</p>
+      <p class="validation-note">
+        曲面接收为受控实验；近接触画质与固定成本仍有失败关卡。<a
+          href="../reports/ballpool-curved-receivers-v8/index.html"
+          >查看实际进度与证据</a
+        >。
+      </p>
       <div class="bookmarks">
         <button data-camera="overview">球池总览</button
         ><button data-camera="close">球面 / 接触处</button
+        ><button data-camera="contact">低位接触处</button
         ><button data-camera="earth">地球 / 飞出</button>
       </div>
       <label
@@ -35,9 +42,10 @@
         </select></label
       >
       <div class="actions">
-        <button id="play">播放物理</button><button id="pause">暂停</button
-        ><button id="toss">投球</button
-        ><button id="freeze">定格并更新 GI</button
+        <button id="play" disabled>播放物理</button
+        ><button id="pause" disabled>暂停</button
+        ><button id="toss" disabled>投球</button
+        ><button id="freeze" disabled>定格并更新 GI</button
         ><button id="reset">重置静态球堆</button>
       </div>
       <div id="state" role="status" aria-live="polite">正在准备静态球堆…</div>

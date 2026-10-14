@@ -28,7 +28,10 @@ try {
       ballPool.play();
       ballPool.toss();
       const before = ballPool.physics.ticks,
-        whole = await measureFrames(ballPool.scene, 120, { warmup: 20 }),
+        whole = await measureFrames(ballPool.scene, 120, {
+          warmup: 20,
+          minimumMilliseconds: 1000,
+        }),
         after = ballPool.physics.ticks;
       return {
         whole,
