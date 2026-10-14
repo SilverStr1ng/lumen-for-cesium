@@ -66,10 +66,14 @@ const report = {
   },
   rounds: [],
   errors: [],
+  renderErrors: [],
 };
 const b = await launchBrowser(),
   p = await b.newPage({ viewport });
 p.on("pageerror", (e) => report.errors.push(String(e)));
+p.on("console", (message) => {
+  if (message.type() === "error") report.renderErrors.push(message.text());
+});
 await p.addInitScript(installGlObserver);
 try {
   await p.goto(
@@ -203,7 +207,11 @@ try {
                     round: f.metrics.round,
                     receiver: [f.resultSize.x, f.resultSize.y],
                     samples: f.samples,
-                    camera: Cesium.Cartesian3.toArray(s.camera.position),
+                    camera: [
+                      s.camera.position.x,
+                      s.camera.position.y,
+                      s.camera.position.z,
+                    ],
                   });
                   epoch++;
                 } else if (mode !== "ddgi" && !f.ready) {
@@ -416,6 +424,7 @@ try {
       activity === "pause" || report.targets.completeFGP95.value <= 3,
   };
   assert.deepEqual(report.errors, []);
+  assert.deepEqual(report.renderErrors, []);
   assert(
     Object.values(report.checks).every(Boolean),
     JSON.stringify(report.checks),
@@ -424,6 +433,17 @@ try {
 } catch (e) {
   report.status = "failed";
   report.error = e.stack;
+  report.failureState = await p
+    .evaluate(() => ({
+      defaultLoop: earthLab.widget.useDefaultRenderLoop,
+      errorPanel: document.querySelector(".cesium-widget-errorPanel")
+        ?.textContent,
+      frame: earthLab.scene.frameState.frameNumber,
+      worldStatus: earthLab.world.status,
+      worldError: earthLab.world.error,
+      fgStatus: earthLab.scene.lumen.finalGather.metrics.status,
+    }))
+    .catch(() => undefined);
   process.exitCode = 1;
 } finally {
   await b.close();
