@@ -1043,13 +1043,17 @@ class LumenGpuWorld {
       (this._jobOptions.publicationMode === "progressive" ||
         this._bounce === this._jobOptions.bounces)
     ) {
+      // Rendering has released its per-frame lease. Drop the previous world
+      // owner before copying the replacement, so normal round swaps never
+      // temporarily own two full FG snapshots. Explicit leases stay counted.
+      this.finalGatherSnapshot?.release();
+      this.finalGatherSnapshot = undefined;
       try {
         const next = new LumenFinalGatherSnapshot(
           this,
           this._previous,
           this._target,
         );
-        this.finalGatherSnapshot?.release();
         this.finalGatherSnapshot = next;
         this.finalGatherStatus = "ready";
       } catch (e) {

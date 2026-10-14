@@ -203,6 +203,67 @@ try {
       );
       assert.notDeepEqual(row.beforeSize, row.size);
     }
+    await p.setViewportSize({ width: 1280, height: 800 });
+    const swaps = await p.evaluate(async () => {
+      const d = earthLab,
+        w = d.world,
+        f = d.scene.lumen.finalGather;
+      await f.configure({
+        quality: "high",
+        sampling: "reconstructed",
+        model: d.model,
+      });
+      f.freezeSampling = false;
+      f.continuousSampling = true;
+      d.scene.requestRenderMode = false;
+      d.widget.resize();
+      d.widget.render();
+      const initialSun = [...d.lighting.sunRadiance],
+        rows = [];
+      for (const factor of [1.02, 1]) {
+        d.lighting.sunRadiance = initialSun.map((v) => v * factor);
+        d.lightingController.update();
+        const done = w.solve({ ...d.lighting }),
+          before = f.metrics.frames,
+          started = performance.now();
+        while (
+          w.requestedRevision !== w.settledRevision ||
+          !f.ready ||
+          f.metrics.revision !== w.requestedRevision
+        ) {
+          d.widget.render();
+          await new Promise(requestAnimationFrame);
+          if (performance.now() - started > 60000)
+            throw Error("snapshot swap timeout");
+        }
+        await done;
+        rows.push({
+          factor,
+          actualFG: f.metrics.frames - before,
+          total: f.metrics.totalAdditionalBytes,
+          peak: f.metrics.peakAdditionalBytes,
+          snapshots: w._fgSnapshots.size,
+          revision: f.metrics.revision,
+          requested: w.requestedRevision,
+          round: f.metrics.round,
+        });
+      }
+      return rows;
+    });
+    for (const row of swaps) {
+      report.rows.push({
+        scene,
+        contract: "real relight snapshot peak",
+        ...row,
+      });
+      assert(
+        row.actualFG > 0 &&
+          row.round === 3 &&
+          row.revision === row.requested &&
+          row.snapshots === 1,
+      );
+      assert(row.total <= 64 * 1048576 && row.peak <= 64 * 1048576);
+    }
     await p.close();
   }
   // Browser DPR and Cesium scale produce actual buffers; planning never reads CSS dimensions.

@@ -271,7 +271,9 @@ export function performancePassed(data, run) {
       if (r.mode !== "ddgi") {
         if (
           !nat(r.metrics.totalAdditionalBytes) ||
-          r.metrics.totalAdditionalBytes > 64 * 1048576
+          r.metrics.totalAdditionalBytes > 64 * 1048576 ||
+          !nat(r.metrics.peakAdditionalBytes) ||
+          r.metrics.peakAdditionalBytes > 64 * 1048576
         )
           return false;
         const expectedPause = isPause && r.mode === "reconstructed";

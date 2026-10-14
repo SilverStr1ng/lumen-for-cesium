@@ -115,6 +115,7 @@ const good = {
         plan: { rw: 640, rh: 400 },
         samples: 32,
         totalAdditionalBytes: 63373760,
+        peakAdditionalBytes: 63373760,
       },
       whole: {
         renderedFrames: 100,
@@ -134,6 +135,9 @@ const good = {
   ),
 };
 assert(performancePassed(good, { exitCode: 0 }));
+const badPeak = structuredClone(good);
+badPeak.rounds[3].metrics.peakAdditionalBytes = 64 * 1048576 + 1;
+assert(!performancePassed(badPeak, { exitCode: 0 }));
 const unbounded = structuredClone(good);
 unbounded.rounds[1].epochs.push(100);
 assert(!performancePassed(unbounded, { exitCode: 0 }));

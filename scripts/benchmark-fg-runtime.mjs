@@ -347,9 +347,10 @@ try {
     },
     memory: {
       value: Math.max(
-        ...report.rounds.map((x) => x.metrics.totalAdditionalBytes ?? 0),
+        ...report.rounds.map((x) => x.metrics.peakAdditionalBytes ?? 0),
       ),
       limit: 64 * 1048576,
+      scope: "peak owned attachments plus all live round/material snapshots",
     },
   };
   report.note =

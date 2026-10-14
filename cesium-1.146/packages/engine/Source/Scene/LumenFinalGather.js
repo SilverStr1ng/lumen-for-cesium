@@ -19,6 +19,7 @@ import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.j
 import ContextLimits from "../Renderer/ContextLimits.js";
 import LumenReceiverPass from "./LumenReceiverPass.js";
 import planFinalGather from "./LumenFinalGatherPlan.js";
+import { finalGatherSnapshotBytes } from "./LumenFinalGatherSnapshot.js";
 import LumenFinalGatherReconstruction from "./LumenFinalGatherReconstruction.js";
 import {
   receiverTrace,
@@ -526,7 +527,11 @@ class LumenFinalGather {
     ) {
       this.release();
       this.fallbackReason = 2;
-      this.metrics.status = "DDGI fallback: no complete FG input";
+      const inputStatus =
+        w?.finalGatherStatus && w.finalGatherStatus !== "ready"
+          ? ` (${w.finalGatherStatus})`
+          : "";
+      this.metrics.status = `DDGI fallback: no complete FG input${inputStatus}`;
       return;
     }
     if (w.finalGatherSnapshot.revision !== w.requestedRevision) {
@@ -560,10 +565,7 @@ class LumenFinalGather {
     }
     const snapshot = w.finalGatherSnapshot;
     // Budget checks precede every allocation and include the owned round copies.
-    const snapshotBytes =
-      (snapshot.previous?.sizeInBytes ?? 0) +
-      (snapshot.current?.sizeInBytes ?? 0) +
-      (snapshot.materials?.sizeInBytes ?? 0);
+    const snapshotBytes = finalGatherSnapshotBytes(w, snapshot);
     const l = this._layout(snapshotBytes);
     this.metrics.requestedMode = this.mode;
     this.metrics.requestedQuality = this.quality;
@@ -865,11 +867,7 @@ class LumenFinalGather {
     this.metrics.history = false;
     this.metrics.accumulationPasses = 0;
     this.metrics.memoryBytes = 0;
-    this.metrics.snapshotBytes =
-      this.lumen.world?.finalGatherSnapshot?.resources.reduce(
-        (sum, r) => sum + r.texture.sizeInBytes,
-        0,
-      ) ?? 0;
+    this.metrics.snapshotBytes = finalGatherSnapshotBytes(this.lumen.world);
     this.metrics.totalAdditionalBytes = this.metrics.snapshotBytes;
   }
   isDestroyed() {

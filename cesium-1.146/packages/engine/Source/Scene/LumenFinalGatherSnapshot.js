@@ -1,5 +1,21 @@
 import destroyLumenResource from "./destroyLumenResource.js";
 import { Cartesian3, PixelDatatype } from "@cesium/core";
+// Include explicit diagnostic leases as well as the current world owner.
+export function finalGatherSnapshotBytes(world, extra) {
+  const snapshots = new Set(world?._fgSnapshots ?? []);
+  if (extra) {
+    snapshots.add(extra);
+  }
+  let bytes = 0;
+  for (const snapshot of snapshots) {
+    if (!snapshot.destroyed) {
+      for (const resource of snapshot.resources ?? []) {
+        bytes += resource.texture.sizeInBytes;
+      }
+    }
+  }
+  return bytes;
+}
 /** Owned immutable E_(k-1), E_k and material copies. Geometry/moments are
  * immutable world-owned resources; leases cannot outlive that world's geometry.
  * @private */
@@ -9,6 +25,20 @@ class LumenFinalGatherSnapshot {
       bytes = 2 * g.width * g.height * 16 + world._materials.sizeInBytes;
     if (world.memoryBytes + bytes > world.maxMemoryBytes) {
       throw Error("Final Gather snapshot exceeds GPU memory budget");
+    }
+    const fg = world.scene?.lumen?.finalGather;
+    if (fg?.lumen?.world === world && fg.mode !== "ddgi") {
+      // A smaller budget or retained diagnostic lease may require dropping
+      // receiver/history caches before cloning. The next frame replans them.
+      if (
+        fg.metrics.memoryBytes + finalGatherSnapshotBytes(world) + bytes >
+        fg.maxMemoryBytes
+      ) {
+        fg.release();
+      }
+      if (finalGatherSnapshotBytes(world) + bytes > fg.maxMemoryBytes) {
+        throw Error("FG snapshots exceed additional memory budget");
+      }
     }
     this.world = world;
     this.references = 1;
@@ -52,6 +82,7 @@ class LumenFinalGatherSnapshot {
       // strand its texture outside this snapshot's rollback list.
       const resource = { texture, fb: undefined };
       this.resources.push(resource);
+      this._recordOwnedBytes();
       const fb = world._framebuffer([texture]);
       resource.fb = fb;
       world._fgCopySource = source;
@@ -83,6 +114,20 @@ class LumenFinalGatherSnapshot {
   isDestroyed() {
     return this.destroyed === true;
   }
+  _recordOwnedBytes() {
+    const fg = this.world.scene?.lumen?.finalGather;
+    if (fg?.lumen?.world !== this.world) {
+      return;
+    }
+    const snapshotBytes = finalGatherSnapshotBytes(this.world, this),
+      total = fg.metrics.memoryBytes + snapshotBytes;
+    fg.metrics.snapshotBytes = snapshotBytes;
+    fg.metrics.totalAdditionalBytes = total;
+    fg.metrics.peakAdditionalBytes = Math.max(
+      fg.metrics.peakAdditionalBytes ?? 0,
+      total,
+    );
+  }
   retain() {
     this.assertAlive();
     this.references++;
@@ -108,6 +153,7 @@ class LumenFinalGatherSnapshot {
     }
     this.resources.length = 0;
     this.world._fgSnapshots.delete(this);
+    this._recordOwnedBytes();
     destroyLumenResource(this);
     // Releasing an outstanding lease after its world closes is harmless. All
     // access/query methods remain guarded by destroyObject.

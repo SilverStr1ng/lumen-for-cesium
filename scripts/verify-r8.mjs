@@ -65,6 +65,7 @@ const regressions = [
   "gallery",
   "r8-acceptance",
   "fg-budget",
+  "fg-snapshot-budget",
   "fg-runtime-window",
   "fg-order",
   "fg-execution",
@@ -248,6 +249,7 @@ try {
     ]);
     report.states.resource = childGroupState(report.tests, [
       "verify-fg-budget",
+      "verify-fg-snapshot-budget",
       "verify-fg-desktop",
       "verify-fg-lifecycle",
       "verify-resource-lifecycle",
@@ -268,6 +270,7 @@ try {
         .filter((r) =>
           [
             "verify-fg-budget",
+            "verify-fg-snapshot-budget",
             "verify-fg-desktop",
             "verify-fg-lifecycle",
             "verify-resource-lifecycle",
