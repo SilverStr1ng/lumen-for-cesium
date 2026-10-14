@@ -1,4 +1,5 @@
-import { spawn } from "node:child_process";
+import { spawn, execFileSync } from "node:child_process";
+import assert from "node:assert/strict";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
@@ -6,7 +7,12 @@ import { sourceVersion } from "./browser-tools.mjs";
 const output =
     process.argv.find((a) => a.startsWith("--output="))?.slice(9) ??
     `reports/contact-transport-v9/run-${new Date().toISOString().replaceAll(":", "-")}`,
-  cached = process.argv.includes("--cached");
+  cached = process.argv.includes("--cached"),
+  recheck = process.argv.includes("--recheck");
+if (cached && recheck)
+  throw Error(
+    "Choose strict cached verification or explicit aggregation recheck, not both",
+  );
 if (!path.resolve(output).startsWith(path.resolve("reports") + path.sep))
   throw Error("R10 output must be under reports");
 const required = [
@@ -39,6 +45,180 @@ const configuration = {
   source:
     "experimental surface cache .08m area scale /256r; immediate control preserved",
 };
+function contactStates(quality, childState) {
+  const keys = new Set(
+    quality?.rows?.map((r) => `${r.count}/${r.scenario}/${r.seed}/${r.view}`),
+  );
+  const expected = [];
+  for (const count of [1, 2])
+    for (const scenario of [
+      "day",
+      "black",
+      "white-sky",
+      "sun-turned",
+      "colored-bounce",
+    ])
+      for (const seed of [0, 5, 19])
+        for (const view of ["close", "contact"])
+          expected.push(`${count}/${scenario}/${seed}/${view}`);
+  const complete =
+    childState === "passed" &&
+    quality?.status === "passed" &&
+    quality.rows.length === 60 &&
+    keys.size === 60 &&
+    expected.every((k) => keys.has(k)) &&
+    !quality.configuration.quick &&
+    quality.configuration.contact &&
+    quality.configuration.source === "cache" &&
+    quality.errors.length === 0 &&
+    quality.renderErrors.length === 0 &&
+    quality.failures.length === 0 &&
+    quality.backends?.length === 2 &&
+    quality.backends.every(
+      (rows) =>
+        rows.length === 3 &&
+        ["split", "fused4", "fused8"].every((mode) =>
+          rows.some(
+            (r) =>
+              r.execution === mode && r.delta <= 0.00001 && r.invalid === 0,
+          ),
+        ),
+    ) &&
+    quality.rows.every((r) => {
+      const requiredRegions = [
+        "foregroundContour",
+        ...(r.view === "contact"
+          ? ["ballFloorContact", ...(r.count === 2 ? ["ballBallContact"] : [])]
+          : []),
+      ];
+      return (
+        r.status === "passed" &&
+        r.maxHistoryNormalDegrees <= 0.25 &&
+        r.query.length > 0 &&
+        r.query.every((p) => p.valid && !p.unknown) &&
+        requiredRegions.every(
+          (name) =>
+            r.regions[name]?.pixels > 0 &&
+            r.regionErrors[name]?.points.length > 0,
+        )
+      );
+    });
+  const query =
+    complete &&
+    quality.rows.every(
+      (r) =>
+        r.source.actual === "cache" &&
+        r.sourceUse.cachedHits > 0 &&
+        r.sourceUse.unknown === 0 &&
+        r.queryNRMSE <= 0.12 &&
+        Object.values(r.regionErrors).every(
+          (v) => !v.points.length || v.queryNRMSE <= 0.12,
+        ),
+    );
+  const image =
+    complete &&
+    quality.rows.every(
+      (r) =>
+        r.linearNRMSE <= 0.2 &&
+        r.meanWeight >= 0.95 &&
+        Object.values(r.regionErrors).every(
+          (v) => !v.points.length || v.linearNRMSE <= 0.2,
+        ),
+    );
+  return {
+    "contact-query": query ? "passed" : "failed",
+    "contact-image": image ? "passed" : "failed",
+  };
+}
+if (process.argv.includes("--self-test")) {
+  const region = { pixels: 1 },
+    error = { points: [1], queryNRMSE: 0.01, linearNRMSE: 0.01 },
+    rows = [];
+  for (const count of [1, 2])
+    for (const scenario of [
+      "day",
+      "black",
+      "white-sky",
+      "sun-turned",
+      "colored-bounce",
+    ])
+      for (const seed of [0, 5, 19])
+        for (const view of ["close", "contact"])
+          rows.push({
+            count,
+            scenario,
+            seed,
+            view,
+            status: "passed",
+            maxHistoryNormalDegrees: 0,
+            query: [{ valid: true, unknown: false }],
+            regions: {
+              foregroundContour: region,
+              ballFloorContact: region,
+              ballBallContact: region,
+            },
+            regionErrors: {
+              foregroundContour: error,
+              ballFloorContact: error,
+              ballBallContact: error,
+            },
+            source: { actual: "cache" },
+            sourceUse: { cachedHits: 1, unknown: 0 },
+            queryNRMSE: 0.01,
+            linearNRMSE: 0.01,
+            meanWeight: 0.96,
+          });
+  const good = {
+    status: "passed",
+    rows,
+    configuration: { contact: true, quick: false, source: "cache" },
+    errors: [],
+    renderErrors: [],
+    failures: [],
+    backends: [1, 2].map(() =>
+      ["split", "fused4", "fused8"].map((execution) => ({
+        execution,
+        delta: 0,
+        invalid: 0,
+      })),
+    ),
+  };
+  assert.deepEqual(contactStates(good, "passed"), {
+    "contact-query": "passed",
+    "contact-image": "passed",
+  });
+  const mutations = [
+    (q) => (q.rows[0].status = "failed"),
+    (q) => (q.rows[0].query[0].valid = false),
+    (q) => (q.rows[0].query[0].unknown = true),
+    (q) => (q.rows[0].maxHistoryNormalDegrees = 0.26),
+    (q) => (q.rows[0].regions.foregroundContour.pixels = 0),
+    (q) => (q.rows[0].regionErrors.foregroundContour.points = []),
+    (q) => (q.backends[0][1].invalid = 1),
+    (q) => (q.backends[0][2].delta = 0.001),
+    (q) => (q.rows[1] = q.rows[0]),
+  ];
+  assert(
+    Object.values(contactStates(good, "failed")).every((s) => s === "failed"),
+    "actual child exit 1 cannot pass",
+  );
+  for (const mutate of mutations) {
+    const q = structuredClone(good);
+    mutate(q);
+    assert(
+      Object.values(contactStates(q, "passed")).every((s) => s === "failed"),
+    );
+  }
+  console.log(
+    JSON.stringify({
+      status: "passed",
+      checks: mutations.length + 2,
+      scope:
+        "original integrity and actual child failure cannot become recommended; no new region coverage threshold",
+    }),
+  );
+  process.exit(0);
+}
 const extra = (await readdir("scripts"))
   .filter((f) => f.endsWith(".mjs"))
   .map((f) => "scripts/" + f)
@@ -84,37 +264,7 @@ async function derive(report) {
   states.attribution = stateFor("root-cause");
   const quality = await get("quality-cache/curved.json");
   if (quality) {
-    const complete =
-      quality.rows.length === 60 &&
-      !quality.configuration.quick &&
-      quality.configuration.contact &&
-      quality.configuration.source === "cache" &&
-      !quality.errors.length &&
-      !quality.renderErrors.length;
-    const query =
-      complete &&
-      quality.rows.every(
-        (r) =>
-          r.source.actual === "cache" &&
-          r.sourceUse.cachedHits > 0 &&
-          r.sourceUse.unknown === 0 &&
-          r.queryNRMSE <= 0.12 &&
-          Object.values(r.regionErrors).every(
-            (v) => !v.points.length || v.queryNRMSE <= 0.12,
-          ),
-      );
-    const image =
-      complete &&
-      quality.rows.every(
-        (r) =>
-          r.linearNRMSE <= 0.2 &&
-          r.meanWeight >= 0.95 &&
-          Object.values(r.regionErrors).every(
-            (v) => !v.points.length || v.linearNRMSE <= 0.2,
-          ),
-      );
-    states["contact-query"] = query ? "passed" : "failed";
-    states["contact-image"] = image ? "passed" : "failed";
+    Object.assign(states, contactStates(quality, stateFor("contact-quality")));
   }
   const regression = await get("regression/test-suite.json");
   if (regression) {
@@ -179,13 +329,39 @@ async function derive(report) {
     status: required.every((s) => states[s] === "passed") ? "passed" : "failed",
   };
 }
-if (cached) {
+if (cached || recheck) {
   try {
     const report = JSON.parse(
       await readFile(output + "/test-suite.json", "utf8"),
     );
+    const changed = [
+      ...new Set([
+        ...Object.keys(report.version.sources),
+        ...Object.keys(version.sources),
+      ]),
+    ].filter((file) => report.version.sources[file] !== version.sources[file]);
+    if (recheck) {
+      const verifier = "scripts/verify-r10.mjs";
+      if (
+        changed.length !== 1 ||
+        changed[0] !== verifier ||
+        report.version.compiledBundle !== version.compiledBundle ||
+        JSON.stringify(report.version.assets) !== JSON.stringify(version.assets)
+      )
+        throw Error("Recheck permits only the verifier itself to change");
+      const original = execFileSync("git", [
+        "show",
+        `${report.version.head}:${verifier}`,
+      ]);
+      if (sha(original) !== report.version.sources[verifier])
+        throw Error(
+          "Execution verifier does not match original committed Git blob bytes",
+        );
+      if (version.modifiedSources.length)
+        throw Error("Commit the verifier repair before recheck");
+    }
     if (
-      fingerprint(report.version) !== fingerprint(version) ||
+      (!recheck && fingerprint(report.version) !== fingerprint(version)) ||
       JSON.stringify(report.configuration) !== JSON.stringify(configuration)
     )
       throw Error(
@@ -208,20 +384,75 @@ if (cached) {
         throw Error("Missing actual child exit/log: " + t.name);
     const actual = await derive(report);
     if (
-      JSON.stringify(actual.states) !== JSON.stringify(report.states) ||
-      actual.recommended !== report.recommended ||
-      actual.status !== report.status
+      !recheck &&
+      (JSON.stringify(actual.states) !== JSON.stringify(report.states) ||
+        actual.recommended !== report.recommended ||
+        actual.status !== report.status)
     )
       throw Error("Cached aggregate contradicts mandatory evidence");
-    await writeFile(
-      output + "/cached-verification.json",
-      JSON.stringify(
-        { verified: true, at: new Date().toISOString(), head: version.head },
-        null,
-        2,
-      ),
-    );
-    console.log(JSON.stringify({ ...actual, cached: true }));
+    const verification = recheck
+      ? {
+          verified: true,
+          kind: "aggregation correction; GPU not rerun",
+          executionHead: report.version.head,
+          verifierHead: version.head,
+          verifierHash: version.sources["scripts/verify-r10.mjs"],
+          verifierByteHash: sha(await readFile("scripts/verify-r10.mjs")),
+          originalSuiteHash: sha(await readFile(output + "/test-suite.json")),
+          sourceDelta: changed,
+          ...actual,
+          at: new Date().toISOString(),
+        }
+      : { verified: true, at: new Date().toISOString(), head: version.head };
+    const destination =
+      output +
+      (recheck ? "/rechecked-verification.json" : "/cached-verification.json");
+    let existing;
+    if (recheck) {
+      try {
+        existing = JSON.parse(await readFile(destination, "utf8"));
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+      }
+      if (existing) {
+        for (const key of [
+          "verified",
+          "kind",
+          "executionHead",
+          "verifierHash",
+          "originalSuiteHash",
+          "sourceDelta",
+          "states",
+          "errors",
+          "status",
+          "recommended",
+        ])
+          if (
+            JSON.stringify(existing[key]) !== JSON.stringify(verification[key])
+          )
+            throw Error(
+              "Immutable recheck contradicts current evidence: " + key,
+            );
+        if (
+          sha(
+            execFileSync("git", [
+              "show",
+              `${existing.verifierHead}:scripts/verify-r10.mjs`,
+            ]),
+          ) !== existing.verifierHash
+        )
+          throw Error(
+            "Recorded verifier does not match its committed Git blob",
+          );
+      }
+    }
+    if (!existing)
+      await writeFile(
+        destination,
+        JSON.stringify(verification, null, 2),
+        recheck ? { flag: "wx" } : undefined,
+      );
+    console.log(JSON.stringify({ ...actual, cached: !recheck, recheck }));
     if (!actual.recommended) process.exitCode = 1;
   } catch (e) {
     console.error(e);
