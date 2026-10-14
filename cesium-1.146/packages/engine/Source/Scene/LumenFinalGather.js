@@ -840,6 +840,8 @@ class LumenFinalGather {
   }
   release() {
     this.ready = false;
+    this.metrics.history = false;
+    this.metrics.accumulationPasses = this.metrics.stablePasses = 0;
     this.texture = undefined;
     this._sampleWorld = this._inputUniforms = this._input = undefined;
     this.reconstruction?.destroy();

@@ -118,7 +118,7 @@ LightingPipelineStage.process = function (
       const registered = model._lumenCurvedSurfaces?.get(renderResources.runtimeNode?.node?.name);
       // Caller registers a descriptor ball, never a material. A separate owner
       // namespace lets every neighbor reject other balls and container patches.
-      const curved = !!registered && !defined(primitive.material.normalTexture) && primitive.material.alphaMode !== "MASK";
+      const curved = registered?.radius===.34 && Number.isInteger(registered.ballId) && registered.ballId>0 && registered.ballId<4096 && !defined(primitive.material.normalTexture) && primitive.material.alphaMode !== "MASK";
       const id = curved ? 4096 + registered.ballId : owners.map.get(ownerKey),
         fg = () => frameState.lumen?.finalGather,
         source = () => {

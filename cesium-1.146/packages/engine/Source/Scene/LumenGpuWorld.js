@@ -1789,6 +1789,7 @@ class LumenGpuWorld {
     this._closed = true;
     this.ready = false;
     this.worker?.terminate();
+    this._order = this._baseMaterials = this._prepared = undefined;
     for (const r of this._requests.values()) {
       r.reject(new Error("GPU world closed"));
     }

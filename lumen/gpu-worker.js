@@ -143,7 +143,15 @@ function pack(b, options) {
       width: counts[0] * counts[1] * 10,
       height: counts[2] * 10,
     },
-    bvh: { ...b.stats, triangles: n, nodes, queries: 0 },
+    bvh: { ...b.stats, triangles: n, nodes, queries: 0,
+      // Typed buffers retained by the preparation worker; JS object/allocator
+      // overhead is separately unmeasured, not silently reported as zero.
+      cpuGeometryBytes:[g.positions,g.uvs,g.normals,g.materialIds,...g.images.filter(Boolean).map(i=>i.data)]
+        .reduce((sum,a)=>sum+a.byteLength,0),
+      cpuRetainedBytes:b.stats.persistentBytes+[g.positions,g.uvs,g.normals,g.materialIds,...g.images.filter(Boolean).map(i=>i.data)]
+        .reduce((sum,a)=>sum+a.byteLength,0),
+      typedPreparationBytes:b.stats.persistentBytes+n*36+nodeData.byteLength+vertices.byteLength+uv.byteLength+materials.byteLength+atlas.byteLength,
+    },
     order: b.order.slice(),
   };
 }

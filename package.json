@@ -53,5 +53,8 @@
     "test:r8": "node scripts/verify-r8.mjs",
     "test:r8:quality": "node scripts/verify-r8-quality.mjs",
     "test:r8:desktop": "node scripts/verify-fg-desktop.mjs"
+  },
+  "dependencies": {
+    "@dimforge/rapier3d-deterministic-compat": "0.18.0"
   }
 }

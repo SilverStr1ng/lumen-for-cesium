@@ -379,7 +379,9 @@ void main(){ivec2 c=ivec2(gl_FragCoord.xy);
  ivec2 r=p+u_receiverOffset;vec4 x=texelFetch(u_receiverPosition,r,0);int i=u_fgStart+lane;
  if(x.a<0.5||i>=u_fgSamples){out_FragColor=vec4(0);return;}
  vec4 n=texelFetch(u_receiverNormal,r,0);vec3 ng=lumen_fgNg(n),ns=lumen_fgNs(n),o=x.xyz+ng*u_fgRayBias,d=fgDirection(ns,i,r+u_fgPixelOffset);
- if(dot(ng,d)<=0.0){out_FragColor=vec4(-3,0,0,0);return;}
+ // Negative distance is disjoint from every real hit, Miss and Unknown.
+ // Negative triangle IDs already encode backfaces and cannot be a zero tag.
+ if(dot(ng,d)<=0.0){out_FragColor=vec4(0,0,0,-1);return;}
  out_FragColor=trace(o,d,completeDistance(o),-1,false);
 }`;
 export const receiverShade = `${common + gather + finalGather + receiverNormals.declarations + receiverNormals.functions}
@@ -393,7 +395,7 @@ void main(){ivec2 p=ivec2(gl_FragCoord.xy),r=p+u_receiverOffset;vec4 x=texelFetc
 #else
   ivec2 hitPixel=ivec2(p.x*4+j,p.y);
 #endif
-  vec4 h=texelFetch(u_receiverHits,hitPixel,0);if(h.x==-3.0)continue;vec4 L=fgRadiance(h,fgDirection(ns,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
+  vec4 h=texelFetch(u_receiverHits,hitPixel,0);if(h.w<0.0)continue;vec4 L=fgRadiance(h,fgDirection(ns,i,r+u_fgPixelOffset));if(L.a<=0.0)sum.a=min(sum.a,L.a);sum.rgb+=L.rgb*(czm_pi/float(u_fgSamples));}
  out_FragColor=sum;
 }`;
 export function receiverFused(batch) {

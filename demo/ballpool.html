@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN" data-scene="ballpool">
+<head><meta charset="utf-8"/><title>Lumen · Ball Pool</title><link rel="icon" href="data:,"/>
+<link rel="stylesheet" href="../cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css"/>
+<link rel="stylesheet" href="gallery.css"/><link rel="stylesheet" href="ballpool.css"/></head>
+<body><div id="view"></div><aside>
+<div class="eyebrow">EARTH · DIFFUSE · MOTION</div><h1>Ball Pool</h1>
+<p>日光下的彩球与颜色传递。<br/>先看静态 GI，再播放、定格与重算。</p>
+<div class="bookmarks"><button data-camera="overview">球池总览</button><button data-camera="close">球面 / 接触处</button><button data-camera="earth">地球 / 飞出</button></div>
+<label>球体数量<select id="count"><option value="1">1 · 曲面验证</option><option value="2">2 · 接触验证</option><option value="16">16 · 验证</option><option value="64" selected>64 · 默认</option><option value="128">128 · 压力 / 实验</option></select></label>
+<div class="actions"><button id="play">播放物理</button><button id="pause">暂停</button><button id="toss">投球</button><button id="freeze">定格并更新 GI</button><button id="reset">重置静态球堆</button></div>
+<div id="state" role="status" aria-live="polite">正在准备静态球堆…</div>
+<label>同条件对照<select id="compare"><option value="fg">重建 FG</option><option value="ddgi">DDGI</option><option value="without">仅移除局部间接光</option></select></label>
+<label>FG 档<select id="fgQuality"><option value="auto">Auto · 32r / 64MiB</option><option value="interactive16">Interactive · 16r / 新质量取舍</option><option value="high">固定半分辨率 · 32r</option></select></label>
+<label>太阳方位<input id="sun" type="range" min="0" max="360" value="140"/></label>
+<label>天空强度<input id="sky" type="range" min="0" max=".5" value=".18" step=".01"/></label>
+<details><summary>接收与性能诊断</summary>
+<label>显示<select id="debug"><option value="0">最终画面</option><option value="13">Raw E</option><option value="14">重建 E</option><option value="15">FG 使用权重</option><option value="17">回退原因</option></select></label>
+<pre id="metrics"></pre><button id="capture">读取一次覆盖诊断</button><pre id="coverage"></pre></details>
+<p class="quiet">运动中：直接光、当前太阳阴影与基础 IBL。<br/>暂停仅停止运动；重算完成后才恢复局部 GI。<br/>固定曝光 1；Globe 为背景，不参加局部 GI。</p>
+<p id="error" role="alert"></p><nav><a href="gallery.html">返回 Gallery</a><a href="../docs/progress/latest.md">实现进度</a><a href="../reports/ballpool-curved-receivers-v8/index.html">R9 验收</a></nav>
+</aside><footer>一个 Cesium / WebGL2 渲染器 · 固定步长 Rapier · 左键相机导航；投球使用按钮，不占用鼠标旋转。</footer>
+<script>window.CESIUM_BASE_URL="/cesium-1.146/Build/CesiumUnminified/";</script>
+<script src="../cesium-1.146/Build/CesiumUnminified/Cesium.js"></script><script type="module" src="ballpool.js"></script></body></html>

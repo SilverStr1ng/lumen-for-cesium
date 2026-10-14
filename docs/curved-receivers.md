@@ -34,6 +34,15 @@ ray. Other balls, container surfaces and unknown geometry cannot share this
 connection. All planar 5mm/segment constraints remain unchanged. Unsupported
 neighborhoods keep raw or valid temporal E instead of borrowing across owners.
 
+The registered subset uses radius 0.34m, at least 16 longitudinal / 8 latitudinal
+divisions. At each triangulated endpoint, the radial-normal predicted center
+differs by at most `r (1-cos(sqrt(2)*pi/16))` plus 1.5mm for the verified half-float
+normal guide error. The pair checks this center agreement, owner, both Ng/Ns
+hemispheres, a maximum 18.2-degree Ns neighborhood and screen footprint. Temporal
+and spatial filtering retain the tighter 5.7-degree Ns neighborhood; only final
+upsampling uses the wider verified convex-patch correspondence. This geometric
+bound does not enable borrowing between balls or loosen planar barriers.
+
 Physics preview disables and destroys the old local world and FG history before
 moving a node. Pause stops physics only. Freeze captures one descriptor revision
 and rebuilds one static world. Generation tokens prohibit an old asynchronous

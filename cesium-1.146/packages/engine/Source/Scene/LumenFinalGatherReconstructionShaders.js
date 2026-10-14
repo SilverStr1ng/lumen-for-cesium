@@ -35,7 +35,7 @@ void main(){
    vec4 e=texelFetch(u_rHistoryE,q,0),hp=texelFetch(u_rHistoryP,q,0),hn=texelFetch(u_rHistoryN,q,0);
    vec3 delta=hp.xyz-p.xyz;
    reason=3.0;
-   if(e.a<.5||!lumen_fgCompatible(p,n,hp,hn,footprint))continue;
+   if(e.a<.5||!lumen_fgCompatible(p,n,hp,hn,footprint)||dot(lumen_fgNs(n),lumen_fgNs(hn))<.995)continue;
    if(!lumen_fgCurve(p)&&texelFetch(u_rNeighborhood,c,0).r<.5&&!lumen_fgSegment(p.xyz,hp.xyz,lumen_fgNg(n)))continue;
    vec2 a=mix(1.0-fraction,fraction,vec2(x,y));float w=a.x*a.y;
    oldE+=e.rgb*w;oldM+=texelFetch(u_rHistoryM,q,0).xy*w;oldLength+=e.a*w;total+=w;
@@ -69,7 +69,7 @@ void main(){
   ivec2 dir=i==0?ivec2(1,0):i==1?ivec2(-1,0):i==2?ivec2(0,1):ivec2(0,-1),q=c+dir;
   if(any(lessThan(q,ivec2(0)))||any(greaterThanEqual(q,size)))continue;
   vec4 hp=texelFetch(u_rPosition,q+u_rOffset,0),hn=texelFetch(u_rNormal,q+u_rOffset,0);
-  if(texelFetch(u_rRaw,q,0).a<.5||!lumen_fgCompatible(p,n,hp,hn,lumen_fgCurve(p)?.05:1e20))continue;
+  if(texelFetch(u_rRaw,q,0).a<.5||!lumen_fgCompatible(p,n,hp,hn,lumen_fgCurve(p)?.05:1e20)||dot(lumen_fgNs(n),lumen_fgNs(hn))<.995)continue;
   links[i]=(lumen_fgCurve(p)||lumen_fgSegment(p.xyz,hp.xyz,lumen_fgNg(n)))?1.0:0.0;
  }out_FragColor=links;
 }`;
@@ -90,7 +90,7 @@ void main(){
   bool connected=true;for(int j=0;j<2;j++){if(j>=u_rStep)break;if(texelFetch(u_rConnections,c+dir*j,0)[i]<.5)connected=false;}
   if(!connected)continue;
   vec4 a=texelFetch(u_rInput,q,0),hp=texelFetch(u_rPosition,q+u_rOffset,0),hn=texelFetch(u_rNormal,q+u_rOffset,0),hm=texelFetch(u_rMoments,q,0);
-  if(a.a<.5||!lumen_fgCompatible(p,n,hp,hn,lumen_fgCurve(p)?.05:1e20))continue;
+  if(a.a<.5||!lumen_fgCompatible(p,n,hp,hn,lumen_fgCurve(p)?.05:1e20)||dot(lumen_fgNs(n),lumen_fgNs(hn))<.995)continue;
   float sigma=sqrt(variance+max(hm.z,.0001));
   // Wide uncertainty for fresh histories; mature estimates preserve E gradients.
   if(min(a.a,e.a)<4.0)sigma=max(sigma,.25*max(lum,rLuma(a.rgb))+.02);
