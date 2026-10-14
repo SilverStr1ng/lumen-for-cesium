@@ -56,6 +56,7 @@ scene.lumen.finalGather.mode = ["fg", "raw"].includes(params.get("fg"))
   : "ddgi";
 scene.lumen.finalGather.quality = [
   "auto",
+  "interactive16",
   "balanced",
   "high",
   "fast",

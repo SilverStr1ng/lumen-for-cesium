@@ -6,6 +6,7 @@ export async function measureFrames(
   { warmup = 20, requireFG = false, beforeFrame, afterFrame } = {},
 ) {
   const intervals = [],
+    cpu = [],
     gpu = [],
     pending = [];
   const gl = scene.context._gl,
@@ -42,7 +43,11 @@ export async function measureFrames(
   const before = () => {
     if (rendered >= frames) return;
     beforeFrame?.(rendered);
-    active = { queries: [], fgBefore: scene.lumen.finalGather.metrics.frames };
+    active = {
+      queries: [],
+      fgBefore: scene.lumen.finalGather.metrics.frames,
+      cpuStart: performance.now(),
+    };
     if (!ext) return;
     if (timestamps) {
       active.queries = [gl.createQuery(), gl.createQuery()];
@@ -63,6 +68,7 @@ export async function measureFrames(
       intervals.push(t - previous);
     previous = t;
     active.include = rendered > warmup && eligible;
+    if (active.include) cpu.push(t - active.cpuStart);
     if (!eligible) excluded++;
     if (active.queries.length) {
       if (timestamps) ext.queryCounterEXT(active.queries[1], ext.TIMESTAMP_EXT);
@@ -118,6 +124,9 @@ export async function measureFrames(
     fps: frame.mean ? 1000 / frame.mean : null,
     frameMilliseconds: frame,
     gpuMilliseconds: stats(gpu),
+    cpuMilliseconds: stats(cpu),
+    cpuScope:
+      "CPU submission between preRender/postRender; earlier physics/update costs reported separately",
     gpuScope: timestamps
       ? "complete rendered frame timestamps"
       : "complete rendered frame elapsed query; separate from FG component window",

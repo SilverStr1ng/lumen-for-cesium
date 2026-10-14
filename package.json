@@ -52,7 +52,11 @@
     "benchmark:r8": "node scripts/benchmark-fg-runtime.mjs --azimuth --lazy",
     "test:r8": "node scripts/verify-r8.mjs",
     "test:r8:quality": "node scripts/verify-r8-quality.mjs",
-    "test:r8:desktop": "node scripts/verify-fg-desktop.mjs"
+    "test:r8:desktop": "node scripts/verify-fg-desktop.mjs",
+    "test:curved-receivers": "node scripts/verify-curved-contract.mjs && node scripts/verify-curved-topology.mjs && node scripts/verify-curved-receivers.mjs && node scripts/verify-curved-temporal.mjs",
+    "test:ballpool": "node scripts/verify-ballpool-descriptor.mjs && node scripts/verify-ballpool.mjs && node scripts/verify-ballpool-desktop.mjs",
+    "benchmark:ballpool": "node scripts/benchmark-ballpool.mjs",
+    "test:r9": "node scripts/verify-r9.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-deterministic-compat": "0.18.0"

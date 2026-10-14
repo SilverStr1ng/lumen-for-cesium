@@ -78,7 +78,11 @@ await p.addInitScript(installGlObserver);
 try {
   await p.goto(
     "http://localhost:8090/demo/" +
-      (sceneName === "gallery" ? "gallery.html?nativeBuffer=1" : "globe.html"),
+      (sceneName === "gallery"
+        ? "gallery.html?nativeBuffer=1"
+        : sceneName === "ballpool"
+          ? "ballpool.html"
+          : "globe.html"),
   );
   await p.waitForFunction(() => earthLab.world?.status === "ready", null, {
     timeout: 180000,
@@ -117,7 +121,13 @@ try {
             s = d.scene,
             f = s.lumen.finalGather,
             { measureFrames } = await import("./benchmark.js");
-          d.camera(sceneName === "gallery" ? "courtyard" : "boxFoot");
+          d.camera(
+            sceneName === "gallery"
+              ? "courtyard"
+              : sceneName === "ballpool"
+                ? "overview"
+                : "boxFoot",
+          );
           d.world.setDisplayTransition(0);
           s.requestRenderMode = false;
           window.glObserver.phase("performance");
