@@ -13,6 +13,10 @@ const good = {
     sameSession: true,
     sameScope: true,
     ready: true,
+    worldReady: true,
+    worldRound: 3,
+    worldRevision: 1,
+    worldPublishedRevision: 1,
     generation: 1,
     committedGeneration: 1,
     startedGeneration: 1,
@@ -42,6 +46,7 @@ for (const field of [
   "sameScope",
   "ready",
   "owned",
+  "worldReady",
 ])
   reject((r) => (r.proof[field] = false));
 for (const field of ["closed", "aborted"])
@@ -53,6 +58,9 @@ reject((r) => delete r.proof.expected);
 reject((r) => (r.proof.bytes = 0));
 reject((r) => (r.proof.declaredBytes = 8));
 reject((r) => (r.proof.url += "x"));
+reject((r) => (r.proof.worldRound = 2));
+reject((r) => (r.proof.worldPublishedRevision = 2));
+reject((r) => (r.proof.worldError = "Worker failed"));
 reject((r) => (r.response.requestId = "different"));
 reject((r) => (r.failure.requestId = "different"));
 reject((r) => (r.response.response.url += "x"));

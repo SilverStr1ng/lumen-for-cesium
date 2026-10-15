@@ -192,6 +192,9 @@ try {
         csp: response.headers.get("content-security-policy"),
         passed:
           status.ready &&
+          status.world.ready &&
+          status.world.round === 3 &&
+          status.world.revision === status.world.publishedRevision &&
           status.audit.length === 8 &&
           status.world.triangles === 998 &&
           workers.some((u) => u.endsWith("/lumen/gpu-worker.js")) &&
@@ -252,14 +255,20 @@ try {
     }));
     await page.waitForTimeout(250);
     const network = await networkProof();
+    const finalStatus = await page.evaluate(() => embedded.session.status());
     report.rows.push({
       prefix,
       display: "minimal-embedded",
       failures,
       network,
       ...embedded,
+      finalStatus,
       passed:
-        embedded.status.ready &&
+        finalStatus.ready &&
+        finalStatus.world.ready &&
+        finalStatus.world.round === 3 &&
+        finalStatus.world.revision === finalStatus.world.publishedRevision &&
+        finalStatus.generation === embedded.status.generation &&
         embedded.visible.visible &&
         embedded.status.audit.length === 8 &&
         embedded.status.world.triangles === 998 &&

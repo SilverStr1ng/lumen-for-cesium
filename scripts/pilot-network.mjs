@@ -25,6 +25,10 @@ export function classifyDeploymentCancellation({
     proof.sameSession &&
     proof.sameScope &&
     proof.ready &&
+    proof.worldReady &&
+    proof.worldRound === 3 &&
+    proof.worldRevision === proof.worldPublishedRevision &&
+    !proof.worldError &&
     proof.generation === proof.committedGeneration &&
     proof.startedGeneration === proof.generation &&
     !proof.closed &&
@@ -88,13 +92,30 @@ export async function observeDeploymentNetwork(page, dataset) {
               const expected = Object.entries(
                 s?.manifest?.resources ?? {},
               ).find(([uri]) => new URL(uri, dataset).href === url)?.[1];
+              const actual = entry
+                ? Array.from(
+                    new Uint8Array(
+                      await crypto.subtle.digest("SHA-256", entry.bytes),
+                    ),
+                    (b) => b.toString(16).padStart(2, "0"),
+                  ).join("")
+                : undefined;
+              const current = window.pilotSession ?? window.embedded?.session;
               return {
                 url,
                 uniqueCall: calls.length === 1,
                 samePage: !!call && call.page === state.page,
-                sameSession: !!s && call?.session === s,
-                sameScope: !!scope && call?.scope === scope,
+                sameSession: !!s && call?.session === s && current === s,
+                sameScope:
+                  !!scope &&
+                  call?.scope === scope &&
+                  current?._resources === scope,
                 ready: !!s?.ready && s.phase === "available",
+                worldReady: !!s?.world?.ready,
+                worldRound: s?.world?.publishedBounce,
+                worldRevision: s?.world?.requestedRevision,
+                worldPublishedRevision: s?.world?.publishedRevision,
+                worldError: s?.world?.error,
                 phase: s?.phase,
                 stage: s?.stage,
                 generation: s?.generation,
@@ -107,14 +128,7 @@ export async function observeDeploymentNetwork(page, dataset) {
                 declaredBytes: call?.declaredBytes,
                 bytes: entry?.bytes.byteLength ?? 0,
                 expected,
-                actual: entry
-                  ? Array.from(
-                      new Uint8Array(
-                        await crypto.subtle.digest("SHA-256", entry.bytes),
-                      ),
-                      (b) => b.toString(16).padStart(2, "0"),
-                    ).join("")
-                  : undefined,
+                actual,
               };
             },
             { url, dataset },
