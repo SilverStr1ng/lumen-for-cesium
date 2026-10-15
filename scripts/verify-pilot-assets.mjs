@@ -80,7 +80,14 @@ for (let i = 0; i < n; i++)
 assert(new Set(geometry.owners).size === geometry.owners.length);
 assert(new Set(geometry.materialIds).size === 2);
 const original = text.gltf;
+for (const key of ["url", "workerUrl", "backend", "modelMatrix"]) {
+  const invalid = structuredClone(manifest);
+  invalid.gi[key] = "untrusted";
+  assert.throws(() => validateManifest(invalid));
+}
 for (const mutate of [
+  (g) => { g.extensions = { CESIUM_RTC: { center: [100, 0, 0] } }; },
+  (g) => { g.nodes[0].extensions = { CESIUM_RTC: { center: [100, 0, 0] } }; },
   (g) => {
     g.nodes[0].children = [0];
   },
@@ -117,7 +124,7 @@ console.log(
     glbGltf: "buffer/accessor equality",
     axis: "per vertex independent Y-up oracle",
     globalOwners: geometry.owners.length,
-    rejections: 8,
+    rejections: 14,
     scope:
       "Transport/geometry only; actual image decode, displayed alignment, quality and resource gates require browser tests",
   }),

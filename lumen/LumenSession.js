@@ -59,6 +59,7 @@ export default class LumenSession {
     this.timings = [];
     this.peakKnownBytes = 0;
     this._pendingResources = new Map();
+    this._displayRemovers = [];
     this.disposed = false;
     this.phase = "empty";
     this._previous = {
@@ -165,6 +166,25 @@ export default class LumenSession {
     const staged = [];
     let stagedTiles,
       committed = false;
+    const displayRemovers = [];
+    let displayError;
+    const failDisplay = (error) => {
+      if (token !== this.generation || this.disposed) return;
+      displayError = "Display loading failed: " + String(error?.message ?? error);
+      controller.abort();
+      // Events may occur inside Model.update/tile traversal. Retire GI after it.
+      queueMicrotask(() => {
+        if (token !== this.generation || this.disposed) return;
+        this.phase = "failed";
+        this.error = displayError;
+        if (committed && !this.scene.isDestroyed()) {
+          this.scene.lumen.coverage = 0;
+          if (this.scene.lumen.world === this.world) this.scene.lumen.unloadWorld();
+          this.world = undefined;
+          this.scene.lumen.finalGather.setModels([], true);
+        }
+      });
+    };
     const pending = { bytes: 0, models: staged, tileset: undefined };
     this._pendingResources.set(token, pending);
     try {
@@ -271,6 +291,7 @@ export default class LumenSession {
             },
           });
           staged.push(model);
+          displayRemovers.push(model.errorEvent.addEventListener(failDisplay));
           this._guard(token, signal);
           this.scene.primitives.add(model);
         }
@@ -333,6 +354,7 @@ export default class LumenSession {
           },
         });
         pending.tileset = stagedTiles;
+        displayRemovers.push(stagedTiles.tileFailed.addEventListener(failDisplay));
         this._guard(token, signal);
         this.scene.primitives.add(stagedTiles);
       }
@@ -348,7 +370,9 @@ export default class LumenSession {
           workerUrl: this.workerUrl,
           url: snapshotUri,
           modelMatrix: frame,
-          ...manifest.gi,
+          spacing: manifest.gi.spacing,
+          rays: manifest.gi.rays,
+          bounces: manifest.gi.bounces,
           bvhStrategy: "sah",
           publicationMode: "progressive",
           environmentMode: "upper-hemisphere",
@@ -359,6 +383,9 @@ export default class LumenSession {
           skyRadiance: [0.15, 0.18, 0.22],
         });
         this._removePublication?.();
+        this._removePublication = undefined;
+        this._displayRemovers.forEach((remove) => remove());
+        this._displayRemovers = displayRemovers;
         this.adapter?.dispose();
         this.adapter = undefined;
         this.models.forEach((m) => this.scene.primitives.remove(m));
@@ -438,6 +465,7 @@ export default class LumenSession {
       this._guard(token, signal);
       if (this.profile === "contact-experimental")
         await this._experimental(signal);
+      this._guard(token, signal);
       this.phase = this._cacheFailure ? "degraded" : "available";
       this.timings.push({
         type: "load",
@@ -449,6 +477,7 @@ export default class LumenSession {
       return this.status();
     } catch (error) {
       if (!committed) {
+        displayRemovers.forEach((remove) => remove());
         staged.forEach((m) => {
           if (!m.isDestroyed()) {
             if (!this.scene.isDestroyed() && this.scene.primitives.contains(m))
@@ -475,12 +504,14 @@ export default class LumenSession {
           ? "context-lost"
           : this._renderError
             ? "failed"
-            : error.name === "AbortError"
+              : displayError
+                ? "failed"
+                : error.name === "AbortError"
               ? "cancelled"
               : "failed";
         this.error = this._contextLost
           ? "Context lost: recreate Scene/session"
-          : (this._renderError ?? String(error));
+          : (displayError ?? this._renderError ?? String(error));
         this.scene.requestRender();
       }
       throw error;
@@ -593,6 +624,7 @@ export default class LumenSession {
       await this._afterFrame(() => {}, signal);
       if (this.profile === "contact-experimental")
         await this._experimental(signal);
+      this._guard(token, signal);
       this.phase = this._cacheFailure ? "degraded" : "available";
       this.timings.push({
         type: "lighting",
@@ -642,6 +674,7 @@ export default class LumenSession {
       this._guard(token, signal);
       if (profile === "contact-experimental" && this.world?.ready)
         await this._experimental(this._controller.signal);
+      this._guard(token, signal);
       this.phase = this.world?.ready
         ? this._cacheFailure
           ? "degraded"
@@ -659,13 +692,16 @@ export default class LumenSession {
   }
   async _experimental(signal) {
     signal.throwIfAborted();
+    const token = this.generation;
     try {
-      this.cache = await this.world.buildSurfaceRadiance({
+      const cache = await this.world.buildSurfaceRadiance({
         spacing: 0.08,
         samples: 256,
       });
-      signal.throwIfAborted();
+      this._guard(token, signal);
+      this.cache = cache;
     } catch (error) {
+      this._guard(token, signal);
       if (error.name === "AbortError") throw error;
       this._cacheFailure = "Experimental cache unavailable: " + String(error);
     }
@@ -921,6 +957,9 @@ export default class LumenSession {
     ++this.generation;
     this._controller?.abort();
     this._removePublication?.();
+    this._removePublication = undefined;
+    this._displayRemovers.forEach((remove) => remove());
+    this._displayRemovers = [];
     this._removeBudget();
     this._removeRenderError();
     this.adapter?.dispose();

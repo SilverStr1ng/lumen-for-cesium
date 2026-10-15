@@ -26,18 +26,23 @@ const report = {
 let browser;
 try {
   browser = await launchBrowser();
+  console.log("Browser launched");
   const page = await browser.newPage({
     viewport: { width: 1280, height: 800 },
   });
   await page.addInitScript(installGlObserver);
+  console.log("Page created");
+  page.on("console", (message) => { if (message.type() === "error") console.error(message.text().slice(0, 1200)); });
   page.on("pageerror", (e) => report.errors.push(String(e)));
   for (const display of ["models", "tiles"]) {
+    console.log("Opening " + display);
     await page.goto(
       (process.env.LUMEN_PILOT_BASE ?? "http://localhost:8090/demo/") +
         "pilot-" +
         display +
         ".html?profile=enhanced",
     );
+    console.log("Opened " + display);
     await page.waitForFunction(
       () => pilotSession?.ready || pilotSession?.phase === "failed",
       null,
@@ -47,12 +52,21 @@ try {
       await page.evaluate(() => pilotSession.ready),
       await page.evaluate(() => pilotSession.error),
     );
+    console.log(JSON.stringify({ display, phase: "loaded" }));
     const checks = await page.evaluate(async () => {
       const results = [],
         s = pilotSession,
         uri = new URL("../fixtures/local-pilot/dataset.json", location.href)
           .href,
         Native = Worker;
+      const bounded = async (promise) => {
+        let timer;
+        try {
+          return await Promise.race([promise, new Promise((_, reject) => {
+            timer = setTimeout(() => { s.cancel(); reject(Error("Operation exceeded 90 seconds")); }, 90000);
+          })]);
+        } finally { clearTimeout(timer); }
+      };
       for (const fault of ["constructor", "postMessage"]) {
         const old = s.world;
         let failed = false,
@@ -61,25 +75,28 @@ try {
         window.Worker =
           fault === "constructor"
             ? class {
-                constructor() {
+                constructor(...a) {
+                  if (!String(a[0]).includes("gpu-worker.js")) return new Native(...a);
                   throw Error("injected Worker construction");
                 }
               }
             : class extends Native {
                 constructor(...a) {
                   super(...a);
-                  created++;
+                  this.injected = String(a[0]).includes("gpu-worker.js");
+                  if (this.injected) created++;
                 }
-                postMessage() {
-                  throw Error("injected postMessage");
+                postMessage(...a) {
+                  if (this.injected) throw Error("injected postMessage");
+                  return super.postMessage(...a);
                 }
                 terminate() {
-                  terminated++;
+                  if (this.injected) terminated++;
                   super.terminate();
                 }
               };
         try {
-          await s.replaceDataset(uri);
+          await bounded(s.replaceDataset(uri));
         } catch {
           failed = true;
         } finally {
@@ -95,7 +112,7 @@ try {
           created,
           terminated,
         });
-        await s.replaceDataset(uri);
+        await bounded(s.replaceDataset(uri));
       }
       const old = s.world;
       const pending = s.replaceDataset(uri);
@@ -111,10 +128,10 @@ try {
         name: "cancel-audit-keeps-matching-world",
         passed: cancelled && s.world === old && !old.isDestroyed(),
       });
-      await s.replaceDataset(uri);
+      await bounded(s.replaceDataset(uri));
       const first = s.replaceDataset(uri),
         second = s.replaceDataset(uri);
-      const settled = await Promise.allSettled([first, second]);
+      const settled = await bounded(Promise.allSettled([first, second]));
       results.push({
         name: "rapid-supersession",
         passed:
@@ -123,6 +140,20 @@ try {
           s.ready,
         settled: settled.map((v) => v.status),
       });
+      const originalCommit = s.onDatasetCommitted;
+      s.onDatasetCommitted = (dataset) => {
+        originalCommit?.(dataset);
+        queueMicrotask(() => {
+          if (s.display === "models") s.models[0].errorEvent.raiseEvent(Error("injected late Model loader failure"));
+          else s.tileset.tileFailed.raiseEvent({ message: "injected late Tile loader failure" });
+        });
+      };
+      let displayRejected = false;
+      try { await bounded(s.replaceDataset(uri)); }
+      catch { displayRejected = true; }
+      finally { s.onDatasetCommitted = originalCommit; }
+      results.push({ name: "late-display-error-terminates-load", passed: displayRejected && s.phase === "failed" && !s.world, error: s.error });
+      await bounded(s.replaceDataset(uri));
       let rejected = false;
       try {
         await s.diagnostics({
@@ -178,7 +209,7 @@ try {
               p.readPixels ||
               p.getBufferSubData ||
               p.finish ||
-              p.clientWaitSync
+              p.blockingClientWaitSync
             ),
         ),
       ),

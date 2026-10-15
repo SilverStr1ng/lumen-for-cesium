@@ -183,7 +183,7 @@ try {
               (p.readPixels ?? 0) +
               (p.getBufferSubData ?? 0) +
               (p.finish ?? 0) +
-              (p.clientWaitSync ?? 0),
+              (p.blockingClientWaitSync ?? 0),
             0,
           ),
         0,

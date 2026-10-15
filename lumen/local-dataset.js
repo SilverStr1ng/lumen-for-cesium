@@ -50,6 +50,8 @@ export function validateTransform(m) {
   return m;
 }
 export function validateManifest(m) {
+  if (Object.keys(m.gi ?? {}).some((key) => !["spacing", "rays", "bounces"].includes(key)))
+    throw Error("Only spacing/rays/bounces are permitted in dataset GI settings");
   if (
     m.schemaVersion !== 1 ||
     typeof m.datasetId !== "string" ||
@@ -94,6 +96,9 @@ export function validateManifest(m) {
   return m;
 }
 export function auditGltf(g) {
+  if (Object.keys(g.extensions ?? {}).length ||
+      (g.nodes ?? []).some((node) => Object.keys(node.extensions ?? {}).length))
+    throw Error("Root/node extensions require matching offline conversion");
   if (g.asset?.version !== "2.0" || g.animations?.length || g.skins?.length)
     throw Error(
       "Only explicit static unskinned glTF2; animation needs static export",
