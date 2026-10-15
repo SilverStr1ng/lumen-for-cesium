@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Sponza material MRT, finite positions and unit shading normals: {"valid":0,"maxNormalError":0,"maxProjectionError":0,"minDepth":null,"maxDepth":0,"hashes":[496278981,496278981,496278981,496278981],"difference":[0,0,0,0],"frustums":1}
+    at check (file:///D:/Nothing/lumen-for-cesium/scripts/verify-lumen.mjs:28:10)
+    at file:///D:/Nothing/lumen-for-cesium/scripts/verify-lumen.mjs:170:3 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.11.0

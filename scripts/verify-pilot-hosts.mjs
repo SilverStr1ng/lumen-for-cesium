@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { launchBrowser, sourceVersion } from "./browser-tools.mjs";
-const output =
-  process.env.LUMEN_REPORT_DIRECTORY ??
-  "reports/local-gi-pilot-v10/hosts-first";
-await mkdir(output, { recursive: true });
+import { newOutput } from "./pilot-validation.mjs";
+const output = await newOutput("hosts");
 const report = {
   version: sourceVersion([
     "scripts/verify-pilot-hosts.mjs",
+    "scripts/pilot-validation.mjs",
     "docs/product/local-gi-v0.1.md",
   ]),
   configuration: {

@@ -51,39 +51,66 @@ export function sourceVersion(extraFiles = []) {
       .map((f) => "cesium-1.146/packages/engine/Source/Scene/" + f),
     ...extraFiles,
   ];
+  const uniqueFiles = [...new Set(files)];
+  const assetFiles = ["fixtures", "cesium-1.146/Build/CesiumUnminified/Assets"]
+    .flatMap((dir) =>
+      existsSync(dir)
+        ? readdirSync(dir, { recursive: true })
+            .map((f) => dir + "/" + f.replaceAll("\\", "/"))
+            .filter((f) => /\.(gltf|glb|bin|png|jpe?g|ktx2|json)$/.test(f))
+        : [],
+    )
+    .sort();
+  const watched = new Set([...uniqueFiles, ...assetFiles]);
+  const status = execFileSync(
+    "git",
+    ["status", "--porcelain=v1", "-z", "--untracked-files=all"],
+    { encoding: "utf8", maxBuffer: 16 * 1048576 },
+  ).split("\0");
+  const modified = new Set();
+  for (let i = 0; i < status.length; i++) {
+    if (!status[i]) continue;
+    const entry = status[i],
+      file = entry.slice(3).replaceAll("\\", "/");
+    if (watched.has(file)) modified.add(file);
+    if (/[RC]/.test(entry.slice(0, 2))) {
+      const original = status[++i]?.replaceAll("\\", "/");
+      if (watched.has(original)) modified.add(original);
+    }
+  }
   const sha256 = (file) =>
     createHash("sha256")
       .update(readFileSync(file, "utf8").replaceAll("\r\n", "\n"))
       .digest("hex");
+  const buildRoot = "cesium-1.146/Build/CesiumUnminified";
+  const compiledFiles = Object.fromEntries(
+    readdirSync(buildRoot, { recursive: true })
+      .map((file) => buildRoot + "/" + file.replaceAll("\\", "/"))
+      .filter((file) => /\.[^/]+$/.test(file) && !file.endsWith(".map"))
+      .sort()
+      .map((file) => [
+        file,
+        /\.(js|css|json|html)$/.test(file)
+          ? sha256(file)
+          : createHash("sha256").update(readFileSync(file)).digest("hex"),
+      ]),
+  );
   return {
     head: execFileSync("git", ["rev-parse", "HEAD"], {
       encoding: "utf8",
     }).trim(),
-    sources: Object.fromEntries(files.map((file) => [file, sha256(file)])),
-    compiledBundle: sha256("cesium-1.146/Build/CesiumUnminified/Cesium.js"),
-    assets: Object.fromEntries(
-      ["fixtures", "cesium-1.146/Build/CesiumUnminified/Assets"]
-        .flatMap((dir) =>
-          existsSync(dir)
-            ? readdirSync(dir, { recursive: true })
-                .map((f) => dir + "/" + f.replaceAll("\\", "/"))
-                .filter((f) => /\.(gltf|glb|bin|png|jpe?g|ktx2|json)$/.test(f))
-            : [],
-        )
-        .sort()
-        .map((f) => [
-          f,
-          createHash("sha256").update(readFileSync(f)).digest("hex"),
-        ]),
+    sources: Object.fromEntries(
+      uniqueFiles.map((file) => [file, sha256(file)]),
     ),
-    modifiedSources: execFileSync(
-      "git",
-      ["diff", "--name-only", "--", ...files],
-      { encoding: "utf8" },
-    )
-      .trim()
-      .split("\n")
-      .filter(Boolean),
+    compiledBundle: sha256("cesium-1.146/Build/CesiumUnminified/Cesium.js"),
+    compiledFiles,
+    assets: Object.fromEntries(
+      assetFiles.map((f) => [
+        f,
+        createHash("sha256").update(readFileSync(f)).digest("hex"),
+      ]),
+    ),
+    modifiedSources: [...modified].sort(),
   };
 }
 export function demoUrl(backend, extra = "") {
@@ -97,7 +124,7 @@ export function demoUrl(backend, extra = "") {
     url.searchParams.set(key, value);
   return url.href;
 }
-export async function launchBrowser() {
+export async function launchBrowser({ naturalFocus = false } = {}) {
   const { chromium } = require("@playwright/test");
   const cache =
     process.env.PLAYWRIGHT_BROWSERS_PATH ??
@@ -133,11 +160,53 @@ export async function launchBrowser() {
     throw new Error(
       "Chromium missing: npm --prefix cesium-1.146 exec -- playwright install chromium",
     );
-  return chromium.launch({
+  const owned = await chromium.launch({
     executablePath,
     chromiumSandbox: true,
-    headless: process.env.LUMEN_HEADFUL !== "1",
+    headless: !naturalFocus && process.env.LUMEN_HEADFUL !== "1",
+    ...(naturalFocus
+      ? {
+          args: ["--remote-debugging-port=0", "--enable-automation"],
+          ignoreDefaultArgs: [
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-renderer-backgrounding",
+          ],
+        }
+      : {}),
   });
+  if (!naturalFocus) return owned;
+  try {
+    // Playwright ordinarily forces every page to appear focused/visible.
+    // Attach without those overrides to this test-owned browser's default
+    // context. Browser security stays enabled; no user browser is attached.
+    const session = await owned.newBrowserCDPSession();
+    const { arguments: args } = await session.send(
+      "Browser.getBrowserCommandLine",
+    );
+    const profile = args
+      .find((a) => a.startsWith("--user-data-dir="))
+      .slice("--user-data-dir=".length);
+    const port = readFileSync(
+      path.join(profile, "DevToolsActivePort"),
+      "utf8",
+    ).split("\n")[0];
+    const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`, {
+      noDefaults: true,
+    });
+    const close = browser.close.bind(browser);
+    browser.close = async () => {
+      try {
+        await close();
+      } finally {
+        await owned.close();
+      }
+    };
+    return browser;
+  } catch (error) {
+    await owned.close();
+    throw error;
+  }
 }
 
 // Observes actual GL calls. It is installed before any context is created.

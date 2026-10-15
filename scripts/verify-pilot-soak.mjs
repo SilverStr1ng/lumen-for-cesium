@@ -1,18 +1,18 @@
 import assert from "node:assert/strict";
-import { mkdir, writeFile, appendFile } from "node:fs/promises";
+import { writeFile, appendFile } from "node:fs/promises";
 import {
   launchBrowser,
   sourceVersion,
   installGlObserver,
 } from "./browser-tools.mjs";
-const output =
-  process.env.LUMEN_REPORT_DIRECTORY ?? "reports/local-gi-pilot-v10/soak-first";
-await mkdir(output, { recursive: true });
+import { newOutput, openPilot, waitFg } from "./pilot-validation.mjs";
+const output = await newOutput("soak");
 const seconds = Number(process.env.LUMEN_SOAK_SECONDS ?? 1800),
   requiredSeconds = 1800;
 const report = {
   version: sourceVersion([
     "scripts/verify-pilot-soak.mjs",
+    "scripts/pilot-validation.mjs",
     "docs/product/local-gi-v0.1.md",
   ]),
   configuration: {
@@ -25,6 +25,8 @@ const report = {
     lodSwitches: 50,
     budget: 64 * 1048576,
     renderDriver: "Actual CesiumWidget RAF, wall-clock cruise and relighting",
+    browser:
+      "headed; security enabled; natural focus/background throttling, Playwright focus emulation disabled",
   },
   samples: [],
   replacements: [],
@@ -35,29 +37,35 @@ const report = {
 };
 let browser;
 try {
-  browser = await launchBrowser();
-  const page = await browser.newPage({
-    viewport: { width: 1920, height: 1080 },
-  });
+  browser = await launchBrowser({ naturalFocus: true });
+  const context = browser.contexts()[0];
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.addInitScript(installGlObserver);
   page.on("pageerror", (e) => report.errors.push(String(e)));
-  await page.goto(
-    "http://localhost:8090/demo/pilot-tiles.html?profile=enhanced",
-  );
-  await page.waitForFunction(
-    () => pilotSession?.ready || pilotSession?.phase === "failed",
-    null,
-    { timeout: 240000 },
-  );
-  assert(
-    await page.evaluate(() => pilotSession.ready),
-    await page.evaluate(() => pilotSession.error),
-  );
+  await openPilot(page, "tiles");
+  await waitFg(page);
   await page.evaluate(() => {
-    window.pilotCruise = { frames: 0, start: performance.now() };
+    window.pilotCruise = {
+      frames: 0,
+      start: performance.now(),
+      intervals: [],
+      stutters: 0,
+      totalIntervals: 0,
+    };
     pilotCruise.remove = pilotHost.scene.preRender.addEventListener(() => {
       const t = (performance.now() - pilotCruise.start) / 1000;
+      const now = performance.now();
+      if (pilotCruise.last !== undefined) {
+        const dt = now - pilotCruise.last;
+        pilotCruise.intervals.push(dt);
+        if (pilotCruise.intervals.length > 4096) pilotCruise.intervals.shift();
+        pilotCruise.totalIntervals++;
+        if (dt > 50) pilotCruise.stutters++;
+      }
+      pilotCruise.last = now;
       pilotCruise.frames++;
+      if (pilotCruise.paused) return;
       pilotHost.view({
         eye: [
           35 * Math.cos(t / 35),
@@ -69,6 +77,7 @@ try {
     });
   });
   const started = Date.now();
+  let idleTested = false;
   let nextReplacement = 0,
     nextLod = 0,
     nextLight = 0;
@@ -148,13 +157,81 @@ try {
       report.lighting.push(row);
       nextLight += Math.max(3, seconds / 30);
     }
+    if (!idleTested && elapsed >= seconds * 0.5) {
+      const before = await page.evaluate(() => {
+        pilotCruise.paused = true;
+        return {
+          version: pilotSession.status().version,
+          revision: pilotSession.status().world.revision,
+          visibility: document.visibilityState,
+        };
+      });
+      const idle = await context.newPage();
+      await idle.goto("about:blank");
+      await idle.bringToFront();
+      const hidden = await page.evaluate(() => document.visibilityState);
+      await page.waitForTimeout(1000);
+      await page.bringToFront();
+      await idle.close();
+      const visible = await page.evaluate(() =>
+        pilotSession.waitForVisible({ timeoutMilliseconds: 60000 }),
+      );
+      await waitFg(page);
+      const after = await page.evaluate(() => ({
+        version: pilotSession.status().version,
+        revision: pilotSession.status().world.revision,
+        visibility: document.visibilityState,
+      }));
+      report.background = {
+        before,
+        hidden,
+        after,
+        visible,
+        status:
+          hidden !== "hidden"
+            ? "not-run"
+            : visible.visible && after.visibility === "visible"
+              ? "passed"
+              : "failed",
+        consistent:
+          before.version === after.version &&
+          before.revision === after.revision,
+      };
+      await page.evaluate(() => {
+        pilotCruise.paused = false;
+      });
+      idleTested = true;
+    }
     const sample = await page.evaluate(() => ({
       status: pilotSession.status(),
       cruiseFrames: pilotCruise.frames,
       fgFrames: pilotHost.scene.lumen.finalGather.metrics.frames,
       continuousSampling: pilotHost.scene.lumen.finalGather.continuousSampling,
+      visibility: document.visibilityState,
     }));
     sample.elapsed = (Date.now() - started) / 1000;
+    const previous = report.samples.at(-1);
+    if (previous) {
+      sample.advance = {
+        seconds: sample.elapsed - previous.elapsed,
+        sceneFrames: sample.cruiseFrames - previous.cruiseFrames,
+        fgFrames: sample.fgFrames - previous.fgFrames,
+        sameGeneration: sample.status.generation === previous.status.generation,
+        sameRevision:
+          sample.status.world?.revision === previous.status.world?.revision,
+      };
+      sample.advance.stable =
+        sample.advance.sameGeneration &&
+        sample.advance.sameRevision &&
+        sample.visibility === "visible" &&
+        previous.visibility === "visible";
+      sample.advance.passed =
+        sample.advance.sceneFrames > 0 &&
+        (!sample.advance.stable ||
+          (sample.advance.fgFrames > 0 &&
+            sample.continuousSampling &&
+            sample.status.fg.effectiveMode === "fg"));
+    }
     report.samples.push(sample);
     await appendFile(output + "/samples.ndjson", JSON.stringify(sample) + "\n");
     console.log(
@@ -169,12 +246,29 @@ try {
     await page.waitForTimeout(1000);
   }
   report.wallSeconds = (Date.now() - started) / 1000;
+  const freshStart = await page.evaluate(() => {
+    pilotCruise.paused = true;
+    return {
+      scene: pilotCruise.frames,
+      fg: pilotHost.scene.lumen.finalGather.metrics.frames,
+    };
+  });
+  await waitFg(page);
   report.final = await page.evaluate(() => {
     pilotCruise.remove();
     return {
       status: pilotSession.status(),
       observer: glObserver.snapshot(),
       frames: pilotCruise.frames,
+      fgFrames: pilotHost.scene.lumen.finalGather.metrics.frames,
+      cadence: {
+        intervalP95: [...pilotCruise.intervals].sort((a, b) => a - b)[
+          Math.ceil(pilotCruise.intervals.length * 0.95) - 1
+        ],
+        stutterFraction:
+          pilotCruise.stutters / Math.max(1, pilotCruise.totalIntervals),
+        intervals: pilotCruise.totalIntervals,
+      },
     };
   });
   report.disposal = await page.evaluate(() => {
@@ -199,14 +293,18 @@ try {
   );
   report.checks = {
     duration: enough,
-    budget: report.final.status.resources.peakKnownBytes <= 64 * 1048576,
+    budget: report.final.status.resources.peakAdmittedBytes <= 64 * 1048576,
     residentLod: report.lod.every((r) => r.passed),
     continuous:
-      report.samples.filter(
-        (s) => s.continuousSampling && s.status.fg.effectiveMode === "fg",
-      ).length >
-      report.samples.length * 0.5,
+      report.samples.slice(1).every((s) => s.advance.passed) &&
+      report.samples.filter((s) => s.advance?.stable && s.advance.fgFrames > 0)
+        .length >
+        report.samples.length * 0.5 &&
+      report.final.frames > freshStart.scene &&
+      report.final.fgFrames >= freshStart.fg + 32,
     noReads,
+    background:
+      report.background?.status === "passed" && report.background.consistent,
     disposed: report.disposal.world === null && report.disposal.targets === 0,
   };
   report.status =

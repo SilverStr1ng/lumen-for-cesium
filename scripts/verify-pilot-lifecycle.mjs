@@ -5,19 +5,18 @@ import {
   sourceVersion,
   installGlObserver,
 } from "./browser-tools.mjs";
-const output =
-  process.env.LUMEN_REPORT_DIRECTORY ??
-  "reports/local-gi-pilot-stabilization-v11/lifecycle-" +
-    new Date().toISOString().replaceAll(":", "-");
-await mkdir(output, { recursive: true });
+import { newOutput } from "./pilot-validation.mjs";
+const output = await newOutput("lifecycle");
 const report = {
   version: sourceVersion([
     "scripts/verify-pilot-lifecycle.mjs",
+    "scripts/pilot-validation.mjs",
     "docs/product/local-gi-v0.1.md",
   ]),
   configuration: {
     buffer: [1280, 800],
     profile: "enhanced",
+    displays: (process.env.LUMEN_PILOT_DISPLAYS ?? "models,tiles").split(","),
     faults:
       "explicit Worker constructor/postMessage injection; real HTTP404 and supersession",
   },

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" />
+  <title>Local GI · 最小嵌入验证</title>
+  <link rel="icon" href="data:," />
+  <link
+    rel="stylesheet"
+    href="../cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css"
+  />
+  <link rel="stylesheet" href="pilot.css" />
+  <div id="view"></div>
+  <aside>
+    <h1>最小嵌入验证</h1>
+    <p>复用原有八个资产，使用公开 session 接口。</p>
+    <button id="dispose">销毁 Session</button>
+    <pre id="status">加载中</pre>
+  </aside>
+  <script src="pilot-base.js"></script>
+  <script src="../cesium-1.146/Build/CesiumUnminified/Cesium.js"></script>
+  <script type="module" src="pilot-embed.js"></script>
+</html>

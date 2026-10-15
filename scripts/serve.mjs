@@ -61,6 +61,7 @@ http
         "Content-Type": mime[path.extname(file)] ?? "application/octet-stream",
         "Content-Length": info.size,
         "Cache-Control": "no-store",
+        ...(process.env.LUMEN_CSP ? {"Content-Security-Policy": process.env.LUMEN_CSP} : {}),
       });
       if (req.method === "HEAD") res.end();
       else createReadStream(file).pipe(res);

@@ -60,12 +60,16 @@
     "test:contact-transport": "node scripts/verify-contact-transport.mjs",
     "benchmark:contact-cache": "node scripts/benchmark-contact-cache.mjs",
     "test:r10": "node scripts/verify-r10.mjs",
-    "test:pilot:assets": "node scripts/verify-pilot-assets.mjs && node scripts/verify-pilot-owners.mjs && node scripts/verify-pilot-cancellation.mjs",
+    "test:pilot:assets": "node scripts/verify-pilot-assets-suite.mjs",
     "test:pilot:hosts": "node scripts/verify-pilot-hosts.mjs",
     "test:pilot:lifecycle": "node scripts/verify-pilot-lifecycle.mjs",
     "test:pilot:quality": "node scripts/verify-pilot-quality.mjs",
     "benchmark:pilot": "node scripts/benchmark-pilot.mjs",
-    "test:pilot:soak": "node scripts/verify-pilot-soak.mjs"
+    "test:pilot:soak": "node scripts/verify-pilot-soak.mjs",
+    "test:r12": "node scripts/verify-r12.mjs",
+    "test:pilot:equivalence": "node scripts/verify-pilot-equivalence.mjs",
+    "test:pilot:runtime": "node scripts/verify-pilot-runtime.mjs",
+    "test:pilot:deployment": "node scripts/verify-pilot-deployment.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-deterministic-compat": "0.18.0"

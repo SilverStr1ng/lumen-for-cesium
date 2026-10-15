@@ -1,0 +1,82 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Rendering must be error-free before data tests
++ actual - expected
+
++ [
++   'RuntimeError: Failed to load model: http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf\n' +
++     'Failed to load glTF\n' +
++     'Failed to load glTF: http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf\n' +
++     'Original stack:\n' +
++     'Original stack:\n' +
++     'Original stack:\n' +
++     'undefined\n' +
++     'Handler stack:\n' +
++     'Error\n' +
++     '    at new RuntimeError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:20288:13)\n' +
++     '    at GltfJsonLoader.getError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:73559:28)\n' +
++     '    at handleError4 (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:78950:26)\n' +
++     '    at loadFromUri2 (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:78942:7)\n' +
++     '    at async loadGltfJson (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:144156:7)\n' +
++     '    at async Model.fromGltfAsync (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:172270:7)\n' +
++     '    at async http://localhost:8090/demo/main.js:287:11\n' +
++     'Handler stack:\n' +
++     'Error\n' +
++     '    at new RuntimeError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:20288:13)\n' +
++     '    at GltfLoader.getError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:73559:28)\n' +
++     '    at handleError7 (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:144192:22)\n' +
++     '    at loadGltfJson (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:144169:7)\n' +
++     '    at async Model.fromGltfAsync (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:172270:7)\n' +
++     '    at async http://localhost:8090/demo/main.js:287:11\n' +
++     'Handler stack:\n' +
++     'Error\n' +
++     '    at new RuntimeError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:20288:13)\n' +
++     '    at ModelUtility.getError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:78634:26)\n' +
++     '    at Model.fromGltfAsync (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:172273:34)\n' +
++     '    at async http://localhost:8090/demo/main.js:287:11'
++ ]
+- []
+
+    at file:///D:/Nothing/lumen-for-cesium/scripts/verify-lumen.mjs:44:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'RuntimeError: Failed to load model: http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf\n' +
+      'Failed to load glTF\n' +
+      'Failed to load glTF: http://localhost:8008/gltf/2.0/Sponza/glTF/Sponza.gltf\n' +
+      'Original stack:\n' +
+      'Original stack:\n' +
+      'Original stack:\n' +
+      'undefined\n' +
+      'Handler stack:\n' +
+      'Error\n' +
+      '    at new RuntimeError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:20288:13)\n' +
+      '    at GltfJsonLoader.getError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:73559:28)\n' +
+      '    at handleError4 (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:78950:26)\n' +
+      '    at loadFromUri2 (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:78942:7)\n' +
+      '    at async loadGltfJson (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:144156:7)\n' +
+      '    at async Model.fromGltfAsync (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:172270:7)\n' +
+      '    at async http://localhost:8090/demo/main.js:287:11\n' +
+      'Handler stack:\n' +
+      'Error\n' +
+      '    at new RuntimeError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:20288:13)\n' +
+      '    at GltfLoader.getError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:73559:28)\n' +
+      '    at handleError7 (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:144192:22)\n' +
+      '    at loadGltfJson (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:144169:7)\n' +
+      '    at async Model.fromGltfAsync (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:172270:7)\n' +
+      '    at async http://localhost:8090/demo/main.js:287:11\n' +
+      'Handler stack:\n' +
+      'Error\n' +
+      '    at new RuntimeError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:20288:13)\n' +
+      '    at ModelUtility.getError (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:78634:26)\n' +
+      '    at Model.fromGltfAsync (http://localhost:8090/cesium-1.146/Build/CesiumUnminified/Cesium.js:172273:34)\n' +
+      '    at async http://localhost:8090/demo/main.js:287:11'
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.11.0
