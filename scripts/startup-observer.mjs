@@ -7,6 +7,8 @@ export function installStartupObserver(options = {}) {
     firstAssetFrame: null,
     firstNewGIFrame: null,
     targetFGFrame: null,
+    programTimingScope:
+      "Per observation window; preExisting programs without initialization markers were prepared earlier. The deleted marker is retained across windows for live-program accounting.",
     gaps: [],
     tasks: [],
     inputs: [],
@@ -395,7 +397,19 @@ export function installStartupObserver(options = {}) {
       row.preExisting = true;
       row.calls = {};
       row.stalls = [];
-      row.firstUse = row.firstDraw = undefined;
+      for (const key of [
+        "submitted",
+        "completed",
+        "completionPolls",
+        "linkStatusChecked",
+        "linkStatusMilliseconds",
+        "firstReflection",
+        "firstUse",
+        "firstDraw",
+        "firstUseMilliseconds",
+        "firstDrawMilliseconds",
+      ])
+        row[key] = undefined;
     }
     previous = 0;
     frame = { globe: false, asset: false, gi: false, fg: false };
