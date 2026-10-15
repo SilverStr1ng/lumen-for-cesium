@@ -24,7 +24,7 @@ npm start
 
 ```text
 default-src 'self';
-script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval';
+script-src 'self' blob: 'unsafe-eval' 'wasm-unsafe-eval';
 worker-src 'self' blob:;
 connect-src 'self' blob: data:;
 img-src 'self' blob: data:;
@@ -33,7 +33,7 @@ style-src 'self' 'unsafe-inline'
 
 可将上述合并为一行并通过 `LUMEN_CSP` 传入本地服务器，或由业务 HTTP 服务器设置同名响应头。JS/WASM 的求值权限属于本版公开部署限制；没有使用 `bypassCSP`、`--disable-web-security` 或关闭 Chromium sandbox。需要更严格策略的业务必须先完成依赖构建适配，当前不认证这种部署。
 
-本轮只认证同源 Worker/资产；不要求宽泛的 CORS 通配。Blob/data 用于经哈希验证的冻结内容，独立资产仍按完整 canonical URL 标识。自建服务器须提供 `.js/.mjs` JavaScript MIME、`.gltf` JSON、`.glb` 二进制 glTF、`.wasm` application/wasm。
+本轮只认证同源 Worker/资产；不要求宽泛的 CORS 通配。Blob/data 用于经哈希验证的冻结内容，独立资产仍按完整 canonical URL 标识。Cesium内联Worker还会通过importScripts加载本页生成的Blob脚本，因此script-src与worker-src都需要blob:。自建服务器须提供 `.js/.mjs` JavaScript MIME、`.gltf` JSON、`.glb` 二进制 glTF、`.wasm` application/wasm。
 
 发布需要保留 `demo/`、`lumen/`、`fixtures/local-pilot/` 与完整 `cesium-1.146/Build/CesiumUnminified/` 目录结构，包括 Workers、ThirdParty、Widgets和Assets。只复制 Cesium.js 会缺资源。Git规则固定 fixture及复制资产的LF；构建按排序后的模块入口生成，干净归档与工作区须逐项比对运行文件，不能只比对主 bundle。
 

@@ -25,7 +25,7 @@ const output = await newOutput("deployment"),
       root: true,
       nonRoot: "/deploy/lumen",
       browserSecurity: "enabled",
-      csp: "default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'",
+      csp: "default-src 'self'; script-src 'self' blob: 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'",
     },
     rows: [],
     errors: [],
@@ -114,8 +114,6 @@ try {
     "clean bundle differs from frozen build",
   );
   browser = await launchBrowser();
-  const page = await browser.newPage({ viewport: { width: 960, height: 600 } });
-  page.on("pageerror", (e) => report.errors.push(String(e)));
   for (const prefix of ["", "/deploy/lumen"]) {
     const port = await new Promise((resolve, reject) => {
       const s = net.createServer();
@@ -156,6 +154,12 @@ try {
     const base = `http://localhost:${port}${prefix}/demo/`;
     process.env.LUMEN_PILOT_BASE = base;
     for (const display of ["models", "tiles"]) {
+      // Each host owns a fresh page/context. Navigation cancellation from a
+      // retired host must not be attributed to the next host's requests.
+      const page = await browser.newPage({
+        viewport: { width: 960, height: 600 },
+      });
+      page.on("pageerror", (e) => report.errors.push(String(e)));
       const requests = [],
         workers = [],
         failures = [];
@@ -167,6 +171,7 @@ try {
       page.on("requestfailed", onFailure);
       console.log("Clean host " + prefix + "/" + display);
       await openPilot(page, display, "baseline");
+      await page.waitForTimeout(250);
       const status = await page.evaluate(() => pilotSession.status()),
         response = await fetch(base + `pilot-${display}.html`);
       const row = {
@@ -200,6 +205,7 @@ try {
         { flag: "wx" },
       );
       assert.equal(row.csp, report.configuration.csp);
+      await page.close();
     }
     if (prefix) {
       assert.equal(
@@ -207,6 +213,10 @@ try {
         404,
       );
     }
+    const page = await browser.newPage({
+      viewport: { width: 960, height: 600 },
+    });
+    page.on("pageerror", (e) => report.errors.push(String(e)));
     await page.goto(base + "pilot-embed.html");
     await page.waitForFunction(
       () =>
@@ -225,8 +235,13 @@ try {
       prefix,
       display: "minimal-embedded",
       ...embedded,
-      passed: embedded.status.ready && embedded.visible.visible,
+      passed:
+        embedded.status.ready &&
+        embedded.visible.visible &&
+        embedded.status.audit.length === 8 &&
+        embedded.status.world.triangles === 998,
     });
+    await page.close();
   }
   report.status =
     report.rows.length === 6 &&
