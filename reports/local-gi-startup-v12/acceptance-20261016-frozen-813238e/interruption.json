@@ -1,0 +1,9 @@
+{
+  "status": "not-run",
+  "startupReady": false,
+  "pilotReady": false,
+  "frozenHead": "813238e1301b47f78e4fe719a4f585c77ff3bd4a",
+  "reason": "Interrupted during no-extension startup after finding the observer targetFG milestone did not require all requested native shader preparations to complete. First asset/GI/input/raw native records remain evidence, but targetFG is only a partial rendered-material milestone. No complete acceptance.json or product certification was produced. A new frozen recipe must rerun the complete matrix.",
+  "preserved": ["60 historical windows", "60 current windows", "partial no-extension raw rows", "CPU profiles", "shader/source hashes"],
+  "unrun": ["complete no-extension gate", "shader-lifecycle", "profile-equivalence", "shared-shader-smoke", "assets", "lifecycle", "equivalence", "quality", "runtime", "performance", "deployment", "soak"]
+}

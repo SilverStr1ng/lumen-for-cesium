@@ -1,0 +1,4701 @@
+{
+  "display": "models",
+  "run": 0,
+  "kind": "baseline",
+  "profile": "baseline",
+  "cache": "same browser profile; driver cache uncontrolled",
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.40",
+    "revision": "@cfaadc5a132d78e1828635aa8405a499f3e14864",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.20"
+  },
+  "browserArguments": [
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "--disable-field-trial-config",
+    "--disable-background-networking",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--disable-back-forward-cache",
+    "--disable-breakpad",
+    "--disable-client-side-phishing-detection",
+    "--disable-component-extensions-with-background-pages",
+    "--disable-component-update",
+    "--no-default-browser-check",
+    "--disable-default-apps",
+    "--disable-dev-shm-usage",
+    "--disable-edgeupdater",
+    "--disable-extensions",
+    "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion",
+    "--enable-features=CDPScreenshotNewSurface",
+    "--allow-pre-commit-input",
+    "--disable-hang-monitor",
+    "--disable-ipc-flooding-protection",
+    "--disable-popup-blocking",
+    "--disable-prompt-on-repost",
+    "--disable-renderer-backgrounding",
+    "--disable-updater-scheduler",
+    "--force-color-profile=srgb",
+    "--metrics-recording-only",
+    "--no-first-run",
+    "--password-store=basic",
+    "--use-mock-keychain",
+    "--no-service-autorun",
+    "--export-tagged-pdf",
+    "--disable-search-engine-choice-screen",
+    "--unsafely-disable-devtools-self-xss-warnings",
+    "--edge-skip-compat-layer-relaunch",
+    "--disable-infobars",
+    "--disable-search-engine-choice-screen",
+    "--disable-sync",
+    "--enable-unsafe-swiftshader",
+    "--headless",
+    "--hide-scrollbars",
+    "--mute-audio",
+    "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+    "--enable-automation",
+    "--user-data-dir=C:\\Users\\rakuyou\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-wHoqfZ",
+    "--remote-debugging-pipe",
+    "--no-startup-window",
+    "--noerrdialogs",
+    "--flag-switches-begin",
+    "--flag-switches-end",
+    "--enable-unsafe-swiftshader"
+  ],
+  "errors": [],
+  "operation": {
+    "outcome": "completed"
+  },
+  "status": {
+    "pilotReady": false,
+    "datasetReady": true,
+    "displayState": {
+      "outcome": "visible",
+      "visible": true,
+      "modelsReady": 8
+    },
+    "lightingRequests": {},
+    "anchor": {
+      "longitude": 114.1,
+      "latitude": 22.3,
+      "height": 2
+    },
+    "phase": "available",
+    "ready": true,
+    "stage": "ready",
+    "display": "models",
+    "profile": "baseline",
+    "effectiveProfile": "baseline",
+    "fg": {
+      "requestedMode": "fg",
+      "status": "disabled",
+      "frames": 265,
+      "memoryBytes": 0,
+      "peakMemoryBytes": 19574784,
+      "draws": 5565,
+      "timingUnavailable": 22,
+      "disjoint": 0,
+      "productionReadbacks": 0,
+      "history": false,
+      "incompleteTimerFrames": 0,
+      "unknownFraction": "diagnostic-only; no production readback",
+      "effectiveMode": "ddgi",
+      "stablePasses": 0,
+      "accumulationPasses": 0,
+      "snapshotBytes": 0,
+      "totalAdditionalBytes": 36842698,
+      "peakAdditionalBytes": 64244794,
+      "planChanges": 20,
+      "requestedQuality": "auto",
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.2",
+        "scale": 0.2,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 384,
+        "rh": 216,
+        "width": 384,
+        "height": 216,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 19574784,
+        "snapshotBytes": 5646528,
+        "additionalSceneBytes": 36842698,
+        "totalBytes": 62064010,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 62064010,
+        "slots": 2654208,
+        "geometrySlots": 2737152,
+        "checkedInvocations": 5391360,
+        "requiredSamplers": 14,
+        "attachments": {
+          "receiverBytes": 2985984,
+          "hitBytes": 5308416,
+          "workBytes": 2985984,
+          "historyBytes": 8294400
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              540
+            ],
+            "totalBytes": 164831626,
+            "checkedInvocations": 22809600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              486
+            ],
+            "totalBytes": 141586570,
+            "checkedInvocations": 18869760,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 120788362,
+            "checkedInvocations": 15344640,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.3333333333333333,
+            "receiver": [
+              640,
+              360
+            ],
+            "totalBytes": 96863626,
+            "checkedInvocations": 11289600,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.3,
+            "receiver": [
+              576,
+              324
+            ],
+            "totalBytes": 86532490,
+            "checkedInvocations": 9538560,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.25,
+            "receiver": [
+              480,
+              270
+            ],
+            "totalBytes": 73074826,
+            "checkedInvocations": 7257600,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "receiverDraws": 610,
+      "historyReset": "source/round/sampling epoch",
+      "sampleEpoch": 264,
+      "sampling": "reconstructed",
+      "revision": 1,
+      "round": 3,
+      "versions": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 1,
+        "sunVisibility": 1,
+        "lighting": 1
+      },
+      "quality": "auto",
+      "resolution": [
+        384,
+        216
+      ],
+      "receiverResolution": [
+        384,
+        216
+      ],
+      "fallbackReason": "none",
+      "effectiveQuality": "auto@0.2",
+      "execution": "split",
+      "rayLayout": "interleaved",
+      "rayOrder": "azimuth",
+      "reconstructionEnabled": true,
+      "lazyFallback": true,
+      "samples": 32,
+      "raySlots": 2654208,
+      "primaryRayUpperBound": 2654208,
+      "solarRayUpperBound": 2654208,
+      "traversalBudget": 256,
+      "geometryRayUpperBound": 2737152,
+      "additionalSceneBytes": 36842698,
+      "timerRecords": 258,
+      "stageTimings": {
+        "receiver": {
+          "records": 258,
+          "lastMilliseconds": 5.449536
+        },
+        "trace": {
+          "records": 2064,
+          "lastMilliseconds": 0.079456
+        },
+        "shade": {
+          "records": 2064,
+          "lastMilliseconds": 0.150336
+        },
+        "neighborhood": {
+          "records": 258,
+          "lastMilliseconds": 0.019328
+        },
+        "connections": {
+          "records": 258,
+          "lastMilliseconds": 0.07264
+        },
+        "temporal": {
+          "records": 258,
+          "lastMilliseconds": 0.068768
+        },
+        "filter1": {
+          "records": 258,
+          "lastMilliseconds": 0.006176
+        },
+        "filter2": {
+          "records": 258,
+          "lastMilliseconds": 0.005792
+        }
+      },
+      "receiverSize": [
+        384,
+        216
+      ],
+      "drawingBuffer": [
+        1920,
+        1080
+      ]
+    },
+    "fallbackReason": "disabled",
+    "generation": 2,
+    "datasetId": "gallery-pilot",
+    "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+    "audit": [
+      {
+        "id": "basalt",
+        "status": "supported",
+        "primitives": 36,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "limestone",
+        "status": "supported",
+        "primitives": 366,
+        "materials": 1,
+        "format": "gltf",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "plaster",
+        "status": "supported",
+        "primitives": 64,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "terracotta",
+        "status": "supported",
+        "primitives": 6,
+        "materials": 1,
+        "format": "gltf",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "oak",
+        "status": "supported",
+        "primitives": 52,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "emitter",
+        "status": "supported",
+        "primitives": 6,
+        "materials": 1,
+        "format": "gltf",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "blue-instance",
+        "status": "supported",
+        "primitives": 6,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "alpha-mask",
+        "status": "supported",
+        "primitives": 2,
+        "materials": 2,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      }
+    ],
+    "plan": {
+      "counts": [
+        18,
+        14,
+        7
+      ],
+      "total": 1764,
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3
+    },
+    "targets": 8,
+    "ownerCounter": 539,
+    "world": {
+      "revision": 1,
+      "publishedRevision": 1,
+      "round": 3,
+      "triangles": 998,
+      "ready": true
+    },
+    "resources": {
+      "budget": 67108864,
+      "categories": {
+        "frozenCpu": 1662910,
+        "blobCpu": 1662910,
+        "displayGpu": 380087,
+        "giGpu": 25317184,
+        "packetCpu": 5720,
+        "workerCpu": 114148,
+        "ownerCpu": 4096,
+        "environmentGpu": 1048576
+      },
+      "allocations": 1726,
+      "knownAdditionalBytes": 30195631,
+      "reservedBytes": 6647067,
+      "admittedBytes": 36842698,
+      "peakKnownBytes": 55597167,
+      "peakAdmittedBytes": 64244794,
+      "driverVram": "not-run",
+      "jsAllocator": "not-run",
+      "giGpu": 25317184,
+      "snapshots": 0,
+      "fgGpu": 0,
+      "displayGpu": 1428663,
+      "cpuKnown": 3449784,
+      "queryAllowance": "4KiB per live timer handle; implementation storage unmeasured"
+    },
+    "timings": [
+      {
+        "type": "load",
+        "generation": 1,
+        "wallMilliseconds": 10035.69999999553,
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "plan": {
+          "counts": [
+            18,
+            14,
+            7
+          ],
+          "total": 1764,
+          "spacing": 2,
+          "rays": 128,
+          "bounces": 3
+        }
+      },
+      {
+        "type": "load",
+        "generation": 2,
+        "wallMilliseconds": 3077.60000000149,
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "plan": {
+          "counts": [
+            18,
+            14,
+            7
+          ],
+          "total": 1764,
+          "spacing": 2,
+          "rays": 128,
+          "bounces": 3
+        }
+      }
+    ]
+  },
+  "measurement": {
+    "timeOrigin": 1792080321305.3,
+    "shellInteractive": 94.10000000149012,
+    "firstSceneFrame": 23.899999998509884,
+    "firstAssetFrame": 23.899999998509884,
+    "firstNewGIFrame": 23.899999998509884,
+    "targetFGFrame": null,
+    "gaps": [],
+    "tasks": [],
+    "inputs": [
+      {
+        "kind": "keydown",
+        "handled": 94.10000000149012,
+        "delay": 9.5,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 2,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 205.10000000149012,
+        "delay": 11.5,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 2,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 316.5,
+        "delay": 13.899999998509884,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 2,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 414.79999999701977,
+        "delay": 2.1999999955296516,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 2,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 528.1000000014901,
+        "delay": 8.5,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 2,
+        "cancel": false
+      }
+    ],
+    "calls": {
+      "deleteProgram": {
+        "count": 6,
+        "milliseconds": 0,
+        "max": 0
+      },
+      "useProgram": {
+        "count": 68476,
+        "milliseconds": 12.400000005960464,
+        "max": 0.20000000298023224
+      },
+      "drawArrays": {
+        "count": 64183,
+        "milliseconds": 13,
+        "max": 0.10000000149011612
+      },
+      "drawElements": {
+        "count": 4240,
+        "milliseconds": 0.8999999985098839,
+        "max": 0.10000000149011612
+      }
+    },
+    "programs": [
+      {
+        "id": 0,
+        "created": -1,
+        "shaders": [
+          0,
+          1
+        ],
+        "calls": {},
+        "submitted": 317.6000000014901,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 331.8999999985099,
+        "firstReflection": 332.1000000014901,
+        "deleted": 6548.29999999702,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 1,
+        "created": -1,
+        "shaders": [
+          2,
+          3
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 334.3999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 338.5,
+        "firstReflection": 338.5,
+        "firstUse": 12.799999997019768,
+        "firstDraw": 12.799999997019768,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 2,
+        "created": -1,
+        "shaders": [
+          4,
+          5
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 339,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 346.3999999985099,
+        "firstReflection": 346.5,
+        "firstUse": 12.799999997019768,
+        "firstDraw": 12.799999997019768,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 3,
+        "created": -1,
+        "shaders": [
+          6,
+          7
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 346.79999999701977,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 349,
+        "firstReflection": 349,
+        "firstUse": 12.799999997019768,
+        "firstDraw": 12.799999997019768,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 4,
+        "created": -1,
+        "shaders": [
+          8,
+          9
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 429.29999999701977,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 432.29999999701977,
+        "firstReflection": 432.29999999701977,
+        "firstUse": 6.399999998509884,
+        "firstDraw": 6.399999998509884,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 5,
+        "created": -1,
+        "shaders": [
+          10,
+          11
+        ],
+        "calls": {},
+        "submitted": 451.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 518.6999999955297,
+        "firstReflection": 518.6999999955297,
+        "preExisting": true
+      },
+      {
+        "id": 6,
+        "created": -1,
+        "shaders": [
+          12,
+          13
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 521.1000000014901,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 525.7999999970198,
+        "firstReflection": 525.7999999970198,
+        "firstUse": 7,
+        "firstDraw": 7,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 7,
+        "created": -1,
+        "shaders": [
+          14,
+          15
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 526.3999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 529.6000000014901,
+        "firstReflection": 529.6000000014901,
+        "firstUse": 12.699999995529652,
+        "firstDraw": 12.799999997019768,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 8,
+        "created": -1,
+        "shaders": [
+          16,
+          17
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 530,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 536.8999999985099,
+        "firstReflection": 536.8999999985099,
+        "firstUse": 12.799999997019768,
+        "firstDraw": 12.799999997019768,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 9,
+        "created": -1,
+        "shaders": [
+          18,
+          19
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 541,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 574.7999999970198,
+        "firstReflection": 574.8999999985099,
+        "firstUse": 6.399999998509884,
+        "firstDraw": 6.399999998509884,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 10,
+        "created": -1,
+        "shaders": [
+          20,
+          21
+        ],
+        "calls": {},
+        "submitted": 675.1000000014901,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 1064,
+        "firstReflection": 1064.1000000014901,
+        "deleted": 6548.5,
+        "preExisting": true
+      },
+      {
+        "id": 11,
+        "created": -1,
+        "shaders": [
+          22,
+          23
+        ],
+        "calls": {},
+        "submitted": 1130.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 1189.2999999970198,
+        "firstReflection": 1189.2999999970198,
+        "deleted": 6548.60000000149,
+        "preExisting": true
+      },
+      {
+        "id": 12,
+        "created": -1,
+        "shaders": [
+          24,
+          25
+        ],
+        "calls": {},
+        "submitted": 1195.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 1334.1999999955297,
+        "firstReflection": 1334.1999999955297,
+        "deleted": 6548.60000000149,
+        "preExisting": true
+      },
+      {
+        "id": 13,
+        "created": -1,
+        "shaders": [
+          26,
+          27
+        ],
+        "calls": {},
+        "submitted": 1459.7999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 1493.5,
+        "firstReflection": 1493.5,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 14,
+        "created": -1,
+        "shaders": [
+          28,
+          29
+        ],
+        "calls": {},
+        "submitted": 1523.8999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 1556,
+        "firstReflection": 1556,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 15,
+        "created": -1,
+        "shaders": [
+          30,
+          31
+        ],
+        "calls": {},
+        "submitted": 1644.1000000014901,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 4881.79999999702,
+        "firstReflection": 4881.79999999702,
+        "preExisting": true
+      },
+      {
+        "id": 16,
+        "created": -1,
+        "shaders": [
+          32,
+          33
+        ],
+        "calls": {},
+        "submitted": 4932,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 5228.79999999702,
+        "firstReflection": 5228.79999999702,
+        "preExisting": true
+      },
+      {
+        "id": 17,
+        "created": -1,
+        "shaders": [
+          34,
+          35
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 3816,
+            "milliseconds": 0.7000000104308128,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 3816,
+            "milliseconds": 0.7999999970197678,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 5232.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 5271.29999999702,
+        "firstReflection": 5271.29999999702,
+        "firstUse": 6.5,
+        "firstDraw": 6.5,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 18,
+        "created": -1,
+        "shaders": [
+          36,
+          37
+        ],
+        "calls": {},
+        "submitted": 5317.79999999702,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 5328.39999999851,
+        "firstReflection": 5328.39999999851,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 19,
+        "created": -1,
+        "shaders": [
+          38,
+          39
+        ],
+        "calls": {},
+        "submitted": 5400.89999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 5422.69999999553,
+        "firstReflection": 5422.69999999553,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 20,
+        "created": -1,
+        "shaders": [
+          40,
+          41
+        ],
+        "calls": {},
+        "submitted": 5460.89999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 5467.89999999851,
+        "firstReflection": 5467.89999999851,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 2669.39999999851
+      },
+      {
+        "id": 21,
+        "created": -1,
+        "shaders": [
+          42,
+          43
+        ],
+        "calls": {},
+        "submitted": 5502.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 6209.69999999553,
+        "firstReflection": 6209.79999999702,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 22,
+        "created": -1,
+        "shaders": [
+          44,
+          45
+        ],
+        "calls": {},
+        "submitted": 6251,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 6327.79999999702,
+        "firstReflection": 6327.89999999851,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 23,
+        "created": -1,
+        "shaders": [
+          46,
+          47
+        ],
+        "calls": {},
+        "submitted": 6363.29999999702,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 6545.5,
+        "firstReflection": 6545.60000000149,
+        "preExisting": true,
+        "deleted": 2669.39999999851
+      },
+      {
+        "id": 24,
+        "created": -1,
+        "shaders": [
+          48,
+          49
+        ],
+        "calls": {},
+        "submitted": 6581.29999999702,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 6599.5,
+        "firstReflection": 6599.5,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 2669.39999999851
+      },
+      {
+        "id": 25,
+        "created": -1,
+        "shaders": [
+          50,
+          51
+        ],
+        "calls": {},
+        "submitted": 6661.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 6663.89999999851,
+        "firstReflection": 6663.89999999851,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 2669.39999999851
+      },
+      {
+        "id": 26,
+        "created": -1,
+        "shaders": [
+          52,
+          53
+        ],
+        "calls": {},
+        "submitted": 6689,
+        "asset": false,
+        "fg": false,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 6725.60000000149,
+        "firstReflection": 6725.60000000149,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 27,
+        "created": -1,
+        "shaders": [
+          54,
+          55
+        ],
+        "calls": {},
+        "submitted": 6728.10000000149,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 7101.39999999851,
+        "firstReflection": 7101.39999999851,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 28,
+        "created": -1,
+        "shaders": [
+          56,
+          57
+        ],
+        "calls": {},
+        "submitted": 7103,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 8792.29999999702,
+        "firstReflection": 8796.69999999553,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 29,
+        "created": -1,
+        "shaders": [
+          58,
+          59
+        ],
+        "calls": {},
+        "submitted": 8799.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 8865.29999999702,
+        "firstReflection": 8865.29999999702,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 30,
+        "created": -1,
+        "shaders": [
+          60,
+          61
+        ],
+        "calls": {},
+        "submitted": 8866.10000000149,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 9161.5,
+        "firstReflection": 9161.5,
+        "preExisting": true,
+        "deleted": 2669.1999999955297
+      },
+      {
+        "id": 31,
+        "created": -1,
+        "shaders": [
+          62,
+          63
+        ],
+        "calls": {},
+        "submitted": 9162.10000000149,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 9585.29999999702,
+        "firstReflection": 9585.29999999702,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 32,
+        "created": -1,
+        "shaders": [
+          64,
+          65
+        ],
+        "calls": {},
+        "submitted": 9585.89999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [],
+        "linkStatusChecked": 10102.79999999702,
+        "firstReflection": 10102.79999999702,
+        "preExisting": true,
+        "deleted": 2669.2999999970198
+      },
+      {
+        "id": 33,
+        "created": -1,
+        "shaders": [
+          66,
+          67
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 3498,
+            "milliseconds": 0.3999999910593033,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 3498,
+            "milliseconds": 0.6000000014901161,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 10373.69999999553,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10411.29999999702,
+        "firstReflection": 10411.29999999702,
+        "firstUse": 5,
+        "firstDraw": 5,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 34,
+        "created": -1,
+        "shaders": [
+          68,
+          69
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 31747,
+            "milliseconds": 6.000000022351742,
+            "max": 0.20000000298023224
+          },
+          "drawArrays": {
+            "count": 31747,
+            "milliseconds": 6.699999988079071,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 10412.5,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10462,
+        "firstReflection": 10462,
+        "firstUse": 5.100000001490116,
+        "firstDraw": 5.100000001490116,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 35,
+        "created": -1,
+        "shaders": [
+          70,
+          71
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 318,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 318,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 10466.29999999702,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10516.29999999702,
+        "firstReflection": 10516.29999999702,
+        "firstUse": 6.299999997019768,
+        "firstDraw": 6.299999997019768,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 36,
+        "created": -1,
+        "shaders": [
+          72,
+          73
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 10517,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10557.29999999702,
+        "firstReflection": 10557.29999999702,
+        "firstUse": 6.399999998509884,
+        "firstDraw": 6.399999998509884,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 37,
+        "created": -1,
+        "shaders": [
+          74,
+          75
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 10558,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10596.10000000149,
+        "firstReflection": 10596.10000000149,
+        "firstUse": 6.399999998509884,
+        "firstDraw": 6.399999998509884,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 38,
+        "created": -1,
+        "shaders": [
+          76,
+          77
+        ],
+        "calls": {},
+        "submitted": 10608.60000000149,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10655.69999999553,
+        "firstReflection": 10655.79999999702,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 39,
+        "created": -1,
+        "shaders": [
+          78,
+          79
+        ],
+        "calls": {},
+        "submitted": 10659.5,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 10716.29999999702,
+        "firstReflection": 10716.29999999702,
+        "preExisting": true
+      },
+      {
+        "id": 40,
+        "created": -1,
+        "shaders": [
+          80,
+          81
+        ],
+        "calls": {},
+        "submitted": 10725.69999999553,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 10773.39999999851,
+        "firstReflection": 10773.5,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 41,
+        "created": -1,
+        "shaders": [
+          82,
+          83
+        ],
+        "calls": {},
+        "submitted": 10775.29999999702,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 10826.69999999553,
+        "firstReflection": 10826.69999999553,
+        "preExisting": true
+      },
+      {
+        "id": 42,
+        "created": -1,
+        "shaders": [
+          84,
+          85
+        ],
+        "calls": {},
+        "submitted": 10828.10000000149,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 10880.19999999553,
+        "firstReflection": 10880.19999999553,
+        "preExisting": true
+      },
+      {
+        "id": 43,
+        "created": -1,
+        "shaders": [
+          86,
+          87
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 2544,
+            "milliseconds": 0.7999999895691872,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 2544,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 10882.60000000149,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 21864,
+        "firstReflection": 21864,
+        "firstUse": 7,
+        "firstDraw": 7.100000001490116,
+        "preExisting": true
+      },
+      {
+        "id": 44,
+        "created": -1,
+        "shaders": [
+          88,
+          89
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 25546,
+            "milliseconds": 4.499999992549419,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 25546,
+            "milliseconds": 5.300000011920929,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 21867,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 33057.10000000149,
+        "firstReflection": 33057.10000000149,
+        "firstUse": 7.600000001490116,
+        "firstDraw": 7.600000001490116,
+        "preExisting": true
+      },
+      {
+        "id": 45,
+        "created": -1,
+        "shaders": [
+          90,
+          91
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 318,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 318,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 33066.39999999851,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 44333.29999999702,
+        "firstReflection": 44333.39999999851,
+        "firstUse": 12.5,
+        "firstDraw": 12.5,
+        "preExisting": true
+      },
+      {
+        "id": 46,
+        "created": -1,
+        "shaders": [
+          92,
+          93
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 44334.5,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 55643.89999999851,
+        "firstReflection": 55643.89999999851,
+        "firstUse": 12.699999995529652,
+        "firstDraw": 12.699999995529652,
+        "preExisting": true
+      },
+      {
+        "id": 47,
+        "created": -1,
+        "shaders": [
+          94,
+          95
+        ],
+        "calls": {
+          "useProgram": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 53,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 55644.89999999851,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [],
+        "linkStatusChecked": 67349.5,
+        "firstReflection": 67349.5,
+        "firstUse": 12.699999995529652,
+        "firstDraw": 12.699999995529652,
+        "preExisting": true
+      },
+      {
+        "id": 48,
+        "created": -1,
+        "shaders": [
+          96,
+          97
+        ],
+        "calls": {},
+        "submitted": 2424.7999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2429,
+        "firstReflection": 2429,
+        "deleted": 2669.39999999851,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 49,
+        "created": -1,
+        "shaders": [
+          98,
+          99
+        ],
+        "calls": {},
+        "submitted": 2448.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2449.7999999970198,
+        "firstReflection": 2449.7999999970198,
+        "deleted": 2669.39999999851,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 50,
+        "created": -1,
+        "shaders": [
+          100,
+          101
+        ],
+        "calls": {},
+        "submitted": 2681,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2683.2999999970198,
+        "firstReflection": 2683.2999999970198,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 51,
+        "created": -1,
+        "shaders": [
+          102,
+          103
+        ],
+        "calls": {},
+        "submitted": 2710.2999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2710.89999999851,
+        "firstReflection": 2710.89999999851,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 52,
+        "created": -1,
+        "shaders": [
+          104,
+          105
+        ],
+        "calls": {},
+        "submitted": 2736.89999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2740.2999999970198,
+        "firstReflection": 2740.2999999970198,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 53,
+        "created": -1,
+        "shaders": [
+          106,
+          107
+        ],
+        "calls": {},
+        "submitted": 2770.6999999955297,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2773.1999999955297,
+        "firstReflection": 2773.1999999955297,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 54,
+        "created": -1,
+        "shaders": [
+          108,
+          109
+        ],
+        "calls": {},
+        "submitted": 2800,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2803.1999999955297,
+        "firstReflection": 2803.2999999970198,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 55,
+        "created": -1,
+        "shaders": [
+          110,
+          111
+        ],
+        "calls": {},
+        "submitted": 2829,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2831,
+        "firstReflection": 2831,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 56,
+        "created": -1,
+        "shaders": [
+          112,
+          113
+        ],
+        "calls": {},
+        "submitted": 2888.2999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2888.89999999851,
+        "firstReflection": 2888.89999999851,
+        "preExisting": true,
+        "stalls": []
+      },
+      {
+        "id": 57,
+        "created": -1,
+        "shaders": [
+          114,
+          115
+        ],
+        "calls": {
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 2905.7999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2909.89999999851,
+        "firstReflection": 2909.89999999851,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 0.7999999970197678
+      },
+      {
+        "id": 58,
+        "created": -1,
+        "shaders": [
+          116,
+          117
+        ],
+        "calls": {
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 2910.39999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2915.89999999851,
+        "firstReflection": 2915.89999999851,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 0.7999999970197678
+      },
+      {
+        "id": 59,
+        "created": -1,
+        "shaders": [
+          118,
+          119
+        ],
+        "calls": {
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 2916.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2920.10000000149,
+        "firstReflection": 2920.10000000149,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 0.7999999970197678
+      },
+      {
+        "id": 60,
+        "created": -1,
+        "shaders": [
+          120,
+          121
+        ],
+        "calls": {
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 2920.2999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2922.5,
+        "firstReflection": 2922.5,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 0.7999999970197678
+      },
+      {
+        "id": 61,
+        "created": -1,
+        "shaders": [
+          122,
+          123
+        ],
+        "calls": {
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 2922.6999999955297,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2925.39999999851,
+        "firstReflection": 2925.39999999851,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 0.7999999970197678
+      },
+      {
+        "id": 62,
+        "created": -1,
+        "shaders": [
+          124,
+          125
+        ],
+        "calls": {
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 2925.60000000149,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 2927.2999999970198,
+        "firstReflection": 2927.2999999970198,
+        "preExisting": true,
+        "stalls": [],
+        "deleted": 0.7999999970197678
+      }
+    ],
+    "shaders": [
+      {
+        "id": 0,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 1,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 1
+      },
+      {
+        "id": 2,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 3,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 2
+      },
+      {
+        "id": 4,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 5,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 3
+      },
+      {
+        "id": 6,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 7,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 4
+      },
+      {
+        "id": 8,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 5
+      },
+      {
+        "id": 9,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 6
+      },
+      {
+        "id": 10,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 7
+      },
+      {
+        "id": 11,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 8
+      },
+      {
+        "id": 12,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 13,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 9
+      },
+      {
+        "id": 14,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 15,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 10
+      },
+      {
+        "id": 16,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 17,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 11
+      },
+      {
+        "id": 18,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 12
+      },
+      {
+        "id": 19,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 13
+      },
+      {
+        "id": 20,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 21,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 14
+      },
+      {
+        "id": 22,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 23,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 15
+      },
+      {
+        "id": 24,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 16
+      },
+      {
+        "id": 25,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 17
+      },
+      {
+        "id": 26,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 18
+      },
+      {
+        "id": 27,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 19
+      },
+      {
+        "id": 28,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 20
+      },
+      {
+        "id": 29,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 21
+      },
+      {
+        "id": 30,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 31,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 22
+      },
+      {
+        "id": 32,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 33,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 23
+      },
+      {
+        "id": 34,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 24
+      },
+      {
+        "id": 35,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 19
+      },
+      {
+        "id": 36,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 37,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 25
+      },
+      {
+        "id": 38,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 39,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 26
+      },
+      {
+        "id": 40,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 41,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 27
+      },
+      {
+        "id": 42,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 43,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 28
+      },
+      {
+        "id": 44,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 45,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 29
+      },
+      {
+        "id": 46,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 47,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 30
+      },
+      {
+        "id": 48,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 49,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 31
+      },
+      {
+        "id": 50,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 51,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 32
+      },
+      {
+        "id": 52,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 33
+      },
+      {
+        "id": 53,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 34
+      },
+      {
+        "id": 54,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 55,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 35
+      },
+      {
+        "id": 56,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 57,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 36
+      },
+      {
+        "id": 58,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 59,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 37
+      },
+      {
+        "id": 60,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 61,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 38
+      },
+      {
+        "id": 62,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 63,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 39
+      },
+      {
+        "id": 64,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 65,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 40
+      },
+      {
+        "id": 66,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 41
+      },
+      {
+        "id": 67,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 42
+      },
+      {
+        "id": 68,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 41
+      },
+      {
+        "id": 69,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 43
+      },
+      {
+        "id": 70,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 41
+      },
+      {
+        "id": 71,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 44
+      },
+      {
+        "id": 72,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 45
+      },
+      {
+        "id": 73,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 46
+      },
+      {
+        "id": 74,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 45
+      },
+      {
+        "id": 75,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 47
+      },
+      {
+        "id": 76,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 48
+      },
+      {
+        "id": 77,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 49
+      },
+      {
+        "id": 78,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 48
+      },
+      {
+        "id": 79,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 50
+      },
+      {
+        "id": 80,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 48
+      },
+      {
+        "id": 81,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 51
+      },
+      {
+        "id": 82,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 52
+      },
+      {
+        "id": 83,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.3999999985098839,
+            "max": 0.3999999985098839
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 53
+      },
+      {
+        "id": 84,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 52
+      },
+      {
+        "id": 85,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 54
+      },
+      {
+        "id": 86,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 55
+      },
+      {
+        "id": 87,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 56
+      },
+      {
+        "id": 88,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 55
+      },
+      {
+        "id": 89,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 57
+      },
+      {
+        "id": 90,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 55
+      },
+      {
+        "id": 91,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.5,
+            "max": 0.5
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 58
+      },
+      {
+        "id": 92,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 59
+      },
+      {
+        "id": 93,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 60
+      },
+      {
+        "id": 94,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 59
+      },
+      {
+        "id": 95,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 61
+      },
+      {
+        "id": 96,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 97,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 15
+      },
+      {
+        "id": 98,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 16
+      },
+      {
+        "id": 99,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 17
+      },
+      {
+        "id": 100,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 101,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 26
+      },
+      {
+        "id": 102,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 103,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 27
+      },
+      {
+        "id": 104,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 105,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 28
+      },
+      {
+        "id": 106,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 107,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 29
+      },
+      {
+        "id": 108,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 109,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 30
+      },
+      {
+        "id": 110,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 111,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 31
+      },
+      {
+        "id": 112,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 113,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 32
+      },
+      {
+        "id": 114,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 115,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 35
+      },
+      {
+        "id": 116,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 117,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 36
+      },
+      {
+        "id": 118,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 119,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 37
+      },
+      {
+        "id": 120,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 121,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 38
+      },
+      {
+        "id": 122,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 123,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 39
+      },
+      {
+        "id": 124,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 125,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 40
+      }
+    ],
+    "sources": [
+      {
+        "index": 0,
+        "hash": "cb85a6538b2edce83e00ae2655879c71b72a2afcbebd84dba914460eeaf55fb6",
+        "bytes": 295,
+        "file": "cb85a6538b2edce83e00ae2655879c71b72a2afcbebd84dba914460eeaf55fb6.glsl"
+      },
+      {
+        "index": 1,
+        "hash": "ad72cb6d11ff198576ac8bb9f1c40062fb110e0f8b884dccf681002fe17c94a7",
+        "bytes": 1890,
+        "file": "ad72cb6d11ff198576ac8bb9f1c40062fb110e0f8b884dccf681002fe17c94a7.glsl"
+      },
+      {
+        "index": 2,
+        "hash": "67dca71702b2d8d279ab6cd9384f0602fba9c409b2818e9fac4caa2f0191a37d",
+        "bytes": 1061,
+        "file": "67dca71702b2d8d279ab6cd9384f0602fba9c409b2818e9fac4caa2f0191a37d.glsl"
+      },
+      {
+        "index": 3,
+        "hash": "ed8f41bf3f274721ee46e41c93419ca89c3cd1950ff2b397f496e9abbf8ad064",
+        "bytes": 2284,
+        "file": "ed8f41bf3f274721ee46e41c93419ca89c3cd1950ff2b397f496e9abbf8ad064.glsl"
+      },
+      {
+        "index": 4,
+        "hash": "c0dc4af5161744c94b98d25178a192405d1cca72e49e690da4bbcfea19d764bf",
+        "bytes": 497,
+        "file": "c0dc4af5161744c94b98d25178a192405d1cca72e49e690da4bbcfea19d764bf.glsl"
+      },
+      {
+        "index": 5,
+        "hash": "765b06cd12a4057d95e04744dcebb971a758e0876bc24bdd6ff32ae93eb6ac48",
+        "bytes": 480,
+        "file": "765b06cd12a4057d95e04744dcebb971a758e0876bc24bdd6ff32ae93eb6ac48.glsl"
+      },
+      {
+        "index": 6,
+        "hash": "a14ca42c8e767c0c0803a1fccf21b681b84b691210d9d398f95cde43ad06ea70",
+        "bytes": 1277,
+        "file": "a14ca42c8e767c0c0803a1fccf21b681b84b691210d9d398f95cde43ad06ea70.glsl"
+      },
+      {
+        "index": 7,
+        "hash": "4eb48ba2422acf402eb5e0dbe3502b1dc558cd9038c86c3ada4d494f5d866750",
+        "bytes": 20992,
+        "file": "4eb48ba2422acf402eb5e0dbe3502b1dc558cd9038c86c3ada4d494f5d866750.glsl"
+      },
+      {
+        "index": 8,
+        "hash": "23f8bb14b4fa7d8df70ecc98d1f8f174d957a56bbed6aee774901fee0f501ef9",
+        "bytes": 49537,
+        "file": "23f8bb14b4fa7d8df70ecc98d1f8f174d957a56bbed6aee774901fee0f501ef9.glsl"
+      },
+      {
+        "index": 9,
+        "hash": "d20fbb60f91b958d415fa528f456b3cc09fabd46d682fdf8892d7c08e475178a",
+        "bytes": 752,
+        "file": "d20fbb60f91b958d415fa528f456b3cc09fabd46d682fdf8892d7c08e475178a.glsl"
+      },
+      {
+        "index": 10,
+        "hash": "4932d76c7ada679561e68cefa02e62f910af4b34fe737cbbabca9870eee2423c",
+        "bytes": 837,
+        "file": "4932d76c7ada679561e68cefa02e62f910af4b34fe737cbbabca9870eee2423c.glsl"
+      },
+      {
+        "index": 11,
+        "hash": "93b8d4373de054b551a6fa1aaf71385fa9ccb38e742f28cb9ee1ee5e8b116d8d",
+        "bytes": 1853,
+        "file": "93b8d4373de054b551a6fa1aaf71385fa9ccb38e742f28cb9ee1ee5e8b116d8d.glsl"
+      },
+      {
+        "index": 12,
+        "hash": "28ad9c5ce30de30ed9f3e14f5a1fcbbc64b6e0c83e297a3c4a8923d39685f84d",
+        "bytes": 14663,
+        "file": "28ad9c5ce30de30ed9f3e14f5a1fcbbc64b6e0c83e297a3c4a8923d39685f84d.glsl"
+      },
+      {
+        "index": 13,
+        "hash": "b5b81b1fc412a9a27754a10dc0a3783160970b86603cedec06e50e4661b170a3",
+        "bytes": 18250,
+        "file": "b5b81b1fc412a9a27754a10dc0a3783160970b86603cedec06e50e4661b170a3.glsl"
+      },
+      {
+        "index": 14,
+        "hash": "c026eb3451bae4e612fb506d7841249bd668e105f68fd9eea5148fdf26af9c46",
+        "bytes": 3009,
+        "file": "c026eb3451bae4e612fb506d7841249bd668e105f68fd9eea5148fdf26af9c46.glsl"
+      },
+      {
+        "index": 15,
+        "hash": "15138e7325e7be59dbbf62dc967e6af8fabaea9268cd75da5e8cdb32b86d9bdb",
+        "bytes": 23081,
+        "file": "15138e7325e7be59dbbf62dc967e6af8fabaea9268cd75da5e8cdb32b86d9bdb.glsl"
+      },
+      {
+        "index": 16,
+        "hash": "cceb34e69a09e2dc9110d4ae1dea697eacce888bb4568d1d3ecad573b9b34041",
+        "bytes": 815,
+        "file": "cceb34e69a09e2dc9110d4ae1dea697eacce888bb4568d1d3ecad573b9b34041.glsl"
+      },
+      {
+        "index": 17,
+        "hash": "9a4171a7181a6929c45554cbbe83ced9a3dc920989f4ccc3f195da384a6dfae0",
+        "bytes": 2717,
+        "file": "9a4171a7181a6929c45554cbbe83ced9a3dc920989f4ccc3f195da384a6dfae0.glsl"
+      },
+      {
+        "index": 18,
+        "hash": "19ed6d54ec4f0a50f7cb7b4803458559b0c61a3ba77518ebf058df187ccd75f8",
+        "bytes": 20953,
+        "file": "19ed6d54ec4f0a50f7cb7b4803458559b0c61a3ba77518ebf058df187ccd75f8.glsl"
+      },
+      {
+        "index": 19,
+        "hash": "17df03c4d40c5bb4faf288c7bc1444161d239ed9f54815a52083dc75c259a3c9",
+        "bytes": 49498,
+        "file": "17df03c4d40c5bb4faf288c7bc1444161d239ed9f54815a52083dc75c259a3c9.glsl"
+      },
+      {
+        "index": 20,
+        "hash": "cda41e01bb702ebcb5d523b55636765aca040afc26c7032004b7748b81a75ce0",
+        "bytes": 20965,
+        "file": "cda41e01bb702ebcb5d523b55636765aca040afc26c7032004b7748b81a75ce0.glsl"
+      },
+      {
+        "index": 21,
+        "hash": "2a3367de0f983c65bed54cc228715fcf2369cbb899f79fc0f5c9e986713766cd",
+        "bytes": 49510,
+        "file": "2a3367de0f983c65bed54cc228715fcf2369cbb899f79fc0f5c9e986713766cd.glsl"
+      },
+      {
+        "index": 22,
+        "hash": "09c5daeafba4496a220cadad8ef0dc54a3c509bcb50ce4d328892e281032b0d6",
+        "bytes": 11194,
+        "file": "09c5daeafba4496a220cadad8ef0dc54a3c509bcb50ce4d328892e281032b0d6.glsl"
+      },
+      {
+        "index": 23,
+        "hash": "727eb0645451c212d6128f5738189bf4bed5a59e0285fa9b93cc470e242ad846",
+        "bytes": 10034,
+        "file": "727eb0645451c212d6128f5738189bf4bed5a59e0285fa9b93cc470e242ad846.glsl"
+      },
+      {
+        "index": 24,
+        "hash": "e1900f629126de166229bc974d044eb79d2d366c9b69b5d75724a4baa4e1ecb5",
+        "bytes": 20981,
+        "file": "e1900f629126de166229bc974d044eb79d2d366c9b69b5d75724a4baa4e1ecb5.glsl"
+      },
+      {
+        "index": 25,
+        "hash": "31ef2ad9768e7e18f7e10b0db4a38c52d3d87819da7154e043f99e80dc1612d3",
+        "bytes": 10282,
+        "file": "31ef2ad9768e7e18f7e10b0db4a38c52d3d87819da7154e043f99e80dc1612d3.glsl"
+      },
+      {
+        "index": 26,
+        "hash": "aa4731fe3516ce9e2fe0575217b61fe17d2ac0fc2658621d5fb09fd7dd1327ca",
+        "bytes": 11097,
+        "file": "aa4731fe3516ce9e2fe0575217b61fe17d2ac0fc2658621d5fb09fd7dd1327ca.glsl"
+      },
+      {
+        "index": 27,
+        "hash": "03fb3117391afc35884f140b2af46f927c053402d1bbe5013b62e029cfcddf2e",
+        "bytes": 827,
+        "file": "03fb3117391afc35884f140b2af46f927c053402d1bbe5013b62e029cfcddf2e.glsl"
+      },
+      {
+        "index": 28,
+        "hash": "27ade07880143d227b39e1e68bdd9cdeba4dfec36710932f8c5a6f3faad3380c",
+        "bytes": 10756,
+        "file": "27ade07880143d227b39e1e68bdd9cdeba4dfec36710932f8c5a6f3faad3380c.glsl"
+      },
+      {
+        "index": 29,
+        "hash": "4efac6de83a6c170c43d38374ee004b4ee9ed281bfdeb97585d03bfd90c782c4",
+        "bytes": 10636,
+        "file": "4efac6de83a6c170c43d38374ee004b4ee9ed281bfdeb97585d03bfd90c782c4.glsl"
+      },
+      {
+        "index": 30,
+        "hash": "ef64c27ac3c0d7a0cf9ad799c6d8f214fc1c69071048f295cb0dbcd305f483f7",
+        "bytes": 21994,
+        "file": "ef64c27ac3c0d7a0cf9ad799c6d8f214fc1c69071048f295cb0dbcd305f483f7.glsl"
+      },
+      {
+        "index": 31,
+        "hash": "1f2eea2cb1223e7077ccc96008d4de7d5574911a2f3dbee3e15e50c6e08f2620",
+        "bytes": 11020,
+        "file": "1f2eea2cb1223e7077ccc96008d4de7d5574911a2f3dbee3e15e50c6e08f2620.glsl"
+      },
+      {
+        "index": 32,
+        "hash": "5ea3ed74b1cb1816122ac5fa60e080aea283c0f57a9cb3aa40fa77cc75e0b1f2",
+        "bytes": 490,
+        "file": "5ea3ed74b1cb1816122ac5fa60e080aea283c0f57a9cb3aa40fa77cc75e0b1f2.glsl"
+      },
+      {
+        "index": 33,
+        "hash": "bb345061ef6301f008bed06444030104a24a98f0f5f5d008b9befc3c35be28ab",
+        "bytes": 20936,
+        "file": "bb345061ef6301f008bed06444030104a24a98f0f5f5d008b9befc3c35be28ab.glsl"
+      },
+      {
+        "index": 34,
+        "hash": "a9243491eaeb39b24fde4f47ddb6d3e8e650d9b426285889929b0dea66284186",
+        "bytes": 42927,
+        "file": "a9243491eaeb39b24fde4f47ddb6d3e8e650d9b426285889929b0dea66284186.glsl"
+      },
+      {
+        "index": 35,
+        "hash": "5319e07fca7eac0cde44acbca55e8112a86fa291a1b2ef69464d6b08920ee7a2",
+        "bytes": 27089,
+        "file": "5319e07fca7eac0cde44acbca55e8112a86fa291a1b2ef69464d6b08920ee7a2.glsl"
+      },
+      {
+        "index": 36,
+        "hash": "821ed296a2c64f0dd3f41b72769cd700007b53f98584428368a1621ff2e8d54a",
+        "bytes": 27209,
+        "file": "821ed296a2c64f0dd3f41b72769cd700007b53f98584428368a1621ff2e8d54a.glsl"
+      },
+      {
+        "index": 37,
+        "hash": "8b96b53253e7ab484f7242ab31691aa8aa79b5be1e5c2c35a9564539e85a1874",
+        "bytes": 13833,
+        "file": "8b96b53253e7ab484f7242ab31691aa8aa79b5be1e5c2c35a9564539e85a1874.glsl"
+      },
+      {
+        "index": 38,
+        "hash": "06267500960309445f97cd6a060dd91de4d9ac5f6406e6507ccbf65673833a85",
+        "bytes": 4275,
+        "file": "06267500960309445f97cd6a060dd91de4d9ac5f6406e6507ccbf65673833a85.glsl"
+      },
+      {
+        "index": 39,
+        "hash": "83111a018bfd5d6a3ce0fccc15e18b12d76b561a29cb41249840e97a7d270697",
+        "bytes": 7252,
+        "file": "83111a018bfd5d6a3ce0fccc15e18b12d76b561a29cb41249840e97a7d270697.glsl"
+      },
+      {
+        "index": 40,
+        "hash": "b360ce6ab31f054de1b5e73634b42ba190f6e2629d4f574f459ce15edb9f4754",
+        "bytes": 4814,
+        "file": "b360ce6ab31f054de1b5e73634b42ba190f6e2629d4f574f459ce15edb9f4754.glsl"
+      },
+      {
+        "index": 41,
+        "hash": "e155785d9527e8632aba02beea1f811ab28362bb87415c83d88c4ec2b8333311",
+        "bytes": 14667,
+        "file": "e155785d9527e8632aba02beea1f811ab28362bb87415c83d88c4ec2b8333311.glsl"
+      },
+      {
+        "index": 42,
+        "hash": "2edfa695430535c0d20e59a15eae435ab8dfa78b7ab1465b3c5e7421e47672b3",
+        "bytes": 79593,
+        "file": "2edfa695430535c0d20e59a15eae435ab8dfa78b7ab1465b3c5e7421e47672b3.glsl"
+      },
+      {
+        "index": 43,
+        "hash": "76eba884b1f57704955e331f495b412afe5001cd891f3203cb5bb6510f6da8fc",
+        "bytes": 79703,
+        "file": "76eba884b1f57704955e331f495b412afe5001cd891f3203cb5bb6510f6da8fc.glsl"
+      },
+      {
+        "index": 44,
+        "hash": "081001ed868a4c006ececbd75f059a12b0413b2b1ae47bb11d6352df711a2a68",
+        "bytes": 79652,
+        "file": "081001ed868a4c006ececbd75f059a12b0413b2b1ae47bb11d6352df711a2a68.glsl"
+      },
+      {
+        "index": 45,
+        "hash": "203cda8442aa0046435708f8dc00301b76a607cd917205bf981ab7dadbb3fdee",
+        "bytes": 14701,
+        "file": "203cda8442aa0046435708f8dc00301b76a607cd917205bf981ab7dadbb3fdee.glsl"
+      },
+      {
+        "index": 46,
+        "hash": "a9e9c13485b29ee9c074fdeeb5411225b903abec73c45ed4c98f70884a809157",
+        "bytes": 79565,
+        "file": "a9e9c13485b29ee9c074fdeeb5411225b903abec73c45ed4c98f70884a809157.glsl"
+      },
+      {
+        "index": 47,
+        "hash": "5eb94e6b9903f100bce47a3cc31f96fbcafa917668cd988a44a0c81820b7be84",
+        "bytes": 79728,
+        "file": "5eb94e6b9903f100bce47a3cc31f96fbcafa917668cd988a44a0c81820b7be84.glsl"
+      },
+      {
+        "index": 48,
+        "hash": "b990db352835523aebdd57dbea7f91f57461baa09d11f7babac07da6cfac2fbe",
+        "bytes": 15666,
+        "file": "b990db352835523aebdd57dbea7f91f57461baa09d11f7babac07da6cfac2fbe.glsl"
+      },
+      {
+        "index": 49,
+        "hash": "59efb3992912aa4ef9eff499e20eb6b00d96f9206d218aa39259034aefc928df",
+        "bytes": 79958,
+        "file": "59efb3992912aa4ef9eff499e20eb6b00d96f9206d218aa39259034aefc928df.glsl"
+      },
+      {
+        "index": 50,
+        "hash": "ebb91ce1f300e4fb273dd7a03aa3b6a681a12bb49b66b56c89934777de346843",
+        "bytes": 80068,
+        "file": "ebb91ce1f300e4fb273dd7a03aa3b6a681a12bb49b66b56c89934777de346843.glsl"
+      },
+      {
+        "index": 51,
+        "hash": "8ea7e5e3e1fc14b21a35cf7a8738194a098b9391ff0e8fb3a99c832954980d53",
+        "bytes": 80017,
+        "file": "8ea7e5e3e1fc14b21a35cf7a8738194a098b9391ff0e8fb3a99c832954980d53.glsl"
+      },
+      {
+        "index": 52,
+        "hash": "0944b33fc8fdda06e21c233f96e845c106e666142ce5981ad9612fcf4c74ddba",
+        "bytes": 15700,
+        "file": "0944b33fc8fdda06e21c233f96e845c106e666142ce5981ad9612fcf4c74ddba.glsl"
+      },
+      {
+        "index": 53,
+        "hash": "a2323a4e60fb464114146de143ea436ae2131dea67700aa4be47c1884fc1c735",
+        "bytes": 79930,
+        "file": "a2323a4e60fb464114146de143ea436ae2131dea67700aa4be47c1884fc1c735.glsl"
+      },
+      {
+        "index": 54,
+        "hash": "f10354c1a5d8b46eb2d34597466c9597db58159076f1e29727aba4949ec8836e",
+        "bytes": 80093,
+        "file": "f10354c1a5d8b46eb2d34597466c9597db58159076f1e29727aba4949ec8836e.glsl"
+      },
+      {
+        "index": 55,
+        "hash": "1b9071fea3865c2c9cb7d8b2f4841cdf2b9b80ed9506d37bded89aec1b7eeca1",
+        "bytes": 15685,
+        "file": "1b9071fea3865c2c9cb7d8b2f4841cdf2b9b80ed9506d37bded89aec1b7eeca1.glsl"
+      },
+      {
+        "index": 56,
+        "hash": "a276ac31d2ddb2ae343c1d4737a563803776a5b2bf50cd3fed9662a0caea57c1",
+        "bytes": 86362,
+        "file": "a276ac31d2ddb2ae343c1d4737a563803776a5b2bf50cd3fed9662a0caea57c1.glsl"
+      },
+      {
+        "index": 57,
+        "hash": "b64276489baf51b707bd42a339cfb9d187ab7155c5f45b9c5ea85d4a2e515ce5",
+        "bytes": 86472,
+        "file": "b64276489baf51b707bd42a339cfb9d187ab7155c5f45b9c5ea85d4a2e515ce5.glsl"
+      },
+      {
+        "index": 58,
+        "hash": "d58e228e09dfc41084ee8aded9add79a54818c179adfdf6883b728b480daa3ee",
+        "bytes": 86421,
+        "file": "d58e228e09dfc41084ee8aded9add79a54818c179adfdf6883b728b480daa3ee.glsl"
+      },
+      {
+        "index": 59,
+        "hash": "33e0e6de1e11c9c5f3dfee25c29fb9ef944d62a132d4d78521729b13c8d07b2f",
+        "bytes": 15719,
+        "file": "33e0e6de1e11c9c5f3dfee25c29fb9ef944d62a132d4d78521729b13c8d07b2f.glsl"
+      },
+      {
+        "index": 60,
+        "hash": "eb19c38bbce1a2763a145fdbb182caa2efca16b0ec3474cbe123d3f06c44cbb7",
+        "bytes": 86334,
+        "file": "eb19c38bbce1a2763a145fdbb182caa2efca16b0ec3474cbe123d3f06c44cbb7.glsl"
+      },
+      {
+        "index": 61,
+        "hash": "00ce45164eda0f50fd532f29ebd679a06ff9cbf804a43eea379f5d059aaa2dd5",
+        "bytes": 86497,
+        "file": "00ce45164eda0f50fd532f29ebd679a06ff9cbf804a43eea379f5d059aaa2dd5.glsl"
+      }
+    ],
+    "snapshots": [],
+    "errors": [],
+    "sourceBytes": 3750786,
+    "overflow": false,
+    "firstAssetMode": "matching-GI",
+    "finished": 563.2999999970198,
+    "resources": [],
+    "workerPreparation": {
+      "persistentBytes": 19664,
+      "strategy": "sah",
+      "bins": 12,
+      "maxDepth": 10,
+      "triangles": 998,
+      "nodes": 379,
+      "queries": 0,
+      "unknown": 0,
+      "alphaRejected": 0,
+      "buildMilliseconds": 9.399999998509884,
+      "tieRankOffset": 998,
+      "tieRankBytes": 4000,
+      "rankAndVertexPackMilliseconds": 2.7999999970197678,
+      "cpuGeometryBytes": 94484,
+      "cpuRetainedBytes": 114148,
+      "typedPreparationBytes": 2234472,
+      "prepareMilliseconds": 13
+    },
+    "extensions": [
+      {
+        "parallel": true,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "buffer": [
+          1920,
+          1080
+        ]
+      }
+    ],
+    "kind": "baseline"
+  },
+  "summary": {
+    "shellInteractive": 94.10000000149012,
+    "firstSceneFrame": 23.899999998509884,
+    "firstAssetFrame": 23.899999998509884,
+    "firstAssetMode": "matching-GI",
+    "firstNewGIFrame": 23.899999998509884,
+    "targetFGFrame": null,
+    "inputCount": 5,
+    "inputP95": 13.899999998509884,
+    "inputMax": 13.899999998509884,
+    "maxMainThreadGap": 0,
+    "programs": 0,
+    "livePrograms": 38,
+    "extensions": [
+      {
+        "parallel": true,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "buffer": [
+          1920,
+          1080
+        ]
+      }
+    ]
+  },
+  "checks": {
+    "shell": true,
+    "asset": true,
+    "gi": true,
+    "input": true,
+    "gap": true,
+    "fg": true,
+    "complete": true
+  },
+  "passed": true
+}

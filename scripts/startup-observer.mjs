@@ -51,6 +51,7 @@ export function installStartupObserver(options = {}) {
         r.count++;
         r.milliseconds += duration;
         r.max = Math.max(r.max, duration);
+        r.last = duration;
         if (duration >= 50)
           (row.stalls ??= []).push({ name, start, duration, parameter });
       }
@@ -176,8 +177,10 @@ export function installStartupObserver(options = {}) {
             row.completionPolls = (row.completionPolls ?? 0) + 1;
             if (result) row.completed ??= now();
           }
-          if (name === "getProgramParameter" && a[1] === this.LINK_STATUS)
+          if (name === "getProgramParameter" && a[1] === this.LINK_STATUS) {
             row.linkStatusChecked ??= now();
+            row.linkStatusMilliseconds ??= row.calls[name].last;
+          }
           if (
             [
               "getActiveUniform",
@@ -194,8 +197,11 @@ export function installStartupObserver(options = {}) {
       const row = programRows.get(a[0]);
       current.set(this, row);
       currentNative.set(this, a[0]);
-      if (row && row.firstUse === undefined) row.firstUse = now();
-      return call("useProgram", row, fn, a, this);
+      const first = row && row.firstUse === undefined;
+      if (first) row.firstUse = now();
+      const result = call("useProgram", row, fn, a, this);
+      if (first && active) row.firstUseMilliseconds = row.calls.useProgram.last;
+      return result;
     });
     for (const name of [
       "drawArrays",
@@ -210,6 +216,7 @@ export function installStartupObserver(options = {}) {
         if (active) {
           if (row && row.firstDraw === undefined) {
             row.firstDraw = start;
+            row.firstDrawMilliseconds = row.calls[name].last;
             // Alpha-mask depth programs can retain the entire original source.
             // Reflection's sampler binding precedes _program publication, so
             // resolve the real pass contract at first draw, once per program.
@@ -342,6 +349,10 @@ export function installStartupObserver(options = {}) {
             world.requestedRevision === world.publishedRevision &&
             metrics.stablePasses >= 32 &&
             metrics.sampleEpoch >= minimumEpoch &&
+            (scene.context._lastShaderPreparationPending ?? 0) === 0 &&
+            (scene.context._shaderPreparationLifetime?.native.size ?? 0) ===
+              0 &&
+            !scene.context._lumenBaseGroup?.blocked &&
             fg.models.size > 0
           )
             state.targetFGFrame ??= t;

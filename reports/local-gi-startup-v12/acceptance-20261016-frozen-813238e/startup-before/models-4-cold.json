@@ -1,0 +1,6793 @@
+{
+  "display": "models",
+  "run": 4,
+  "kind": "cold",
+  "profile": "enhanced",
+  "cache": "fresh-process/profile; driver cache uncontrolled",
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.40",
+    "revision": "@cfaadc5a132d78e1828635aa8405a499f3e14864",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.20"
+  },
+  "browserArguments": [
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "--disable-field-trial-config",
+    "--disable-background-networking",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--disable-back-forward-cache",
+    "--disable-breakpad",
+    "--disable-client-side-phishing-detection",
+    "--disable-component-extensions-with-background-pages",
+    "--disable-component-update",
+    "--no-default-browser-check",
+    "--disable-default-apps",
+    "--disable-dev-shm-usage",
+    "--disable-edgeupdater",
+    "--disable-extensions",
+    "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion",
+    "--enable-features=CDPScreenshotNewSurface",
+    "--allow-pre-commit-input",
+    "--disable-hang-monitor",
+    "--disable-ipc-flooding-protection",
+    "--disable-popup-blocking",
+    "--disable-prompt-on-repost",
+    "--disable-renderer-backgrounding",
+    "--disable-updater-scheduler",
+    "--force-color-profile=srgb",
+    "--metrics-recording-only",
+    "--no-first-run",
+    "--password-store=basic",
+    "--use-mock-keychain",
+    "--no-service-autorun",
+    "--export-tagged-pdf",
+    "--disable-search-engine-choice-screen",
+    "--unsafely-disable-devtools-self-xss-warnings",
+    "--edge-skip-compat-layer-relaunch",
+    "--disable-infobars",
+    "--disable-search-engine-choice-screen",
+    "--disable-sync",
+    "--enable-unsafe-swiftshader",
+    "--headless",
+    "--hide-scrollbars",
+    "--mute-audio",
+    "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+    "--enable-automation",
+    "--user-data-dir=C:\\Users\\rakuyou\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-b5A84s",
+    "--remote-debugging-pipe",
+    "--no-startup-window",
+    "--noerrdialogs",
+    "--flag-switches-begin",
+    "--flag-switches-end",
+    "--enable-unsafe-swiftshader"
+  ],
+  "errors": [],
+  "status": {
+    "pilotReady": false,
+    "datasetReady": true,
+    "displayState": {
+      "outcome": "visible",
+      "visible": true,
+      "modelsReady": 8
+    },
+    "lightingRequests": {},
+    "anchor": {
+      "longitude": 114.1,
+      "latitude": 22.3,
+      "height": 2
+    },
+    "phase": "available",
+    "ready": true,
+    "stage": "ready",
+    "display": "models",
+    "profile": "enhanced",
+    "effectiveProfile": "enhanced",
+    "fg": {
+      "requestedMode": "fg",
+      "status": "active experimental FG",
+      "frames": 59,
+      "memoryBytes": 19574784,
+      "peakMemoryBytes": 19574784,
+      "draws": 1239,
+      "timingUnavailable": 0,
+      "disjoint": 0,
+      "productionReadbacks": 0,
+      "history": true,
+      "incompleteTimerFrames": 0,
+      "unknownFraction": "diagnostic-only; no production readback",
+      "effectiveMode": "fg",
+      "stablePasses": 35,
+      "accumulationPasses": 35,
+      "snapshotBytes": 5646528,
+      "totalAdditionalBytes": 62064010,
+      "peakAdditionalBytes": 62064010,
+      "planChanges": 2,
+      "requestedQuality": "auto",
+      "plan": {
+        "supported": true,
+        "reason": "Auto reduced receiver to fit budgets",
+        "requestedQuality": "auto",
+        "effectiveQuality": "auto@0.2",
+        "scale": 0.2,
+        "samples": 32,
+        "targetFrames": 32,
+        "execution": "split",
+        "reconstruction": true,
+        "rw": 384,
+        "rh": 216,
+        "width": 384,
+        "height": 216,
+        "ox": 0,
+        "oy": 0,
+        "bytes": 19574784,
+        "snapshotBytes": 5646528,
+        "additionalSceneBytes": 36842698,
+        "totalBytes": 62064010,
+        "reservedHistoryBytes": 0,
+        "reservedGeometrySlots": 0,
+        "planningBytes": 62064010,
+        "slots": 2654208,
+        "geometrySlots": 2737152,
+        "checkedInvocations": 5391360,
+        "requiredSamplers": 14,
+        "attachments": {
+          "receiverBytes": 2985984,
+          "hitBytes": 5308416,
+          "workBytes": 2985984,
+          "historyBytes": 8294400
+        },
+        "rejections": [
+          {
+            "scale": 0.5,
+            "receiver": [
+              960,
+              540
+            ],
+            "totalBytes": 164831626,
+            "checkedInvocations": 22809600,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.45,
+            "receiver": [
+              864,
+              486
+            ],
+            "totalBytes": 141586570,
+            "checkedInvocations": 18869760,
+            "reasons": [
+              "additional memory budget",
+              "primary slots plus geometry query budget"
+            ]
+          },
+          {
+            "scale": 0.4,
+            "receiver": [
+              768,
+              432
+            ],
+            "totalBytes": 120788362,
+            "checkedInvocations": 15344640,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.3333333333333333,
+            "receiver": [
+              640,
+              360
+            ],
+            "totalBytes": 96863626,
+            "checkedInvocations": 11289600,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.3,
+            "receiver": [
+              576,
+              324
+            ],
+            "totalBytes": 86532490,
+            "checkedInvocations": 9538560,
+            "reasons": [
+              "additional memory budget"
+            ]
+          },
+          {
+            "scale": 0.25,
+            "receiver": [
+              480,
+              270
+            ],
+            "totalBytes": 73074826,
+            "checkedInvocations": 7257600,
+            "reasons": [
+              "additional memory budget"
+            ]
+          }
+        ]
+      },
+      "receiverDraws": 610,
+      "historyReset": "source/round/sampling epoch",
+      "sampleEpoch": 58,
+      "sampling": "reconstructed",
+      "revision": 1,
+      "round": 3,
+      "versions": {
+        "geometry": 1,
+        "rayLayout": 1,
+        "material": 1,
+        "sunVisibility": 1,
+        "lighting": 1
+      },
+      "quality": "auto",
+      "resolution": [
+        384,
+        216
+      ],
+      "receiverResolution": [
+        384,
+        216
+      ],
+      "fallbackReason": "none",
+      "effectiveQuality": "auto@0.2",
+      "execution": "split",
+      "rayLayout": "interleaved",
+      "rayOrder": "azimuth",
+      "reconstructionEnabled": true,
+      "lazyFallback": true,
+      "samples": 32,
+      "raySlots": 2654208,
+      "primaryRayUpperBound": 2654208,
+      "solarRayUpperBound": 2654208,
+      "traversalBudget": 256,
+      "geometryRayUpperBound": 2737152,
+      "additionalSceneBytes": 36842698,
+      "timerRecords": 58,
+      "stageTimings": {
+        "receiver": {
+          "records": 58,
+          "lastMilliseconds": 5.913856
+        },
+        "trace": {
+          "records": 464,
+          "lastMilliseconds": 0.075392
+        },
+        "shade": {
+          "records": 464,
+          "lastMilliseconds": 0.148224
+        },
+        "neighborhood": {
+          "records": 58,
+          "lastMilliseconds": 0.02128
+        },
+        "connections": {
+          "records": 58,
+          "lastMilliseconds": 0.054464
+        },
+        "temporal": {
+          "records": 58,
+          "lastMilliseconds": 0.068832
+        },
+        "filter1": {
+          "records": 58,
+          "lastMilliseconds": 0.006016
+        },
+        "filter2": {
+          "records": 58,
+          "lastMilliseconds": 0.005792
+        }
+      },
+      "receiverSize": [
+        384,
+        216
+      ],
+      "drawingBuffer": [
+        1920,
+        1080
+      ]
+    },
+    "fallbackReason": "active experimental FG",
+    "generation": 1,
+    "datasetId": "gallery-pilot",
+    "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+    "audit": [
+      {
+        "id": "basalt",
+        "status": "supported",
+        "primitives": 36,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "limestone",
+        "status": "supported",
+        "primitives": 366,
+        "materials": 1,
+        "format": "gltf",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "plaster",
+        "status": "supported",
+        "primitives": 64,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "terracotta",
+        "status": "supported",
+        "primitives": 6,
+        "materials": 1,
+        "format": "gltf",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "oak",
+        "status": "supported",
+        "primitives": 52,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "emitter",
+        "status": "supported",
+        "primitives": 6,
+        "materials": 1,
+        "format": "gltf",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "blue-instance",
+        "status": "supported",
+        "primitives": 6,
+        "materials": 1,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      },
+      {
+        "id": "alpha-mask",
+        "status": "supported",
+        "primitives": 2,
+        "materials": 2,
+        "format": "glb",
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "proxy": "same-frozen-display-bytes"
+      }
+    ],
+    "plan": {
+      "counts": [
+        18,
+        14,
+        7
+      ],
+      "total": 1764,
+      "spacing": 2,
+      "rays": 128,
+      "bounces": 3
+    },
+    "targets": 8,
+    "ownerCounter": 539,
+    "world": {
+      "revision": 1,
+      "publishedRevision": 1,
+      "round": 3,
+      "triangles": 998,
+      "ready": true
+    },
+    "resources": {
+      "budget": 67108864,
+      "categories": {
+        "frozenCpu": 1662910,
+        "blobCpu": 1662910,
+        "displayGpu": 380087,
+        "giGpu": 25317184,
+        "snapshotGpu": 5646528,
+        "packetCpu": 5720,
+        "workerCpu": 114148,
+        "ownerCpu": 4096,
+        "fgGpu": 19574784,
+        "environmentGpu": 1048576,
+        "queryAllowance": 90112
+      },
+      "allocations": 1769,
+      "knownAdditionalBytes": 55507055,
+      "reservedBytes": 6556955,
+      "admittedBytes": 62064010,
+      "peakKnownBytes": 55597167,
+      "peakAdmittedBytes": 62064010,
+      "driverVram": "not-run",
+      "jsAllocator": "not-run",
+      "giGpu": 25317184,
+      "snapshots": 5646528,
+      "fgGpu": 19574784,
+      "displayGpu": 1428663,
+      "cpuKnown": 3449784,
+      "queryAllowance": "4KiB per live timer handle; implementation storage unmeasured"
+    },
+    "timings": [
+      {
+        "type": "load",
+        "generation": 1,
+        "wallMilliseconds": 10687.39999999851,
+        "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+        "plan": {
+          "counts": [
+            18,
+            14,
+            7
+          ],
+          "total": 1764,
+          "spacing": 2,
+          "rays": 128,
+          "bounces": 3
+        }
+      }
+    ]
+  },
+  "measurement": {
+    "timeOrigin": 1792080542364.5,
+    "shellInteractive": 339.09999999403954,
+    "firstSceneFrame": 531.3999999985099,
+    "firstAssetFrame": 67300.59999999404,
+    "firstNewGIFrame": 67300.59999999404,
+    "targetFGFrame": 67910.69999999553,
+    "gaps": [
+      {
+        "start": 12.099999994039536,
+        "duration": 62.5
+      },
+      {
+        "start": 101.69999999552965,
+        "duration": 126.80000000447035
+      },
+      {
+        "start": 270.29999999701977,
+        "duration": 69.5
+      },
+      {
+        "start": 429.59999999403954,
+        "duration": 103.40000000596046
+      },
+      {
+        "start": 533,
+        "duration": 52.79999999701977
+      },
+      {
+        "start": 772.6999999955297,
+        "duration": 464.3999999985099
+      },
+      {
+        "start": 1295.8999999985099,
+        "duration": 71.5
+      },
+      {
+        "start": 1367.3999999985099,
+        "duration": 159.69999999552965
+      },
+      {
+        "start": 1554.2999999970198,
+        "duration": 60.29999999701977
+      },
+      {
+        "start": 1614.5999999940395,
+        "duration": 110.70000000298023
+      },
+      {
+        "start": 1758.8999999985099,
+        "duration": 50.19999999552965
+      },
+      {
+        "start": 1809.0999999940395,
+        "duration": 3482
+      },
+      {
+        "start": 5373.79999999702,
+        "duration": 314.8999999985099
+      },
+      {
+        "start": 5726.5999999940395,
+        "duration": 51.900000005960464
+      },
+      {
+        "start": 5902.29999999702,
+        "duration": 741.5
+      },
+      {
+        "start": 6676.79999999702,
+        "duration": 95.79999999701977
+      },
+      {
+        "start": 6805.0999999940395,
+        "duration": 211.80000000447035
+      },
+      {
+        "start": 7139.89999999851,
+        "duration": 3647.60000000149
+      },
+      {
+        "start": 10957.89999999851,
+        "duration": 56343.69999999553
+      }
+    ],
+    "tasks": [
+      {
+        "start": 142.79999999701977,
+        "duration": 55,
+        "name": "self"
+      },
+      {
+        "start": 270.19999999552965,
+        "duration": 68,
+        "name": "self"
+      },
+      {
+        "start": 429.59999999403954,
+        "duration": 102,
+        "name": "self"
+      },
+      {
+        "start": 533,
+        "duration": 52,
+        "name": "self"
+      },
+      {
+        "start": 772.6999999955297,
+        "duration": 463,
+        "name": "self"
+      },
+      {
+        "start": 1295.8999999985099,
+        "duration": 70,
+        "name": "self"
+      },
+      {
+        "start": 1367.3999999985099,
+        "duration": 159,
+        "name": "self"
+      },
+      {
+        "start": 1554.2999999970198,
+        "duration": 60,
+        "name": "self"
+      },
+      {
+        "start": 1614.5999999940395,
+        "duration": 110,
+        "name": "self"
+      },
+      {
+        "start": 1809.0999999940395,
+        "duration": 3481,
+        "name": "self"
+      },
+      {
+        "start": 5373.69999999553,
+        "duration": 314,
+        "name": "self"
+      },
+      {
+        "start": 5726.5999999940395,
+        "duration": 51,
+        "name": "self"
+      },
+      {
+        "start": 5902.29999999702,
+        "duration": 741,
+        "name": "self"
+      },
+      {
+        "start": 6676.79999999702,
+        "duration": 95,
+        "name": "self"
+      },
+      {
+        "start": 6805,
+        "duration": 211,
+        "name": "self"
+      },
+      {
+        "start": 7139.89999999851,
+        "duration": 3647,
+        "name": "self"
+      },
+      {
+        "start": 10957.89999999851,
+        "duration": 56342,
+        "name": "self"
+      }
+    ],
+    "inputs": [
+      {
+        "kind": "keydown",
+        "handled": 98.89999999850988,
+        "delay": 3.399999998509884,
+        "shellReady": false,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 200.19999999552965,
+        "delay": 1.6999999955296516,
+        "shellReady": false,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 339.09999999403954,
+        "delay": 24.5,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 429.5,
+        "delay": 6.9000000059604645,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 585.5,
+        "delay": 52.900000005960464,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 638.0999999940395,
+        "delay": 2.5,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 738.5,
+        "delay": 2,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1236.5999999940395,
+        "delay": 393.19999999552965,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1236.7999999970198,
+        "delay": 284.20000000298023,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1236.7999999970198,
+        "delay": 176.20000000298023,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1236.8999999985099,
+        "delay": 67.39999999850988,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1290.3999999985099,
+        "delay": 10.899999998509884,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1526.8999999985099,
+        "delay": 137.39999999850988,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1527,
+        "delay": 27.5,
+        "shellReady": true,
+        "phase": "auditing",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1614.5,
+        "delay": 6.9000000059604645,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 1725.1999999955297,
+        "delay": 7.600000001490116,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5290.89999999851,
+        "delay": 3465.39999999851,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5290.89999999851,
+        "delay": 3354.3000000044703,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5291,
+        "delay": 3248.4000000059605,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5291.0999999940395,
+        "delay": 3140.5,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5316.5,
+        "delay": 5,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5688.39999999851,
+        "delay": 267.8999999985099,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5688.5,
+        "delay": 158,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5688.5,
+        "delay": 51,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5778.29999999702,
+        "delay": 30.799999997019768,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 5857.39999999851,
+        "delay": 1.8999999985098839,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 6643.5,
+        "delay": 678,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 6643.5999999940395,
+        "delay": 570,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 6643.69999999553,
+        "delay": 460.1000000014901,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 6643.79999999702,
+        "delay": 352.20000000298023,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 6772.5,
+        "delay": 41.900000005960464,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 7016.69999999553,
+        "delay": 177.10000000149012,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 7016.79999999702,
+        "delay": 68.29999999701977,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 7082.29999999702,
+        "delay": 25.799999997019768,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 10787.19999999553,
+        "delay": 3621.60000000149,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 10787.39999999851,
+        "delay": 3512.8000000044703,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 10787.5,
+        "delay": 3404.9000000059605,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 10787.5,
+        "delay": 3296,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 10863.79999999702,
+        "delay": 8.200000002980232,
+        "shellReady": true,
+        "phase": "lighting",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67301.09999999404,
+        "delay": 56336.59999999404,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67301.29999999702,
+        "delay": 56227.79999999702,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67301.29999999702,
+        "delay": 56119.79999999702,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67301.39999999851,
+        "delay": 56010.89999999851,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67383.09999999404,
+        "delay": 21.69999999552965,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67478.59999999404,
+        "delay": 9.299999997019768,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67596.19999999553,
+        "delay": 16.799999997019768,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67707.09999999404,
+        "delay": 17.799999997019768,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67818,
+        "delay": 18.700000002980232,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      },
+      {
+        "kind": "keydown",
+        "handled": 67910.79999999702,
+        "delay": 2.399999998509884,
+        "shellReady": true,
+        "phase": "available",
+        "generation": 1,
+        "cancel": false
+      }
+    ],
+    "calls": {
+      "texImage2D": {
+        "count": 562,
+        "milliseconds": 16,
+        "max": 6.199999995529652
+      },
+      "bufferData": {
+        "count": 1794,
+        "milliseconds": 2.7999999970197678,
+        "max": 0.5
+      },
+      "shaderSource": {
+        "count": 96,
+        "milliseconds": 6.899999983608723,
+        "max": 0.4000000059604645
+      },
+      "compileShader": {
+        "count": 96,
+        "milliseconds": 0.10000000149011612,
+        "max": 0.10000000149011612
+      },
+      "linkProgram": {
+        "count": 48,
+        "milliseconds": 0.09999999403953552,
+        "max": 0.09999999403953552
+      },
+      "getProgramParameter": {
+        "count": 144,
+        "milliseconds": 65561.19999998808,
+        "max": 11524
+      },
+      "getActiveUniform": {
+        "count": 1070,
+        "milliseconds": 1.0000000074505806,
+        "max": 0.30000000447034836
+      },
+      "getUniformLocation": {
+        "count": 1146,
+        "milliseconds": 1.3999999985098839,
+        "max": 0.10000000149011612
+      },
+      "getActiveAttrib": {
+        "count": 106,
+        "milliseconds": 0,
+        "max": 0
+      },
+      "getAttribLocation": {
+        "count": 106,
+        "milliseconds": 0,
+        "max": 0
+      },
+      "useProgram": {
+        "count": 79493,
+        "milliseconds": 16.799999967217445,
+        "max": 0.19999999552965164
+      },
+      "drawElements": {
+        "count": 16218,
+        "milliseconds": 5.999999970197678,
+        "max": 0.19999999552965164
+      },
+      "deleteProgram": {
+        "count": 12,
+        "milliseconds": 0,
+        "max": 0
+      },
+      "drawArrays": {
+        "count": 62964,
+        "milliseconds": 15.400000020861626,
+        "max": 0.20000000298023224
+      }
+    },
+    "programs": [
+      {
+        "id": 0,
+        "created": 302.79999999701977,
+        "shaders": [
+          0,
+          1
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 12.5,
+            "max": 12.5
+          },
+          "getActiveUniform": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 302.79999999701977,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 315.5,
+        "firstReflection": 315.8999999985099,
+        "firstUse": 316.19999999552965,
+        "firstDraw": 316.59999999403954,
+        "deleted": 6649.0999999940395
+      },
+      {
+        "id": 1,
+        "created": 317.8999999985099,
+        "shaders": [
+          2,
+          3
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 3.899999998509884,
+            "max": 3.899999998509884
+          },
+          "getActiveUniform": {
+            "count": 4,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 4,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 216,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 215,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          }
+        },
+        "submitted": 317.8999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 321.79999999701977,
+        "firstReflection": 321.79999999701977,
+        "firstUse": 321.8999999985099,
+        "firstDraw": 322
+      },
+      {
+        "id": 2,
+        "created": 322.19999999552965,
+        "shaders": [
+          4,
+          5
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 8.700000002980232,
+            "max": 8.700000002980232
+          },
+          "getActiveUniform": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 216,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 215,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 322.19999999552965,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 331,
+        "firstReflection": 331,
+        "firstUse": 331.09999999403954,
+        "firstDraw": 331.19999999552965
+      },
+      {
+        "id": 3,
+        "created": 331.5,
+        "shaders": [
+          6,
+          7
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 1.8999999985098839,
+            "max": 1.8999999985098839
+          },
+          "getActiveUniform": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 216,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "drawElements": {
+            "count": 215,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 331.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 333.3999999985099,
+        "firstReflection": 333.3999999985099,
+        "firstUse": 333.5,
+        "firstDraw": 333.5
+      },
+      {
+        "id": 4,
+        "created": 424.3999999985099,
+        "shaders": [
+          8,
+          9
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 3,
+            "max": 3
+          },
+          "getActiveUniform": {
+            "count": 7,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 7,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 204,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 203,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.19999999552965164
+          }
+        },
+        "submitted": 424.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 427.5,
+        "firstReflection": 427.59999999403954,
+        "firstUse": 427.69999999552965,
+        "firstDraw": 428.09999999403954
+      },
+      {
+        "id": 5,
+        "created": 438.3999999985099,
+        "shaders": [
+          10,
+          11
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 74.5,
+            "max": 74.5
+          },
+          "getActiveUniform": {
+            "count": 37,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 41,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 782,
+            "milliseconds": 0.3999999985098839,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 781,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 438.3999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 438.79999999701977,
+            "duration": 74.5,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 513.2999999970198,
+        "firstReflection": 513.2999999970198,
+        "firstUse": 513.7999999970198,
+        "firstDraw": 514.6999999955297
+      },
+      {
+        "id": 6,
+        "created": 514.7999999970198,
+        "shaders": [
+          12,
+          13
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 3.6999999955296516,
+            "max": 3.6999999955296516
+          },
+          "getActiveUniform": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 203,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 202,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 514.7999999970198,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 518.5999999940395,
+        "firstReflection": 518.5999999940395,
+        "firstUse": 518.5999999940395,
+        "firstDraw": 518.6999999955297
+      },
+      {
+        "id": 7,
+        "created": 519.3999999985099,
+        "shaders": [
+          14,
+          15
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 3,
+            "max": 3
+          },
+          "getActiveUniform": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 203,
+            "milliseconds": 0.4000000059604645,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 202,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 519.3999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 522.5,
+        "firstReflection": 522.5,
+        "firstUse": 522.5,
+        "firstDraw": 522.6999999955297
+      },
+      {
+        "id": 8,
+        "created": 523.0999999940395,
+        "shaders": [
+          16,
+          17
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 7.5,
+            "max": 7.5
+          },
+          "getActiveUniform": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 203,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 202,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 523.0999999940395,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 530.6999999955297,
+        "firstReflection": 530.6999999955297,
+        "firstUse": 530.7999999970198,
+        "firstDraw": 530.7999999970198
+      },
+      {
+        "id": 9,
+        "created": 536.5,
+        "shaders": [
+          18,
+          19
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 46.80000000447035,
+            "max": 46.70000000298023
+          },
+          "getActiveUniform": {
+            "count": 19,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 19,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 202,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 201,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 536.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 583.2999999970198,
+        "firstReflection": 583.3999999985099,
+        "firstUse": 583.5,
+        "firstDraw": 583.8999999985099
+      },
+      {
+        "id": 10,
+        "created": 774.0999999940395,
+        "shaders": [
+          20,
+          21
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 459.5,
+            "max": 459.5
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 774.0999999940395,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 774.1999999955297,
+            "duration": 459.5,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 1233.7999999970198,
+        "firstReflection": 1233.7999999970198,
+        "firstUse": 1233.7999999970198,
+        "firstDraw": 1233.8999999985099,
+        "deleted": 6649.29999999702
+      },
+      {
+        "id": 11,
+        "created": 1300.1999999955297,
+        "shaders": [
+          22,
+          23
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 64.29999999701977,
+            "max": 64.29999999701977
+          },
+          "getActiveUniform": {
+            "count": 19,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 19,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 61,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 60,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 1300.1999999955297,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 1300.2999999970198,
+            "duration": 64.29999999701977,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 1364.5999999940395,
+        "firstReflection": 1364.5999999940395,
+        "firstUse": 1364.6999999955297,
+        "firstDraw": 1364.8999999985099,
+        "deleted": 6649.29999999702
+      },
+      {
+        "id": 12,
+        "created": 1375.5,
+        "shaders": [
+          24,
+          25
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 149.79999999701977,
+            "max": 149.79999999701977
+          },
+          "getActiveUniform": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 353,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 352,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "deleteProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 1375.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 1375.5,
+            "duration": 149.79999999701977,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 1525.2999999970198,
+        "firstReflection": 1525.3999999985099,
+        "firstUse": 1525.3999999985099,
+        "firstDraw": 1525.5,
+        "deleted": 6649.29999999702
+      },
+      {
+        "id": 13,
+        "created": 1679.3999999985099,
+        "shaders": [
+          26,
+          27
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 44.600000001490116,
+            "max": 44.600000001490116
+          },
+          "getActiveUniform": {
+            "count": 32,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getUniformLocation": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 17,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 16,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 1679.3999999985099,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 1724.1999999955297,
+        "firstReflection": 1724.1999999955297,
+        "firstUse": 1724.3999999985099,
+        "firstDraw": 1724.5
+      },
+      {
+        "id": 14,
+        "created": 1768.0999999940395,
+        "shaders": [
+          28,
+          29
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 39.600000001490116,
+            "max": 39.600000001490116
+          },
+          "getActiveUniform": {
+            "count": 34,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 38,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 1768.0999999940395,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 1807.8999999985099,
+        "firstReflection": 1808,
+        "firstUse": 1808.1999999955297,
+        "firstDraw": 1808.2999999970198
+      },
+      {
+        "id": 15,
+        "created": 1902.5,
+        "shaders": [
+          30,
+          31
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 3384.0999999940395,
+            "max": 3384.0999999940395
+          },
+          "getActiveUniform": {
+            "count": 11,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 11,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 59,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 58,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 1902.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 1902.5,
+            "duration": 3384.0999999940395,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 5286.5999999940395,
+        "firstReflection": 5286.5999999940395,
+        "firstUse": 5286.79999999702,
+        "firstDraw": 5287
+      },
+      {
+        "id": 16,
+        "created": 5337.19999999553,
+        "shaders": [
+          32,
+          33
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 34.5,
+            "max": 34.5
+          },
+          "getActiveUniform": {
+            "count": 34,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 38,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 7097,
+            "milliseconds": 1.3999999910593033,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 7096,
+            "milliseconds": 2.299999974668026,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 5337.29999999702,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 5372,
+        "firstReflection": 5372,
+        "firstUse": 5372.19999999553,
+        "firstDraw": 5372.29999999702
+      },
+      {
+        "id": 17,
+        "created": 5377.5,
+        "shaders": [
+          34,
+          35
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 308,
+            "max": 308
+          },
+          "getActiveUniform": {
+            "count": 10,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 10,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 47,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 46,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 5377.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 5377.5999999940395,
+            "duration": 308,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 5685.5999999940395,
+        "firstReflection": 5685.5999999940395,
+        "firstUse": 5685.5999999940395,
+        "firstDraw": 5685.89999999851
+      },
+      {
+        "id": 18,
+        "created": 5729.0999999940395,
+        "shaders": [
+          36,
+          37
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 10.399999998509884,
+            "max": 10.399999998509884
+          },
+          "getActiveUniform": {
+            "count": 5,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 5,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 55,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 54,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 5729.0999999940395,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 5739.5999999940395,
+        "firstReflection": 5739.5999999940395,
+        "firstUse": 5739.79999999702,
+        "firstDraw": 5739.79999999702
+      },
+      {
+        "id": 19,
+        "created": 5812.89999999851,
+        "shaders": [
+          38,
+          39
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 20.19999999552965,
+            "max": 20.19999999552965
+          },
+          "getActiveUniform": {
+            "count": 4,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 4,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 55,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 54,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 5812.89999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 5833.0999999940395,
+        "firstReflection": 5833.0999999940395,
+        "firstUse": 5833.0999999940395,
+        "firstDraw": 5833.0999999940395
+      },
+      {
+        "id": 20,
+        "created": 5867.69999999553,
+        "shaders": [
+          40,
+          41
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 6.899999998509884,
+            "max": 6.899999998509884
+          },
+          "getActiveUniform": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 182,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "drawElements": {
+            "count": 181,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 5867.69999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 5874.69999999553,
+        "firstReflection": 5874.69999999553,
+        "firstUse": 5874.79999999702,
+        "firstDraw": 5874.79999999702
+      },
+      {
+        "id": 21,
+        "created": 5905.0999999940395,
+        "shaders": [
+          42,
+          43
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 736.5,
+            "max": 736.3999999985099
+          },
+          "getActiveUniform": {
+            "count": 13,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 13,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 49,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 48,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 5905.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 5905.29999999702,
+            "duration": 736.3999999985099,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 6641.69999999553,
+        "firstReflection": 6641.79999999702,
+        "firstUse": 6641.89999999851,
+        "firstDraw": 6642
+      },
+      {
+        "id": 22,
+        "created": 6679.39999999851,
+        "shaders": [
+          44,
+          45
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 90.39999999850988,
+            "max": 90.39999999850988
+          },
+          "getActiveUniform": {
+            "count": 13,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 13,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 49,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 48,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 6679.39999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 6679.39999999851,
+            "duration": 90.39999999850988,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 6769.79999999702,
+        "firstReflection": 6769.79999999702,
+        "firstUse": 6770,
+        "firstDraw": 6770.19999999553
+      },
+      {
+        "id": 23,
+        "created": 6808.69999999553,
+        "shaders": [
+          46,
+          47
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 203.79999999701977,
+            "max": 203.79999999701977
+          },
+          "getActiveUniform": {
+            "count": 20,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 20,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 81,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 80,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 6808.69999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 6808.89999999851,
+            "duration": 203.79999999701977,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 7012.69999999553,
+        "firstReflection": 7012.69999999553,
+        "firstUse": 7012.89999999851,
+        "firstDraw": 7013.0999999940395
+      },
+      {
+        "id": 24,
+        "created": 7057.39999999851,
+        "shaders": [
+          48,
+          49
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 22.5,
+            "max": 22.399999998509884
+          },
+          "getActiveUniform": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 98,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 97,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 7057.39999999851,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 7079.89999999851,
+        "firstReflection": 7080,
+        "firstUse": 7080,
+        "firstDraw": 7080.0999999940395
+      },
+      {
+        "id": 25,
+        "created": 7148.69999999553,
+        "shaders": [
+          50,
+          51
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 2.7000000029802322,
+            "max": 2.7000000029802322
+          },
+          "getActiveUniform": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 10,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 9,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 7148.69999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "linkStatusChecked": 7151.5999999940395,
+        "firstReflection": 7151.5999999940395,
+        "firstUse": 7151.5999999940395,
+        "firstDraw": 7151.69999999553
+      },
+      {
+        "id": 26,
+        "created": 7176.5,
+        "shaders": [
+          52,
+          53
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 34.100000001490116,
+            "max": 34.100000001490116
+          },
+          "getActiveUniform": {
+            "count": 27,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 27,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 4321,
+            "milliseconds": 0.6000000014901161,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 4320,
+            "milliseconds": 1,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 7176.5,
+        "asset": false,
+        "fg": false,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": true,
+        "localGI": false,
+        "linkStatusChecked": 7210.79999999702,
+        "firstReflection": 7210.79999999702,
+        "firstUse": 7211,
+        "firstDraw": 7211.19999999553
+      },
+      {
+        "id": 27,
+        "created": 7214.19999999553,
+        "shaders": [
+          54,
+          55
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 397,
+            "max": 397
+          },
+          "getActiveUniform": {
+            "count": 20,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 20,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 481,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.10000000149011612
+          },
+          "drawElements": {
+            "count": 480,
+            "milliseconds": 0.5,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 7214.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 7214.29999999702,
+            "duration": 397,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 7611.39999999851,
+        "firstReflection": 7611.39999999851,
+        "firstUse": 7611.5,
+        "firstDraw": 7611.79999999702
+      },
+      {
+        "id": 28,
+        "created": 7612.19999999553,
+        "shaders": [
+          56,
+          57
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 1787.8999999985099,
+            "max": 1787.8999999985099
+          },
+          "getActiveUniform": {
+            "count": 41,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 41,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 481,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 480,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 7612.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 7612.29999999702,
+            "duration": 1787.8999999985099,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 9400.29999999702,
+        "firstReflection": 9400.29999999702,
+        "firstUse": 9400.5,
+        "firstDraw": 9400.79999999702
+      },
+      {
+        "id": 29,
+        "created": 9401.5,
+        "shaders": [
+          58,
+          59
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 77.70000000298023,
+            "max": 77.70000000298023
+          },
+          "getActiveUniform": {
+            "count": 17,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 17,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 61,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 60,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 9401.5,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 9401.59999999404,
+            "duration": 77.70000000298023,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 9479.29999999702,
+        "firstReflection": 9479.29999999702,
+        "firstUse": 9479.39999999851,
+        "firstDraw": 9479.59999999404
+      },
+      {
+        "id": 30,
+        "created": 9480.19999999553,
+        "shaders": [
+          60,
+          61
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 326.30000000447035,
+            "max": 326.30000000447035
+          },
+          "getActiveUniform": {
+            "count": 9,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "getUniformLocation": {
+            "count": 9,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 61,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 60,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 9480.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 9480.19999999553,
+            "duration": 326.30000000447035,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 9806.59999999404,
+        "firstReflection": 9806.89999999851,
+        "firstUse": 9806.89999999851,
+        "firstDraw": 9807
+      },
+      {
+        "id": 31,
+        "created": 9807.19999999553,
+        "shaders": [
+          62,
+          63
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 429.3999999985099,
+            "max": 429.3999999985099
+          },
+          "getActiveUniform": {
+            "count": 24,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 24,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 61,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 60,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 9807.19999999553,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 9807.19999999553,
+            "duration": 429.3999999985099,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 10236.59999999404,
+        "firstReflection": 10236.69999999553,
+        "firstUse": 10236.79999999702,
+        "firstDraw": 10236.89999999851
+      },
+      {
+        "id": 32,
+        "created": 10237.09999999404,
+        "shaders": [
+          64,
+          65
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 547.8000000044703,
+            "max": 547.8000000044703
+          },
+          "getActiveUniform": {
+            "count": 8,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 8,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 2,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 121,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawElements": {
+            "count": 120,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 10237.09999999404,
+        "asset": false,
+        "fg": false,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": false,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 10237.09999999404,
+            "duration": 547.8000000044703,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 10785,
+        "firstReflection": 10785,
+        "firstUse": 10785,
+        "firstDraw": 10785.19999999553
+      },
+      {
+        "id": 33,
+        "created": 11020.5,
+        "shaders": [
+          66,
+          67
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 43.899999998509884,
+            "max": 43.899999998509884
+          },
+          "getActiveUniform": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 12,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 2377,
+            "milliseconds": 0.6000000014901161,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 2376,
+            "milliseconds": 0.7000000029802322,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 11020.5,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11064.59999999404,
+        "firstReflection": 11064.59999999404,
+        "firstUse": 11064.79999999702,
+        "firstDraw": 11064.89999999851
+      },
+      {
+        "id": 34,
+        "created": 11065.5,
+        "shaders": [
+          68,
+          69
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 44.5,
+            "max": 44.5
+          },
+          "getActiveUniform": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 21565,
+            "milliseconds": 4.099999979138374,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 21564,
+            "milliseconds": 4.899999991059303,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 11065.5,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11110.29999999702,
+        "firstReflection": 11110.29999999702,
+        "firstUse": 11110.29999999702,
+        "firstDraw": 11110.39999999851
+      },
+      {
+        "id": 35,
+        "created": 11114.09999999404,
+        "shaders": [
+          70,
+          71
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 48,
+            "max": 48
+          },
+          "getActiveUniform": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 217,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 216,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 11114.09999999404,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11162.29999999702,
+        "firstReflection": 11162.29999999702,
+        "firstUse": 11162.39999999851,
+        "firstDraw": 11162.5
+      },
+      {
+        "id": 36,
+        "created": 11163.09999999404,
+        "shaders": [
+          72,
+          73
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 42.70000000298023,
+            "max": 42.70000000298023
+          },
+          "getActiveUniform": {
+            "count": 12,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "getUniformLocation": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 37,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 11163.09999999404,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11206,
+        "firstReflection": 11206,
+        "firstUse": 11206.09999999404,
+        "firstDraw": 11206.19999999553
+      },
+      {
+        "id": 37,
+        "created": 11206.69999999553,
+        "shaders": [
+          74,
+          75
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 42.599999994039536,
+            "max": 42.599999994039536
+          },
+          "getActiveUniform": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 12,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 37,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 11206.69999999553,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": true,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11249.59999999404,
+        "firstReflection": 11249.59999999404,
+        "firstUse": 11249.69999999553,
+        "firstDraw": 11249.69999999553
+      },
+      {
+        "id": 38,
+        "created": 11264.59999999404,
+        "shaders": [
+          76,
+          77
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 44.29999999701977,
+            "max": 44.29999999701977
+          },
+          "getActiveUniform": {
+            "count": 30,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 30,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 1729,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 1728,
+            "milliseconds": 0.3999999910593033,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 11264.59999999404,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11309.79999999702,
+        "firstReflection": 11309.79999999702,
+        "firstUse": 11310,
+        "firstDraw": 11310.89999999851
+      },
+      {
+        "id": 39,
+        "created": 11312.69999999553,
+        "shaders": [
+          78,
+          79
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 57.69999999552965,
+            "max": 57.69999999552965
+          },
+          "getActiveUniform": {
+            "count": 31,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 31,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 17353,
+            "milliseconds": 4.0999999940395355,
+            "max": 0.19999999552965164
+          },
+          "drawArrays": {
+            "count": 17352,
+            "milliseconds": 4.900000020861626,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 11312.69999999553,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 11312.89999999851,
+            "duration": 57.69999999552965,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 11370.59999999404,
+        "firstReflection": 11370.69999999553,
+        "firstUse": 11370.79999999702,
+        "firstDraw": 11370.89999999851
+      },
+      {
+        "id": 40,
+        "created": 11382.39999999851,
+        "shaders": [
+          80,
+          81
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 49.900000005960464,
+            "max": 49.80000000447035
+          },
+          "getActiveUniform": {
+            "count": 31,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getUniformLocation": {
+            "count": 31,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 217,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 216,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 11382.39999999851,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "linkStatusChecked": 11432.39999999851,
+        "firstReflection": 11432.5,
+        "firstUse": 11432.79999999702,
+        "firstDraw": 11433
+      },
+      {
+        "id": 41,
+        "created": 11434.69999999553,
+        "shaders": [
+          82,
+          83
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 58.5,
+            "max": 58.5
+          },
+          "getActiveUniform": {
+            "count": 29,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 29,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 37,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 11434.69999999553,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 11434.89999999851,
+            "duration": 58.5,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 11493.39999999851,
+        "firstReflection": 11493.39999999851,
+        "firstUse": 11493.59999999404,
+        "firstDraw": 11493.69999999553
+      },
+      {
+        "id": 42,
+        "created": 11495.09999999404,
+        "shaders": [
+          84,
+          85
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 54.899999998509884,
+            "max": 54.899999998509884
+          },
+          "getActiveUniform": {
+            "count": 31,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 31,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 37,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 11495.09999999404,
+        "asset": true,
+        "fg": true,
+        "receiver": true,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 11495.5,
+            "duration": 54.899999998509884,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 11550.39999999851,
+        "firstReflection": 11550.39999999851,
+        "firstUse": 11550.5,
+        "firstDraw": 11550.59999999404
+      },
+      {
+        "id": 43,
+        "created": 11552.79999999702,
+        "shaders": [
+          86,
+          87
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 11470.20000000298,
+            "max": 11470.20000000298
+          },
+          "getActiveUniform": {
+            "count": 86,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getUniformLocation": {
+            "count": 98,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 1729,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 1728,
+            "milliseconds": 0.7000000104308128,
+            "max": 0.10000000149011612
+          }
+        },
+        "submitted": 11552.79999999702,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 11553.09999999404,
+            "duration": 11470.20000000298,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 23023.29999999702,
+        "firstReflection": 23023.39999999851,
+        "firstUse": 23024,
+        "firstDraw": 23024.5
+      },
+      {
+        "id": 44,
+        "created": 23026,
+        "shaders": [
+          88,
+          89
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 11524,
+            "max": 11524
+          },
+          "getActiveUniform": {
+            "count": 87,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 99,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 17353,
+            "milliseconds": 3.3000000044703484,
+            "max": 0.10000000149011612
+          },
+          "drawArrays": {
+            "count": 17352,
+            "milliseconds": 3.7000000029802322,
+            "max": 0.20000000298023224
+          }
+        },
+        "submitted": 23026,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 23026.29999999702,
+            "duration": 11524,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 34550.29999999702,
+        "firstReflection": 34550.29999999702,
+        "firstUse": 34550.5,
+        "firstDraw": 34550.69999999553
+      },
+      {
+        "id": 45,
+        "created": 34559.59999999404,
+        "shaders": [
+          90,
+          91
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 11179.39999999851,
+            "max": 11179.39999999851
+          },
+          "getActiveUniform": {
+            "count": 87,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getUniformLocation": {
+            "count": 99,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 217,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 216,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 34559.59999999404,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 34559.79999999702,
+            "duration": 11179.39999999851,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 45739.19999999553,
+        "firstReflection": 45739.19999999553,
+        "firstUse": 45739.59999999404,
+        "firstDraw": 45739.69999999553
+      },
+      {
+        "id": 46,
+        "created": 45740.5,
+        "shaders": [
+          92,
+          93
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 10578.70000000298,
+            "max": 10578.70000000298
+          },
+          "getActiveUniform": {
+            "count": 85,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.10000000149011612
+          },
+          "getUniformLocation": {
+            "count": 97,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 37,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 45740.59999999404,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 45740.79999999702,
+            "duration": 10578.70000000298,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 56319.5,
+        "firstReflection": 56319.5,
+        "firstUse": 56319.89999999851,
+        "firstDraw": 56320.09999999404
+      },
+      {
+        "id": 47,
+        "created": 56320.79999999702,
+        "shaders": [
+          94,
+          95
+        ],
+        "calls": {
+          "linkProgram": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getProgramParameter": {
+            "count": 3,
+            "milliseconds": 10978.39999999851,
+            "max": 10978.39999999851
+          },
+          "getActiveUniform": {
+            "count": 87,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "getUniformLocation": {
+            "count": 99,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.10000000149011612
+          },
+          "getActiveAttrib": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "getAttribLocation": {
+            "count": 3,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "useProgram": {
+            "count": 37,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "drawArrays": {
+            "count": 36,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "submitted": 56320.79999999702,
+        "asset": true,
+        "fg": true,
+        "receiver": false,
+        "depthOnly": false,
+        "globe": false,
+        "localGI": true,
+        "stalls": [
+          {
+            "name": "getProgramParameter",
+            "start": 56321,
+            "duration": 10978.39999999851,
+            "parameter": 35714
+          }
+        ],
+        "linkStatusChecked": 67299.39999999851,
+        "firstReflection": 67299.39999999851,
+        "firstUse": 67300.19999999553,
+        "firstDraw": 67300.29999999702
+      }
+    ],
+    "shaders": [
+      {
+        "id": 0,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 1,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 1
+      },
+      {
+        "id": 2,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 3,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 2
+      },
+      {
+        "id": 4,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 5,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 3
+      },
+      {
+        "id": 6,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 7,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 4
+      },
+      {
+        "id": 8,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 5
+      },
+      {
+        "id": 9,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 6
+      },
+      {
+        "id": 10,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 7
+      },
+      {
+        "id": 11,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 8
+      },
+      {
+        "id": 12,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 13,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 9
+      },
+      {
+        "id": 14,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 15,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 10
+      },
+      {
+        "id": 16,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 17,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 11
+      },
+      {
+        "id": 18,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 12
+      },
+      {
+        "id": 19,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 13
+      },
+      {
+        "id": 20,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 21,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 14
+      },
+      {
+        "id": 22,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 23,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 15
+      },
+      {
+        "id": 24,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 16
+      },
+      {
+        "id": 25,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 17
+      },
+      {
+        "id": 26,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 18
+      },
+      {
+        "id": 27,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 19
+      },
+      {
+        "id": 28,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 20
+      },
+      {
+        "id": 29,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.19999999552965164
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 21
+      },
+      {
+        "id": 30,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 31,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 22
+      },
+      {
+        "id": 32,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 23
+      },
+      {
+        "id": 33,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 19
+      },
+      {
+        "id": 34,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 35,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 24
+      },
+      {
+        "id": 36,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 37,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 25
+      },
+      {
+        "id": 38,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 39,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          }
+        },
+        "source": 26
+      },
+      {
+        "id": 40,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 41,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 27
+      },
+      {
+        "id": 42,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 43,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 28
+      },
+      {
+        "id": 44,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 45,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 29
+      },
+      {
+        "id": 46,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 47,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 30
+      },
+      {
+        "id": 48,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 49,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 31
+      },
+      {
+        "id": 50,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 51,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 32
+      },
+      {
+        "id": 52,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 33
+      },
+      {
+        "id": 53,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 34
+      },
+      {
+        "id": 54,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 55,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.19999999552965164
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 35
+      },
+      {
+        "id": 56,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 57,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 36
+      },
+      {
+        "id": 58,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 59,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 37
+      },
+      {
+        "id": 60,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 61,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 38
+      },
+      {
+        "id": 62,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 63,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 39
+      },
+      {
+        "id": 64,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 0
+      },
+      {
+        "id": 65,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 40
+      },
+      {
+        "id": 66,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 41
+      },
+      {
+        "id": 67,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 42
+      },
+      {
+        "id": 68,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 41
+      },
+      {
+        "id": 69,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.4000000059604645,
+            "max": 0.4000000059604645
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 43
+      },
+      {
+        "id": 70,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 41
+      },
+      {
+        "id": 71,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 44
+      },
+      {
+        "id": 72,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 45
+      },
+      {
+        "id": 73,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 46
+      },
+      {
+        "id": 74,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 45
+      },
+      {
+        "id": 75,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 47
+      },
+      {
+        "id": 76,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 48
+      },
+      {
+        "id": 77,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 49
+      },
+      {
+        "id": 78,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.20000000298023224,
+            "max": 0.20000000298023224
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 48
+      },
+      {
+        "id": 79,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.19999999552965164
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 50
+      },
+      {
+        "id": 80,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 48
+      },
+      {
+        "id": 81,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 51
+      },
+      {
+        "id": 82,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 52
+      },
+      {
+        "id": 83,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.19999999552965164,
+            "max": 0.19999999552965164
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 53
+      },
+      {
+        "id": 84,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 52
+      },
+      {
+        "id": 85,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 54
+      },
+      {
+        "id": 86,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 55
+      },
+      {
+        "id": 87,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 56
+      },
+      {
+        "id": 88,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 55
+      },
+      {
+        "id": 89,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 57
+      },
+      {
+        "id": 90,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 55
+      },
+      {
+        "id": 91,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.3999999985098839,
+            "max": 0.3999999985098839
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 58
+      },
+      {
+        "id": 92,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.09999999403953552,
+            "max": 0.09999999403953552
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 59
+      },
+      {
+        "id": 93,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.30000000447034836,
+            "max": 0.30000000447034836
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 60
+      },
+      {
+        "id": 94,
+        "type": 35633,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.10000000149011612,
+            "max": 0.10000000149011612
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 59
+      },
+      {
+        "id": 95,
+        "type": 35632,
+        "calls": {
+          "shaderSource": {
+            "count": 1,
+            "milliseconds": 0.29999999701976776,
+            "max": 0.29999999701976776
+          },
+          "compileShader": {
+            "count": 1,
+            "milliseconds": 0,
+            "max": 0
+          }
+        },
+        "source": 61
+      }
+    ],
+    "sources": [
+      {
+        "index": 0,
+        "hash": "cb85a6538b2edce83e00ae2655879c71b72a2afcbebd84dba914460eeaf55fb6",
+        "bytes": 295,
+        "file": "cb85a6538b2edce83e00ae2655879c71b72a2afcbebd84dba914460eeaf55fb6.glsl"
+      },
+      {
+        "index": 1,
+        "hash": "ad72cb6d11ff198576ac8bb9f1c40062fb110e0f8b884dccf681002fe17c94a7",
+        "bytes": 1890,
+        "file": "ad72cb6d11ff198576ac8bb9f1c40062fb110e0f8b884dccf681002fe17c94a7.glsl"
+      },
+      {
+        "index": 2,
+        "hash": "67dca71702b2d8d279ab6cd9384f0602fba9c409b2818e9fac4caa2f0191a37d",
+        "bytes": 1061,
+        "file": "67dca71702b2d8d279ab6cd9384f0602fba9c409b2818e9fac4caa2f0191a37d.glsl"
+      },
+      {
+        "index": 3,
+        "hash": "ed8f41bf3f274721ee46e41c93419ca89c3cd1950ff2b397f496e9abbf8ad064",
+        "bytes": 2284,
+        "file": "ed8f41bf3f274721ee46e41c93419ca89c3cd1950ff2b397f496e9abbf8ad064.glsl"
+      },
+      {
+        "index": 4,
+        "hash": "c0dc4af5161744c94b98d25178a192405d1cca72e49e690da4bbcfea19d764bf",
+        "bytes": 497,
+        "file": "c0dc4af5161744c94b98d25178a192405d1cca72e49e690da4bbcfea19d764bf.glsl"
+      },
+      {
+        "index": 5,
+        "hash": "765b06cd12a4057d95e04744dcebb971a758e0876bc24bdd6ff32ae93eb6ac48",
+        "bytes": 480,
+        "file": "765b06cd12a4057d95e04744dcebb971a758e0876bc24bdd6ff32ae93eb6ac48.glsl"
+      },
+      {
+        "index": 6,
+        "hash": "a14ca42c8e767c0c0803a1fccf21b681b84b691210d9d398f95cde43ad06ea70",
+        "bytes": 1277,
+        "file": "a14ca42c8e767c0c0803a1fccf21b681b84b691210d9d398f95cde43ad06ea70.glsl"
+      },
+      {
+        "index": 7,
+        "hash": "4eb48ba2422acf402eb5e0dbe3502b1dc558cd9038c86c3ada4d494f5d866750",
+        "bytes": 20992,
+        "file": "4eb48ba2422acf402eb5e0dbe3502b1dc558cd9038c86c3ada4d494f5d866750.glsl"
+      },
+      {
+        "index": 8,
+        "hash": "23f8bb14b4fa7d8df70ecc98d1f8f174d957a56bbed6aee774901fee0f501ef9",
+        "bytes": 49537,
+        "file": "23f8bb14b4fa7d8df70ecc98d1f8f174d957a56bbed6aee774901fee0f501ef9.glsl"
+      },
+      {
+        "index": 9,
+        "hash": "d20fbb60f91b958d415fa528f456b3cc09fabd46d682fdf8892d7c08e475178a",
+        "bytes": 752,
+        "file": "d20fbb60f91b958d415fa528f456b3cc09fabd46d682fdf8892d7c08e475178a.glsl"
+      },
+      {
+        "index": 10,
+        "hash": "4932d76c7ada679561e68cefa02e62f910af4b34fe737cbbabca9870eee2423c",
+        "bytes": 837,
+        "file": "4932d76c7ada679561e68cefa02e62f910af4b34fe737cbbabca9870eee2423c.glsl"
+      },
+      {
+        "index": 11,
+        "hash": "93b8d4373de054b551a6fa1aaf71385fa9ccb38e742f28cb9ee1ee5e8b116d8d",
+        "bytes": 1853,
+        "file": "93b8d4373de054b551a6fa1aaf71385fa9ccb38e742f28cb9ee1ee5e8b116d8d.glsl"
+      },
+      {
+        "index": 12,
+        "hash": "28ad9c5ce30de30ed9f3e14f5a1fcbbc64b6e0c83e297a3c4a8923d39685f84d",
+        "bytes": 14663,
+        "file": "28ad9c5ce30de30ed9f3e14f5a1fcbbc64b6e0c83e297a3c4a8923d39685f84d.glsl"
+      },
+      {
+        "index": 13,
+        "hash": "b5b81b1fc412a9a27754a10dc0a3783160970b86603cedec06e50e4661b170a3",
+        "bytes": 18250,
+        "file": "b5b81b1fc412a9a27754a10dc0a3783160970b86603cedec06e50e4661b170a3.glsl"
+      },
+      {
+        "index": 14,
+        "hash": "c026eb3451bae4e612fb506d7841249bd668e105f68fd9eea5148fdf26af9c46",
+        "bytes": 3009,
+        "file": "c026eb3451bae4e612fb506d7841249bd668e105f68fd9eea5148fdf26af9c46.glsl"
+      },
+      {
+        "index": 15,
+        "hash": "15138e7325e7be59dbbf62dc967e6af8fabaea9268cd75da5e8cdb32b86d9bdb",
+        "bytes": 23081,
+        "file": "15138e7325e7be59dbbf62dc967e6af8fabaea9268cd75da5e8cdb32b86d9bdb.glsl"
+      },
+      {
+        "index": 16,
+        "hash": "cceb34e69a09e2dc9110d4ae1dea697eacce888bb4568d1d3ecad573b9b34041",
+        "bytes": 815,
+        "file": "cceb34e69a09e2dc9110d4ae1dea697eacce888bb4568d1d3ecad573b9b34041.glsl"
+      },
+      {
+        "index": 17,
+        "hash": "9a4171a7181a6929c45554cbbe83ced9a3dc920989f4ccc3f195da384a6dfae0",
+        "bytes": 2717,
+        "file": "9a4171a7181a6929c45554cbbe83ced9a3dc920989f4ccc3f195da384a6dfae0.glsl"
+      },
+      {
+        "index": 18,
+        "hash": "19ed6d54ec4f0a50f7cb7b4803458559b0c61a3ba77518ebf058df187ccd75f8",
+        "bytes": 20953,
+        "file": "19ed6d54ec4f0a50f7cb7b4803458559b0c61a3ba77518ebf058df187ccd75f8.glsl"
+      },
+      {
+        "index": 19,
+        "hash": "17df03c4d40c5bb4faf288c7bc1444161d239ed9f54815a52083dc75c259a3c9",
+        "bytes": 49498,
+        "file": "17df03c4d40c5bb4faf288c7bc1444161d239ed9f54815a52083dc75c259a3c9.glsl"
+      },
+      {
+        "index": 20,
+        "hash": "cda41e01bb702ebcb5d523b55636765aca040afc26c7032004b7748b81a75ce0",
+        "bytes": 20965,
+        "file": "cda41e01bb702ebcb5d523b55636765aca040afc26c7032004b7748b81a75ce0.glsl"
+      },
+      {
+        "index": 21,
+        "hash": "2a3367de0f983c65bed54cc228715fcf2369cbb899f79fc0f5c9e986713766cd",
+        "bytes": 49510,
+        "file": "2a3367de0f983c65bed54cc228715fcf2369cbb899f79fc0f5c9e986713766cd.glsl"
+      },
+      {
+        "index": 22,
+        "hash": "09c5daeafba4496a220cadad8ef0dc54a3c509bcb50ce4d328892e281032b0d6",
+        "bytes": 11194,
+        "file": "09c5daeafba4496a220cadad8ef0dc54a3c509bcb50ce4d328892e281032b0d6.glsl"
+      },
+      {
+        "index": 23,
+        "hash": "e1900f629126de166229bc974d044eb79d2d366c9b69b5d75724a4baa4e1ecb5",
+        "bytes": 20981,
+        "file": "e1900f629126de166229bc974d044eb79d2d366c9b69b5d75724a4baa4e1ecb5.glsl"
+      },
+      {
+        "index": 24,
+        "hash": "727eb0645451c212d6128f5738189bf4bed5a59e0285fa9b93cc470e242ad846",
+        "bytes": 10034,
+        "file": "727eb0645451c212d6128f5738189bf4bed5a59e0285fa9b93cc470e242ad846.glsl"
+      },
+      {
+        "index": 25,
+        "hash": "31ef2ad9768e7e18f7e10b0db4a38c52d3d87819da7154e043f99e80dc1612d3",
+        "bytes": 10282,
+        "file": "31ef2ad9768e7e18f7e10b0db4a38c52d3d87819da7154e043f99e80dc1612d3.glsl"
+      },
+      {
+        "index": 26,
+        "hash": "aa4731fe3516ce9e2fe0575217b61fe17d2ac0fc2658621d5fb09fd7dd1327ca",
+        "bytes": 11097,
+        "file": "aa4731fe3516ce9e2fe0575217b61fe17d2ac0fc2658621d5fb09fd7dd1327ca.glsl"
+      },
+      {
+        "index": 27,
+        "hash": "03fb3117391afc35884f140b2af46f927c053402d1bbe5013b62e029cfcddf2e",
+        "bytes": 827,
+        "file": "03fb3117391afc35884f140b2af46f927c053402d1bbe5013b62e029cfcddf2e.glsl"
+      },
+      {
+        "index": 28,
+        "hash": "27ade07880143d227b39e1e68bdd9cdeba4dfec36710932f8c5a6f3faad3380c",
+        "bytes": 10756,
+        "file": "27ade07880143d227b39e1e68bdd9cdeba4dfec36710932f8c5a6f3faad3380c.glsl"
+      },
+      {
+        "index": 29,
+        "hash": "4efac6de83a6c170c43d38374ee004b4ee9ed281bfdeb97585d03bfd90c782c4",
+        "bytes": 10636,
+        "file": "4efac6de83a6c170c43d38374ee004b4ee9ed281bfdeb97585d03bfd90c782c4.glsl"
+      },
+      {
+        "index": 30,
+        "hash": "ef64c27ac3c0d7a0cf9ad799c6d8f214fc1c69071048f295cb0dbcd305f483f7",
+        "bytes": 21994,
+        "file": "ef64c27ac3c0d7a0cf9ad799c6d8f214fc1c69071048f295cb0dbcd305f483f7.glsl"
+      },
+      {
+        "index": 31,
+        "hash": "1f2eea2cb1223e7077ccc96008d4de7d5574911a2f3dbee3e15e50c6e08f2620",
+        "bytes": 11020,
+        "file": "1f2eea2cb1223e7077ccc96008d4de7d5574911a2f3dbee3e15e50c6e08f2620.glsl"
+      },
+      {
+        "index": 32,
+        "hash": "5ea3ed74b1cb1816122ac5fa60e080aea283c0f57a9cb3aa40fa77cc75e0b1f2",
+        "bytes": 490,
+        "file": "5ea3ed74b1cb1816122ac5fa60e080aea283c0f57a9cb3aa40fa77cc75e0b1f2.glsl"
+      },
+      {
+        "index": 33,
+        "hash": "bb345061ef6301f008bed06444030104a24a98f0f5f5d008b9befc3c35be28ab",
+        "bytes": 20936,
+        "file": "bb345061ef6301f008bed06444030104a24a98f0f5f5d008b9befc3c35be28ab.glsl"
+      },
+      {
+        "index": 34,
+        "hash": "a9243491eaeb39b24fde4f47ddb6d3e8e650d9b426285889929b0dea66284186",
+        "bytes": 42927,
+        "file": "a9243491eaeb39b24fde4f47ddb6d3e8e650d9b426285889929b0dea66284186.glsl"
+      },
+      {
+        "index": 35,
+        "hash": "5319e07fca7eac0cde44acbca55e8112a86fa291a1b2ef69464d6b08920ee7a2",
+        "bytes": 27089,
+        "file": "5319e07fca7eac0cde44acbca55e8112a86fa291a1b2ef69464d6b08920ee7a2.glsl"
+      },
+      {
+        "index": 36,
+        "hash": "821ed296a2c64f0dd3f41b72769cd700007b53f98584428368a1621ff2e8d54a",
+        "bytes": 27209,
+        "file": "821ed296a2c64f0dd3f41b72769cd700007b53f98584428368a1621ff2e8d54a.glsl"
+      },
+      {
+        "index": 37,
+        "hash": "8b96b53253e7ab484f7242ab31691aa8aa79b5be1e5c2c35a9564539e85a1874",
+        "bytes": 13833,
+        "file": "8b96b53253e7ab484f7242ab31691aa8aa79b5be1e5c2c35a9564539e85a1874.glsl"
+      },
+      {
+        "index": 38,
+        "hash": "06267500960309445f97cd6a060dd91de4d9ac5f6406e6507ccbf65673833a85",
+        "bytes": 4275,
+        "file": "06267500960309445f97cd6a060dd91de4d9ac5f6406e6507ccbf65673833a85.glsl"
+      },
+      {
+        "index": 39,
+        "hash": "83111a018bfd5d6a3ce0fccc15e18b12d76b561a29cb41249840e97a7d270697",
+        "bytes": 7252,
+        "file": "83111a018bfd5d6a3ce0fccc15e18b12d76b561a29cb41249840e97a7d270697.glsl"
+      },
+      {
+        "index": 40,
+        "hash": "b360ce6ab31f054de1b5e73634b42ba190f6e2629d4f574f459ce15edb9f4754",
+        "bytes": 4814,
+        "file": "b360ce6ab31f054de1b5e73634b42ba190f6e2629d4f574f459ce15edb9f4754.glsl"
+      },
+      {
+        "index": 41,
+        "hash": "e155785d9527e8632aba02beea1f811ab28362bb87415c83d88c4ec2b8333311",
+        "bytes": 14667,
+        "file": "e155785d9527e8632aba02beea1f811ab28362bb87415c83d88c4ec2b8333311.glsl"
+      },
+      {
+        "index": 42,
+        "hash": "2edfa695430535c0d20e59a15eae435ab8dfa78b7ab1465b3c5e7421e47672b3",
+        "bytes": 79593,
+        "file": "2edfa695430535c0d20e59a15eae435ab8dfa78b7ab1465b3c5e7421e47672b3.glsl"
+      },
+      {
+        "index": 43,
+        "hash": "76eba884b1f57704955e331f495b412afe5001cd891f3203cb5bb6510f6da8fc",
+        "bytes": 79703,
+        "file": "76eba884b1f57704955e331f495b412afe5001cd891f3203cb5bb6510f6da8fc.glsl"
+      },
+      {
+        "index": 44,
+        "hash": "081001ed868a4c006ececbd75f059a12b0413b2b1ae47bb11d6352df711a2a68",
+        "bytes": 79652,
+        "file": "081001ed868a4c006ececbd75f059a12b0413b2b1ae47bb11d6352df711a2a68.glsl"
+      },
+      {
+        "index": 45,
+        "hash": "203cda8442aa0046435708f8dc00301b76a607cd917205bf981ab7dadbb3fdee",
+        "bytes": 14701,
+        "file": "203cda8442aa0046435708f8dc00301b76a607cd917205bf981ab7dadbb3fdee.glsl"
+      },
+      {
+        "index": 46,
+        "hash": "a9e9c13485b29ee9c074fdeeb5411225b903abec73c45ed4c98f70884a809157",
+        "bytes": 79565,
+        "file": "a9e9c13485b29ee9c074fdeeb5411225b903abec73c45ed4c98f70884a809157.glsl"
+      },
+      {
+        "index": 47,
+        "hash": "5eb94e6b9903f100bce47a3cc31f96fbcafa917668cd988a44a0c81820b7be84",
+        "bytes": 79728,
+        "file": "5eb94e6b9903f100bce47a3cc31f96fbcafa917668cd988a44a0c81820b7be84.glsl"
+      },
+      {
+        "index": 48,
+        "hash": "b990db352835523aebdd57dbea7f91f57461baa09d11f7babac07da6cfac2fbe",
+        "bytes": 15666,
+        "file": "b990db352835523aebdd57dbea7f91f57461baa09d11f7babac07da6cfac2fbe.glsl"
+      },
+      {
+        "index": 49,
+        "hash": "59efb3992912aa4ef9eff499e20eb6b00d96f9206d218aa39259034aefc928df",
+        "bytes": 79958,
+        "file": "59efb3992912aa4ef9eff499e20eb6b00d96f9206d218aa39259034aefc928df.glsl"
+      },
+      {
+        "index": 50,
+        "hash": "ebb91ce1f300e4fb273dd7a03aa3b6a681a12bb49b66b56c89934777de346843",
+        "bytes": 80068,
+        "file": "ebb91ce1f300e4fb273dd7a03aa3b6a681a12bb49b66b56c89934777de346843.glsl"
+      },
+      {
+        "index": 51,
+        "hash": "8ea7e5e3e1fc14b21a35cf7a8738194a098b9391ff0e8fb3a99c832954980d53",
+        "bytes": 80017,
+        "file": "8ea7e5e3e1fc14b21a35cf7a8738194a098b9391ff0e8fb3a99c832954980d53.glsl"
+      },
+      {
+        "index": 52,
+        "hash": "0944b33fc8fdda06e21c233f96e845c106e666142ce5981ad9612fcf4c74ddba",
+        "bytes": 15700,
+        "file": "0944b33fc8fdda06e21c233f96e845c106e666142ce5981ad9612fcf4c74ddba.glsl"
+      },
+      {
+        "index": 53,
+        "hash": "a2323a4e60fb464114146de143ea436ae2131dea67700aa4be47c1884fc1c735",
+        "bytes": 79930,
+        "file": "a2323a4e60fb464114146de143ea436ae2131dea67700aa4be47c1884fc1c735.glsl"
+      },
+      {
+        "index": 54,
+        "hash": "f10354c1a5d8b46eb2d34597466c9597db58159076f1e29727aba4949ec8836e",
+        "bytes": 80093,
+        "file": "f10354c1a5d8b46eb2d34597466c9597db58159076f1e29727aba4949ec8836e.glsl"
+      },
+      {
+        "index": 55,
+        "hash": "1b9071fea3865c2c9cb7d8b2f4841cdf2b9b80ed9506d37bded89aec1b7eeca1",
+        "bytes": 15685,
+        "file": "1b9071fea3865c2c9cb7d8b2f4841cdf2b9b80ed9506d37bded89aec1b7eeca1.glsl"
+      },
+      {
+        "index": 56,
+        "hash": "a276ac31d2ddb2ae343c1d4737a563803776a5b2bf50cd3fed9662a0caea57c1",
+        "bytes": 86362,
+        "file": "a276ac31d2ddb2ae343c1d4737a563803776a5b2bf50cd3fed9662a0caea57c1.glsl"
+      },
+      {
+        "index": 57,
+        "hash": "b64276489baf51b707bd42a339cfb9d187ab7155c5f45b9c5ea85d4a2e515ce5",
+        "bytes": 86472,
+        "file": "b64276489baf51b707bd42a339cfb9d187ab7155c5f45b9c5ea85d4a2e515ce5.glsl"
+      },
+      {
+        "index": 58,
+        "hash": "d58e228e09dfc41084ee8aded9add79a54818c179adfdf6883b728b480daa3ee",
+        "bytes": 86421,
+        "file": "d58e228e09dfc41084ee8aded9add79a54818c179adfdf6883b728b480daa3ee.glsl"
+      },
+      {
+        "index": 59,
+        "hash": "33e0e6de1e11c9c5f3dfee25c29fb9ef944d62a132d4d78521729b13c8d07b2f",
+        "bytes": 15719,
+        "file": "33e0e6de1e11c9c5f3dfee25c29fb9ef944d62a132d4d78521729b13c8d07b2f.glsl"
+      },
+      {
+        "index": 60,
+        "hash": "eb19c38bbce1a2763a145fdbb182caa2efca16b0ec3474cbe123d3f06c44cbb7",
+        "bytes": 86334,
+        "file": "eb19c38bbce1a2763a145fdbb182caa2efca16b0ec3474cbe123d3f06c44cbb7.glsl"
+      },
+      {
+        "index": 61,
+        "hash": "00ce45164eda0f50fd532f29ebd679a06ff9cbf804a43eea379f5d059aaa2dd5",
+        "bytes": 86497,
+        "file": "00ce45164eda0f50fd532f29ebd679a06ff9cbf804a43eea379f5d059aaa2dd5.glsl"
+      }
+    ],
+    "snapshots": [],
+    "errors": [],
+    "sourceBytes": 3750786,
+    "overflow": false,
+    "firstAssetMode": "matching-GI",
+    "finished": 67983.19999999553,
+    "resources": [
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css",
+        "start": 9.5,
+        "duration": 5.5999999940395355,
+        "encoded": 30710,
+        "decoded": 30710,
+        "initiator": "link"
+      },
+      {
+        "name": "http://localhost:8093/demo/pilot.css",
+        "start": 9.599999994039536,
+        "duration": 6.9000000059604645,
+        "encoded": 741,
+        "decoded": 741,
+        "initiator": "link"
+      },
+      {
+        "name": "http://localhost:8093/demo/pilot-base.js",
+        "start": 9.699999995529652,
+        "duration": 6.800000004470348,
+        "encoded": 121,
+        "decoded": 121,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Cesium.js",
+        "start": 9.699999995529652,
+        "duration": 79.70000000298023,
+        "encoded": 16083504,
+        "decoded": 16083504,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/demo/pilot-host.js",
+        "start": 9.799999997019768,
+        "duration": 7.100000001490116,
+        "encoded": 5307,
+        "decoded": 5307,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/LumenSession.js",
+        "start": 198.89999999850988,
+        "duration": 1.6000000014901161,
+        "encoded": 47950,
+        "decoded": 47950,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/session-requests.js",
+        "start": 229.5,
+        "duration": 2.6999999955296516,
+        "encoded": 2748,
+        "decoded": 2748,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/resource-budget.js",
+        "start": 229.5,
+        "duration": 3.0999999940395355,
+        "encoded": 3816,
+        "decoded": 3816,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/gltf-container.js",
+        "start": 229.5,
+        "duration": 3.2999999970197678,
+        "encoded": 4042,
+        "decoded": 4042,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/session-diagnostics.js",
+        "start": 229.5,
+        "duration": 3.399999998509884,
+        "encoded": 6845,
+        "decoded": 6845,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/pilot-resource-plan.js",
+        "start": 229.59999999403954,
+        "duration": 3.8000000044703484,
+        "encoded": 771,
+        "decoded": 771,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/frozen-resources.js",
+        "start": 229.59999999403954,
+        "duration": 3.5,
+        "encoded": 14224,
+        "decoded": 14224,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/session-resources.js",
+        "start": 229.59999999403954,
+        "duration": 3.9000000059604645,
+        "encoded": 6219,
+        "decoded": 6219,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/LumenTilesAdapter.js",
+        "start": 229.69999999552965,
+        "duration": 4.300000004470348,
+        "encoded": 3275,
+        "decoded": 3275,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/local-dataset.js",
+        "start": 229.69999999552965,
+        "duration": 4,
+        "encoded": 11847,
+        "decoded": 11847,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/gltf.js",
+        "start": 235,
+        "duration": 1,
+        "encoded": 11521,
+        "decoded": 11521,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/math.js",
+        "start": 236.59999999403954,
+        "duration": 0.9000000059604645,
+        "encoded": 1421,
+        "decoded": 1421,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/approximateTerrainHeights.json",
+        "start": 265.8999999985099,
+        "duration": 1.6000000014901161,
+        "encoded": 299471,
+        "decoded": 299471,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/dataset.json",
+        "start": 268.3999999985099,
+        "duration": 1.1000000014901161,
+        "encoded": 5027,
+        "decoded": 5027,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/IAU2006_XYS/IAU2006_XYS_18.json",
+        "start": 273.59999999403954,
+        "duration": 1,
+        "encoded": 65310,
+        "decoded": 65310,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Images/ion-credit.png",
+        "start": 337.69999999552965,
+        "duration": 2,
+        "encoded": 6028,
+        "decoded": 6028,
+        "initiator": "img"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/parent.glb",
+        "start": 368,
+        "duration": 2.5,
+        "encoded": 391328,
+        "decoded": 391328,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_px.jpg",
+        "start": 372,
+        "duration": 1.5999999940395355,
+        "encoded": 122746,
+        "decoded": 122746,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_mx.jpg",
+        "start": 372.09999999403954,
+        "duration": 21.700000002980232,
+        "encoded": 118775,
+        "decoded": 118775,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_py.jpg",
+        "start": 372.19999999552965,
+        "duration": 3.399999998509884,
+        "encoded": 152999,
+        "decoded": 152999,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_my.jpg",
+        "start": 372.29999999701977,
+        "duration": 3.399999998509884,
+        "encoded": 152501,
+        "decoded": 152501,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_pz.jpg",
+        "start": 372.29999999701977,
+        "duration": 3.5,
+        "encoded": 152537,
+        "decoded": 152537,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/SkyBox/tycho2t3_80_mz.jpg",
+        "start": 372.3999999985099,
+        "duration": 3.899999998509884,
+        "encoded": 167980,
+        "decoded": 167980,
+        "initiator": "xmlhttprequest"
+      },
+      {
+        "name": "http://localhost:8093/cesium-1.146/Build/CesiumUnminified/Assets/Textures/moonSmall.jpg",
+        "start": 372.59999999403954,
+        "duration": 3.600000001490116,
+        "encoded": 18196,
+        "decoded": 18196,
+        "initiator": "img"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/basalt.glb",
+        "start": 375.79999999701977,
+        "duration": 1.3999999985098839,
+        "encoded": 25892,
+        "decoded": 25892,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/limestone.gltf",
+        "start": 380.3999999985099,
+        "duration": 2.399999998509884,
+        "encoded": 342600,
+        "decoded": 342600,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/plaster.glb",
+        "start": 385.19999999552965,
+        "duration": 2.399999998509884,
+        "encoded": 49252,
+        "decoded": 49252,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/terracotta.gltf",
+        "start": 400,
+        "duration": 1.3999999985098839,
+        "encoded": 6478,
+        "decoded": 6478,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/oak.glb",
+        "start": 404.19999999552965,
+        "duration": 1.3000000044703484,
+        "encoded": 39600,
+        "decoded": 39600,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/emitter.gltf",
+        "start": 532.6999999955297,
+        "duration": 1.5,
+        "encoded": 6369,
+        "decoded": 6369,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/blue-instance.glb",
+        "start": 594.5,
+        "duration": 6.5,
+        "encoded": 4816,
+        "decoded": 4816,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/alpha-mask.glb",
+        "start": 602.3999999985099,
+        "duration": 2.6999999955296516,
+        "encoded": 2496,
+        "decoded": 2496,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-0.glb",
+        "start": 608,
+        "duration": 1.5,
+        "encoded": 25900,
+        "decoded": 25900,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-1.glb",
+        "start": 615.5,
+        "duration": 2.0999999940395355,
+        "encoded": 258788,
+        "decoded": 258788,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-2.glb",
+        "start": 635.7999999970198,
+        "duration": 3.100000001490116,
+        "encoded": 49260,
+        "decoded": 49260,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-3.glb",
+        "start": 646.2999999970198,
+        "duration": 1.5,
+        "encoded": 4824,
+        "decoded": 4824,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-4.glb",
+        "start": 652.3999999985099,
+        "duration": 1.6999999955296516,
+        "encoded": 39608,
+        "decoded": 39608,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-5.glb",
+        "start": 655.5999999940395,
+        "duration": 2.600000001490116,
+        "encoded": 4720,
+        "decoded": 4720,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-6.glb",
+        "start": 660.3999999985099,
+        "duration": 1.5,
+        "encoded": 4828,
+        "decoded": 4828,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tile-7.glb",
+        "start": 663.2999999970198,
+        "duration": 1.2000000029802322,
+        "encoded": 2492,
+        "decoded": 2492,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/limestone.bin",
+        "start": 667.0999999940395,
+        "duration": 1.3000000044703484,
+        "encoded": 62592,
+        "decoded": 62592,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/terracotta.bin",
+        "start": 671.6999999955297,
+        "duration": 2.899999998509884,
+        "encoded": 1152,
+        "decoded": 1152,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/emitter.bin",
+        "start": 675.8999999985099,
+        "duration": 2.5,
+        "encoded": 1152,
+        "decoded": 1152,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/gallery-mineral.png",
+        "start": 679.3999999985099,
+        "duration": 1.1999999955296516,
+        "encoded": 2987,
+        "decoded": 2987,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/fixtures/local-pilot/tileset.json",
+        "start": 682.1999999955297,
+        "duration": 1.1000000014901161,
+        "encoded": 3523,
+        "decoded": 3523,
+        "initiator": "fetch"
+      },
+      {
+        "name": "http://localhost:8093/lumen/gpu-worker.js",
+        "start": 1742,
+        "duration": -127.60000000149012,
+        "encoded": 9517,
+        "decoded": 9517,
+        "initiator": "other"
+      },
+      {
+        "name": "http://localhost:8093/lumen/gltf.js",
+        "start": 1742.6999999955297,
+        "duration": 1.6000000014901161,
+        "encoded": 11521,
+        "decoded": 11521,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/bvh.js",
+        "start": 1742.7999999970198,
+        "duration": 1.8999999985098839,
+        "encoded": 9282,
+        "decoded": 9282,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/surface-radiance-layout.js",
+        "start": 1742.8999999985099,
+        "duration": 1.6999999955296516,
+        "encoded": 3487,
+        "decoded": 3487,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/math.js",
+        "start": 1745.7999999970198,
+        "duration": 0.8999999985098839,
+        "encoded": 1421,
+        "decoded": 1421,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/gltf-container.js",
+        "start": 1745.8999999985099,
+        "duration": 1.1000000014901161,
+        "encoded": 4042,
+        "decoded": 4042,
+        "initiator": "script"
+      },
+      {
+        "name": "http://localhost:8093/lumen/local-dataset.js",
+        "start": 1745.8999999985099,
+        "duration": 1.2999999970197678,
+        "encoded": 11847,
+        "decoded": 11847,
+        "initiator": "script"
+      }
+    ],
+    "workerPreparation": {
+      "persistentBytes": 19664,
+      "strategy": "sah",
+      "bins": 12,
+      "maxDepth": 10,
+      "triangles": 998,
+      "nodes": 379,
+      "queries": 0,
+      "unknown": 0,
+      "alphaRejected": 0,
+      "buildMilliseconds": 11,
+      "tieRankOffset": 998,
+      "tieRankBytes": 4000,
+      "rankAndVertexPackMilliseconds": 4.200000002980232,
+      "cpuGeometryBytes": 94484,
+      "cpuRetainedBytes": 114148,
+      "typedPreparationBytes": 2234472,
+      "prepareMilliseconds": 16.399999998509884
+    },
+    "extensions": [
+      {
+        "parallel": true,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "buffer": [
+          1920,
+          1080
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "shellInteractive": 339.09999999403954,
+    "firstSceneFrame": 531.3999999985099,
+    "firstAssetFrame": 67300.59999999404,
+    "firstAssetMode": "matching-GI",
+    "firstNewGIFrame": 67300.59999999404,
+    "targetFGFrame": 67910.69999999553,
+    "inputCount": 47,
+    "inputP95": 56119.79999999702,
+    "inputMax": 56336.59999999404,
+    "maxMainThreadGap": 56343.69999999553,
+    "programs": 48,
+    "livePrograms": 44,
+    "extensions": [
+      {
+        "parallel": true,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "buffer": [
+          1920,
+          1080
+        ]
+      }
+    ]
+  },
+  "checks": {
+    "shell": true,
+    "asset": false,
+    "gi": false,
+    "input": false,
+    "gap": false,
+    "fg": true,
+    "complete": true
+  },
+  "passed": false
+}
