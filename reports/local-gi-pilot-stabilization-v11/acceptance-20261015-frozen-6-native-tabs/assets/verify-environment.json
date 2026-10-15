@@ -1,0 +1,29 @@
+{
+  "tolerance": 0.025,
+  "checks": [
+    {
+      "name": "sphere: analytic directional irradiance; no energy growth",
+      "maximumError": 0.005319031076975733,
+      "passed": true
+    },
+    {
+      "name": "upper-hemisphere: analytic directional irradiance; no energy growth",
+      "maximumError": 0.017878325282171925,
+      "passed": true
+    },
+    {
+      "name": "root domain includes 200m blocker and retains historical 100m floor",
+      "maximum": 201.01999900009997,
+      "full": {
+        "status": "Hit",
+        "triangle": 0,
+        "u": 0.25,
+        "v": 0.5,
+        "distance": 200,
+        "backface": true
+      },
+      "passed": true
+    }
+  ],
+  "status": "passed"
+}

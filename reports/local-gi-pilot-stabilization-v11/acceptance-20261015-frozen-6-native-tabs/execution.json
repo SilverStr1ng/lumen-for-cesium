@@ -1,0 +1,68 @@
+{
+  "children": [
+    {
+      "name": "assets",
+      "command": "test:pilot:assets",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "lifecycle",
+      "command": "test:pilot:lifecycle",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 1200
+    },
+    {
+      "name": "equivalence",
+      "command": "test:pilot:equivalence",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 1800
+    },
+    {
+      "name": "quality",
+      "command": "test:pilot:quality",
+      "exitCode": 1,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 2400
+    },
+    {
+      "name": "runtime",
+      "command": "test:pilot:runtime",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 1800
+    },
+    {
+      "name": "performance",
+      "command": "benchmark:pilot",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 1200
+    },
+    {
+      "name": "deployment",
+      "command": "test:pilot:deployment",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 2400
+    },
+    {
+      "name": "soak",
+      "command": "test:pilot:soak",
+      "exitCode": 0,
+      "timedOut": false,
+      "cleanupFailed": false,
+      "timeoutSeconds": 2400
+    }
+  ]
+}

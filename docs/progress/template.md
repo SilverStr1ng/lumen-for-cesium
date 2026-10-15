@@ -11,6 +11,8 @@
 
 Local GI 试点分别报告 assets、session-lifecycle、tiles-residency、resource、query-quality、final-image-quality、temporal、performance、relight-visible、soak、deployment。基础与增强档分别给出40案例中的各自分母、区域误差/覆盖/Unknown/回退；原物理目标参考保留，legacy对照仅用于归因。等待实际有效FG新epoch及匹配world/revision/round，不能用postRender次数代替。
 
+实际像素诊断须将射线绑定首个渲染采集帧；各模式帧检查同一拥有者、发布revision/round、相机pose、投影及drawingBuffer。数值舍入保护与产品画质门限分别命名，给出实际运动拒绝反例，不以double位级噪声中断整张矩阵。网络取消保留原请求身份和错误；已验证内容分类须同requestId、当前会话scope/generation、完整字节重算SHA，缺字段或其他错误仍失败。
+
 ## 现在可以打开
 
 `npm run setup` → `npm run build` → `npm start`。
@@ -44,7 +46,7 @@ Local GI 试点分别报告 assets、session-lifecycle、tiles-residency、resou
 
 Local GI 另列：唯一CPU/GPU拥有字节、预留与替换峰值、独立GL存活/遗漏观察及其范围；固定64MiB与实际Auto接收尺寸/样本。CPU发布、渲染像素诊断、桌面合成器/光子延迟分开。计时仅统计测量帧，审计disjoint和查询收尾，不把暂停采样窗口用于活动性能认证。
 
-长期证据包含真实墙钟时长、Scene/FG推进、20次替换、50次LOD/卸载转身、改灯及实际后台恢复。说明浏览器是否有界面、焦点仿真是否关闭；短smoke仍为not-run。部署列出clean setup/build/serve、源码及发布字节比对、根/非根路径、同源Worker/纹理和CSP，不关闭浏览器安全开关。
+长期证据包含真实墙钟时长、Scene/FG推进、20次替换、50次LOD/卸载转身、改灯及实际后台恢复。记录实际浏览器、renderer、drawing buffer、启动参数，以及焦点仿真/后台节流状态；原生标签页恢复与桌面窗口遮挡/OS合成器恢复分别报告，前者不能认证后者。说明浏览器是否有界面；短smoke仍为not-run。部署列出clean setup/build/serve、源码及发布字节比对、根/非根路径、同源Worker/纹理和CSP，不关闭浏览器安全开关。
 
 若有缓存，另列地址/来源、有限反弹代、初始化、改灯、定格、目标样本收敛、worker布局CPU、GL提交CPU与GPU各代。全帧、组件、跨帧预计算分开；source/revision不等价窗口不称纯开销。临时克隆、代际图像、快照lease、查询峰值纳入原附加预算。
 

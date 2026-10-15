@@ -1,0 +1,85 @@
+# R12 · 201fa16 独立画质明细
+
+冻结源码 `201fa164c9cc5dcab9f806d3ddde0bea9185f0f6`，实际1920×1080，独立physical参考8192样本，三轮、曝光1、阴影2048。保留原40案例、固定像素网格、所有CPU命中区域分母。增强档等待有效FG新epoch；同world/revision/round采集。
+
+query≤12%、实际使用E≤20%，每个资产区域分别应用；physical仍是目标，legacy只用于归因。通过数不能用整体平均值代替。原始版本/构建/资产/配置及逐点值见[quality.json](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/quality.json)。该画质对象的状态为 **failed**；不表示尚在运行的其他必需关卡已经完成。
+
+## 40案例
+
+| 显示/档位/光照/视角 | 分母 | query | 最终E | E绝对RMSE | FG点数 | 未通过区域 | 结论 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| [models-baseline-day-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-day-overview.json) | 9 | 12.39% | 12.37% | 0.07237 | 0 | plaster(2) | failed |
+| [models-baseline-day-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-day-courtyard.json) | 24 | 34.49% | 34.46% | 0.16355 | 0 | plaster(9) | failed |
+| [models-baseline-day-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-day-skylight.json) | 23 | 76.32% | 76.28% | 0.15017 | 0 | plaster(10), emitter(2), limestone(7), oak(1), alpha-mask(1), basalt(2) | failed |
+| [models-baseline-day-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-day-doorway.json) | 24 | 6.72% | 6.72% | 0.03713 | 0 | emitter(1) | failed |
+| [models-baseline-day-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-day-emitter.json) | 24 | 63.48% | 63.46% | 0.19024 | 0 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [models-baseline-night-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-night-overview.json) | 9 | 3.72% | 3.70% | 0.00487 | 0 | — | passed |
+| [models-baseline-night-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-night-courtyard.json) | 24 | 12.49% | 12.46% | 0.01228 | 0 | plaster(9), alpha-mask(1) | failed |
+| [models-baseline-night-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-night-skylight.json) | 23 | 29.37% | 29.37% | 0.04149 | 0 | plaster(10), emitter(2), alpha-mask(1), basalt(2) | failed |
+| [models-baseline-night-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-night-doorway.json) | 24 | 14.08% | 14.06% | 0.01574 | 0 | plaster(17), emitter(1), alpha-mask(1) | failed |
+| [models-baseline-night-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-baseline-night-emitter.json) | 24 | 47.70% | 47.66% | 0.13417 | 0 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [models-enhanced-day-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-day-overview.json) | 9 | 3.64% | 2.46% | 0.01438 | 9 | — | passed |
+| [models-enhanced-day-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-day-courtyard.json) | 24 | 7.00% | 6.46% | 0.03065 | 24 | plaster(9), alpha-mask(1) | failed |
+| [models-enhanced-day-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-day-skylight.json) | 23 | 30.36% | 28.19% | 0.05551 | 22 | plaster(10), emitter(2), limestone(7), oak(1), alpha-mask(1), basalt(2) | failed |
+| [models-enhanced-day-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-day-doorway.json) | 24 | 5.55% | 4.74% | 0.02619 | 22 | emitter(1), alpha-mask(1), limestone(5) | failed |
+| [models-enhanced-day-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-day-emitter.json) | 24 | 23.21% | 22.15% | 0.06640 | 24 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [models-enhanced-night-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-night-overview.json) | 9 | 1.77% | 1.95% | 0.00256 | 9 | — | passed |
+| [models-enhanced-night-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-night-courtyard.json) | 24 | 4.29% | 4.10% | 0.00404 | 24 | plaster(9), alpha-mask(1) | failed |
+| [models-enhanced-night-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-night-skylight.json) | 23 | 26.48% | 23.92% | 0.03380 | 22 | plaster(10), emitter(2), limestone(7), alpha-mask(1), basalt(2) | failed |
+| [models-enhanced-night-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-night-doorway.json) | 24 | 13.93% | 11.60% | 0.01299 | 22 | plaster(17), emitter(1), alpha-mask(1) | failed |
+| [models-enhanced-night-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/models-enhanced-night-emitter.json) | 24 | 18.95% | 17.45% | 0.04914 | 24 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [tiles-baseline-day-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-day-overview.json) | 9 | 12.39% | 12.37% | 0.07237 | 0 | plaster(2) | failed |
+| [tiles-baseline-day-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-day-courtyard.json) | 24 | 34.49% | 34.46% | 0.16355 | 0 | plaster(9) | failed |
+| [tiles-baseline-day-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-day-skylight.json) | 23 | 76.32% | 76.28% | 0.15017 | 0 | plaster(10), emitter(2), limestone(7), oak(1), alpha-mask(1), basalt(2) | failed |
+| [tiles-baseline-day-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-day-doorway.json) | 24 | 6.72% | 6.72% | 0.03713 | 0 | emitter(1) | failed |
+| [tiles-baseline-day-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-day-emitter.json) | 24 | 63.48% | 63.46% | 0.19024 | 0 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [tiles-baseline-night-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-night-overview.json) | 9 | 3.72% | 3.70% | 0.00487 | 0 | — | passed |
+| [tiles-baseline-night-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-night-courtyard.json) | 24 | 12.49% | 12.46% | 0.01228 | 0 | plaster(9), alpha-mask(1) | failed |
+| [tiles-baseline-night-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-night-skylight.json) | 23 | 29.37% | 29.37% | 0.04149 | 0 | plaster(10), emitter(2), alpha-mask(1), basalt(2) | failed |
+| [tiles-baseline-night-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-night-doorway.json) | 24 | 14.08% | 14.06% | 0.01574 | 0 | plaster(17), emitter(1), alpha-mask(1) | failed |
+| [tiles-baseline-night-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-baseline-night-emitter.json) | 24 | 47.70% | 47.66% | 0.13417 | 0 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [tiles-enhanced-day-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-day-overview.json) | 9 | 3.64% | 2.53% | 0.01481 | 9 | — | passed |
+| [tiles-enhanced-day-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-day-courtyard.json) | 24 | 7.00% | 6.56% | 0.03112 | 24 | plaster(9), alpha-mask(1) | failed |
+| [tiles-enhanced-day-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-day-skylight.json) | 23 | 30.36% | 28.18% | 0.05547 | 22 | plaster(10), emitter(2), limestone(7), oak(1), alpha-mask(1), basalt(2) | failed |
+| [tiles-enhanced-day-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-day-doorway.json) | 24 | 5.55% | 4.71% | 0.02604 | 22 | emitter(1), alpha-mask(1), limestone(5) | failed |
+| [tiles-enhanced-day-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-day-emitter.json) | 24 | 23.21% | 21.97% | 0.06587 | 24 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+| [tiles-enhanced-night-overview](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-night-overview.json) | 9 | 1.77% | 2.23% | 0.00293 | 9 | — | passed |
+| [tiles-enhanced-night-courtyard](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-night-courtyard.json) | 24 | 4.29% | 4.05% | 0.00399 | 24 | plaster(9), alpha-mask(1) | failed |
+| [tiles-enhanced-night-skylight](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-night-skylight.json) | 23 | 26.48% | 23.54% | 0.03325 | 22 | plaster(10), emitter(2), limestone(7), alpha-mask(1), basalt(2) | failed |
+| [tiles-enhanced-night-doorway](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-night-doorway.json) | 24 | 13.93% | 11.64% | 0.01303 | 22 | plaster(17), emitter(1), alpha-mask(1) | failed |
+| [tiles-enhanced-night-emitter](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/quality/tiles-enhanced-night-emitter.json) | 24 | 18.95% | 17.64% | 0.04965 | 24 | plaster(7), emitter(8), limestone(7), basalt(2) | failed |
+
+## 区域分母及覆盖
+
+以下分母为该档20案例固定接收点总数，包含重复视角/光照观察，不代表唯一表面数量。最大NRMSE取单案例中的该区域；绝对RMSE使用所有该区域接收点。两种统计不混作同一分母。
+
+| 档位/区域 | 累计分母 | 观察案例 | FG覆盖点 | 最差query | 最差E | E绝对RMSE |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| baseline/plaster | 180 | 20 | 0 | 154.23% | 154.15% | 0.11803 |
+| baseline/limestone | 156 | 20 | 0 | 102.43% | 102.39% | 0.12260 |
+| baseline/terracotta | 4 | 4 | 0 | 0.97% | 0.96% | 0.00129 |
+| baseline/alpha-mask | 12 | 12 | 0 | 773.45% | 773.23% | 0.06760 |
+| baseline/emitter | 44 | 12 | 0 | 27.44% | 27.39% | 0.05669 |
+| baseline/oak | 4 | 4 | 0 | 21.34% | 21.30% | 0.01955 |
+| baseline/basalt | 16 | 8 | 0 | 25.57% | 25.59% | 0.09058 |
+| enhanced/plaster | 180 | 20 | 180 | 43.99% | 42.49% | 0.03391 |
+| enhanced/limestone | 156 | 20 | 144 | 22.09% | 22.39% | 0.02960 |
+| enhanced/terracotta | 4 | 4 | 4 | 0.15% | 1.98% | 0.00391 |
+| enhanced/alpha-mask | 12 | 12 | 12 | 107.57% | 111.56% | 0.01728 |
+| enhanced/emitter | 44 | 12 | 44 | 24.88% | 23.99% | 0.05236 |
+| enhanced/oak | 4 | 4 | 4 | 18.45% | 17.52% | 0.01592 |
+| enhanced/basalt | 16 | 8 | 16 | 30.09% | 26.46% | 0.09449 |
+
+基础档416点使用DDGI；增强档404/416点FG权重>0.5，12点保留code8几何兼容保护。两档GPU query Unknown与独立参考Unknown均为0。原40案例中的背景Miss独立列于原始数据，没有改作受支持接收点。增强档实际Auto接收尺寸384×216、32r，主画面1920×1080。
+
+## 三处代表失败点
+
+同方向8192样本GPU查询、32768样本physical/legacy参考，以及64方向的源项与独立余项替换，见[等价与归因](../../../reports/local-gi-pilot-stabilization-v11/acceptance-20261015-frozen-5/equivalence/equivalence.json)。四种几何表达998三角形，query最大差0，最终E在预定容差内。
+
+| 原案例/资产 | GPU8192均值RGB | physical32768 RGB | physical标准误RGB | legacy32768 RGB |
+| --- | --- | --- | --- | --- |
+| models-enhanced-day-overview/limestone | 0.67640, 0.73142, 0.77732 | 0.61594, 0.67254, 0.72497 | 0.00207, 0.00187, 0.00150 | 0.66237, 0.71844, 0.76710 |
+| models-enhanced-day-doorway/plaster | 0.23914, 0.16481, 0.09786 | 0.15479, 0.09648, 0.04750 | 0.00282, 0.00174, 0.00086 | 0.15487, 0.09653, 0.04752 |
+| tiles-enhanced-night-emitter/basalt | 0.84431, 0.52795, 0.26950 | 0.68029, 0.42776, 0.22031 | 0.00626, 0.00394, 0.00201 | 0.68037, 0.42781, 0.22034 |
+
+门洞与夜间发光区域中，命中表面的DDGI余项明显高于独立路径余项；overview的physical/legacy差异解释部分起点偏差。增加采样没有消除共同偏差，也不能据这三个点推断全部失败只由同一原因造成。原始天空/太阳/自发光/DDGI/独立余项分量与Unknown计数完整保留于归因JSON。

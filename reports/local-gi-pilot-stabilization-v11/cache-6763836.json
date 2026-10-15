@@ -1,0 +1,10 @@
+{
+  "head": "67638369841a1ff2a8dbecddcca37f4ac0962503",
+  "evidenceFilesMatched": 99,
+  "acceptanceSHA256": "baef4ff63cdad0eaa8219c7280965ff1b6e319ac5cc9ecab1d1765c35b9cd718",
+  "command": "node scripts/verify-r12.mjs --cached",
+  "exitCode": 1,
+  "status": "passed-negative-check",
+  "log": "file:///D:/Nothing/lumen-for-cesium/scripts/verify-r12.mjs:137\r\n      throw Error(\"Cached child gate did not pass: \" + directory);\r\n            ^\r\n\r\nError: Cached child gate did not pass: quality\r\n    at file:///D:/Nothing/lumen-for-cesium/scripts/verify-r12.mjs:137:13\r\n\r\nNode.js v24.19.0\r\n",
+  "scope": "Exact source/build/assets/configuration/recipe/HEAD and evidence cache validation still refuses failed quality; this is not a passing product acceptance."
+}
