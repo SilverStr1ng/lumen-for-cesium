@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN" data-display="models">
+  <meta charset="utf-8" /><title>Local GI · 多模型宿主</title>
+  <link rel="icon" href="data:," /><link
+    rel="stylesheet"
+    href="../cesium-1.146/Build/CesiumUnminified/Widgets/widgets.css"
+  /><link rel="stylesheet" href="pilot.css" />
+  <div id="view"></div>
+  <aside>
+    <h1>Local GI · 多模型</h1>
+    <p>八个独立资产，共享常驻静态 GI 世界。当前为待验收试点。</p>
+    <label
+      >公开配置
+      <select id="profile">
+        <option value="baseline">基础 DDGI</option>
+        <option value="enhanced">FG 增强 · Auto / 64MiB</option>
+        <option value="contact-experimental">
+          接触缓存实验 · 保留 R10 失败
+        </option>
+      </select></label
+    >
+    <button id="light">切换太阳并重照明</button
+    ><button id="replace">重新加载数据集</button
+    ><button id="failure">加载失败演练</button
+    ><button id="cancel">取消加载</button
+    ><button id="recreate">销毁并重建宿主</button>
+    <a href="pilot-tiles.html">进入独立 Tiles 宿主</a> ·
+    <a href="gallery.html">Gallery</a>
+    <pre id="status" aria-live="polite">准备中</pre>
+  </aside>
+  <script>
+    window.CESIUM_BASE_URL = new URL(
+      "../cesium-1.146/Build/CesiumUnminified/",
+      location.href,
+    ).href;
+  </script>
+  <script src="../cesium-1.146/Build/CesiumUnminified/Cesium.js"></script>
+  <script type="module" src="pilot-host.js"></script>
+</html>

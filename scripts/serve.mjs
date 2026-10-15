@@ -5,12 +5,17 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const port = Number(process.env.LUMEN_PORT ?? 8090);
+const base = (process.env.LUMEN_BASE_PATH ?? "").replace(/\/+$/, "");
+if (base && (!base.startsWith("/") || base.includes(".."))) {
+  throw new Error("LUMEN_BASE_PATH must be an absolute URL prefix");
+}
 const mime = {
   ".html": "text/html",
   ".js": "text/javascript",
   ".mjs": "text/javascript",
   ".json": "application/json",
   ".gltf": "model/gltf+json",
+  ".glb": "model/gltf-binary",
   ".bin": "application/octet-stream",
   ".css": "text/css",
   ".png": "image/png",
@@ -24,9 +29,17 @@ http
       let name = decodeURIComponent(
         new URL(req.url, "http://localhost").pathname,
       );
+      if (base) {
+        if (name !== base && !name.startsWith(base + "/")) {
+          res.writeHead(404);
+          res.end("Outside deployment prefix");
+          return;
+        }
+        name = name.slice(base.length) || "/";
+      }
       if (name === "/") {
         res.writeHead(302, {
-          Location: `/demo/index.html${new URL(req.url, "http://localhost").search}`,
+          Location: `${base}/demo/index.html${new URL(req.url, "http://localhost").search}`,
         });
         res.end();
         return;

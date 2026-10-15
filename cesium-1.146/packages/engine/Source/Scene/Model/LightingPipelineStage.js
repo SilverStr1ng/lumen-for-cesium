@@ -128,7 +128,10 @@ LightingPipelineStage.process = function (
         !defined(primitive.material.normalTexture) &&
         primitive.material.alphaMode !== "MASK";
       const id = curved
-          ? 4096 + registered.ballId
+          ? (frameState.lumen?.finalGather?.curvedSurfaceOwner(
+              model,
+              registered.ballId,
+            ) ?? 4096 + registered.ballId)
           : (frameState.lumen?.finalGather?.surfaceOwner(model, ownerKey) ??
             owners.map.get(ownerKey)),
         fg = () => frameState.lumen?.finalGather,
@@ -159,7 +162,10 @@ LightingPipelineStage.process = function (
         ],
         u_lumenFgSurfaceId: [
           "float",
-          () => (curved ? id : (fg()?.surfaceOwner(model, ownerKey) ?? id)),
+          () =>
+            curved
+              ? (fg()?.curvedSurfaceOwner(model, registered.ballId) ?? id)
+              : (fg()?.surfaceOwner(model, ownerKey) ?? id),
         ],
         u_lumenFgFallbackCode: ["float", () => fg()?.fallbackReason ?? 1],
         u_lumenReceiverSupported: [

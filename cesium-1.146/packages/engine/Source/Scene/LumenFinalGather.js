@@ -1,3 +1,4 @@
+import LumenReceiverOwners from "./LumenReceiverOwners.js";
 import destroyLumenResource from "./destroyLumenResource.js";
 import LumenGpuTimer from "./LumenGpuTimer.js";
 import {
@@ -42,7 +43,8 @@ const nearest = new Sampler({
  * Unsupported views/surfaces and resource failures use the existing DDGI. @private */
 class LumenFinalGather {
   get additionalOwnedBytes() {
-    let bytes = this.additionalSceneBytes ?? 0;
+    let bytes =
+      (this.additionalSceneBytes ?? 0) + (this._owners?.claims.byteLength ?? 0);
     for (const cache of this.lumen?.world?._surfaceCaches ?? []) {
       bytes += cache.additionalBytes;
     }
@@ -55,8 +57,7 @@ class LumenFinalGather {
     this.quality = "balanced";
     this.model = undefined;
     this.models = new Set();
-    this._surfaceOwners = new WeakMap();
-    this._nextSurfaceOwner = 1;
+    this._owners = new LumenReceiverOwners();
     this.maxMemoryBytes = 64 * 1048576;
     this.additionalSceneBytes = 0;
     this.maxRayInvocations = 16 * 1048576;
@@ -240,26 +241,18 @@ class LumenFinalGather {
     this.models = next;
     this.model = undefined;
     if (resetOwners) {
-      this._surfaceOwners = new WeakMap();
-      this._nextSurfaceOwner = 1;
+      this._owners = new LumenReceiverOwners();
     }
     this.scene.requestRender();
   }
+  get _nextSurfaceOwner() {
+    return this._owners?.next;
+  }
   surfaceOwner(model, primitive) {
-    let owners = this._surfaceOwners.get(model);
-    if (!owners) {
-      owners = new WeakMap();
-      this._surfaceOwners.set(model, owners);
-    }
-    if (!owners.has(primitive)) {
-      if (this._nextSurfaceOwner === 4096) this._nextSurfaceOwner = 8192;
-      if (this._nextSurfaceOwner >= 1048576)
-        throw new DeveloperError(
-          "Receiver owner namespace exhausted; replace dataset",
-        );
-      owners.set(primitive, this._nextSurfaceOwner++);
-    }
-    return owners.get(primitive);
+    return this._owners.surface(model, primitive);
+  }
+  curvedSurfaceOwner(model, ballId) {
+    return this._owners.curve(model, ballId);
   }
   supported(model, frameState) {
     return (
@@ -954,6 +947,7 @@ class LumenFinalGather {
     this._unregisterTimer();
     this._destroyed = true;
     this.models.clear();
+    this._owners = undefined;
     this.model = undefined;
     this.lumen = this.scene = undefined;
     return destroyLumenResource(this);

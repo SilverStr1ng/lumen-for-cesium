@@ -66,7 +66,7 @@ export function sourceVersion(extraFiles = []) {
           existsSync(dir)
             ? readdirSync(dir, { recursive: true })
                 .map((f) => dir + "/" + f.replaceAll("\\", "/"))
-                .filter((f) => /\.(gltf|bin|png|jpe?g|ktx2|json)$/.test(f))
+                .filter((f) => /\.(gltf|glb|bin|png|jpe?g|ktx2|json)$/.test(f))
             : [],
         )
         .sort()

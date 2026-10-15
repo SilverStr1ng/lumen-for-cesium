@@ -84,7 +84,12 @@ export function validateManifest(m) {
     Math.abs(anchor.latitude) > 90
   )
     throw Error("Finite geodetic anchor required");
-  if (!(m.gi?.spacing > 0) || m.gi.rays !== 128 || m.gi.bounces !== 3)
+  if (
+    !Number.isFinite(m.gi?.spacing) ||
+    !(m.gi.spacing > 0) ||
+    m.gi.rays !== 128 ||
+    m.gi.bounces !== 3
+  )
     throw Error("Pilot uses spacing>0 /128 rays /3 rounds");
   return m;
 }
@@ -118,6 +123,10 @@ export function auditGltf(g) {
         throw Error("Static uncompressed TRIANGLES required");
   for (const mesh of g.meshes ?? [])
     for (const p of mesh.primitives) {
+      if (p.attributes?.NORMAL === undefined)
+        throw Error(
+          "Pilot standard PBR triangles require normals; offline export missing normals",
+        );
       const a = g.accessors?.[p.attributes?.POSITION];
       if (
         !a ||
@@ -283,6 +292,7 @@ export async function loadDatasetGeometry(
     });
     progress("asset " + asset.id);
   }
+  if (!result.positions.length) throw Error("Dataset contains no triangles");
   if (result.materials.length > 65535 || result.positions.length > 9 * 200000)
     throw Error("Local dataset material/triangle budget exceeded");
   const counts = result.bounds
