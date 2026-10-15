@@ -1,85 +1,50 @@
-# R10 实现进度 · 2026-10-14
+# R11 Local GI 试点进度 · 2026-10-15
 
-静态表面缓存改善了原接收纹理的输入，并降低命中着色成本；最终显示像素仍有18/60案例失败，一轮缓存和完整性能也未达标。完整验收 **failed / recommended=false**。缓存保持显式实验候选。
+两个宿主、多资产 GLB/glTF 和有界 Tiles 代理已经可以运行；独立主画面画质仍未通过，故当前不是可投入使用的试点。`pilotReady=false`，不标记 recommended。本文是交付前检查点，未完成验收列为 not-run。
 
-分支 `feat/contact-transport-v9`；测试源码 `c0f2ed8aed8cd106b170f765c82ff490ba08afc5`。基线 `522201e5` / 原被测源码 `93b5f22` 保留。汇总器在 `c3ba35c` 补充真实子进程失败与完整性门禁；[更正记录](../../reports/contact-transport-v9/acceptance-20261014/rechecked-verification.json)核对其余源码、构建、资产和证据未变，GPU未重跑。原汇总不覆写。实际交付提交见此文 Git 历史。
+分支 `feat/local-gi-pilot-v10`；审查基线 `127d9ef39f48da7f51b35d2e156a34ec70c656ad`；宿主实现提交 `c071869`，资产实现提交 `306ab7d`。审查修复尚在复验；测试目录中的源码、构建及资产指纹定义各次实际测试对象，不能把开发阶段结果缓存认证为后续提交。
 
-## 现在可以使用
+## 可以打开和操作
 
-`npm run setup` → `npm run build` → `npm start`。
-[Ball Pool](http://localhost:8090/demo/ballpool.html) 仍默认即时参考；在“命中光照来源”选择“静态表面缓存”。也可[直接打开候选](http://localhost:8090/demo/ballpool.html?radianceSource=cache)。等待静态 GI 就绪后操作；播放/投球会失效旧局部 GI，暂停后点击“定格并更新 GI”。改灯和定格都需重新计算缓存。
+运行 `npm run setup`、`npm run build`、`npm start`，打开 [Models 宿主](http://localhost:8090/demo/pilot-models.html) 或 [Tiles 宿主](http://localhost:8090/demo/pilot-tiles.html)。两页实际使用同一 session 接口，没有复制 Ball Pool 状态机。等待状态 available，再切换基础 DDGI / FG Auto、改灯、重载或取消；故障按钮用于检查失败恢复。Tiles 页可切换父级与子级显示。接触缓存必须显式选择实验档，仍承担 R10 的失败。
 
-[证据展示页](http://localhost:8090/reports/contact-transport-v9/index.html) · [完整矩阵](../../reports/contact-transport-v9/acceptance-20261014/quality-cache/curved.json) · [总验收](../../reports/contact-transport-v9/acceptance-20261014/test-suite.json)。复现用 `npm run test:r10 -- --output=reports/contact-transport-v9/<新目录>`；失败非零，旧目录不可覆写。
+加载中暂时没有有效的新世界照明；提交后的显示、GI 世界、FG 快照与版本一起切换。Tiles 的 GI 来自同一清单的常驻代理，不随显示瓦片卸载消失。两个 LOD 复用同一几何，只改变分批显示，不声称网格简化加速或城市流式 GI。
 
-## 已完成与边界
+## 已完成、部分和未完成
 
-| 能力 | 状态与限制 |
+| 项目 | 当前状态与范围 |
 | --- | --- |
-| 同方向源项归因 | 原单/双球 day 接触点，1/2/3轮；天空/自发光/太阳/上一轮DDGI分开，独立路径余项替换；不是全部案例唯一根因证明 |
-| 受控起点修复 | 局部三角形误差包络、外扩ULP、仅排除源三角形；解析窄缝/斜面及真实GPU球地/双球通过；不声称任意退化几何证明 |
-| 静态表面候选 | 真实表面生成 S0/S1/S2，独立原 triangle+bary微片元；不复制DDGI，不提高3轮、不跨owner/面借用；有限空间/采样近似仍需验收 |
-| 生命周期与Auto | source token、geometry generation、requested/settled revision、最终分块取消、资源与销毁保护；总附加预算64MiB |
-| 既有渲染与采样 | Ng/Ns、线性E、历史失效、几何壁垒、IBL policy及生产无同步读回保留；未新增去噪器 |
-| 运动中完整多反弹GI | 未实现；播放仍为明确标注的物理预览，定格后一次静态世界重建 |
+| 安全替换入口 | 已实现先构造再退役；实际 Worker 构造、postMessage、404 与重试已有开发验证。新增显示异步错误处理正在复验 |
+| 多资产 | 8 项独立描述，共享一个局部世界；外部及嵌入图片、GLB、Y-up 实例、材质分组、透明裁切、全局 owner；纯资产与拒绝测试通过 |
+| 显示和 GI 一致性 | 同一冻结资源与双精度 ENU/局部变换；拒绝不支持的缩放、根/节点扩展。画质矩阵仍有失败，不能以资源一致宣称光照正确 |
+| 有界 Tiles | 两级 REPLACE 显示与常驻代理已实现；50 次 LOD、卸载转身和长期运行尚未形成最终验收 |
+| 薄 session 与两个宿主 | 已实现，开发运行与原生画布证据可用；干净安装、非根路径和部署限制尚需完整实跑 |
+| 设备与质量合同 | [Local GI v0.1](../product/local-gi-v0.1.md) 已冻结；原 query 12% / 主画面线性 E 20% 不变 |
+| 完整运动 GI、通用城市流式 GI、地形参与 | 未实现；不属于本次新增算法范围 |
 
-## 原接触点与全部关卡
+## 实际设备、画质与成本
 
-原单球 day/contact/seed0 球地区域，旧接收纹理重建误差 344.65%；受控起点+即时余项 339.03%；候选 physical 接收纹理重建 **3.61%**、query **4.10%**，绝对E RMSE **0.00352**。对同一 legacy 参考候选重建为 3.81%、query 3.31%；两种基准和原始点集都保留。这个接收尺寸结果不能代表主画面每个像素。
+实测环境：RTX 5080、Ryzen 7 9800X3D、Windows 11、Chrome 155、WebGL2/D3D11，实际 drawing buffer 1920×1080；默认阴影 2048、曝光 1、2m 网格、128 rays、3 轮。以下是开发候选结果，审查修复后尚需核对指纹并复验。
 
-归因限定原单/双球 day、同128方向：单球球地3轮即时误差338.56%，只替换相同第一命中的DDGI余项后6.46%；1轮20.32%不变，2轮430.95%→7.50%。这支持命中侧余项是这些点的主要限制，不证明全部案例只有这一原因。[源项与余项对照](../../reports/contact-transport-v9/acceptance-20261014/root-physical/root-cause-summary.json)保留天空、太阳、自发光、上一轮DDGI及独立路径。
+[独立画质矩阵](../../reports/local-gi-pilot-v10/quality-candidate-3/quality.json)：Models/Tiles × 基础/增强 × 日/夜 × 5 个视角，共 40 案例，**34 个失败**。按实际主画面像素射线寻找表面，使用独立 8192 样本有限路径参考，同时报告 query、实际使用 E、绝对误差及资产区域分母。部分视角整体误差通过，局部资产区域仍失败，不能删除这些失败来放行。前两次诊断脚本错误也保留，不作有效算法结果。
 
-原三轮接收纹理全部60案例：即时控制 48 个失败，候选 0 个失败。query12%、重建20%、原曝光/反弹/采样与区域分母不放宽。轮廓、球地、球球最差query分别8.62%、7.27%、3.97%，重建7.70%、7.29%、6.45%；区域平均FG权重最低77.14%、75.00%、85.81%。这不是区域全部覆盖；原分母保留，未用整体覆盖替代区域误差。Unknown/缺失缓存/即时回退计数均0；使用缓存命中29375，真实miss/已知黑1230。[区域矩阵](../../reports/contact-transport-v9/acceptance-20261014/quality-cache/curved.json)还记录绝对/最大误差与参考SE。
+[持续帧候选性能](../../reports/local-gi-pilot-v10/benchmark-candidate-1/benchmark.json)：
 
-| 必需关卡 | 结果 |
-| --- | --- |
-| regression | passed |
-| ray-origin | passed |
-| attribution | passed |
-| contact-query | passed |
-| contact-image | passed |
-| temporal | passed |
-| surface-cache | failed |
-| lifecycle | passed |
-| resource | passed |
-| fixed32-performance | failed |
-| interactive-performance | failed |
-| rebuild-latency | passed |
-| showcase | passed |
+| 宿主 / 档位 | 全场 GPU P95 | CPU 提交 P95 | 实际帧间隔 P95 |
+| --- | ---: | ---: | ---: |
+| Models 基础 | 4.76ms | 5.10ms | 5.30ms |
+| Models 增强 | 5.25ms | 5.30ms | 5.40ms |
+| Tiles 基础 | 7.46ms | 7.70ms | 7.90ms |
+| Tiles 增强 | 7.88ms | 8.10ms | 8.30ms |
 
-有限轮次与缓存本身 2/12 项未通过，详见[独立表面与接收查询](../../reports/contact-transport-v9/acceptance-20261014/surface-finite/surface-cache.json)。未通过项保留 experimental；新模块通过不使R8全系统通过。
+四项满足冻结的 30FPS 窗口门限；这是 headless 浏览器持续 RAF 测量，不代表桌面合成器的显示刷新率。增强档实际持续 32 样本、384×216 接收尺寸，没有全部回退 DDGI。性能通过不等于画质、加载响应或长期运行通过。R8 固定 32r 原失败和 R10 18/60 最终像素失败原样保留。
 
-额外[一轮同方向对照](../../reports/contact-transport-v9/one-round-control/query.json)完成：单球球地即时10.60%→缓存12.41%，双球轮廓2.15%→14.53%，支持空间近似是剩余限制，不能仅归为统计噪声。[实际显示像素的独立几何/线性E参考](../../reports/contact-transport-v9/final-pixel-reference-reviewed/used.json)：**failed，18/60 案例未通过，最差25.53%**。原表contact-image的passed仅指原接收纹理；真实显示接触区仍失败，位置/法线随投影采样变化，需要单独解决。所有原点/新像素与失败保留。
+Models 增强性能窗口已知附加拥有资源约 63.87MiB，其中 GI GPU 33,060,864B、FG 19,574,784B、快照 5,646,528B；另计 CPU 已知缓冲和显示资源。这是逻辑拥有资源账目，不是驱动显存或 JS 堆测量。其他画质运行已记录超出 64MiB 的历史峰值，因此**资源门禁尚未通过**；不能只引用稳定窗口低于预算的数值。替换、改灯和暂存峰值需要继续收口。驱动 VRAM、JS allocator 为 not-run。
 
-## 实际设备与总成本
+改灯已有 CPU publication 与 postRender 提交时间记录；真实主画面可见响应延迟尚为 not-run，不能把 CPU 发布等同于用户看到。30 分钟巡航、20 次替换、50 次 LOD、完整移动/故障/后台恢复与干净部署均待最终验收。生产同步读回观察已有候选零计数，显式诊断读回单独标注：1920×1080 RGBA32F 每次另需 33,177,600B CPU 临时数组，GC 并存峰值未测，不在上述稳定窗口账目中，不能宣称完整资源峰值通过。
 
-ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)；Chrome 155.0.8059.40，WebGL2 / headless，页面visibility=visible。本机实测不是独占GPU或手动FPS。1280×800，主画面尺度1、阴影2048、曝光1、2m/128探针射线/3轮保持；AMD Ryzen 7 9800X3D 8-Core Processor（主机身份在验收后独立采集，非运行heap峰值）。
+## 加权完成度与投入使用的阻断
 
-| 持续活动窗口 | 即时 GPU P95 | 缓存 GPU P95 | CPU提交P95 即时→缓存 | shade改善 | 条件 |
-| --- | ---: | ---: | ---: | ---: | --- |
-| auto/static | 9.24ms | 6.61ms | 2.70→2.70ms | 93.27% | 同receiver/样本/快照 |
-| auto/moving | 9.62ms | 6.31ms | 2.70→2.77ms | 93.96% | 同receiver/样本/快照 |
-| interactive16/static | 5.01ms | 5.02ms | 3.00→2.53ms | 92.04% | 同receiver/样本/快照 |
-| interactive16/moving | 5.10ms | 5.00ms | 2.70→2.60ms | 92.88% | 同receiver/样本/快照 |
+用户提供的 [原始 JSON](readiness/baseline-v1.json) 按原字节保存，SHA-256 `e4d27c5ab63f4e65ce76f728875f46c78af3c2bd3a15231abd1536f3d9f0d674`。主目标 **42.5/100（约43%）**；受限试点 **58.75/100（约60%）**。逐项权重、成熟度锚点、分母、评分理由和历史来源都保留；本检查点不先行加分，也不按提交数或测试通过率计分。
 
-值为三个窗口各自P95的均值；moving是相机移动、球堆几何冻结，物理播放仍无完整局部GI。全帧和60帧组件分开。32r和16r仍为不同档。缓存减少secondary shade，primary trace未消失；原相对DDGI<=3ms、相对原raw<=1ms及移动/改灯失败继续保留。
-
-64球首次缓存：提交墙钟 3090.90ms，worker布局 31.40ms，GL提交CPU 1183.20ms，GPU各代合计 1943.32ms；这些不能藏在稳态收益后。
-
-| 更新与收敛 | 完整墙钟 | 缓存构建GPU合计 |
-| --- | ---: | ---: |
-| immediate/relight | 1355.62ms | 不使用缓存 |
-| immediate/freeze-and-converge | 1054.61ms | 不使用缓存 |
-| cache/relight | 3499.59ms | 1911.65ms |
-| cache/freeze-and-converge | 3498.87ms | 1941.86ms |
-
-改灯包含150帧忙窗口，冻结包含新世界/缓存与目标样本收敛；不能把墙钟当单次API耗时。细分见[完整成本账](../../reports/contact-transport-v9/acceptance-20261014/cache-cost/contact-cost.json)。忙帧时间不包含跨帧缓存GPU提交，后者单列；pending/missing/disjoint非零时GPU合计标incomplete。无同source/revision的改灯窗口不称纯开销优化。
-
-所有正式球池资源/更新/生命周期测得的已知附加峰值 **61.60MiB /64MiB**；其中桌面1920×1080/2560×1440 Auto峰值 58.46MiB。64球缓存驻留GPU 6.78MiB、单候选已知临时+GPU峰值 10.95MiB。CPU/GPU/快照/物理WASM分别见[桌面资源](../../reports/contact-transport-v9/acceptance-20261014/desktop/desktop.json)与[完整更新](../../reports/contact-transport-v9/acceptance-20261014/cache-cost/contact-cost.json)。128球缓存拒绝不提高上限；即时安全回退和压力覆盖仍单列。驱动物理VRAM、worker JS allocator开销为not-run，不能把拥有资源合计称实际VRAM。
-
-## 下一里程碑
-
-1. 优先修复实际显示接触区18项失败及一轮缓存空间误差，保留全部点、physical/legacy与SE；不增加历史掩盖输入。
-2. 在同质量同receiver下处理primary trace成本及缓存冷启动/改灯摊销，原32r和完整性能门限继续独立验收。
-3. 先收口静态缓存质量、预算与更新成本，再另立受限运动GI任务；当前不做动态BVH、Tiles GI或反射。
-
-详细机制：[传输合同](../contact-transport.md)。审查：[Standards / Spec](review-r10.md)。模板：[template.md](template.md)。必需失败/未运行均阻止推荐。
+投入使用的主要阻断是独立区域画质失败、全生命周期资源峰值、真实可见改灯响应和长期/部署证据缺口。下一里程碑：先完成错误恢复复验与预算峰值收口，再冻结源码运行部署及长期矩阵；以完整证据重新评分。无法通过的质量项明确作为产品限制报告，不增加反弹、曝光、去噪或新缓存体系掩盖问题。

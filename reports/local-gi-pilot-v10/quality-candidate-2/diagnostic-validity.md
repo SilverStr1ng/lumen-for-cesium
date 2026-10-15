@@ -1,0 +1,3 @@
+This attempt returned nonzero with all 40 rows retained. Its numerical quality comparisons are invalid: the script indexed the loader's per-triangle normal array as if it contained per-vertex normals. Some normals became NaN (serialized as null), and the reference integrated the wrong or empty hemisphere.
+
+Do not interpret these numbers as an algorithm before/after result or reuse them as cached acceptance. The same 24-pixel grid, five views, two lighting cases, two profiles and two hosts are rerun with corrected indexing and finite-input validation. No threshold or failure region was removed.

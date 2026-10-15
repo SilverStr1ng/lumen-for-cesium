@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "baselineDate": "2026-10-14",
+  "reviewedHead": "127d9ef39f48da7f51b35d2e156a34ec70c656ad",
+  "branch": "feat/contact-transport-v9",
+  "testedImplementation": "c0f2ed8aed8cd106b170f765c82ff490ba08afc5",
+  "aggregationPatch": "c3ba35c",
+  "independentGpuRerun": false,
+  "scoringKind": "reviewer-defined weighted evidence maturity; not measured work-hours or success probability",
+  "anchors": {
+    "0": "目标能力未实现",
+    "25": "有基础或受限入口，产品集成缺口明显",
+    "50": "可运行，但关键验收仍未完成",
+    "75": "主要实现与关键测试已完成，跨场景/产品收口未完成",
+    "100": "在冻结产品范围与目标设备上完成全部必需验收"
+  },
+  "primaryScope": "园区/街区级Cesium桌面WebGL2动态漫反射GI；包括业务多资产、Tiles驻留、地形参与、少量刚体；不含镜面/玻璃/焦散/完整UE等价移植",
+  "primary": {
+    "rows": [
+      {
+        "id": "render",
+        "name": "材质、HDR、阴影与光照接入",
+        "weight": 15,
+        "maturity": 75,
+        "reason": "关键分量和多项受控回归已建立；材质/跨设备边界未完整产品验证",
+        "sources": [
+          "S1",
+          "S4"
+        ],
+        "creditedPoints": 11.25
+      },
+      {
+        "id": "gi",
+        "name": "静态世界查询、DDGI、FG与重建",
+        "weight": 20,
+        "maturity": 75,
+        "reason": "主要链路可运行；最终接触像素和一轮表面缓存仍有失败",
+        "sources": [
+          "S1",
+          "S2",
+          "S10"
+        ],
+        "creditedPoints": 15
+      },
+      {
+        "id": "assets",
+        "name": "业务资产管线与可嵌入接口",
+        "weight": 15,
+        "maturity": 25,
+        "reason": "现有入口为单URL静态glTF/单FG目标；缺多资产、GLB与交付边界",
+        "sources": [
+          "S3",
+          "S4",
+          "S5"
+        ],
+        "creditedPoints": 3.75
+      },
+      {
+        "id": "tiles",
+        "name": "3D Tiles、LOD和GI驻留",
+        "weight": 10,
+        "maturity": 0,
+        "reason": "尚无通过验证的流式GI驻留和LOD事务",
+        "sources": [
+          "S1",
+          "S3",
+          "S6"
+        ],
+        "creditedPoints": 0
+      },
+      {
+        "id": "terrain",
+        "name": "地理坐标、区域与地形GI",
+        "weight": 10,
+        "maturity": 25,
+        "reason": "局部坐标和Globe展示已接通；地形/跨区完整GI未实现",
+        "sources": [
+          "S1",
+          "S4",
+          "S6"
+        ],
+        "creditedPoints": 2.5
+      },
+      {
+        "id": "dynamic",
+        "name": "少量运动刚体的连续GI",
+        "weight": 10,
+        "maturity": 0,
+        "reason": "物理预览与定格重算不计为连续动态GI",
+        "sources": [
+          "S1",
+          "S2"
+        ],
+        "creditedPoints": 0
+      },
+      {
+        "id": "performance",
+        "name": "目标设备性能、预算与降级",
+        "weight": 10,
+        "maturity": 50,
+        "reason": "Auto和预算已有验证；活动性能未全过，仅高端GPU证据",
+        "sources": [
+          "S1",
+          "S4"
+        ],
+        "creditedPoints": 5
+      },
+      {
+        "id": "delivery",
+        "name": "稳定性、部署、运维与回归",
+        "weight": 10,
+        "maturity": 50,
+        "reason": "多项生命周期/回归已建立；通用加载异常、部署和跨设备验收待补",
+        "sources": [
+          "S1",
+          "S3",
+          "S8"
+        ],
+        "creditedPoints": 5
+      }
+    ],
+    "scorePercent": 42.5,
+    "displayPercent": 43,
+    "uncertaintyDescription": "审查估计，约40–45%；以42.5加权结果四舍五入展示"
+  },
+  "limitedPilotScope": "指定桌面设备、有限局部区域、静态多模型、太阳/天空可重照明；仅常驻GI代理；不含连续动态GI/城市流式/完整地形GI",
+  "limitedPilot": {
+    "rows": [
+      {
+        "id": "render",
+        "name": "材质、HDR、阴影与光照接入",
+        "weight": 20,
+        "maturity": 75,
+        "creditedPoints": 15
+      },
+      {
+        "id": "gi",
+        "name": "静态世界查询、DDGI、FG与重建",
+        "weight": 25,
+        "maturity": 75,
+        "creditedPoints": 18.75
+      },
+      {
+        "id": "assets",
+        "name": "业务资产管线与可嵌入接口",
+        "weight": 20,
+        "maturity": 25,
+        "creditedPoints": 5
+      },
+      {
+        "id": "performance",
+        "name": "目标设备性能、预算与降级",
+        "weight": 15,
+        "maturity": 50,
+        "creditedPoints": 7.5
+      },
+      {
+        "id": "delivery",
+        "name": "稳定性、部署、运维与回归",
+        "weight": 15,
+        "maturity": 50,
+        "creditedPoints": 7.5
+      },
+      {
+        "id": "demo",
+        "name": "演示与用户文档",
+        "weight": 5,
+        "maturity": 100,
+        "creditedPoints": 5
+      }
+    ],
+    "scorePercent": 58.75,
+    "displayApproximatePercent": 60,
+    "uncertaintyDescription": "加权58.75，近似显示60%；不得替代主目标分数"
+  },
+  "rules": [
+    "权重与产品范围从本轮冻结，后续变更须增加版本并并列旧口径",
+    "不以提交数、文件数、测试passed比例推断完成度",
+    "分数不是剩余工时比例",
+    "硬性发布阻断不被其他高分抵消",
+    "不倒推历史百分比",
+    "旧实验失败保留；profile试点通过不改写全产品或历史recommended"
+  ],
+  "sources": {
+    "S1": {
+      "title": "当前用户进度与被测版本",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/docs/progress/latest.md"
+    },
+    "S2": {
+      "title": "表面缓存与起点合同",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/docs/contact-transport.md"
+    },
+    "S3": {
+      "title": "世界加载入口",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/cesium-1.146/packages/engine/Source/Scene/Lumen.js"
+    },
+    "S4": {
+      "title": "FG 单模型接收与预算",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js"
+    },
+    "S5": {
+      "title": "世界几何加载器",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/lumen/gltf.js"
+    },
+    "S6": {
+      "title": "静态数据打包与探针上限",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/lumen/gpu-worker.js"
+    },
+    "S7": {
+      "title": "表面缓存构建器",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/cesium-1.146/packages/engine/Source/Scene/LumenSurfaceRadianceCache.js"
+    },
+    "S8": {
+      "title": "R10 汇总验收",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/scripts/verify-r10.mjs"
+    },
+    "S9": {
+      "title": "表面采样布局",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/lumen/surface-radiance-layout.js"
+    },
+    "S10": {
+      "title": "GPU 缓存递推与命中查询",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/127d9ef39f48da7f51b35d2e156a34ec70c656ad/cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js"
+    }
+  },
+  "releaseReady": false,
+  "pilotReleaseReady": false,
+  "r11Checkpoint": {
+    "date": "2026-10-15",
+    "implementationHead": "c071869",
+    "state": "in-progress",
+    "baselineFile": "baseline-v1.json",
+    "baselineSha256": "e4d27c5ab63f4e65ce76f728875f46c78af3c2bd3a15231abd1536f3d9f0d674",
+    "scoreChange": {
+      "primary": 0,
+      "limitedPilot": 0
+    },
+    "reason": "R11 required quality remains failed; lifecycle/resource/deployment/soak certification is incomplete. Preserve all baseline row weights, reasons, sources and denominators until reviewed evidence supports rescoring.",
+    "report": "../2026-10-15-r11-c071869-checkpoint.md",
+    "blockers": [
+      "independent-region-quality",
+      "lifecycle-resource-peaks",
+      "visible-relight-latency",
+      "long-run-and-clean-deployment"
+    ],
+    "pilotReady": false
+  }
+}
