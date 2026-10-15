@@ -1,0 +1,55 @@
+{
+  "status": "failed",
+  "reason": "Clean archive byte identity preflight found CRLF/LF differences before deployment; run aborted, no cached promotion",
+  "testedHead": "07eadf990ebf04db173e32a251bfb38b7585bd9a",
+  "differences": [
+    {
+      "file": "fixtures/alpha-mask.gltf",
+      "working": "f962287c0bf86b01e8fd759df4cecc728fefcda984d90fa481d856e2bdf310b9",
+      "archived": "2f5e3542e6b917972fafe9fe81524b3452c723bac404bacaa3479a7e0b813426"
+    },
+    {
+      "file": "fixtures/alpha-mask.json",
+      "working": "e1cd288928e6d27ca0b389e424236accb56e8cf6085b59dc8abd97eebdf888b4",
+      "archived": "ed2054fa15b77a6f2c0f4555f98dc05fab44b2ec47c65bc602100dac81eff87b"
+    },
+    {
+      "file": "fixtures/far-blocker.gltf",
+      "working": "f2179f9f37137421d538b5c10cdf7bdf687858316b32fcbe222c481e1f833eca",
+      "archived": "77b0656aeced71f53ccfb07d12ed3d02557c3d1330c96978c6f2eccd25829862"
+    },
+    {
+      "file": "fixtures/far-blocker.json",
+      "working": "1dc50c41567b37f62bf798e9ebb230abecff8a1e84361fe05759ef8b353b06f6",
+      "archived": "85dec03673594882e8c70c7db41ac9aa277155d626fb5ffe1cf3839c10cd74f6"
+    },
+    {
+      "file": "fixtures/two-rooms.gltf",
+      "working": "5f440e0a78ef14b01726954dadd7de636d79870dc42a07661796e81857488634",
+      "archived": "04aef115e24f385b8c8f4c0efe46da7c2658310f4e69aa563a7ed6fcb60fb291"
+    },
+    {
+      "file": "fixtures/two-rooms.json",
+      "working": "3212f00f7ef2b77707c4a63d5035577810856c948daee5d4abca14549312ce4d",
+      "archived": "146cac16e162d56a2bda472c39a21c18a1ba7c650beee1c474314470fd8c2b6d"
+    },
+    {
+      "file": "fixtures/untextured.gltf",
+      "working": "c924ab61e8f0f2dc812ed332de5a5b7643fccb04ca7c31ada04328e407ede5f5",
+      "archived": "1cf3d0bdfa85873b45f6fabddceb4127f5729b60dd129419d9177e5bc67ed2b9"
+    },
+    {
+      "file": "fixtures/untextured.json",
+      "working": "b072bff7f001b3f991ed531b14daf790bf5b669109f81686a69c80643074f7aa",
+      "archived": "613b7db8f749e4b9fcd71d73640df06e8174045a1984caa6252dffa237da0fa8"
+    }
+  ],
+  "notRun": [
+    "equivalence",
+    "quality",
+    "runtime",
+    "performance",
+    "deployment",
+    "soak"
+  ]
+}

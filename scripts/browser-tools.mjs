@@ -10,6 +10,7 @@ const require = createRequire(
 );
 export function sourceVersion(extraFiles = []) {
   const files = [
+    ".gitattributes",
     "cesium-1.146/packages/engine/Source/Scene/LumenGpuWorld.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenGpuShaders.js",
     "cesium-1.146/packages/engine/Source/Shaders/Model/LumenStageFS.glsl",
