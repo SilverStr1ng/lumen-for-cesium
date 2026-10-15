@@ -202,6 +202,12 @@ class LumenFinalGatherReconstruction {
         { uniformMap: uniforms, owner: this },
       );
     }
+    let ready = true;
+    for (const command of Object.values(this._commands)) {
+      command.shaderProgram._prepareOptIn = true;
+      if (!command.shaderProgram.prepare()) ready = false;
+    }
+    if (!ready) return;
     this.controller._measure("connections", () =>
       this._draw(this._commands.connections, this.connectionFramebuffer),
     );

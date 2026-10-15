@@ -119,6 +119,32 @@ export async function capturePixels(
           ["fallback", 17],
         ]) {
       scene.lumen.debugMode = mode;
+      // A variant change rebuilds forward/derived programs. A single postRender
+      // may still have used the base fallback; never read it as FG diagnostic E.
+      const deadline = performance.now() + 30000;
+      let stable = 0;
+      while (stable < 2) {
+        await session._afterFrame(() => {
+          session._guard(token, signal);
+          if (
+            world !== session.world ||
+            revision !== world.requestedRevision ||
+            profile !== session.profile
+          )
+            throw Error("Diagnostic frame ownership changed while preparing");
+          const context = scene.context;
+          stable =
+            context._lastShaderPreparationPending === 0 &&
+            !context._lumenBaseGroup?.blocked
+              ? stable + 1
+              : 0;
+          if (performance.now() > deadline)
+            throw new DOMException(
+              "Diagnostic variant not ready",
+              "TimeoutError",
+            );
+        }, signal);
+      }
       values[name] = await session._afterFrame(() => {
         session._guard(token, signal);
         if (

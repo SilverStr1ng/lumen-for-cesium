@@ -109,6 +109,7 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         vec3 response = u_lumenPbrDiffuseResponse ? lumen_iblDiffuseResponse : material.diffuse;
         indirectDiffuse = response * queriedE * (lumen_materialCoverage / czm_pi);
         color += indirectDiffuse;
+        #ifdef LUMEN_DIAGNOSTICS
         if (u_lumenDebugMode == 1) color = directColor;
         if (u_lumenDebugMode == 2) color = indirectDiffuse;
         if (u_lumenDebugMode == 3) color = material.emissive;
@@ -133,6 +134,7 @@ vec3 computePbrLighting(in czm_modelMaterial material, in vec3 position, in vec3
         // Small integer IDs remain exact in the HDR half-float scene target.
         if(u_lumenDebugMode==19)color=vec3(u_lumenFgCurved?128.0+u_lumenFgSurfaceId-4096.0:u_lumenDiagnosticSurface,u_lumenFgCurved?1.0:0.0,u_lumenFgCurved&&((u_lumenEyeToLocal*vec4(position,1.0)).z<=u_lumenDiagnosticFloorZ+0.04)?8.0:u_lumenDiagnosticSurface>0.0?4.0:0.0);
         if(u_lumenDebugMode==20){float angle=clamp(acos(clamp(dot(lumen_triangleNormal(position),material.normalEC),-1.0,1.0))/(czm_pi/6.0),0.0,1.0);color=u_lumenFgCurved?vec3(angle,0,1.0-angle):vec3(0);}
+        #endif
         #endif
     }
     #endif

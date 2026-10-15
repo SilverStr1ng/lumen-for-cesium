@@ -16,7 +16,8 @@ class LumenProbeDisplay {
     this.inputTarget = target;
     this.alpha = alpha;
     const g = this.world.packet.grid;
-    this.world._draw("displayBlend", output.fb, 0, 0, g.width, g.height);
+    if (!this.world._draw("displayBlend", output.fb, 0, 0, g.width, g.height))
+      throw Error("Display transition shader must be ready before publication");
     this.draws++;
   }
   copy(source, output) {

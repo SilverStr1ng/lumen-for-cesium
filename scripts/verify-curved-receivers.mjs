@@ -310,7 +310,8 @@ try {
                   receiverRays(p, f.samples, f.seed, f.metrics.sampleEpoch),
                 ),
                 rays = all.filter((r) => !r.knownZero),
-                values = ballPool.world.diagnoseTransport(rays).cacheStatus;
+                values = (await ballPool.world.diagnoseTransport(rays))
+                  .cacheStatus;
               return {
                 scheduled: all.length,
                 knownZero: all.length - rays.length,

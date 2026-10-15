@@ -98,7 +98,8 @@ class LumenFinalGatherSnapshot {
       const fb = world._framebuffer([texture]);
       resource.fb = fb;
       world._fgCopySource = source;
-      world._draw("fgCopy", fb, 0, 0, texture.width, texture.height);
+      if (!world._draw("fgCopy", fb, 0, 0, texture.width, texture.height))
+        throw Error("Snapshot copy shader must be ready before publication");
       return texture;
     };
     try {

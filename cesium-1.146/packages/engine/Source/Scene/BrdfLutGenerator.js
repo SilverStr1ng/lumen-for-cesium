@@ -17,6 +17,7 @@ import BrdfLutGeneratorFS from "../Shaders/BrdfLutGeneratorFS.js";
 function BrdfLutGenerator() {
   this._colorTexture = undefined;
   this._drawCommand = undefined;
+  this._ready = false;
 }
 
 Object.defineProperties(BrdfLutGenerator.prototype, {
@@ -58,11 +59,20 @@ BrdfLutGenerator.prototype.update = function (frameState) {
     });
 
     createCommand(this, context, framebuffer);
-    this._drawCommand.execute(context);
-    framebuffer.destroy();
-    this._drawCommand.shaderProgram =
-      this._drawCommand.shaderProgram &&
-      this._drawCommand.shaderProgram.destroy();
+  }
+  if (!this._ready) {
+    const context = frameState.context;
+    const command = this._drawCommand;
+    if (context._lumenShaderPreparation) {
+      command.shaderProgram._prepareOptIn = true;
+      context._lumenBrdfPending = !command.shaderProgram.prepare();
+      if (context._lumenBrdfPending) return;
+    }
+    command.execute(context);
+    command.framebuffer.destroy();
+    command.framebuffer = undefined;
+    command.shaderProgram = command.shaderProgram.destroy();
+    this._ready = true;
   }
 };
 
@@ -71,6 +81,10 @@ BrdfLutGenerator.prototype.isDestroyed = function () {
 };
 
 BrdfLutGenerator.prototype.destroy = function () {
+  if (this._drawCommand && !this._ready) {
+    this._drawCommand.framebuffer.destroy();
+    this._drawCommand.shaderProgram.destroy();
+  }
   this._colorTexture = this._colorTexture && this._colorTexture.destroy();
   return destroyObject(this);
 };

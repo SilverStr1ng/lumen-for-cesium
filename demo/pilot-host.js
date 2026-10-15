@@ -144,6 +144,7 @@ setInterval(() => {
   status.textContent = JSON.stringify(
     {
       phase: s.phase,
+      startup: s.startup,
       requested: s.profile,
       effective: s.effectiveProfile,
       version: s.version?.slice(0, 12),

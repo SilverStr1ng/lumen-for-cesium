@@ -12,6 +12,7 @@ import LumenFinalGather from "./LumenFinalGather.js";
  */
 function Lumen(scene) {
   this._scene = scene;
+  scene.context._requestShaderRender = () => scene.requestRender();
   this._enabled = false;
   this._irradiance = new Cartesian3(0.5, 0.5, 0.5);
   this._coverage = 1.0;

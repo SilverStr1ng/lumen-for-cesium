@@ -8,6 +8,7 @@ import {
 } from "@cesium/core";
 import ImageBasedLightingStageFS from "../../Shaders/Model/ImageBasedLightingStageFS.js";
 import LumenStageFS from "../../Shaders/Model/LumenStageFS.js";
+import lumenShaderVariant from "../LumenShaderVariant.js";
 import ShaderDestination from "../../Renderer/ShaderDestination.js";
 import SpecularEnvironmentCubeMap from "../SpecularEnvironmentCubeMap.js";
 
@@ -33,101 +34,125 @@ ImageBasedLightingPipelineStage.process = function (
   const imageBasedLighting = model.imageBasedLighting;
   const environmentMapManager = model.environmentMapManager;
   const shaderBuilder = renderResources.shaderBuilder;
-  // Uniforms are present even while disabled, so toggling requires no model rebuild.
-  shaderBuilder.addUniform(
-    "bool",
-    "u_lumenEnabled",
-    ShaderDestination.FRAGMENT,
-  );
-  shaderBuilder.addUniform(
-    "vec3",
-    "u_lumenIrradiance",
-    ShaderDestination.FRAGMENT,
-  );
-  shaderBuilder.addUniform(
-    "float",
-    "u_lumenCoverage",
-    ShaderDestination.FRAGMENT,
-  );
-  shaderBuilder.addUniform(
-    "int",
-    "u_lumenDebugMode",
-    ShaderDestination.FRAGMENT,
-  );
-  shaderBuilder.addUniform(
-    "bool",
-    "u_lumenPbrDiffuseResponse",
-    ShaderDestination.FRAGMENT,
-  );
-  shaderBuilder.addUniform(
-    "bool",
-    "u_lumenEnhancedIbl",
-    ShaderDestination.FRAGMENT,
-  );
-  const lumen = frameState.lumen;
-  const lumenUniformMap = renderResources.uniformMap;
-  lumenUniformMap.u_lumenEnabled = () =>
-    Boolean(
-      lumen?.enabled && frameState.passes.render && frameState.mode === 3,
-    );
-  lumenUniformMap.u_lumenIrradiance = () =>
-    lumen?.world ? Cartesian3.ZERO : (lumen?._irradiance ?? Cartesian3.ZERO);
-  lumenUniformMap.u_lumenCoverage = () =>
-    lumen?.world && !lumen.world.ready ? 0 : (lumen?.coverage ?? 0);
-  lumenUniformMap.u_lumenDebugMode = () => lumen?.debugMode ?? 0;
-  lumenUniformMap.u_lumenEnhancedIbl = () => lumen?.iblPolicy === "enhanced";
-  lumenUniformMap.u_lumenPbrDiffuseResponse = () =>
-    lumen?.diffuseResponse === "cesium";
-  if (frameState.context?.webgl2) {
-    shaderBuilder.addDefine(
-      "LUMEN_WORLD_SUPPORTED",
-      undefined,
+  const variant = lumenShaderVariant(model, frameState);
+  shaderBuilder._lumenPrepare =
+    variant !== "cesium" || model._lumenPrepare === true;
+  if (variant !== "cesium") {
+    shaderBuilder.addUniform(
+      "bool",
+      "u_lumenEnabled",
       ShaderDestination.FRAGMENT,
     );
-  }
-  const worldUniforms = {
-    u_lumenWorldEnabled: ["bool", () => Boolean(lumen?.world?.ready)],
-    u_lumenLinearAtlas: ["bool", () => Boolean(lumen?.world?.linearAtlas)],
-    u_lumenProbeIrradiance: [
-      "sampler2D",
-      () =>
-        lumen?.world?.displayIrradianceTexture ??
-        lumen?.world?.irradianceTexture ??
-        frameState.context.defaultTexture,
-    ],
-    u_lumenProbeDistances: [
-      "sampler2D",
-      () => lumen?.world?.distanceTexture ?? frameState.context.defaultTexture,
-    ],
-    u_lumenProbePositions: [
-      "sampler2D",
-      () => lumen?.world?.positionTexture ?? frameState.context.defaultTexture,
-    ],
-    u_lumenEyeToLocal: [
-      "mat4",
-      () => lumen?.world?.eyeToLocal ?? Matrix4.IDENTITY,
-    ],
-    u_lumenProbeOrigin: ["vec3", () => lumen?.world?.origin ?? Cartesian3.ZERO],
-    u_lumenProbeCounts: ["vec3", () => lumen?.world?.counts ?? Cartesian3.ZERO],
-    u_lumenProbeSpacing: ["float", () => lumen?.world?.spacing ?? 1],
-    u_lumenNormalBias: ["float", () => lumen?.world?.normalBias ?? 0],
-    u_lumenWorldGain: ["float", () => lumen?.world?.gain ?? 1],
-    u_lumenLegacyKernel: [
+    shaderBuilder.addUniform(
+      "vec3",
+      "u_lumenIrradiance",
+      ShaderDestination.FRAGMENT,
+    );
+    shaderBuilder.addUniform(
+      "float",
+      "u_lumenCoverage",
+      ShaderDestination.FRAGMENT,
+    );
+    if (variant.endsWith("diagnostic")) {
+      shaderBuilder.addDefine(
+        "LUMEN_DIAGNOSTICS",
+        undefined,
+        ShaderDestination.FRAGMENT,
+      );
+      shaderBuilder.addUniform(
+        "int",
+        "u_lumenDebugMode",
+        ShaderDestination.FRAGMENT,
+      );
+    } else
+      shaderBuilder.addDefine(
+        "u_lumenDebugMode",
+        "0",
+        ShaderDestination.FRAGMENT,
+      );
+    shaderBuilder.addUniform(
       "bool",
-      () =>
-        lumen?.world?.displayLegacyKernel ??
-        lumen?.world?.options.reconstructionMode === "legacy",
-    ],
-    u_lumenGatherControl: [
-      "vec4",
-      () => lumen?.world?.displayGatherControl ?? defaultGatherControl,
-    ],
-  };
-  for (const [name, [type, value]] of Object.entries(worldUniforms)) {
-    shaderBuilder.addUniform(type, name, ShaderDestination.FRAGMENT);
-    lumenUniformMap[name] = value;
+      "u_lumenPbrDiffuseResponse",
+      ShaderDestination.FRAGMENT,
+    );
+    shaderBuilder.addUniform(
+      "bool",
+      "u_lumenEnhancedIbl",
+      ShaderDestination.FRAGMENT,
+    );
+    const lumen = frameState.lumen;
+    const lumenUniformMap = renderResources.uniformMap;
+    lumenUniformMap.u_lumenEnabled = () =>
+      Boolean(
+        lumen?.enabled && frameState.passes.render && frameState.mode === 3,
+      );
+    lumenUniformMap.u_lumenIrradiance = () =>
+      lumen?.world ? Cartesian3.ZERO : (lumen?._irradiance ?? Cartesian3.ZERO);
+    lumenUniformMap.u_lumenCoverage = () =>
+      lumen?.world && !lumen.world.ready ? 0 : (lumen?.coverage ?? 0);
+    lumenUniformMap.u_lumenDebugMode = () => lumen?.debugMode ?? 0;
+    lumenUniformMap.u_lumenEnhancedIbl = () => lumen?.iblPolicy === "enhanced";
+    lumenUniformMap.u_lumenPbrDiffuseResponse = () =>
+      lumen?.diffuseResponse === "cesium";
+    if (frameState.context?.webgl2) {
+      shaderBuilder.addDefine(
+        "LUMEN_WORLD_SUPPORTED",
+        undefined,
+        ShaderDestination.FRAGMENT,
+      );
+    }
+    const worldUniforms = {
+      u_lumenWorldEnabled: ["bool", () => Boolean(lumen?.world?.ready)],
+      u_lumenLinearAtlas: ["bool", () => Boolean(lumen?.world?.linearAtlas)],
+      u_lumenProbeIrradiance: [
+        "sampler2D",
+        () =>
+          lumen?.world?.displayIrradianceTexture ??
+          lumen?.world?.irradianceTexture ??
+          frameState.context.defaultTexture,
+      ],
+      u_lumenProbeDistances: [
+        "sampler2D",
+        () =>
+          lumen?.world?.distanceTexture ?? frameState.context.defaultTexture,
+      ],
+      u_lumenProbePositions: [
+        "sampler2D",
+        () =>
+          lumen?.world?.positionTexture ?? frameState.context.defaultTexture,
+      ],
+      u_lumenEyeToLocal: [
+        "mat4",
+        () => lumen?.world?.eyeToLocal ?? Matrix4.IDENTITY,
+      ],
+      u_lumenProbeOrigin: [
+        "vec3",
+        () => lumen?.world?.origin ?? Cartesian3.ZERO,
+      ],
+      u_lumenProbeCounts: [
+        "vec3",
+        () => lumen?.world?.counts ?? Cartesian3.ZERO,
+      ],
+      u_lumenProbeSpacing: ["float", () => lumen?.world?.spacing ?? 1],
+      u_lumenNormalBias: ["float", () => lumen?.world?.normalBias ?? 0],
+      u_lumenWorldGain: ["float", () => lumen?.world?.gain ?? 1],
+      u_lumenLegacyKernel: [
+        "bool",
+        () =>
+          lumen?.world?.displayLegacyKernel ??
+          lumen?.world?.options.reconstructionMode === "legacy",
+      ],
+      u_lumenGatherControl: [
+        "vec4",
+        () => lumen?.world?.displayGatherControl ?? defaultGatherControl,
+      ],
+    };
+    for (const [name, [type, value]] of Object.entries(worldUniforms)) {
+      shaderBuilder.addUniform(type, name, ShaderDestination.FRAGMENT);
+      lumenUniformMap[name] = value;
+    }
+    shaderBuilder.addFragmentLines(LumenStageFS);
   }
-  shaderBuilder.addFragmentLines(LumenStageFS);
 
   // If environment maps or spherical harmonics are not specifically provided, use procedural lighting.
   let specularEnvironmentMapAtlas;

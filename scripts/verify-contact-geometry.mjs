@@ -165,7 +165,7 @@ try {
           skyRadiance: [0, 0, 0],
         });
         await w.completed;
-        const result = w.diagnoseTransport([ray]);
+        const result = await w.diagnoseTransport([ray]);
         result.lowBudget = await w.trace([{ ...ray, budget: 1 }]);
         return result;
       } finally {

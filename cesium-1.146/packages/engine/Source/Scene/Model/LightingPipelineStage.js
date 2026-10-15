@@ -6,6 +6,7 @@ import { functions as fgGeometry } from "../LumenFinalGatherGeometry.js";
 import LumenReceiverPass from "../LumenReceiverPass.js";
 import LightingStageFS from "../../Shaders/Model/LightingStageFS.js";
 import LightingModel from "./LightingModel.js";
+import lumenShaderVariant from "../LumenShaderVariant.js";
 
 /**
  * The lighting pipeline stage is responsible for taking a material and rendering
@@ -64,7 +65,9 @@ LightingPipelineStage.process = function (
   // First adapter: opaque/alpha-mask standard triangle materials with normals.
   // Extensions requiring a different diffuse transport model stay on Cesium lighting.
   const defines = shaderBuilder._fragmentShaderParts.defineLines;
+  const variant = lumenShaderVariant(model, frameState);
   if (
+    variant !== "cesium" &&
     lightingModel === LightingModel.PBR &&
     primitive.primitiveType === 4 &&
     defines.includes("HAS_NORMALS") &&
@@ -87,6 +90,7 @@ LightingPipelineStage.process = function (
       ).length;
     LumenReceiverPass.noteSamplers(model, 10 + existingSamplers);
     if (
+      variant.startsWith("fg") &&
       frameState?.context?.webgl2 &&
       ContextLimits.maximumTextureImageUnits >= 10 + existingSamplers
     ) {
@@ -95,17 +99,20 @@ LightingPipelineStage.process = function (
         undefined,
         ShaderDestination.FRAGMENT,
       );
-      shaderBuilder.addDefine(
-        "LUMEN_FG_REASONS",
-        undefined,
-        ShaderDestination.FRAGMENT,
-      );
+      if (variant.endsWith("diagnostic"))
+        shaderBuilder.addDefine(
+          "LUMEN_FG_REASONS",
+          undefined,
+          ShaderDestination.FRAGMENT,
+        );
       shaderBuilder.addDefine(
         "LUMEN_FG_RECONSTRUCTION",
         undefined,
         ShaderDestination.FRAGMENT,
       );
-      shaderBuilder.addFragmentLines(fgGeometry);
+      shaderBuilder.addFragmentLines(
+        `#ifdef LUMEN_RECEIVER_COMPOSITE\n${fgGeometry}\n#endif`,
+      );
       let owners = surfaceOwners.get(model);
       if (!owners) {
         owners = { next: 1, map: new WeakMap() };

@@ -527,7 +527,7 @@ class LumenFinalGather {
       } else queryLease?.release();
     }
   }
-  _draw(name, target, width, height) {
+  _draw(name, target, width, height, preparationOnly = false) {
     const c = this.scene.context;
     if (!this._commands[name]) {
       const uniformMap = {};
@@ -576,6 +576,9 @@ class LumenFinalGather {
       );
     }
     const cmd = this._commands[name];
+    cmd.shaderProgram._prepareOptIn = true;
+    if (!cmd.shaderProgram.prepare()) return false;
+    if (preparationOnly) return true;
     cmd.framebuffer = target;
     cmd.renderState = RenderState.fromCache({
       viewport: new BoundingRectangle(0, 0, width, height),
@@ -585,6 +588,7 @@ class LumenFinalGather {
     pass.viewport = new BoundingRectangle(0, 0, width, height);
     cmd.execute(c, pass);
     this.metrics.draws++;
+    return true;
   }
   executePrepared(passState, list) {
     const s = this.scene,
@@ -594,6 +598,11 @@ class LumenFinalGather {
     this.metrics.effectiveMode = "ddgi";
     this.fallbackReason = 1;
     if (this.mode === "ddgi" || !this.lumen.enabled) {
+      return;
+    }
+    if (s.context._lumenBaseGroup?.blocked) {
+      this.metrics.status = "FG waiting for complete base/shadow programs";
+      s.requestRender();
       return;
     }
     if (
@@ -755,6 +764,21 @@ class LumenFinalGather {
       this._allocate(l);
       this._input = snapshot;
       this._inputUniforms = w.finalGatherUniforms(snapshot);
+      const preparationNames =
+        this.execution === "split"
+          ? ["receiverTrace", "receiverShade", "receiverNeighborhood"]
+          : [
+              `receiverFused${this.execution === "fused8" ? 8 : 4}`,
+              "receiverNeighborhood",
+            ];
+      let shadersReady = true;
+      for (const name of preparationNames)
+        if (!this._draw(name, undefined, 0, 0, true)) shadersReady = false;
+      if (!shadersReady) {
+        this.metrics.status = "FG shaders preparing";
+        s.requestRender();
+        return;
+      }
       this.samples = l.samples;
       Cartesian2.fromElements(l.rw, l.rh, this.receiverSize);
       Cartesian2.fromElements(l.width, l.height, this.resultSize);
@@ -767,6 +791,11 @@ class LumenFinalGather {
       this.metrics.receiverDraws = this._measure("receiver", () =>
         this.receiver.execute(s, passState, list, l.rw, l.rh),
       );
+      if (this.receiver.pending) {
+        this.metrics.status = "FG receiver shaders preparing";
+        s.requestRender();
+        return;
+      }
       this._epochForFrame = this.sequenceEpoch ?? this._sampleEpoch;
       this._accumulation = this.ping[1].texture;
       const chunk = this.execution === "fused8" ? 8 : 4;
@@ -836,7 +865,7 @@ class LumenFinalGather {
         if (this._historyWorld !== w) {
           this.reconstruction.invalidate("world generation");
         }
-        this.reconstruction.execute({
+        const reconstructed = this.reconstruction.execute({
           key: reconstructionKey,
           raw: this.texture,
           receiver: this.receiver,
@@ -847,6 +876,11 @@ class LumenFinalGather {
           eye,
           direction,
         });
+        if (!reconstructed) {
+          this.metrics.status = "FG reconstruction shaders preparing";
+          s.requestRender();
+          return;
+        }
         if (this.reconstruction.addedInformation) {
           this._stableFrames++;
         }

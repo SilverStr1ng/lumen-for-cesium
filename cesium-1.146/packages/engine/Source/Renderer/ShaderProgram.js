@@ -34,6 +34,11 @@ function ShaderProgram(options) {
   );
 
   this._gl = options.gl;
+  this._context = options.context;
+  this._prepareOptIn = options.asynchronousCompilation === true;
+  this._pending = undefined;
+  this.preparationState = "unprepared";
+  this.preparationFallback = undefined;
   this._logShaderCompilation = options.logShaderCompilation;
   this._debugShaders = options.debugShaders;
   this._attributeLocations = options.attributeLocations;
@@ -183,7 +188,7 @@ function handleUniformPrecisionMismatches(
 
 const consolePrefix = "[Cesium WebGL] ";
 
-function createAndLinkProgram(gl, shader) {
+function createAndLinkProgram(gl, shader, defer = false) {
   const vsSource = shader._vertexShaderText;
   const fsSource = shader._fragmentShaderText;
 
@@ -213,6 +218,16 @@ function createAndLinkProgram(gl, shader) {
   }
 
   gl.linkProgram(program);
+  if (defer) {
+    shader._pending = { program, vertexShader, fragmentShader };
+    return;
+  }
+  return finishLink(gl, shader, { program, vertexShader, fragmentShader });
+}
+
+function finishLink(gl, shader, { program, vertexShader, fragmentShader }) {
+  const vsSource = shader._vertexShaderText;
+  const fsSource = shader._fragmentShaderText;
   let log;
 
   // For performance: if linker succeeds, return without checking compile status
@@ -462,14 +477,22 @@ function initialize(shader) {
     return;
   }
 
-  reinitialize(shader);
+  if (shader._prepareOptIn) {
+    if (!shader.prepare()) {
+      throw new DeveloperError(
+        "Shader preparation is pending; caller must check prepare() before reflection or binding",
+      );
+    }
+  } else {
+    reinitialize(shader);
+  }
 }
 
-function reinitialize(shader) {
+function reinitialize(shader, preparedProgram) {
   const oldProgram = shader._program;
 
   const gl = shader._gl;
-  const program = createAndLinkProgram(gl, shader, shader._debugShaders);
+  const program = preparedProgram ?? createAndLinkProgram(gl, shader);
   const numberOfVertexAttributes = gl.getProgramParameter(
     program,
     gl.ACTIVE_ATTRIBUTES,
@@ -538,6 +561,115 @@ function reinitialize(shader) {
       }
     };
   }
+}
+
+// Opt-in only. Cache ownership, rather than an individual request, owns pending
+// native resources. No promise can enable a retired model after cancellation.
+ShaderProgram.prototype.prepare = function () {
+  if (!this._prepareOptIn) return true;
+  const gl = this._gl;
+  const pendingResult = () => {
+    if (this._context)
+      (this._context._shaderPreparationPending ??= new Set()).add(this);
+    this._context?._requestShaderRender?.();
+    return false;
+  };
+  if (gl.isContextLost?.()) {
+    releasePending(this);
+    this.preparationState = "cancelled";
+    return false;
+  }
+  if (
+    this.preparationState === "cancelled" ||
+    this.preparationState === "failed"
+  )
+    return false;
+  if (defined(this._program)) {
+    this._cachedShader?.cache.retainPreparedProgram?.(this);
+    return true;
+  }
+  if (!defined(this._parallelCompile)) {
+    this._parallelCompile =
+      gl.getExtension("KHR_parallel_shader_compile") ?? null;
+    if (this._context)
+      this._context._shaderPreparationPath = this._parallelCompile
+        ? "KHR_parallel_shader_compile"
+        : "synchronous-no-extension";
+  }
+  if (!this._pending) {
+    const context = this._context;
+    if (context && (context._shaderPreparationSubmissions ?? 0) >= 1)
+      return pendingResult();
+    if (context)
+      context._shaderPreparationSubmissions =
+        (context._shaderPreparationSubmissions ?? 0) + 1;
+    if (!this._parallelCompile) {
+      this.preparationFallback = "synchronous-no-extension";
+      try {
+        reinitialize(this);
+        this.preparationState = "ready";
+        this._cachedShader?.cache.retainPreparedProgram?.(this);
+        return true;
+      } catch (error) {
+        this.preparationState = "failed";
+        throw error;
+      }
+    }
+    createAndLinkProgram(gl, this, true);
+    this._submittedFrame = context?._shaderPreparationFrame ?? 0;
+    this.preparationState = "pending";
+    return pendingResult();
+  }
+  if (
+    this._context &&
+    this._submittedFrame === (this._context._shaderPreparationFrame ?? 0)
+  )
+    return pendingResult();
+  if (
+    this._context &&
+    this._polledFrame === this._context._shaderPreparationFrame
+  )
+    return pendingResult();
+  this._polledFrame = this._context?._shaderPreparationFrame;
+  if (
+    !gl.getProgramParameter(
+      this._pending.program,
+      this._parallelCompile.COMPLETION_STATUS_KHR,
+    )
+  )
+    return pendingResult();
+  if (gl.isContextLost?.()) {
+    releasePending(this);
+    this.preparationState = "cancelled";
+    return false;
+  }
+  const pending = this._pending;
+  // finishLink owns deletion of both shaders and of a failed native program.
+  this._pending = undefined;
+  try {
+    const program = finishLink(gl, this, pending);
+    try {
+      reinitialize(this, program);
+    } catch (error) {
+      gl.deleteProgram(program);
+      throw error;
+    }
+    this.preparationState = "ready";
+    this._cachedShader?.cache.retainPreparedProgram?.(this);
+    return true;
+  } catch (error) {
+    this.preparationState = "failed";
+    throw error;
+  }
+};
+
+function releasePending(shader) {
+  const pending = shader._pending;
+  if (!pending) return;
+  shader._gl.deleteShader(pending.vertexShader);
+  shader._gl.deleteShader(pending.fragmentShader);
+  shader._gl.deleteProgram(pending.program);
+  shader._pending = undefined;
 }
 
 ShaderProgram.prototype._bind = function () {
@@ -615,7 +747,9 @@ ShaderProgram.prototype.destroy = function () {
 };
 
 ShaderProgram.prototype.finalDestroy = function () {
-  this._gl.deleteProgram(this._program);
+  releasePending(this);
+  if (this._fallback && !this._fallback.isDestroyed()) this._fallback.destroy();
+  if (defined(this._program)) this._gl.deleteProgram(this._program);
   return destroyObject(this);
 };
 export default ShaderProgram;

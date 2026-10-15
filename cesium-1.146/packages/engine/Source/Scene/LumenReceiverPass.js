@@ -70,6 +70,7 @@ class LumenReceiverPass {
         attributeLocations: source.shaderProgram._attributeLocations,
       });
     }
+    shader._prepareOptIn = true;
     source.derivedCommands ??= {};
     const derived =
       source.derivedCommands.lumenReceiver ??
@@ -82,6 +83,16 @@ class LumenReceiverPass {
     return draw;
   }
   execute(scene, passState, list, width, height) {
+    let ready = true;
+    for (const f of list)
+      for (const pass of [Pass.GLOBE, Pass.CESIUM_3D_TILE, Pass.OPAQUE]) {
+        for (let j = 0; j < f.indices[pass]; j++) {
+          const draw = this.command(scene, f.commands[pass][j]);
+          if (draw && !draw.shaderProgram.prepare()) ready = false;
+        }
+      }
+    this.pending = !ready;
+    if (!ready) return 0;
     const context = scene.context,
       state = context.uniformState,
       oldFramebuffer = passState.framebuffer,

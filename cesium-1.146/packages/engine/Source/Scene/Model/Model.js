@@ -20,6 +20,7 @@ import {
 import Credit from "../../Core/Credit.js";
 import Resource from "../../Core/Resource.js";
 import Pass from "../../Renderer/Pass.js";
+import lumenShaderVariant from "../LumenShaderVariant.js";
 import ClippingPlaneCollection from "../ClippingPlaneCollection.js";
 import ClippingPolygonCollection from "../ClippingPolygonCollection.js";
 import DynamicEnvironmentMapManager from "../DynamicEnvironmentMapManager.js";
@@ -1999,6 +2000,11 @@ const scratchClippingPlanesMatrix = new Matrix4();
  * @exception {RuntimeError} Failed to load external reference.
  */
 Model.prototype.update = function (frameState) {
+  const variant = lumenShaderVariant(this, frameState);
+  if (this._lumenBuiltVariant !== variant) {
+    this._lumenBuiltVariant = variant;
+    this.resetDrawCommands();
+  }
   let finishedProcessing = false;
   try {
     // Keep processing the model every frame until the main resources

@@ -55,6 +55,38 @@ ShaderCache.prototype.replaceShaderProgram = function (options) {
   return this.getShaderProgram(options);
 };
 
+// A bounded session lease pins completed, actually requested programs in this
+// existing cache across dataset replacement. Pending request-only programs keep
+// normal ownership and are not pinned. No model/revision enters a cache key.
+ShaderCache.prototype.beginPreparationLease = function () {
+  if (this._preparationLease)
+    throw Error("Shader preparation lease already owned");
+  const entries = new Set();
+  this._preparationLease = entries;
+  return () => {
+    if (this._preparationLease !== entries) return;
+    this._preparationLease = undefined;
+    if (!this.isDestroyed())
+      for (const entry of entries)
+        this.releaseShaderProgram(entry.shaderProgram);
+    entries.clear();
+  };
+};
+
+ShaderCache.prototype.retainPreparedProgram = function (shader) {
+  const entries = this._preparationLease;
+  let entry = shader._cachedShader;
+  while (entry?.parent) entry = entry.parent;
+  if (!entries || !entry || entries.has(entry)) return;
+  if (entries.size >= 256) {
+    this.preparationRetentionOverflow = true;
+    return;
+  }
+  entries.add(entry);
+  entry.count++;
+  delete this._shadersToRelease[entry.keyword];
+};
+
 function toSortedJson(dictionary) {
   const sortedKeys = Object.keys(dictionary).sort();
   return JSON.stringify(dictionary, sortedKeys);
@@ -118,6 +150,8 @@ ShaderCache.prototype.getShaderProgram = function (options) {
 
     const shaderProgram = new ShaderProgram({
       gl: context._gl,
+      context: context,
+      asynchronousCompilation: options.asynchronousCompilation,
       logShaderCompilation: context.logShaderCompilation,
       debugShaders: context.debugShaders,
       vertexShaderSource: vertexShaderSource,
@@ -142,6 +176,8 @@ ShaderCache.prototype.getShaderProgram = function (options) {
   }
 
   ++cachedShader.count;
+  if (options.asynchronousCompilation)
+    cachedShader.shaderProgram._prepareOptIn = true;
   return cachedShader.shaderProgram;
 };
 
@@ -202,6 +238,23 @@ ShaderCache.prototype.createDerivedShaderProgram = function (
     });
   }
 
+  // Cast/depth/pick retain alpha/clipping, but never consume forward irradiance.
+  const depthOnly = fragmentShaderSource.sources.some((source) =>
+    /void (?:czm_shadow_cast_main|czm_pick_main|czm_depth_main)\b/.test(source),
+  );
+  if (depthOnly && shaderProgram._prepareOptIn) {
+    fragmentShaderSource = fragmentShaderSource.clone();
+    fragmentShaderSource.defines = fragmentShaderSource.defines.filter(
+      (d) =>
+        ![
+          "LUMEN_RECEIVER_COMPOSITE",
+          "LUMEN_FG_REASONS",
+          "LUMEN_FG_RECONSTRUCTION",
+          "LUMEN_DIAGNOSTICS",
+        ].includes(d),
+    );
+  }
+
   const context = this._context;
 
   const vertexShaderText =
@@ -211,6 +264,8 @@ ShaderCache.prototype.createDerivedShaderProgram = function (
 
   const derivedShaderProgram = new ShaderProgram({
     gl: context._gl,
+    context: context,
+    asynchronousCompilation: shaderProgram._prepareOptIn,
     logShaderCompilation: context.logShaderCompilation,
     debugShaders: context.debugShaders,
     vertexShaderSource: vertexShaderSource,
@@ -220,7 +275,37 @@ ShaderCache.prototype.createDerivedShaderProgram = function (
     attributeLocations: attributeLocations,
   });
 
+  derivedShaderProgram._lumenModelProgram = shaderProgram._lumenModelProgram;
+  if (fragmentShaderSource.defines.includes("LUMEN_RECEIVER_PASS"))
+    derivedShaderProgram._lumenModelProgram = false;
+  if (shaderProgram._fallback && !depthOnly) {
+    const base = fragmentShaderSource.clone();
+    base.defines = base.defines.filter(
+      (d) =>
+        ![
+          "LUMEN_RECEIVER_COMPOSITE",
+          "LUMEN_FG_REASONS",
+          "LUMEN_FG_RECONSTRUCTION",
+        ].includes(d),
+    );
+    // Receiver outputs are not a forward fallback; they must wait for themselves.
+    if (!base.defines.includes("LUMEN_RECEIVER_PASS")) {
+      derivedShaderProgram._fallback = this.getShaderProgram({
+        vertexShaderSource,
+        fragmentShaderSource: base,
+        attributeLocations,
+        asynchronousCompilation: true,
+      });
+      derivedShaderProgram._fallback._lumenModelProgram = true;
+    }
+  }
+  if (derivedShaderProgram._lumenModelProgram)
+    context._trackLumenBaseShader(
+      derivedShaderProgram._fallback ?? derivedShaderProgram,
+    );
+
   const derivedCachedShader = {
+    parent: cachedShader,
     cache: this,
     shaderProgram: derivedShaderProgram,
     keyword: derivedKeyword,
@@ -249,6 +334,9 @@ function destroyShader(cache, cachedShader) {
 
 ShaderCache.prototype.destroyReleasedShaderPrograms = function () {
   const shadersToRelease = this._shadersToRelease;
+  // Destruction may release a fallback. Retain that newly queued release for
+  // the next frame instead of losing its final reference during this sweep.
+  this._shadersToRelease = {};
 
   for (const keyword in shadersToRelease) {
     if (shadersToRelease.hasOwnProperty(keyword)) {
@@ -257,8 +345,6 @@ ShaderCache.prototype.destroyReleasedShaderPrograms = function () {
       --this._numberOfShaders;
     }
   }
-
-  this._shadersToRelease = {};
 };
 
 ShaderCache.prototype.releaseShaderProgram = function (shaderProgram) {

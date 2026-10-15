@@ -1421,16 +1421,61 @@ Context.prototype.draw = function (
   const renderState = drawCommand._renderState ?? this._defaultRenderState;
   shaderProgram = shaderProgram ?? drawCommand._shaderProgram;
   uniformMap = uniformMap ?? drawCommand._uniformMap;
+  if (shaderProgram._lumenModelProgram && this._lumenBrdfPending) return false;
+
+  // A pending command must not bind a framebuffer/program, set uniforms or draw.
+  if (shaderProgram._lumenModelProgram) {
+    this._trackLumenBaseShader(shaderProgram._fallback ?? shaderProgram);
+  }
+  if (shaderProgram._fallback) {
+    // Submit the small, valid base contract first, never a giant shader in its place.
+    if (!shaderProgram._fallback.prepare()) return false;
+    if (this._lumenBaseGroup?.blocked) return false;
+    if (!shaderProgram.prepare()) shaderProgram = shaderProgram._fallback;
+  } else if (shaderProgram._prepareOptIn && !shaderProgram.prepare())
+    return false;
+  if (shaderProgram._lumenModelProgram && this._lumenBaseGroup?.blocked)
+    return false;
 
   beginDraw(this, framebuffer, passState, shaderProgram, renderState);
   continueDraw(this, drawCommand, shaderProgram, uniformMap);
+  if (shaderProgram._lumenModelProgram)
+    this._lumenModelDrawSerial = (this._lumenModelDrawSerial ?? 0) + 1;
+  return true;
 };
 
 Context.prototype.beginFrame = function () {
   // A no-op. Overridden when drawing to a SharedContext.
 };
 
+Context.prototype._trackLumenBaseShader = function (shader) {
+  const group = (this._lumenBaseGroup ??= {
+    programs: new Set(),
+    blocked: true,
+    changed: false,
+  });
+  if (!group.programs.has(shader)) {
+    group.programs.add(shader);
+    group.changed = true;
+    group.blocked = true;
+  }
+};
+
 Context.prototype.endFrame = function () {
+  const group = this._lumenBaseGroup;
+  if (group) {
+    for (const shader of group.programs)
+      if (shader.isDestroyed()) group.programs.delete(shader);
+    for (const shader of group.programs) shader.prepare();
+    group.blocked =
+      group.changed || [...group.programs].some((s) => !s._program);
+    group.changed = false;
+  }
+  this._lastShaderPreparationPending =
+    this._shaderPreparationPending?.size ?? 0;
+  this._shaderPreparationPending?.clear();
+  this._shaderPreparationSubmissions = 0;
+  this._shaderPreparationFrame = (this._shaderPreparationFrame ?? 0) + 1;
   const gl = this._gl;
   gl.useProgram(null);
 

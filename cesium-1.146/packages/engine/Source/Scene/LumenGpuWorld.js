@@ -754,12 +754,12 @@ class LumenGpuWorld {
         this._queryGeometricNormal ?? c.defaultTexture,
     };
   }
-  _draw(name, framebuffer, x, y, width, height) {
+  _draw(name, framebuffer, x, y, width, height, preparationOnly = false) {
     const c = this.scene.context;
     const mode =
       name === "moments"
         ? this._geometryIntegrationMode
-        : this._jobOptions?.integrationMode;
+        : (this._jobOptions ?? this.options).integrationMode;
     const variant = ["moments", "integrate"].includes(name);
     const key = variant ? `${name}_${mode}` : name;
     let command = this._commands[key];
@@ -782,11 +782,15 @@ class LumenGpuWorld {
         },
       );
     }
+    command.shaderProgram._prepareOptIn = true;
+    if (!command.shaderProgram.prepare()) return false;
+    if (preparationOnly) return true;
     command.framebuffer = framebuffer;
     // A fresh pass state makes Context apply the changed viewport even for adjacent batches.
     const ps = new PassState(c);
     ps.viewport = new BoundingRectangle(x, y, width, height);
     command.execute(c, ps);
+    return true;
   }
   _invalidateTimers() {
     this.metrics.disjoint++;
@@ -1202,6 +1206,27 @@ class LumenGpuWorld {
         }
         return;
       }
+      // Prepare only this solver's finite production passes. Native submissions
+      // share the context's one-per-frame admission; no atlas/job is advanced.
+      // This overlaps independent compile work instead of waiting serially at
+      // every solver phase. Explicit diagnostic shaders stay demand-driven.
+      for (const name of [
+        "relocate",
+        "intersect",
+        "classify",
+        ...(this._weights ? ["weights"] : []),
+        "moments",
+        "momentsBorder",
+        "visibility",
+        "direct",
+        "bounce",
+        "integrate",
+        "border",
+        ...(this._captureFinalGather ? ["fgCopy"] : []),
+        ...(this.displayTransitionMilliseconds > 0 ? ["displayBlend"] : []),
+      ]) {
+        this._draw(name, undefined, 0, 0, 0, 0, true);
+      }
       let estimatedTime = 0;
       // Cheap cache/integration batches share one frame; expensive tracing remains bounded.
       // Estimates come from asynchronously completed GPU queries, never a blocking read.
@@ -1217,6 +1242,21 @@ class LumenGpuWorld {
             phase === "integrate"
               ? `${phase}_${this._jobOptions.integrationMode}`
               : phase;
+        if (!this._draw(phase, undefined, 0, 0, 0, 0, true)) {
+          this.status = `GPU shader preparation · ${phase}`;
+          this.scene.requestRender();
+          break;
+        }
+        if (
+          phase === "border" &&
+          ((this._captureFinalGather &&
+            !this._draw("fgCopy", undefined, 0, 0, 0, 0, true)) ||
+            (this.displayTransitionMilliseconds > 0 &&
+              !this._draw("displayBlend", undefined, 0, 0, 0, 0, true)))
+        ) {
+          this.scene.requestRender();
+          break;
+        }
         const count = Math.min(
           this._batches[scheduleKey] ?? 8,
           workTotal - this._cursor,
@@ -1664,7 +1704,8 @@ class LumenGpuWorld {
       framebuffers.push(fb);
       this._previous = this._published;
       this._phase = "query";
-      this._draw(name, fb, 0, 0, points.length, 1);
+      if (!this._draw(name, fb, 0, 0, points.length, 1))
+        throw Error("Diagnostic program must be prepared before readback");
       const data = this._read(fb, points.length, 1);
       return Array.from({ length: points.length }, (_, i) =>
         Array.from(data.subarray(i * 4, i * 4 + 4)),
@@ -1683,7 +1724,7 @@ class LumenGpuWorld {
   }
   _finalGatherQueryUniforms() {
     // A command persists, but each uniform reads the currently leased snapshot.
-    const keys = Object.keys(this.finalGatherUniforms(this._fgInput));
+    const keys = this._queryUniformKeys;
     return Object.fromEntries(
       keys.map((key) => [
         key,
@@ -1691,10 +1732,87 @@ class LumenGpuWorld {
       ]),
     );
   }
-  diagnoseTransport(rays, { snapshot = this.finalGatherSnapshot } = {}) {
+  prepareDiagnostics(
+    names,
+    { signal, snapshot = this.finalGatherSnapshot } = {},
+  ) {
+    if (!names.every((name) => name.startsWith("query") && shaders[name]))
+      return Promise.reject(
+        Error("Explicit diagnostic program names required"),
+      );
+    if (
+      names.some((name) =>
+        [
+          "queryFinalGather",
+          "queryExactProbeVisibility",
+          "queryTransport",
+          "querySurfaceStatus",
+        ].includes(name),
+      )
+    )
+      this._queryUniformKeys ??= Object.keys(
+        this.finalGatherUniforms(snapshot),
+      );
+    return new Promise((resolve, reject) => {
+      let remove;
+      const clean = () => {
+        clearTimeout(timer);
+        remove?.();
+        signal?.removeEventListener("abort", cancel);
+        this._diagnosticWaiters?.delete(cancel);
+      };
+      const cancel = () => {
+        clean();
+        reject(
+          new DOMException("Diagnostic preparation cancelled", "AbortError"),
+        );
+      };
+      const timer = setTimeout(() => {
+        clean();
+        reject(
+          new DOMException(
+            "Diagnostic shader preparation deadline or stopped Scene",
+            "TimeoutError",
+          ),
+        );
+      }, 30000);
+      (this._diagnosticWaiters ??= new Set()).add(cancel);
+      const poll = () => {
+        try {
+          if (
+            this._closed ||
+            this.scene.isDestroyed() ||
+            this.scene.context._gl.isContextLost() ||
+            signal?.aborted
+          ) {
+            cancel();
+            return;
+          }
+          let ready = true;
+          for (const name of names)
+            if (!this._draw(name, undefined, 0, 0, 0, 0, true)) ready = false;
+          if (ready) {
+            clean();
+            resolve();
+          } else this.scene.requestRender();
+        } catch (error) {
+          clean();
+          reject(error);
+        }
+      };
+      remove = this.scene.postRender.addEventListener(poll);
+      signal?.addEventListener("abort", cancel, { once: true });
+      poll();
+    });
+  }
+  async diagnoseTransport(rays, { snapshot = this.finalGatherSnapshot } = {}) {
     if (!snapshot) {
       throw Error("FG snapshot required for transport diagnostic");
     }
+    snapshot.assertAlive();
+    await this.prepareDiagnostics(["queryTransport", "querySurfaceStatus"], {
+      snapshot,
+    });
     snapshot.assertAlive();
     this._fgInput = snapshot.retain();
     try {
@@ -1733,7 +1851,7 @@ class LumenGpuWorld {
       this._fgInput = undefined;
     }
   }
-  sampleFinalGather(
+  async sampleFinalGather(
     points,
     {
       snapshot = this.finalGatherSnapshot,
@@ -1777,6 +1895,8 @@ class LumenGpuWorld {
     ) {
       throw Error("Invalid FG query sequence");
     }
+    await this.prepareDiagnostics(["queryFinalGather"], { snapshot });
+    snapshot.assertAlive();
     this._fgInput = snapshot.retain();
     this._fgSamples = samples;
     this._fgSeed = seed;
@@ -1804,7 +1924,7 @@ class LumenGpuWorld {
       this._fgBudget = undefined;
     }
   }
-  sampleExactProbeVisibility(
+  async sampleExactProbeVisibility(
     points,
     { snapshot = this.finalGatherSnapshot, budget } = {},
   ) {
@@ -1817,6 +1937,8 @@ class LumenGpuWorld {
     ) {
       throw Error("FG budget in [1,4096] required");
     }
+    await this.prepareDiagnostics(["queryExactProbeVisibility"], { snapshot });
+    snapshot.assertAlive();
     this._fgInput = snapshot.retain();
     this._fgBudget = budget;
     this._fgExact = true;
@@ -1839,7 +1961,8 @@ class LumenGpuWorld {
       this._fgExact = false;
     }
   }
-  sample(points, diagnostic = {}) {
+  async sample(points, diagnostic = {}) {
+    await this.prepareDiagnostics(["querySample"]);
     const old = this._sampleGatherControl,
       oldDisplay = this._sampleDisplay,
       oldLegacy = this._sampleLegacyKernel;
@@ -1864,7 +1987,8 @@ class LumenGpuWorld {
       this._sampleLegacyKernel = oldLegacy;
     }
   }
-  trace(rays, { anyHit = false, statistics = false } = {}) {
+  async trace(rays, { anyHit = false, statistics = false } = {}) {
+    await this.prepareDiagnostics(["queryTrace"]);
     const groups = new Map(),
       result = new Array(rays.length);
     rays.forEach((r, i) => {
@@ -1930,6 +2054,7 @@ class LumenGpuWorld {
     this.scene.requestRender();
   }
   _release() {
+    for (const cancel of [...(this._diagnosticWaiters ?? [])]) cancel();
     for (const cache of [...this._surfaceCaches]) {
       cache.destroy();
     }

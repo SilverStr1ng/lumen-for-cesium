@@ -93,12 +93,16 @@ export default class LumenSession {
     this.disposed = false;
     this.phase = "empty";
     this._previous = {
+      shaderPreparation: scene.context._lumenShaderPreparation,
       enabled: scene.lumen.enabled,
       coverage: scene.lumen.coverage,
       iblPolicy: scene.lumen.iblPolicy,
       light: scene.light,
       continuousSampling: scene.lumen.finalGather.continuousSampling,
     };
+    scene.context._lumenShaderPreparation = true;
+    this._releaseShaderLease =
+      scene.context.shaderCache.beginPreparationLease();
     sessions.set(scene, this);
     this._removeRenderError = scene.renderError.addEventListener((_, error) => {
       if (this._contextLost) {
@@ -114,6 +118,17 @@ export default class LumenSession {
     this._removeBudget = scene.preRender.addEventListener(() =>
       this._account(),
     );
+    let drawSerial = scene.context._lumenModelDrawSerial ?? 0;
+    this._removeStartupFrame = scene.postRender.addEventListener(() => {
+      const next = scene.context._lumenModelDrawSerial ?? 0;
+      if (
+        next !== drawSerial &&
+        this.world &&
+        this._committedGeneration === this.generation
+      )
+        this._basePresentedGeneration = this.generation;
+      drawSerial = next;
+    });
     this._lost = (event) => {
       event.preventDefault();
       this._contextLost = true;
@@ -481,6 +496,8 @@ export default class LumenSession {
                   if (!model.isDestroyed()) model.destroy();
                   throw aborted();
                 }
+                model._lumenPrepare = true;
+                model._lumenPendingDataset = true;
                 return model;
               }),
             signal,
@@ -648,7 +665,12 @@ export default class LumenSession {
         this._nativeLease = pending.nativeLease;
         pending.nativeLease = undefined;
         this.models = staged;
+        this.models.forEach((model) => {
+          model._lumenPendingDataset = false;
+          model.show = true;
+        });
         this.tileset = stagedTiles;
+        if (this.tileset) this.tileset.show = true;
         this.world = world;
         pending.world = world;
         this._datasetReady = false;
@@ -1119,6 +1141,51 @@ export default class LumenSession {
         "4KiB per live timer handle; implementation storage unmeasured",
     };
   }
+  startupStatus() {
+    const context = this.scene.context,
+      world = this.world,
+      fg = this.scene.lumen.finalGather,
+      m = fg.metrics;
+    let state;
+    if (
+      ["failed", "cancelled", "context-lost", "disposed"].includes(this.phase)
+    )
+      state = this.phase;
+    else if (!world || this._committedGeneration !== this.generation)
+      state = "dataset-loading";
+    else if (this._basePresentedGeneration !== this.generation)
+      state = "base-warming";
+    else if (
+      !world.ready ||
+      world.requestedRevision !== world.publishedRevision
+    )
+      state = "gi-warming";
+    else if (
+      this.profile !== "baseline" &&
+      (fg._sampleWorld !== world ||
+        m.effectiveMode !== "fg" ||
+        !m.history ||
+        m.stablePasses < 32 ||
+        m.revision !== world.requestedRevision ||
+        m.round !== 3)
+    )
+      state = "fg-warming";
+    else state = "ready";
+    const cache = context.shaderCache;
+    return {
+      state,
+      generation: this.generation,
+      committedGeneration: this._committedGeneration,
+      basePresented: this._basePresentedGeneration === this.generation,
+      publishedRound: world?.publishedBounce ?? 0,
+      pendingPrograms: context._lastShaderPreparationPending ?? 0,
+      compilationPath: context._shaderPreparationPath ?? "unprepared",
+      retainedPrograms: cache._preparationLease?.size ?? 0,
+      retentionOverflow: !!cache.preparationRetentionOverflow,
+      scope:
+        "Rendered base and matching GI/FG preparation; independent of pilotReady/physical quality",
+    };
+  }
   status() {
     if (this.scene.isDestroyed())
       return {
@@ -1133,6 +1200,7 @@ export default class LumenSession {
       this.scene.lumen.finalGather.metrics;
     return {
       pilotReady: false,
+      startup: this.startupStatus(),
       datasetReady: this._datasetReady && !!this.world,
       displayState: this.displayStatus(),
       lightingRequests: {
@@ -1304,10 +1372,14 @@ export default class LumenSession {
     this._displayRemovers = [];
     this._removeBudget();
     this._removeRenderError();
+    this._removeStartupFrame();
+    this._releaseShaderLease();
     this.adapter?.dispose();
     this.canvas.removeEventListener("webglcontextlost", this._lost);
     document.removeEventListener("visibilitychange", this._visibility);
     if (!this.scene.isDestroyed()) {
+      this.scene.context._lumenShaderPreparation =
+        this._previous.shaderPreparation;
       const l = this.scene.lumen;
       if (l.world === this.world) l.unloadWorld();
       l.finalGather.setModels([], true);

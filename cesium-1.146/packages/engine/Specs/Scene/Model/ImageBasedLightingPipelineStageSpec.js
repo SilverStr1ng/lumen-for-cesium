@@ -10,6 +10,7 @@ import ShaderBuilderTester from "../../../../../Specs/ShaderBuilderTester.js";
 
 describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
   const mockFrameState = {
+    lumen: { enabled: true, debugMode: 1 },
     context: {
       floatingPointTexture: true,
       colorBufferFloat: true,
@@ -17,9 +18,39 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     },
   };
 
+  it("keeps ordinary and unregistered session models on the original IBL source", function () {
+    for (const lumen of [
+      undefined,
+      { enabled: false },
+      {
+        enabled: true,
+        resourceBudget: {},
+        finalGather: { models: new Set(), mode: "fg" },
+      },
+    ]) {
+      const model = {
+        imageBasedLighting: new ImageBasedLighting(),
+        environmentMapManager: {},
+      };
+      const resources = {
+        model,
+        shaderBuilder: new ShaderBuilder(),
+        uniformMap: {},
+      };
+      ImageBasedLightingPipelineStage.process(resources, model, {
+        ...mockFrameState,
+        lumen,
+      });
+      expect(resources.uniformMap.u_lumenEnabled).toBeUndefined();
+      expect(
+        resources.shaderBuilder._fragmentShaderParts.shaderLines,
+      ).not.toContain(_shadersLumenStageFS);
+    }
+  });
+
   it("updates Lumen uniforms without rebuilding and disables them during picking", function () {
     const lumen = {
-      enabled: false,
+      enabled: true,
       coverage: 1,
       _irradiance: new Cartesian3(1, 2, 3),
       debugMode: 0,
@@ -40,6 +71,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
       model,
     };
     ImageBasedLightingPipelineStage.process(resources, model, frameState);
+    lumen.enabled = false;
     const uniforms = resources.uniformMap;
     expect(uniforms.u_lumenPbrDiffuseResponse()).toBe(false);
     lumen.diffuseResponse = "cesium";
@@ -79,6 +111,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
     );
 
     ShaderBuilderTester.expectHasFragmentDefines(shaderBuilder, [
+      "LUMEN_DIAGNOSTICS",
       "USE_IBL_LIGHTING",
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
@@ -167,6 +200,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
       "USE_IBL_LIGHTING",
       "DIFFUSE_IBL",
       "CUSTOM_SPHERICAL_HARMONICS",
+      "LUMEN_DIAGNOSTICS",
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",
@@ -249,6 +283,7 @@ describe("Scene/Model/ImageBasedLightingPipelineStage", function () {
       "USE_IBL_LIGHTING",
       "SPECULAR_IBL",
       "CUSTOM_SPECULAR_IBL",
+      "LUMEN_DIAGNOSTICS",
     ]);
     ShaderBuilderTester.expectHasFragmentUniforms(shaderBuilder, [
       "uniform bool u_lumenEnabled;",

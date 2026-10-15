@@ -516,6 +516,7 @@ ShaderBuilder.prototype.buildShaderProgram = function (context) {
     vertexShaderSource: vertexShaderSource,
     fragmentShaderSource: fragmentShaderSource,
     attributeLocations: this._attributeLocations,
+    asynchronousCompilation: this._lumenPrepare === true,
   });
 };
 

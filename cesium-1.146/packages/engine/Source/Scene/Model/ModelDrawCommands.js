@@ -82,6 +82,30 @@ function createShaderProgram(
 
   const model = primitiveRenderResources.model;
   const shaderProgram = shaderBuilder.buildShaderProgram(frameState.context);
+  shaderProgram._lumenModelProgram = shaderBuilder._lumenPrepare === true;
+  if (
+    shaderBuilder._fragmentShaderParts.defineLines.includes(
+      "LUMEN_RECEIVER_COMPOSITE",
+    ) &&
+    !shaderProgram._fallback
+  ) {
+    const base = shaderBuilder.clone();
+    base._fragmentShaderParts.defineLines =
+      base._fragmentShaderParts.defineLines.filter(
+        (d) =>
+          ![
+            "LUMEN_RECEIVER_COMPOSITE",
+            "LUMEN_FG_REASONS",
+            "LUMEN_FG_RECONSTRUCTION",
+          ].includes(d),
+      );
+    shaderProgram._fallback = base.buildShaderProgram(frameState.context);
+    shaderProgram._fallback._lumenModelProgram = true;
+  }
+  if (shaderProgram._lumenModelProgram)
+    frameState.context._trackLumenBaseShader(
+      shaderProgram._fallback ?? shaderProgram,
+    );
   model._pipelineResources.push(shaderProgram);
   return shaderProgram;
 }

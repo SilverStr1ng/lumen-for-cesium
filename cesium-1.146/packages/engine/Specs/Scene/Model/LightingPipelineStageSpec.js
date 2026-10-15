@@ -102,6 +102,7 @@ describe("Scene/Model/LightingPipelineStage", function () {
       LightingPipelineStage.process(
         { model: {}, lightingOptions: options, shaderBuilder },
         { primitiveType: 4, material: { alphaMode } },
+        { lumen: { enabled: true, debugMode: 0 } },
       );
       expect(shaderBuilder._fragmentShaderParts.defineLines).toContain(
         "LUMEN_MODEL_LIGHTING",
@@ -120,8 +121,12 @@ describe("Scene/Model/LightingPipelineStage", function () {
       "NO_NORMALS",
     ]) {
       const shaderBuilder = new ShaderBuilder();
-      if (unsupported !== "NO_NORMALS") {shaderBuilder.addDefine("HAS_NORMALS");}
-      if (unsupported.startsWith("USE_")) {shaderBuilder.addDefine(unsupported);}
+      if (unsupported !== "NO_NORMALS") {
+        shaderBuilder.addDefine("HAS_NORMALS");
+      }
+      if (unsupported.startsWith("USE_")) {
+        shaderBuilder.addDefine(unsupported);
+      }
       LightingPipelineStage.process(
         {
           model: unsupported === "CUSTOM_SHADER" ? { customShader: {} } : {},
@@ -132,6 +137,7 @@ describe("Scene/Model/LightingPipelineStage", function () {
           primitiveType: 4,
           material: { alphaMode: unsupported === "BLEND" ? "BLEND" : "OPAQUE" },
         },
+        { lumen: { enabled: true, debugMode: 0 } },
       );
       expect(shaderBuilder._fragmentShaderParts.defineLines).not.toContain(
         "LUMEN_MODEL_LIGHTING",
