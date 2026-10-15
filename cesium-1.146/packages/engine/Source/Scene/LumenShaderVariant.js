@@ -8,6 +8,8 @@ export default function lumenShaderVariant(model, frameState) {
   if (lumen.resourceBudget && !registered) return "cesium";
   const fg = registered && lumen.finalGather.mode !== "ddgi";
   const diagnostic =
-    (lumen.debugMode ?? 0) !== 0 || (fg && lumen.finalGather.mode === "raw");
+    lumen.diagnosticShaders === true ||
+    (lumen.debugMode ?? 0) !== 0 ||
+    (fg && lumen.finalGather.mode === "raw");
   return `${fg ? "fg" : "ddgi"}${diagnostic ? "-diagnostic" : ""}`;
 }

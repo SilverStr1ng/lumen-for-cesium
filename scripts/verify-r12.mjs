@@ -5,6 +5,13 @@ import os from "node:os";
 import { sourceVersion } from "./browser-tools.mjs";
 import { newOutput, pilotBase } from "./pilot-validation.mjs";
 import { runBounded } from "./pilot-process.mjs";
+import { startStartupBaseline } from "./startup-baseline.mjs";
+import {
+  childOutcomeValid,
+  readiness,
+  startupGates,
+} from "./pilot-acceptance.mjs";
+const startup = process.argv.includes("--startup");
 const scripts = (await readdir("scripts"))
   .filter((f) => /^verify-pilot.*\.mjs$/.test(f))
   .map((f) => "scripts/" + f);
@@ -16,9 +23,17 @@ const inputs = [
   "scripts/verify-environment.mjs",
   "scripts/verify-curved-contract.mjs",
   "scripts/verify-r12.mjs",
+  "scripts/verify-shader-preparation.mjs",
+  "scripts/startup-observer.mjs",
+  "scripts/startup-baseline.mjs",
+  "scripts/native-cancel-probe.mjs",
+  "docs/product/local-gi-startup-v1.json",
+  "docs/product/local-gi-startup-v12.md",
+  "reports/local-gi-startup-v12/r13-0-before-presented/startup.json",
   "scripts/benchmark-pilot.mjs",
   "scripts/pilot-validation.mjs",
   "scripts/pilot-process.mjs",
+  "scripts/pilot-acceptance.mjs",
   "scripts/pilot-network.mjs",
   "scripts/gl-allocation-observer.mjs",
   "scripts/setup.mjs",
@@ -31,6 +46,7 @@ const inputs = [
   "docs/product/local-gi-deployment-v11.md",
   "docs/progress/readiness/baseline-v1.json",
   "docs/progress/readiness/v10-review.json",
+  "docs/progress/readiness/v11-review.json",
   ...[
     "models-enhanced-day-overview",
     "models-enhanced-day-doorway",
@@ -41,7 +57,7 @@ const inputs = [
 ];
 const version = sourceVersion(inputs),
   configuration = {
-    schema: 2,
+    schema: startup ? 3 : 2,
     buffer: [1920, 1080],
     profiles: ["baseline", "enhanced"],
     cache: false,
@@ -67,8 +83,13 @@ const version = sourceVersion(inputs),
       "relight-visible",
       "soak",
       "deployment",
+      ...(startup ? startupGates : []),
     ],
   };
+if (startup)
+  configuration.startup = JSON.parse(
+    await readFile("docs/product/local-gi-startup-v1.json", "utf8"),
+  );
 const cached = process.argv.includes("--cached");
 const evidenceHashes = async (output) => {
   const entries = await readdir(output, {
@@ -120,6 +141,17 @@ if (cached) {
   );
   if (JSON.stringify(execution.children) !== JSON.stringify(old.children))
     throw Error("Cached execution outcomes differ from summary");
+  const expectedReady = readiness(
+    old,
+    configuration.required,
+    startup ? 14 : 8,
+    startup,
+  );
+  if (
+    old.pilotReady !== expectedReady.pilotReady ||
+    (startup && old.startupReady !== expectedReady.startupReady)
+  )
+    throw Error("Cached readiness does not match execution outcomes");
   for (const [directory, file] of [
     ["assets", "assets"],
     ["lifecycle", "lifecycle"],
@@ -129,6 +161,15 @@ if (cached) {
     ["performance", "benchmark"],
     ["deployment", "deployment"],
     ["soak", "soak"],
+    ...(startup
+      ? [
+          ["startup", "startup"],
+          ["startup-no-extension", "startup"],
+          ["shader-lifecycle", "shader-lifecycle"],
+          ["profile-equivalence", "profile-equivalence"],
+          ["shared-shader-smoke", "shader-smoke"],
+        ]
+      : []),
   ]) {
     const child = JSON.parse(
       await readFile(`${output}/${directory}/${file}.json`, "utf8"),
@@ -136,23 +177,39 @@ if (cached) {
     if (!compatible(child.version) || child.status !== "passed")
       throw Error("Cached child gate did not pass: " + directory);
   }
+  if (startup) {
+    const before = JSON.parse(
+      await readFile(output + "/startup-before/startup.json", "utf8"),
+    );
+    if (
+      !compatible(before.version) ||
+      before.rows?.length !== 60 ||
+      before.rows.some((r) => !r.measurement || r.errors.length)
+    )
+      throw Error(
+        "Cached historical measurements are incomplete or incompatible",
+      );
+  }
   console.log(
     JSON.stringify({
       cached: true,
       testedHead: old.version.head,
       status: old.status,
       pilotReady: old.pilotReady,
+      ...(startup ? { startupReady: old.startupReady } : {}),
     }),
   );
   if (
     old.status !== "passed" ||
     old.pilotReady !== true ||
     configuration.required.some((gate) => old.gates[gate] !== "passed") ||
-    old.children?.length !== 8 ||
-    old.children.some((c) => c.exitCode !== 0 || c.timedOut || c.cleanupFailed)
+    old.children?.length !== (startup ? 14 : 8) ||
+    old.children.some((c) => !childOutcomeValid(c))
   )
     process.exitCode = 1;
 } else {
+  if (startup && !process.env.LUMEN_REPORT_DIRECTORY)
+    process.env.LUMEN_REPORT_DIRECTORY = `reports/local-gi-startup-v12/acceptance-${new Date().toISOString().replaceAll(":", "-")}`;
   const output = await newOutput("acceptance"),
     report = {
       version,
@@ -173,7 +230,7 @@ if (cached) {
     };
   if (version.modifiedSources.length)
     throw Error(
-      "Freeze source before formal R12 acceptance: " +
+      "Freeze source before formal acceptance: " +
         version.modifiedSources.join(","),
     );
   await writeFile(
@@ -181,7 +238,7 @@ if (cached) {
     JSON.stringify({ version, configuration }, null, 2),
     { flag: "wx" },
   );
-  const run = async (name, command, timeoutSeconds) => {
+  const run = async (name, command, timeoutSeconds, overrides = {}) => {
     const childOutput = output + "/" + name,
       args =
         process.platform === "win32"
@@ -200,6 +257,17 @@ if (cached) {
           LUMEN_PILOT_DISPLAYS: "models,tiles",
           LUMEN_PILOT_REPLACEMENTS: "20",
           LUMEN_PILOT_LOD_SWITCHES: "50",
+          LUMEN_STARTUP_RUNS: "5",
+          LUMEN_STARTUP_WINDOWS:
+            "cold,reload,baseline,enhanced,diagnostic,new-context",
+          LUMEN_STARTUP_NO_KHR: "0",
+          LUMEN_STARTUP_CPU: "1",
+          LUMEN_STARTUP_PROFILE: "enhanced",
+          LUMEN_STARTUP_RUNTIME_MANIFEST: "",
+          LUMEN_EQ_BEFORE_BASE: "",
+          LUMEN_SHADER_LIFECYCLE_STAGES:
+            "auditing,base-warming,gi-warming,fg-warming,stopped,context-loss,dispose",
+          ...overrides,
         },
       },
     );
@@ -240,7 +308,8 @@ if (cached) {
       : states.every((s) => s === "passed")
         ? "passed"
         : "not-run";
-  for (const [name, command, timeoutSeconds] of [
+  let baseline;
+  const cases = [
     ["assets", "test:pilot:assets", 300],
     ["lifecycle", "test:pilot:lifecycle", 1200],
     ["equivalence", "test:pilot:equivalence", 1800],
@@ -249,13 +318,73 @@ if (cached) {
     ["performance", "benchmark:pilot", 1200],
     ["deployment", "test:pilot:deployment", 2400],
     ["soak", "test:pilot:soak", 2400],
-  ]) {
-    console.log("R12 group " + name);
-    if (!(await run(name, command, timeoutSeconds))) {
-      report.infrastructureError =
-        "Child tree cleanup unconfirmed; later GPU groups not-run";
-      break;
+  ];
+  if (startup) {
+    try {
+      baseline = await startStartupBaseline(output);
+    } catch (error) {
+      report.baselineSetupError = String(error);
     }
+    const historical = baseline
+      ? {
+          LUMEN_STARTUP_RUNTIME_MANIFEST: baseline.manifest,
+          LUMEN_EQ_BEFORE_BASE: baseline.base,
+        }
+      : {};
+    cases.unshift(
+      ...(baseline
+        ? [
+            [
+              "startup-before",
+              "test:pilot:startup",
+              1800,
+              {
+                ...historical,
+                LUMEN_PILOT_BASE: baseline.base,
+              },
+            ],
+          ]
+        : []),
+      ["startup", "test:pilot:startup", 1800],
+      [
+        "startup-no-extension",
+        "test:pilot:startup",
+        1800,
+        {
+          LUMEN_STARTUP_RUNS: "5",
+          LUMEN_STARTUP_WINDOWS: "cold",
+          LUMEN_STARTUP_NO_KHR: "1",
+        },
+      ],
+      ["shader-lifecycle", "test:pilot:shader-lifecycle", 1800],
+      [
+        "profile-equivalence",
+        "test:pilot:profile-equivalence",
+        1800,
+        historical,
+      ],
+      ["shared-shader-smoke", "test:pilot:shader-smoke", 600],
+    );
+    report.baseline = baseline
+      ? {
+          base: baseline.base,
+          runtime: baseline.runtime,
+          scope:
+            "Historical comparison; its old startup failures are preserved, not a new implementation gate",
+        }
+      : { status: "not-run", error: report.baselineSetupError };
+  }
+  try {
+    for (const [name, command, timeoutSeconds, overrides] of cases) {
+      console.log((startup ? "R13" : "R12") + " group " + name);
+      if (!(await run(name, command, timeoutSeconds, overrides))) {
+        report.infrastructureError =
+          "Child tree cleanup unconfirmed; later GPU groups not-run";
+        break;
+      }
+    }
+  } finally {
+    baseline?.close();
   }
   await writeFile(
     output + "/execution.json",
@@ -319,6 +448,28 @@ if (cached) {
     soak: passed(soak),
     deployment: passed(deployment),
   };
+  if (startup) {
+    const cold = await read("startup", "startup.json"),
+      fallback = await read("startup-no-extension", "startup.json"),
+      shader = await read("shader-lifecycle", "shader-lifecycle.json"),
+      profiles = await read("profile-equivalence", "profile-equivalence.json"),
+      smoke = await read("shared-shader-smoke", "shader-smoke.json"),
+      before = await read("startup-before", "startup.json");
+    Object.assign(report.gates, {
+      "startup-cold": cold.gates?.["startup-cold"] ?? passed(cold),
+      "startup-warm": cold.gates?.["startup-warm"] ?? passed(cold),
+      "startup-no-extension":
+        fallback.gates?.["startup-no-extension"] ?? passed(fallback),
+      "shader-lifecycle": passed(shader),
+      "profile-equivalence": passed(profiles),
+      "shared-shader-smoke": passed(smoke),
+    });
+    report.beforeEvidence =
+      before.rows?.length === 60 &&
+      before.rows.every((r) => r.measurement && !r.errors.length)
+        ? "passed"
+        : "not-run";
+  }
   report.profiles = Object.fromEntries(
     configuration.profiles.map((profile) => {
       const rows = quality.rows?.filter((r) => r.profile === profile) ?? [];
@@ -352,12 +503,17 @@ if (cached) {
       ];
     }),
   );
-  report.status = report.children.some((c) => c.exitCode !== 0 || c.timedOut)
-    ? "failed"
-    : gate(Object.values(report.gates));
-  report.pilotReady =
-    report.status === "passed" &&
-    report.children.every((c) => c.exitCode === 0);
+  report.status =
+    report.infrastructureError ||
+    report.children.some((c) => !childOutcomeValid(c))
+      ? "failed"
+      : gate(Object.values(report.gates));
+  Object.assign(
+    report,
+    readiness(report, configuration.required, startup ? 14 : 8, startup),
+  );
+  if (report.status === "passed" && !report.pilotReady)
+    report.status = "not-run";
   report.finished = new Date().toISOString();
   const endVersion = sourceVersion(inputs);
   if (
@@ -366,6 +522,7 @@ if (cached) {
   ) {
     report.status = "failed";
     report.pilotReady = false;
+    report.startupReady = false;
     report.sourceChanged = true;
   }
   report.evidence = await evidenceHashes(output);
@@ -380,6 +537,7 @@ if (cached) {
       testedHead: version.head,
       status: report.status,
       pilotReady: report.pilotReady,
+      ...(startup ? { startupReady: report.startupReady } : {}),
       gates: report.gates,
     }),
   );

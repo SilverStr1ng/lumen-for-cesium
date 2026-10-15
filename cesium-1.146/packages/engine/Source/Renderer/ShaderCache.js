@@ -77,7 +77,8 @@ ShaderCache.prototype.retainPreparedProgram = function (shader) {
   const entries = this._preparationLease;
   let entry = shader._cachedShader;
   while (entry?.parent) entry = entry.parent;
-  if (!entries || !entry || entries.has(entry)) return;
+  if (!entries || !entry || !entry.count || entries.has(entry)) return;
+  if (entry.preparing?.size) return;
   if (entries.size >= 256) {
     this.preparationRetentionOverflow = true;
     return;
@@ -85,6 +86,25 @@ ShaderCache.prototype.retainPreparedProgram = function (shader) {
   entries.add(entry);
   entry.count++;
   delete this._shadersToRelease[entry.keyword];
+};
+
+ShaderCache.prototype.beginProgramPreparation = function (shader) {
+  let entry = shader._cachedShader;
+  while (entry?.parent) entry = entry.parent;
+  // A newly requested native child makes the family ineligible for retention.
+  // Keep real Model references; release the cache-only pin until all pending
+  // members have completed. Cancellation can now destroy an unowned family.
+  if (entry && this._preparationLease?.delete(entry))
+    this.releaseShaderProgram(entry.shaderProgram);
+  if (entry) {
+    (entry.preparing ??= new Set()).add(shader);
+    shader._preparationFamily = entry;
+  }
+};
+
+ShaderCache.prototype.finishProgramPreparation = function (shader) {
+  shader._preparationFamily?.preparing.delete(shader);
+  shader._preparationFamily = undefined;
 };
 
 function toSortedJson(dictionary) {
@@ -166,6 +186,7 @@ ShaderCache.prototype.getShaderProgram = function (options) {
       shaderProgram: shaderProgram,
       keyword: keyword,
       derivedKeywords: [],
+      derivedPrograms: new Map(),
       count: 0,
     };
 
@@ -187,10 +208,10 @@ ShaderCache.prototype.replaceDerivedShaderProgram = function (
   options,
 ) {
   const cachedShader = shaderProgram._cachedShader;
-  const derivedKeyword = keyword + cachedShader.keyword;
-  const cachedDerivedShader = this._shaders[derivedKeyword];
+  const cachedDerivedShader = cachedShader.derivedPrograms.get(keyword);
   if (defined(cachedDerivedShader)) {
     destroyShader(this, cachedDerivedShader);
+    cachedShader.derivedPrograms.delete(keyword);
     const index = cachedShader.derivedKeywords.indexOf(keyword);
     if (index > -1) {
       cachedShader.derivedKeywords.splice(index, 1);
@@ -205,8 +226,9 @@ ShaderCache.prototype.getDerivedShaderProgram = function (
   keyword,
 ) {
   const cachedShader = shaderProgram._cachedShader;
-  const derivedKeyword = keyword + cachedShader.keyword;
-  const cachedDerivedShader = this._shaders[derivedKeyword];
+  // A source cache key can contain many KiB. Do not concatenate/hash the whole
+  // source family for every derived-command lookup in every rendering pass.
+  const cachedDerivedShader = cachedShader.derivedPrograms.get(keyword);
   if (!defined(cachedDerivedShader)) {
     return undefined;
   }
@@ -239,9 +261,15 @@ ShaderCache.prototype.createDerivedShaderProgram = function (
   }
 
   // Cast/depth/pick retain alpha/clipping, but never consume forward irradiance.
-  const depthOnly = fragmentShaderSource.sources.some((source) =>
-    /void (?:czm_shadow_cast_main|czm_pick_main|czm_depth_main)\b/.test(source),
-  );
+  const depthOnly =
+    shaderProgram._lumenDepthOnly ||
+    ["depthOnly", "pick", "snap"].includes(keyword) ||
+    keyword.startsWith("pickMetadata-") ||
+    fragmentShaderSource.sources.some((source) =>
+      /void (?:czm_shadow_cast_main|czm_non_pick_main|czm_pick_main|czm_non_snap_main)\b/.test(
+        source,
+      ),
+    );
   if (depthOnly && shaderProgram._prepareOptIn) {
     fragmentShaderSource = fragmentShaderSource.clone();
     fragmentShaderSource.defines = fragmentShaderSource.defines.filter(
@@ -276,6 +304,11 @@ ShaderCache.prototype.createDerivedShaderProgram = function (
   });
 
   derivedShaderProgram._lumenModelProgram = shaderProgram._lumenModelProgram;
+  derivedShaderProgram._lumenDepthOnly = depthOnly;
+  derivedShaderProgram._lumenFgProgram =
+    !depthOnly &&
+    !fragmentShaderSource.defines.includes("LUMEN_RECEIVER_PASS") &&
+    fragmentShaderSource.defines.includes("LUMEN_RECEIVER_COMPOSITE");
   if (fragmentShaderSource.defines.includes("LUMEN_RECEIVER_PASS"))
     derivedShaderProgram._lumenModelProgram = false;
   if (shaderProgram._fallback && !depthOnly) {
@@ -310,21 +343,19 @@ ShaderCache.prototype.createDerivedShaderProgram = function (
     shaderProgram: derivedShaderProgram,
     keyword: derivedKeyword,
     derivedKeywords: [],
+    derivedPrograms: new Map(),
     count: 0,
   };
 
   cachedShader.derivedKeywords.push(keyword);
+  cachedShader.derivedPrograms.set(keyword, derivedCachedShader);
   derivedShaderProgram._cachedShader = derivedCachedShader;
   this._shaders[derivedKeyword] = derivedCachedShader;
   return derivedShaderProgram;
 };
 
 function destroyShader(cache, cachedShader) {
-  const derivedKeywords = cachedShader.derivedKeywords;
-  const length = derivedKeywords.length;
-  for (let i = 0; i < length; ++i) {
-    const keyword = derivedKeywords[i] + cachedShader.keyword;
-    const derivedCachedShader = cache._shaders[keyword];
+  for (const derivedCachedShader of cachedShader.derivedPrograms.values()) {
     destroyShader(cache, derivedCachedShader);
   }
 

@@ -17,6 +17,7 @@ function Lumen(scene) {
   this._irradiance = new Cartesian3(0.5, 0.5, 0.5);
   this._coverage = 1.0;
   this._debugMode = 0;
+  this._diagnosticShaders = false;
   this._diffuseResponse = "lambert";
   this._iblPolicy = "enhanced";
   this.world = undefined;
@@ -24,6 +25,17 @@ function Lumen(scene) {
 }
 
 Object.defineProperties(Lumen.prototype, {
+  /** Explicit diagnostics may keep the diagnostic variant at debugMode=0 for
+   * a same-input production/diagnostic comparison. Disabled by default. */
+  diagnosticShaders: {
+    get() {
+      return this._diagnosticShaders;
+    },
+    set(value) {
+      this._diagnosticShaders = Boolean(value);
+      this._scene.requestRender();
+    },
+  },
   /** Enhanced multiscatter allocation is opt-in within active supported Lumen materials. Disabled Lumen always restores the original engine IBL. */
   iblPolicy: {
     get() {

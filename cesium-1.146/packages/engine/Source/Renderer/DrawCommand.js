@@ -664,7 +664,7 @@ class DrawCommand {
    * @param {PassState} [passState] The state for the current render pass.
    */
   execute(context, passState) {
-    context.draw(this, passState);
+    return context.draw(this, passState);
   }
 }
 

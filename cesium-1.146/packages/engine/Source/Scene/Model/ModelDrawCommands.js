@@ -83,6 +83,10 @@ function createShaderProgram(
   const model = primitiveRenderResources.model;
   const shaderProgram = shaderBuilder.buildShaderProgram(frameState.context);
   shaderProgram._lumenModelProgram = shaderBuilder._lumenPrepare === true;
+  shaderProgram._lumenFgProgram =
+    shaderBuilder._fragmentShaderParts.defineLines.includes(
+      "LUMEN_RECEIVER_COMPOSITE",
+    );
   if (
     shaderBuilder._fragmentShaderParts.defineLines.includes(
       "LUMEN_RECEIVER_COMPOSITE",

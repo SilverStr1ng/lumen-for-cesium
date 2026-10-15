@@ -126,7 +126,8 @@ class LumenReceiverPass {
           for (let j = 0; j < f.indices[pass]; j++) {
             const draw = this.command(scene, f.commands[pass][j]);
             if (draw) {
-              draw.execute(context, passState);
+              if (!draw.execute(context, passState))
+                throw Error("Receiver lost shader readiness before execution");
               draws++;
             }
           }

@@ -42,3 +42,39 @@ assert.equal(review.pilotReleaseReady, false);
 console.log(
   "PASS immutable baseline-v1 weights/anchors; only reviewed asset/Tiles credits, 48.75/63.75; blockers remain binding",
 );
+const nextBytes = await readFile("docs/progress/readiness/v11-review.json");
+assert.equal(
+  createHash("sha256").update(nextBytes).digest("hex"),
+  "e482c8cad4e9283c488e2e4d6bff7dda382b7b2bbdcf992f875446d040613e3e",
+);
+const next = JSON.parse(nextBytes);
+assert.deepEqual(next.anchors, baseline.anchors);
+for (const [scope, expected] of [
+  ["primary", 55],
+  ["limitedPilot", 72.5],
+]) {
+  assert.equal(next[scope].rows.length, review[scope].rows.length);
+  assert.equal(
+    next[scope].rows.reduce((sum, r) => sum + r.weight, 0),
+    100,
+  );
+  for (const row of next[scope].rows) {
+    const old = review[scope].rows.find((r) => r.id === row.id);
+    assert.equal(row.weight, old.weight);
+    assert.equal(
+      row.maturity,
+      ["assets", "delivery"].includes(row.id) ? 75 : old.maturity,
+    );
+    assert.equal(row.creditedPoints, (row.weight * row.maturity) / 100);
+  }
+  assert.equal(
+    next[scope].rows.reduce((sum, r) => sum + r.creditedPoints, 0),
+    expected,
+  );
+  assert.equal(next[scope].scorePercent, expected);
+}
+assert.equal(next.releaseReady, false);
+assert.equal(next.pilotReleaseReady, false);
+console.log(
+  "PASS v11 review 55/72.5; only assets/API and delivery credited, GI/performance unchanged",
+);

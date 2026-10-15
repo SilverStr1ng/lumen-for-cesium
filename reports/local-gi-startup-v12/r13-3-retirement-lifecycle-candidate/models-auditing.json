@@ -1,0 +1,192 @@
+{
+  "display": "models",
+  "stage": "auditing",
+  "errors": [],
+  "before": {
+    "generation": 1,
+    "status": {
+      "pilotReady": false,
+      "startup": {
+        "state": "dataset-loading",
+        "generation": 1,
+        "basePresented": false,
+        "publishedRound": 0,
+        "pendingPrograms": 0,
+        "compilationPath": "unprepared",
+        "retainedPrograms": 0,
+        "retentionOverflow": false,
+        "nativePending": 0,
+        "nativeRetired": 0,
+        "scope": "Rendered base and matching GI/FG preparation; independent of pilotReady/physical quality"
+      },
+      "datasetReady": false,
+      "displayState": {
+        "outcome": "no-visible-content",
+        "visible": false,
+        "modelsReady": 0
+      },
+      "lightingRequests": {},
+      "phase": "auditing",
+      "ready": false,
+      "stage": "fetch-manifest",
+      "display": "models",
+      "profile": "enhanced",
+      "effectiveProfile": "enhanced",
+      "fg": {
+        "requestedMode": "ddgi",
+        "status": "disabled",
+        "frames": 0,
+        "memoryBytes": 0,
+        "peakMemoryBytes": 0,
+        "draws": 0,
+        "timingUnavailable": 0,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": false,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "ddgi",
+        "timerRecords": 0,
+        "stageTimings": {},
+        "receiverSize": [
+          1,
+          1
+        ],
+        "drawingBuffer": [
+          1920,
+          1080
+        ]
+      },
+      "fallbackReason": "disabled",
+      "generation": 1,
+      "audit": [],
+      "targets": 0,
+      "ownerCounter": 1,
+      "world": null,
+      "resources": {
+        "budget": 67108864,
+        "categories": {
+          "ownerCpu": 4096
+        },
+        "allocations": 1,
+        "knownAdditionalBytes": 4096,
+        "reservedBytes": 786432,
+        "admittedBytes": 790528,
+        "peakKnownBytes": 4096,
+        "peakAdmittedBytes": 790528,
+        "driverVram": "not-run",
+        "jsAllocator": "not-run",
+        "giGpu": 0,
+        "snapshots": 0,
+        "fgGpu": 0,
+        "displayGpu": 0,
+        "cpuKnown": 4096,
+        "queryAllowance": "4KiB per live timer handle; implementation storage unmeasured"
+      },
+      "timings": []
+    },
+    "pending": 0
+  },
+  "input": {
+    "kind": "click",
+    "handled": 649,
+    "delay": 6.5,
+    "shellReady": true,
+    "phase": "cancelled",
+    "generation": 2,
+    "cancel": true
+  },
+  "nativeCleanup": {
+    "error": 0,
+    "pending": 0,
+    "retired": 0
+  },
+  "after": {
+    "status": {
+      "pilotReady": false,
+      "startup": {
+        "state": "cancelled",
+        "generation": 2,
+        "basePresented": false,
+        "publishedRound": 0,
+        "pendingPrograms": 0,
+        "compilationPath": "unprepared",
+        "retainedPrograms": 0,
+        "retentionOverflow": false,
+        "nativePending": 0,
+        "nativeRetired": 0,
+        "scope": "Rendered base and matching GI/FG preparation; independent of pilotReady/physical quality"
+      },
+      "datasetReady": false,
+      "displayState": {
+        "outcome": "no-visible-content",
+        "visible": false,
+        "modelsReady": 0
+      },
+      "lightingRequests": {},
+      "phase": "cancelled",
+      "ready": false,
+      "error": "Operation cancelled",
+      "stage": "fetch-manifest",
+      "display": "models",
+      "profile": "enhanced",
+      "effectiveProfile": "enhanced",
+      "fg": {
+        "requestedMode": "ddgi",
+        "status": "disabled",
+        "frames": 0,
+        "memoryBytes": 0,
+        "peakMemoryBytes": 0,
+        "draws": 0,
+        "timingUnavailable": 0,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": false,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "ddgi",
+        "timerRecords": 0,
+        "stageTimings": {},
+        "receiverSize": [
+          1,
+          1
+        ],
+        "drawingBuffer": [
+          1920,
+          1080
+        ]
+      },
+      "fallbackReason": "disabled",
+      "generation": 2,
+      "audit": [],
+      "targets": 0,
+      "ownerCounter": 1,
+      "world": null,
+      "resources": {
+        "budget": 67108864,
+        "categories": {
+          "displayGpu": 28,
+          "ownerCpu": 4096
+        },
+        "allocations": 3,
+        "knownAdditionalBytes": 4124,
+        "reservedBytes": 786432,
+        "admittedBytes": 790556,
+        "peakKnownBytes": 4124,
+        "peakAdmittedBytes": 790556,
+        "driverVram": "not-run",
+        "jsAllocator": "not-run",
+        "giGpu": 0,
+        "snapshots": 0,
+        "fgGpu": 0,
+        "displayGpu": 28,
+        "cpuKnown": 4096,
+        "queryAllowance": "4KiB per live timer handle; implementation storage unmeasured"
+      },
+      "timings": []
+    },
+    "oldPending": [],
+    "remainingModels": 0
+  },
+  "passed": true
+}

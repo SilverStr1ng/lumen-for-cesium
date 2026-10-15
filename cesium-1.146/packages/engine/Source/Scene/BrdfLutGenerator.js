@@ -63,12 +63,16 @@ BrdfLutGenerator.prototype.update = function (frameState) {
   if (!this._ready) {
     const context = frameState.context;
     const command = this._drawCommand;
-    if (context._lumenShaderPreparation) {
+    if (
+      context._lumenShaderPreparation ||
+      command.shaderProgram._prepareOptIn
+    ) {
       command.shaderProgram._prepareOptIn = true;
       context._lumenBrdfPending = !command.shaderProgram.prepare();
       if (context._lumenBrdfPending) return;
     }
-    command.execute(context);
+    if (!context.draw(command)) return;
+    context._lumenBrdfPending = false;
     command.framebuffer.destroy();
     command.framebuffer = undefined;
     command.shaderProgram = command.shaderProgram.destroy();

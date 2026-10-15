@@ -10,6 +10,16 @@ import AutomaticUniforms from "./AutomaticUniforms.js";
 import ContextLimits from "./ContextLimits.js";
 import createUniform from "./createUniform.js";
 import createUniformArray from "./createUniformArray.js";
+import {
+  maximumNativePreparations,
+  preparationCapacityBytes,
+  preparationState,
+  trackPreparation,
+  finishPreparation,
+  deletePreparationHandle,
+  retirePreparation,
+  whenPreparationIdle,
+} from "./ShaderProgramCleanup.js";
 
 let nextShaderProgramId = 0;
 
@@ -192,40 +202,55 @@ function createAndLinkProgram(gl, shader, defer = false) {
   const vsSource = shader._vertexShaderText;
   const fsSource = shader._fragmentShaderText;
 
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-  gl.shaderSource(vertexShader, vsSource);
-  gl.compileShader(vertexShader);
+  let vertexShader, fragmentShader, program;
+  try {
+    vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertexShader, vsSource);
+    gl.compileShader(vertexShader);
 
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-  gl.shaderSource(fragmentShader, fsSource);
-  gl.compileShader(fragmentShader);
+    fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fragmentShader, fsSource);
+    gl.compileShader(fragmentShader);
 
-  const program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
+    program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
 
-  const attributeLocations = shader._attributeLocations;
-  if (defined(attributeLocations)) {
-    for (const attribute in attributeLocations) {
-      if (attributeLocations.hasOwnProperty(attribute)) {
-        gl.bindAttribLocation(
-          program,
-          attributeLocations[attribute],
-          attribute,
-        );
+    const attributeLocations = shader._attributeLocations;
+    if (defined(attributeLocations)) {
+      for (const attribute in attributeLocations) {
+        if (attributeLocations.hasOwnProperty(attribute)) {
+          gl.bindAttribLocation(
+            program,
+            attributeLocations[attribute],
+            attribute,
+          );
+        }
       }
     }
+    gl.linkProgram(program);
+  } catch (error) {
+    retirePreparation(shader, { program, vertexShader, fragmentShader });
+    throw error;
   }
-
-  gl.linkProgram(program);
-  if (defer) {
+  if (defer || shader._prepareOptIn) {
     shader._pending = { program, vertexShader, fragmentShader };
-    return;
+    trackPreparation(shader, shader._pending);
+    if (defer) {
+      if (shader._context)
+        (shader._context._shaderPreparationActive ??= new Set()).add(shader);
+      return;
+    }
   }
-  return finishLink(gl, shader, { program, vertexShader, fragmentShader });
+  return finishLink(
+    gl,
+    shader,
+    shader._pending ?? { program, vertexShader, fragmentShader },
+  );
 }
 
-function finishLink(gl, shader, { program, vertexShader, fragmentShader }) {
+function finishLink(gl, shader, pending) {
+  const { program, vertexShader, fragmentShader } = pending;
   const vsSource = shader._vertexShaderText;
   const fsSource = shader._fragmentShaderText;
   let log;
@@ -249,8 +274,8 @@ function finishLink(gl, shader, { program, vertexShader, fragmentShader }) {
       }
     }
 
-    gl.deleteShader(vertexShader);
-    gl.deleteShader(fragmentShader);
+    deletePreparationHandle(gl, pending, "vertexShader");
+    deletePreparationHandle(gl, pending, "fragmentShader");
 
     return program;
   }
@@ -277,9 +302,9 @@ function finishLink(gl, shader, { program, vertexShader, fragmentShader }) {
     errorMessage = `Program failed to link.  Link log: ${log}`;
   }
 
-  gl.deleteShader(vertexShader);
-  gl.deleteShader(fragmentShader);
-  gl.deleteProgram(program);
+  deletePreparationHandle(gl, pending, "vertexShader");
+  deletePreparationHandle(gl, pending, "fragmentShader");
+  deletePreparationHandle(gl, pending, "program");
   throw new RuntimeError(errorMessage);
 
   function logTranslatedSource(compiledShader, name) {
@@ -473,6 +498,11 @@ function setSamplerUniforms(gl, program, samplerUniforms) {
 }
 
 function initialize(shader) {
+  if (
+    shader._prepareOptIn &&
+    ["failed", "cancelled"].includes(shader.preparationState)
+  )
+    throw new DeveloperError(`Shader preparation ${shader.preparationState}`);
   if (defined(shader._program)) {
     return;
   }
@@ -493,33 +523,51 @@ function reinitialize(shader, preparedProgram) {
 
   const gl = shader._gl;
   const program = preparedProgram ?? createAndLinkProgram(gl, shader);
-  const numberOfVertexAttributes = gl.getProgramParameter(
-    program,
-    gl.ACTIVE_ATTRIBUTES,
-  );
-  const uniforms = findUniforms(gl, program);
-  const partitionedUniforms = partitionUniforms(
-    shader,
-    uniforms.uniformsByName,
-  );
+  let numberOfVertexAttributes,
+    uniforms,
+    partitionedUniforms,
+    vertexAttributes,
+    maximumTextureUnitIndex;
+  try {
+    numberOfVertexAttributes = gl.getProgramParameter(
+      program,
+      gl.ACTIVE_ATTRIBUTES,
+    );
+    uniforms = findUniforms(gl, program);
+    partitionedUniforms = partitionUniforms(shader, uniforms.uniformsByName);
+    vertexAttributes = findVertexAttributes(
+      gl,
+      program,
+      numberOfVertexAttributes,
+    );
+    maximumTextureUnitIndex = setSamplerUniforms(
+      gl,
+      program,
+      uniforms.samplerUniforms,
+    );
+  } catch (error) {
+    if (shader._pending?.program !== program) gl.deleteProgram(program);
+    throw error;
+  }
 
   shader._program = program;
   shader._numberOfVertexAttributes = numberOfVertexAttributes;
-  shader._vertexAttributes = findVertexAttributes(
-    gl,
-    program,
-    numberOfVertexAttributes,
-  );
+  shader._vertexAttributes = vertexAttributes;
   shader._uniformsByName = uniforms.uniformsByName;
   shader._uniforms = uniforms.uniforms;
   shader._automaticUniforms = partitionedUniforms.automaticUniforms;
   shader._manualUniforms = partitionedUniforms.manualUniforms;
 
-  shader.maximumTextureUnitIndex = setSamplerUniforms(
-    gl,
-    program,
-    uniforms.samplerUniforms,
-  );
+  shader.maximumTextureUnitIndex = maximumTextureUnitIndex;
+
+  const pending = shader._pending;
+  if (pending?.program === program) {
+    // Publish reflected ownership before releasing native preparation capacity.
+    pending.program = undefined;
+    shader._pending = undefined;
+    shader._context?._shaderPreparationActive?.delete(shader);
+    finishPreparation(pending);
+  }
 
   if (oldProgram) {
     shader._gl.deleteProgram(oldProgram);
@@ -600,6 +648,13 @@ ShaderProgram.prototype.prepare = function () {
     const context = this._context;
     if (context && (context._shaderPreparationSubmissions ?? 0) >= 1)
       return pendingResult();
+    if (preparationState(this).error) {
+      this.preparationState = "failed";
+      return false;
+    }
+    if (preparationState(this).native.size >= maximumNativePreparations)
+      return pendingResult();
+    this._cachedShader?.cache.beginProgramPreparation?.(this);
     if (context)
       context._shaderPreparationSubmissions =
         (context._shaderPreparationSubmissions ?? 0) + 1;
@@ -608,14 +663,23 @@ ShaderProgram.prototype.prepare = function () {
       try {
         reinitialize(this);
         this.preparationState = "ready";
+        this._cachedShader?.cache.finishProgramPreparation?.(this);
         this._cachedShader?.cache.retainPreparedProgram?.(this);
         return true;
       } catch (error) {
+        releasePending(this);
         this.preparationState = "failed";
+        this._cachedShader?.cache.finishProgramPreparation?.(this);
         throw error;
       }
     }
-    createAndLinkProgram(gl, this, true);
+    try {
+      createAndLinkProgram(gl, this, true);
+    } catch (error) {
+      this.preparationState = "failed";
+      this._cachedShader?.cache.finishProgramPreparation?.(this);
+      throw error;
+    }
     this._submittedFrame = context?._shaderPreparationFrame ?? 0;
     this.preparationState = "pending";
     return pendingResult();
@@ -644,32 +708,29 @@ ShaderProgram.prototype.prepare = function () {
     return false;
   }
   const pending = this._pending;
-  // finishLink owns deletion of both shaders and of a failed native program.
-  this._pending = undefined;
+  pending.completed = true;
   try {
     const program = finishLink(gl, this, pending);
-    try {
-      reinitialize(this, program);
-    } catch (error) {
-      gl.deleteProgram(program);
-      throw error;
-    }
+    reinitialize(this, program);
     this.preparationState = "ready";
+    this._cachedShader?.cache.finishProgramPreparation?.(this);
     this._cachedShader?.cache.retainPreparedProgram?.(this);
     return true;
   } catch (error) {
+    releasePending(this);
     this.preparationState = "failed";
+    this._cachedShader?.cache.finishProgramPreparation?.(this);
     throw error;
   }
 };
 
 function releasePending(shader) {
+  shader._context?._shaderPreparationActive?.delete(shader);
+  shader._cachedShader?.cache.finishProgramPreparation?.(shader);
   const pending = shader._pending;
   if (!pending) return;
-  shader._gl.deleteShader(pending.vertexShader);
-  shader._gl.deleteShader(pending.fragmentShader);
-  shader._gl.deleteProgram(pending.program);
   shader._pending = undefined;
+  retirePreparation(shader, pending);
 }
 
 ShaderProgram.prototype._bind = function () {
@@ -752,4 +813,6 @@ ShaderProgram.prototype.finalDestroy = function () {
   if (defined(this._program)) this._gl.deleteProgram(this._program);
   return destroyObject(this);
 };
+ShaderProgram.preparationCapacityBytes = preparationCapacityBytes;
+ShaderProgram.whenPreparationIdle = whenPreparationIdle;
 export default ShaderProgram;

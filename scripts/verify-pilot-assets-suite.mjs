@@ -20,6 +20,8 @@ const output = await newOutput("assets"),
     "verify-pilot-accounting",
     "verify-pilot-lod-policy",
     "verify-pilot-readiness",
+    "verify-shader-preparation",
+    "verify-pilot-acceptance",
   ],
   rows = [];
 for (const name of tests) {
@@ -51,6 +53,8 @@ await writeFile(
         "scripts/pilot-network.mjs",
         "docs/progress/readiness/baseline-v1.json",
         "docs/progress/readiness/v10-review.json",
+        "docs/progress/readiness/v11-review.json",
+        "scripts/pilot-acceptance.mjs",
       ]),
       rows,
       status,

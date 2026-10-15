@@ -789,7 +789,8 @@ class LumenGpuWorld {
     // A fresh pass state makes Context apply the changed viewport even for adjacent batches.
     const ps = new PassState(c);
     ps.viewport = new BoundingRectangle(x, y, width, height);
-    command.execute(c, ps);
+    if (!command.execute(c, ps))
+      throw Error("World pass lost shader readiness before execution");
     return true;
   }
   _invalidateTimers() {

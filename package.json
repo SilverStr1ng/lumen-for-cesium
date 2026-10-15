@@ -69,7 +69,13 @@
     "test:r12": "node scripts/verify-r12.mjs",
     "test:pilot:equivalence": "node scripts/verify-pilot-equivalence.mjs",
     "test:pilot:runtime": "node scripts/verify-pilot-runtime.mjs",
-    "test:pilot:deployment": "node scripts/verify-pilot-deployment.mjs"
+    "test:pilot:deployment": "node scripts/verify-pilot-deployment.mjs",
+    "test:shader-preparation": "node scripts/verify-shader-preparation.mjs",
+    "test:pilot:startup": "node scripts/verify-pilot-startup.mjs",
+    "test:pilot:shader-lifecycle": "node scripts/verify-pilot-shader-lifecycle.mjs",
+    "test:pilot:profile-equivalence": "node scripts/verify-pilot-profile-equivalence.mjs",
+    "test:pilot:shader-smoke": "node scripts/verify-pilot-shader-smoke.mjs",
+    "test:r13": "node scripts/verify-r12.mjs --startup"
   },
   "dependencies": {
     "@dimforge/rapier3d-deterministic-compat": "0.18.0"

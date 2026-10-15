@@ -1,0 +1,421 @@
+{
+  "display": "tiles",
+  "stage": "stopped",
+  "errors": [],
+  "before": {
+    "generation": 1,
+    "status": {
+      "pilotReady": false,
+      "startup": {
+        "state": "base-warming",
+        "generation": 1,
+        "committedGeneration": 1,
+        "basePresented": false,
+        "publishedRound": 0,
+        "pendingPrograms": 0,
+        "compilationPath": "KHR_parallel_shader_compile",
+        "retainedPrograms": 1,
+        "retentionOverflow": false,
+        "nativePending": 0,
+        "nativeRetired": 0,
+        "scope": "Rendered base and matching GI/FG preparation; independent of pilotReady/physical quality"
+      },
+      "datasetReady": false,
+      "displayState": {
+        "outcome": "no-visible-content",
+        "visible": false,
+        "modelsReady": 0,
+        "tilesLoadedForCurrentView": false,
+        "adapter": {
+          "detail": "auto",
+          "maximumScreenSpaceError": 16,
+          "loads": 0,
+          "unloads": 0,
+          "frames": 3,
+          "membershipChanges": 0,
+          "activeModels": 0,
+          "loadedModels": 0,
+          "geometryResidency": "manifest proxy; unchanged by tile events"
+        }
+      },
+      "lightingRequests": {},
+      "anchor": {
+        "longitude": 114.1,
+        "latitude": 22.3,
+        "height": 2
+      },
+      "phase": "lighting",
+      "ready": false,
+      "stage": "gi-solve",
+      "display": "tiles",
+      "profile": "enhanced",
+      "effectiveProfile": "enhanced",
+      "fg": {
+        "requestedMode": "fg",
+        "status": "DDGI fallback: no complete FG input",
+        "frames": 0,
+        "memoryBytes": 0,
+        "peakMemoryBytes": 0,
+        "draws": 0,
+        "timingUnavailable": 0,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": false,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "ddgi",
+        "stablePasses": 0,
+        "accumulationPasses": 0,
+        "snapshotBytes": 0,
+        "totalAdditionalBytes": 15139348,
+        "timerRecords": 0,
+        "stageTimings": {},
+        "receiverSize": [
+          1,
+          1
+        ],
+        "drawingBuffer": [
+          1920,
+          1080
+        ]
+      },
+      "fallbackReason": "DDGI fallback: no complete FG input",
+      "generation": 1,
+      "datasetId": "gallery-pilot",
+      "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+      "audit": [
+        {
+          "id": "basalt",
+          "status": "supported",
+          "primitives": 36,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "limestone",
+          "status": "supported",
+          "primitives": 366,
+          "materials": 1,
+          "format": "gltf",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "plaster",
+          "status": "supported",
+          "primitives": 64,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "terracotta",
+          "status": "supported",
+          "primitives": 6,
+          "materials": 1,
+          "format": "gltf",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "oak",
+          "status": "supported",
+          "primitives": 52,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "emitter",
+          "status": "supported",
+          "primitives": 6,
+          "materials": 1,
+          "format": "gltf",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "blue-instance",
+          "status": "supported",
+          "primitives": 6,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "alpha-mask",
+          "status": "supported",
+          "primitives": 2,
+          "materials": 2,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        }
+      ],
+      "plan": {
+        "counts": [
+          18,
+          14,
+          7
+        ],
+        "total": 1764,
+        "spacing": 2,
+        "rays": 128,
+        "bounces": 3
+      },
+      "targets": 0,
+      "ownerCounter": 1,
+      "world": {
+        "revision": 1,
+        "publishedRevision": 0,
+        "round": 0,
+        "ready": false
+      },
+      "tiles": {
+        "detail": "auto",
+        "maximumScreenSpaceError": 16,
+        "loads": 0,
+        "unloads": 0,
+        "frames": 3,
+        "membershipChanges": 0,
+        "activeModels": 0,
+        "loadedModels": 0,
+        "geometryResidency": "manifest proxy; unchanged by tile events"
+      },
+      "resources": {
+        "budget": 67108864,
+        "categories": {
+          "frozenCpu": 2408192,
+          "blobCpu": 2408192,
+          "displayGpu": 262178,
+          "workerCpu": 94484,
+          "ownerCpu": 4096,
+          "environmentGpu": 132600
+        },
+        "allocations": 130,
+        "knownAdditionalBytes": 5309742,
+        "reservedBytes": 9829606,
+        "admittedBytes": 15139348,
+        "peakKnownBytes": 5309742,
+        "peakAdmittedBytes": 19690658,
+        "driverVram": "not-run",
+        "jsAllocator": "not-run",
+        "giGpu": 0,
+        "snapshots": 0,
+        "fgGpu": 0,
+        "displayGpu": 394778,
+        "cpuKnown": 4914964,
+        "queryAllowance": "4KiB per live timer handle; implementation storage unmeasured"
+      },
+      "timings": []
+    },
+    "pending": 0
+  },
+  "input": {
+    "kind": "click",
+    "handled": 811.5,
+    "delay": 4.700000002980232,
+    "shellReady": true,
+    "phase": "cancelled",
+    "generation": 2,
+    "cancel": true
+  },
+  "nativeCleanup": {
+    "error": 0,
+    "pending": 0,
+    "retired": 0
+  },
+  "after": {
+    "status": {
+      "pilotReady": false,
+      "startup": {
+        "state": "cancelled",
+        "generation": 2,
+        "committedGeneration": 1,
+        "basePresented": false,
+        "publishedRound": 0,
+        "pendingPrograms": 10,
+        "compilationPath": "KHR_parallel_shader_compile",
+        "retainedPrograms": 0,
+        "retentionOverflow": false,
+        "nativePending": 0,
+        "nativeRetired": 0,
+        "scope": "Rendered base and matching GI/FG preparation; independent of pilotReady/physical quality"
+      },
+      "datasetReady": false,
+      "displayState": {
+        "outcome": "no-visible-content",
+        "visible": false,
+        "modelsReady": 0,
+        "tilesLoadedForCurrentView": false
+      },
+      "lightingRequests": {},
+      "anchor": {
+        "longitude": 114.1,
+        "latitude": 22.3,
+        "height": 2
+      },
+      "phase": "cancelled",
+      "ready": false,
+      "error": "Operation cancelled",
+      "stage": "gi-solve",
+      "display": "tiles",
+      "profile": "enhanced",
+      "effectiveProfile": "enhanced",
+      "fg": {
+        "requestedMode": "fg",
+        "status": "DDGI fallback: no complete FG input",
+        "frames": 0,
+        "memoryBytes": 0,
+        "peakMemoryBytes": 0,
+        "draws": 0,
+        "timingUnavailable": 0,
+        "disjoint": 0,
+        "productionReadbacks": 0,
+        "history": false,
+        "incompleteTimerFrames": 0,
+        "unknownFraction": "diagnostic-only; no production readback",
+        "effectiveMode": "ddgi",
+        "stablePasses": 0,
+        "accumulationPasses": 0,
+        "snapshotBytes": 0,
+        "totalAdditionalBytes": 40456532,
+        "timerRecords": 0,
+        "stageTimings": {},
+        "receiverSize": [
+          1,
+          1
+        ],
+        "drawingBuffer": [
+          1920,
+          1080
+        ]
+      },
+      "fallbackReason": "DDGI fallback: no complete FG input",
+      "generation": 2,
+      "datasetId": "gallery-pilot",
+      "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+      "audit": [
+        {
+          "id": "basalt",
+          "status": "supported",
+          "primitives": 36,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "limestone",
+          "status": "supported",
+          "primitives": 366,
+          "materials": 1,
+          "format": "gltf",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "plaster",
+          "status": "supported",
+          "primitives": 64,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "terracotta",
+          "status": "supported",
+          "primitives": 6,
+          "materials": 1,
+          "format": "gltf",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "oak",
+          "status": "supported",
+          "primitives": 52,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "emitter",
+          "status": "supported",
+          "primitives": 6,
+          "materials": 1,
+          "format": "gltf",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "blue-instance",
+          "status": "supported",
+          "primitives": 6,
+          "materials": 1,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        },
+        {
+          "id": "alpha-mask",
+          "status": "supported",
+          "primitives": 2,
+          "materials": 2,
+          "format": "glb",
+          "version": "128b64f0ce05a6362e249ccd2c7c2a76eb7fad7b6a9f7752e6833c06c105c09a",
+          "proxy": "same-frozen-display-bytes"
+        }
+      ],
+      "plan": {
+        "counts": [
+          18,
+          14,
+          7
+        ],
+        "total": 1764,
+        "spacing": 2,
+        "rays": 128,
+        "bounces": 3
+      },
+      "targets": 0,
+      "ownerCounter": 1,
+      "world": null,
+      "resources": {
+        "budget": 67108864,
+        "categories": {
+          "frozenCpu": 2408192,
+          "blobCpu": 2408192,
+          "displayGpu": 262178,
+          "ownerCpu": 4096,
+          "environmentGpu": 131072
+        },
+        "allocations": 107,
+        "knownAdditionalBytes": 5213730,
+        "reservedBytes": 4458032,
+        "admittedBytes": 9671762,
+        "peakKnownBytes": 30650838,
+        "peakAdmittedBytes": 40456532,
+        "driverVram": "not-run",
+        "jsAllocator": "not-run",
+        "giGpu": 0,
+        "snapshots": 0,
+        "fgGpu": 0,
+        "displayGpu": 393250,
+        "cpuKnown": 4820480,
+        "queryAllowance": "4KiB per live timer handle; implementation storage unmeasured"
+      },
+      "timings": []
+    },
+    "oldPending": [],
+    "remainingModels": 0
+  },
+  "passed": true
+}

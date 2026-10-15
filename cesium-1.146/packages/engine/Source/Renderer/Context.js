@@ -1425,13 +1425,23 @@ Context.prototype.draw = function (
 
   // A pending command must not bind a framebuffer/program, set uniforms or draw.
   if (shaderProgram._lumenModelProgram) {
-    this._trackLumenBaseShader(shaderProgram._fallback ?? shaderProgram);
+    this._trackLumenBaseShader(shaderProgram._fallback ?? shaderProgram, true);
   }
   if (shaderProgram._fallback) {
     // Submit the small, valid base contract first, never a giant shader in its place.
     if (!shaderProgram._fallback.prepare()) return false;
     if (this._lumenBaseGroup?.blocked) return false;
-    if (!shaderProgram.prepare()) shaderProgram = shaderProgram._fallback;
+    // A full forward FG program has no valid input before the first matching
+    // DDGI publication. Let the base/solver finish first instead of competing
+    // with them for driver compilation workers. This never pauses valid FG.
+    if (
+      (shaderProgram._lumenFgProgram &&
+        uniformMap?.u_lumenWorldEnabled &&
+        (!uniformMap.u_lumenWorldEnabled() ||
+          (uniformMap.u_lumenCoverage?.() ?? 1) <= 0)) ||
+      !shaderProgram.prepare()
+    )
+      shaderProgram = shaderProgram._fallback;
   } else if (shaderProgram._prepareOptIn && !shaderProgram.prepare())
     return false;
   if (shaderProgram._lumenModelProgram && this._lumenBaseGroup?.blocked)
@@ -1439,8 +1449,21 @@ Context.prototype.draw = function (
 
   beginDraw(this, framebuffer, passState, shaderProgram, renderState);
   continueDraw(this, drawCommand, shaderProgram, uniformMap);
-  if (shaderProgram._lumenModelProgram)
+  if (shaderProgram._lumenModelProgram && !shaderProgram._lumenDepthOnly)
     this._lumenModelDrawSerial = (this._lumenModelDrawSerial ?? 0) + 1;
+  if (
+    shaderProgram._lumenModelProgram &&
+    !shaderProgram._lumenDepthOnly &&
+    uniformMap?.u_lumenWorldEnabled?.() &&
+    (uniformMap.u_lumenCoverage?.() ?? 0) > 0
+  )
+    this._lumenGiDrawSerial = (this._lumenGiDrawSerial ?? 0) + 1;
+  if (
+    shaderProgram._lumenFgProgram &&
+    uniformMap?.u_lumenFgEnabled?.() &&
+    (uniformMap.u_lumenCoverage?.() ?? 0) > 0
+  )
+    this._lumenFgDrawSerial = (this._lumenFgDrawSerial ?? 0) + 1;
   return true;
 };
 
@@ -1448,25 +1471,62 @@ Context.prototype.beginFrame = function () {
   // A no-op. Overridden when drawing to a SharedContext.
 };
 
-Context.prototype._trackLumenBaseShader = function (shader) {
+Context.prototype._trackLumenBaseShader = function (shader, requested = false) {
   const group = (this._lumenBaseGroup ??= {
+    registered: new WeakSet(),
     programs: new Set(),
+    requested: new Set(),
     blocked: true,
     changed: false,
   });
-  if (!group.programs.has(shader)) {
+  // Discover pass contracts before rendering, but prepare only actual commands.
+  // Unused root/log-depth intermediates do not need a native program.
+  if (!group.registered.has(shader)) {
+    group.registered.add(shader);
+    group.changed = true;
+    group.blocked = true;
+  }
+  if (requested && !group.programs.has(shader)) {
     group.programs.add(shader);
     group.changed = true;
     group.blocked = true;
   }
+  if (requested) group.requested.add(shader);
+};
+
+Context.prototype._progressShaderPreparations = function () {
+  const active = this._shaderPreparationActive;
+  if (!active) return;
+  for (const shader of active) {
+    if (shader.isDestroyed() || !shader._pending) {
+      active.delete(shader);
+      continue;
+    }
+    if (
+      shader._submittedFrame === this._shaderPreparationFrame ||
+      shader._polledFrame === this._shaderPreparationFrame
+    )
+      continue;
+    // One already-submitted, otherwise unrequested job per frame. A hidden
+    // Model/LOD must not permanently occupy all native admission slots.
+    active.delete(shader);
+    active.add(shader);
+    shader.prepare();
+    break;
+  }
 };
 
 Context.prototype.endFrame = function () {
+  this._progressShaderPreparations();
   const group = this._lumenBaseGroup;
   if (group) {
-    for (const shader of group.programs)
-      if (shader.isDestroyed()) group.programs.delete(shader);
-    for (const shader of group.programs) shader.prepare();
+    // Context.draw has already prepared every requested command before any GL
+    // binding. Do not submit/poll stale intermediates at frame end or let an
+    // unused old pass block the current visible contract indefinitely.
+    group.programs = new Set(
+      [...group.requested].filter((s) => !s.isDestroyed()),
+    );
+    group.requested.clear();
     group.blocked =
       group.changed || [...group.programs].some((s) => !s._program);
     group.changed = false;

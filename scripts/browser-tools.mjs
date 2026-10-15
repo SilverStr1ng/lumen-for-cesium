@@ -29,10 +29,19 @@ export function sourceVersion(extraFiles = []) {
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js",
     "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
-    ...["ShaderProgram", "ShaderCache", "ShaderBuilder", "Context", "DrawCommand", "ComputeEngine"].map(
-      (file) => `cesium-1.146/packages/engine/Source/Renderer/${file}.js`,
-    ),
+    ...[
+      "ShaderProgram",
+      "ShaderProgramCleanup",
+      "ShaderCache",
+      "ShaderBuilder",
+      "Context",
+      "DrawCommand",
+      "ComputeEngine",
+    ].map((file) => `cesium-1.146/packages/engine/Source/Renderer/${file}.js`),
     "cesium-1.146/packages/engine/Source/Scene/Model/ImageBasedLightingPipelineStage.js",
+    "cesium-1.146/packages/engine/Source/Scene/Model/Model.js",
+    "cesium-1.146/packages/engine/Source/Scene/Model/ModelDrawCommands.js",
+    "cesium-1.146/packages/engine/Source/Scene/BrdfLutGenerator.js",
     "cesium-1.146/packages/engine/Source/Scene/Model/ModelStatistics.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js",
@@ -138,6 +147,7 @@ export function demoUrl(backend, extra = "") {
 }
 export async function launchBrowser({
   naturalFocus = false,
+  recordArguments = false,
   headless = !naturalFocus && process.env.LUMEN_HEADFUL !== "1",
 } = {}) {
   const { chromium } = require("@playwright/test");
@@ -179,6 +189,9 @@ export async function launchBrowser({
     executablePath,
     chromiumSandbox: true,
     headless,
+    ...(recordArguments && !naturalFocus
+      ? { args: ["--enable-automation"] }
+      : {}),
     ...(naturalFocus
       ? {
           args: ["--remote-debugging-port=0", "--enable-automation"],

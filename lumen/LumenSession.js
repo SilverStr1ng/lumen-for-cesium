@@ -88,6 +88,16 @@ export default class LumenSession {
     // Reserve their entire disclosed allowance once; no full inventory scan
     // is needed for every draw/query in a production frame.
     this._queryLease = this.budget.reserve(160 * 4096, "query capacity");
+    this._shaderContext = scene.context;
+    this._shaderCapacityLease = this.budget.reserve(
+      Cesium.ShaderProgram.preparationCapacityBytes,
+      "shader preparation capacity",
+    );
+    const previousCapacity = scene.context._lumenShaderCapacity;
+    previousCapacity?.cancelIdle?.();
+    previousCapacity?.lease.release();
+    this._shaderCapacityRecord = { lease: this._shaderCapacityLease };
+    scene.context._lumenShaderCapacity = this._shaderCapacityRecord;
     this.budget.queryCapacity = true;
     this._displayRemovers = [];
     this.disposed = false;
@@ -118,7 +128,9 @@ export default class LumenSession {
     this._removeBudget = scene.preRender.addEventListener(() =>
       this._account(),
     );
-    let drawSerial = scene.context._lumenModelDrawSerial ?? 0;
+    let drawSerial = scene.context._lumenModelDrawSerial ?? 0,
+      giSerial = scene.context._lumenGiDrawSerial ?? 0,
+      fgSerial = scene.context._lumenFgDrawSerial ?? 0;
     this._removeStartupFrame = scene.postRender.addEventListener(() => {
       const next = scene.context._lumenModelDrawSerial ?? 0;
       if (
@@ -128,6 +140,34 @@ export default class LumenSession {
       )
         this._basePresentedGeneration = this.generation;
       drawSerial = next;
+      if (
+        this._basePresentedGeneration === this._committedGeneration &&
+        this._committedGeneration === this.generation &&
+        this.world?.ready &&
+        this.world.publishedRevision === this.world.requestedRevision &&
+        scene.lumen.coverage === 0
+      )
+        scene.lumen.coverage = 1;
+      const nextGi = scene.context._lumenGiDrawSerial ?? 0;
+      if (
+        nextGi !== giSerial &&
+        this.world &&
+        this._committedGeneration === this.generation
+      ) {
+        this._giPresentedGeneration = this.generation;
+        this._giPresentedRevision = this.world.requestedRevision;
+      }
+      giSerial = nextGi;
+      const nextFg = scene.context._lumenFgDrawSerial ?? 0;
+      if (
+        nextFg !== fgSerial &&
+        this.world &&
+        this._committedGeneration === this.generation
+      ) {
+        this._fgPresentedGeneration = this.generation;
+        this._fgPresentedRevision = this.world.requestedRevision;
+      }
+      fgSerial = nextFg;
     });
     this._lost = (event) => {
       event.preventDefault();
@@ -496,7 +536,6 @@ export default class LumenSession {
                   if (!model.isDestroyed()) model.destroy();
                   throw aborted();
                 }
-                model._lumenPrepare = true;
                 model._lumenPendingDataset = true;
                 return model;
               }),
@@ -667,6 +706,7 @@ export default class LumenSession {
         this.models = staged;
         this.models.forEach((model) => {
           model._lumenPendingDataset = false;
+          model._lumenPrepare = true;
           model.show = true;
         });
         this.tileset = stagedTiles;
@@ -721,7 +761,11 @@ export default class LumenSession {
               this.world === world &&
               event.revision === world.requestedRevision
             ) {
-              l.coverage = 1;
+              if (
+                this._basePresentedGeneration === token &&
+                this._committedGeneration === token
+              )
+                l.coverage = 1;
               this.scene.requestRender();
             }
           },
@@ -820,7 +864,11 @@ export default class LumenSession {
   cancel() {
     this._visibleController.abort();
     this._visibleController = new AbortController();
-    if (this.disposed || this.ready) return this.status();
+    if (this.disposed || (this.ready && this.startupStatus().state === "ready"))
+      return this.status();
+    this._releaseShaderLease();
+    this._releaseShaderLease =
+      this.scene.context.shaderCache.beginPreparationLease();
     this._lightingRequests?.close();
     const generation = this.generation;
     this._controller?.abort();
@@ -832,7 +880,20 @@ export default class LumenSession {
       this.scene.lumen.coverage = 0;
       this.scene.lumen.unloadWorld();
       this.world = undefined;
+      const displays = new Set([
+        ...this.models,
+        ...(this.adapter?.loaded ?? []),
+      ]);
+      this.adapter?.dispose();
+      this.adapter = undefined;
       this.scene.lumen.finalGather.setModels([], true);
+      for (const model of displays)
+        if (!model.isDestroyed()) {
+          model.destroyPipelineResources();
+          model.resetDrawCommands();
+        }
+      this.scene.context.shaderCache.destroyReleasedShaderPrograms();
+      this.scene.context.shaderCache.destroyReleasedShaderPrograms();
     }
     this.phase = "cancelled";
     this.error = "Operation cancelled";
@@ -994,6 +1055,9 @@ export default class LumenSession {
     if (!profiles[profile] || this.disposed)
       throw Error("Unknown profile or disposed session");
     this.phase = "quality";
+    this._basePresentedGeneration = undefined;
+    this._giPresentedGeneration = this._giPresentedRevision = undefined;
+    this._fgPresentedGeneration = this._fgPresentedRevision = undefined;
     this.profile = profile;
     this._cacheFailure = undefined;
     const token = this.generation,
@@ -1147,7 +1211,8 @@ export default class LumenSession {
       fg = this.scene.lumen.finalGather,
       m = fg.metrics;
     let state;
-    if (
+    if (context._shaderPreparationLifetime?.error) state = "failed";
+    else if (
       ["failed", "cancelled", "context-lost", "disposed"].includes(this.phase)
     )
       state = this.phase;
@@ -1157,13 +1222,18 @@ export default class LumenSession {
       state = "base-warming";
     else if (
       !world.ready ||
-      world.requestedRevision !== world.publishedRevision
+      world.requestedRevision !== world.publishedRevision ||
+      this._giPresentedGeneration !== this.generation ||
+      this._giPresentedRevision !== world.requestedRevision
     )
       state = "gi-warming";
     else if (
       this.profile !== "baseline" &&
-      (fg._sampleWorld !== world ||
+      (this._fgPresentedGeneration !== this.generation ||
+        this._fgPresentedRevision !== world.requestedRevision ||
+        fg._sampleWorld !== world ||
         m.effectiveMode !== "fg" ||
+        (context._lastShaderPreparationPending ?? 0) > 0 ||
         !m.history ||
         m.stablePasses < 32 ||
         m.revision !== world.requestedRevision ||
@@ -1182,6 +1252,9 @@ export default class LumenSession {
       compilationPath: context._shaderPreparationPath ?? "unprepared",
       retainedPrograms: cache._preparationLease?.size ?? 0,
       retentionOverflow: !!cache.preparationRetentionOverflow,
+      nativePending: context._shaderPreparationLifetime?.native.size ?? 0,
+      nativeRetired: context._shaderPreparationLifetime?.retired.size ?? 0,
+      nativeCleanupError: context._shaderPreparationLifetime?.error,
       scope:
         "Rendered base and matching GI/FG preparation; independent of pilotReady/physical quality",
     };
@@ -1392,10 +1465,24 @@ export default class LumenSession {
       l.resourceBudget = this._previousBudget;
       l.finalGather.continuousSampling = this._previous.continuousSampling;
       this.scene.light = this._previous.light;
+      // A stopped host cannot provide the normal end-of-frame cache sweep.
+      this.scene.context.shaderCache.destroyReleasedShaderPrograms();
+      this.scene.context.shaderCache.destroyReleasedShaderPrograms();
     }
     this._resources?.close();
     this._nativeLease?.release();
     this._queryLease?.release();
+    const capacityRecord = this._shaderCapacityRecord,
+      shaderContext = this._shaderContext;
+    capacityRecord.cancelIdle = this.C.ShaderProgram.whenPreparationIdle(
+      shaderContext,
+      () => {
+        capacityRecord.lease.release();
+        if (shaderContext._lumenShaderCapacity === capacityRecord)
+          shaderContext._lumenShaderCapacity = undefined;
+      },
+    );
+    this._shaderCapacityLease = undefined;
     this.models = [];
     this.tileset = this.world = this.geometry = undefined;
     this._snapshotUri = this._geometryUri = undefined;

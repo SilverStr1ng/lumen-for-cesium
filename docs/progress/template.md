@@ -9,6 +9,8 @@
 
 必需关卡：分别列 passed / failed / not-run，全部必需项通过前 pilotReady=false。缓存证据须核对源码、构建、资产、配置与验证脚本；开发候选不自动认证为后续提交。
 
+启动单列 startupReady，不能抵消绝对画质或生成 pilotReady。两宿主各至少5次：fresh browser/profile、new context、same-context reload、baseline/enhanced切档，分别列中位数/最坏值及全部原始记录。保留 driver cache 不可控声明。导航前开始测真实 UI/输入/取消、Globe、真实 forward 资产、新GI、32有效新epoch最终FG及最大主线程停顿；depth/shadow/pick不能充当资产呈现。CPU profile、program/source hash、编译/链接/LINK_STATUS/反射/首次draw和无扩展回退另链证据。单次 native 停顿仍失败，不用延长采集上限制造通过。
+
 Local GI 试点分别报告 assets、session-lifecycle、tiles-residency、resource、query-quality、final-image-quality、temporal、performance、relight-visible、soak、deployment。基础与增强档分别给出40案例中的各自分母、区域误差/覆盖/Unknown/回退；原物理目标参考保留，legacy对照仅用于归因。等待实际有效FG新epoch及匹配world/revision/round，不能用postRender次数代替。
 
 实际像素诊断须将射线绑定首个渲染采集帧；各模式帧检查同一拥有者、发布revision/round、相机pose、投影及drawingBuffer。数值舍入保护与产品画质门限分别命名，给出实际运动拒绝反例，不以double位级噪声中断整张矩阵。网络取消保留原请求身份和错误；已验证内容分类须同requestId、当前会话scope/generation、完整字节重算SHA，缺字段或其他错误仍失败。

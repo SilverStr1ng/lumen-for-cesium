@@ -21,7 +21,11 @@ export default class LumenTilesAdapter {
           : [];
     this.removeLoad = tileset.tileLoad.addEventListener((tile) => {
       this.loads++;
-      models(tile.content).forEach((m) => this.loaded.add(m));
+      models(tile.content).forEach((m) => {
+        m._lumenPrepare = true;
+        m.resetDrawCommands();
+        this.loaded.add(m);
+      });
     });
     this.removeUnload = tileset.tileUnload.addEventListener((tile) => {
       this.unloads++;

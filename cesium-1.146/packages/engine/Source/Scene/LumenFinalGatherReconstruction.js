@@ -246,7 +246,8 @@ class LumenFinalGatherReconstruction {
     const pass = new PassState(this.context);
     pass.framebuffer = framebuffer;
     pass.viewport = new BoundingRectangle(0, 0, this.width, this.height);
-    command.execute(this.context, pass);
+    if (!command.execute(this.context, pass))
+      throw Error("Reconstruction lost shader readiness before execution");
     this.controller.metrics.draws++;
   }
   release() {

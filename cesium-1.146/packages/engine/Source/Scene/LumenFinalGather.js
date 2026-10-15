@@ -20,6 +20,7 @@ import TextureMagnificationFilter from "../Renderer/TextureMagnificationFilter.j
 import ContextLimits from "../Renderer/ContextLimits.js";
 import LumenReceiverPass from "./LumenReceiverPass.js";
 import planFinalGather from "./LumenFinalGatherPlan.js";
+import { preparationCapacityBytes } from "../Renderer/ShaderProgramCleanup.js";
 import { finalGatherSnapshotBytes } from "./LumenFinalGatherSnapshot.js";
 import LumenFinalGatherReconstruction from "./LumenFinalGatherReconstruction.js";
 import {
@@ -45,7 +46,9 @@ class LumenFinalGather {
   get additionalOwnedBytes() {
     if (this.lumen.resourceBudget) return this.lumen.resourceBudget.planBase;
     let bytes =
-      (this.additionalSceneBytes ?? 0) + (this._owners?.claims.byteLength ?? 0);
+      (this.additionalSceneBytes ?? 0) +
+      (this._owners?.claims.byteLength ?? 0) +
+      preparationCapacityBytes;
     for (const cache of this.lumen?.world?._surfaceCaches ?? []) {
       bytes += cache.additionalBytes;
     }
@@ -586,7 +589,8 @@ class LumenFinalGather {
     const pass = new PassState(c);
     pass.framebuffer = target;
     pass.viewport = new BoundingRectangle(0, 0, width, height);
-    cmd.execute(c, pass);
+    if (!cmd.execute(c, pass))
+      throw Error("FG pass lost shader readiness before execution");
     this.metrics.draws++;
     return true;
   }
