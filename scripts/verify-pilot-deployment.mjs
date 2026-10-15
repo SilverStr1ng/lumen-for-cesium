@@ -7,6 +7,7 @@ import path from "node:path";
 import { newOutput, openPilot } from "./pilot-validation.mjs";
 import { sourceVersion, launchBrowser } from "./browser-tools.mjs";
 import { runBounded } from "./pilot-process.mjs";
+import { observeDeploymentNetwork } from "./pilot-network.mjs";
 const output = await newOutput("deployment"),
   report = {
     version: sourceVersion([
@@ -14,6 +15,7 @@ const output = await newOutput("deployment"),
       "scripts/serve.mjs",
       "scripts/setup.mjs",
       "scripts/pilot-process.mjs",
+      "scripts/pilot-network.mjs",
       "package.json",
       "package-lock.json",
       "cesium-1.146/package-lock.json",
@@ -170,8 +172,13 @@ try {
       page.on("worker", onWorker);
       page.on("requestfailed", onFailure);
       console.log("Clean host " + prefix + "/" + display);
+      const networkProof = await observeDeploymentNetwork(
+        page,
+        new URL("../fixtures/local-pilot/dataset.json", base).href,
+      );
       await openPilot(page, display, "baseline");
       await page.waitForTimeout(250);
+      const network = await networkProof();
       const status = await page.evaluate(() => pilotSession.status()),
         response = await fetch(base + `pilot-${display}.html`);
       const row = {
@@ -181,13 +188,17 @@ try {
         requests,
         workers,
         failures,
+        network,
         csp: response.headers.get("content-security-policy"),
         passed:
           status.ready &&
           status.audit.length === 8 &&
           status.world.triangles === 998 &&
           workers.some((u) => u.endsWith("/lumen/gpu-worker.js")) &&
-          !failures.length &&
+          failures.length === network.length &&
+          network.every(
+            (r) => r.outcome === "cancelled-with-verified-content",
+          ) &&
           requests
             .filter((u) => u.startsWith("http"))
             .every((u) => new URL(u).origin === new URL(base).origin),
@@ -217,6 +228,14 @@ try {
       viewport: { width: 960, height: 600 },
     });
     page.on("pageerror", (e) => report.errors.push(String(e)));
+    const failures = [];
+    page.on("requestfailed", (r) =>
+      failures.push({ url: r.url(), error: r.failure() }),
+    );
+    const networkProof = await observeDeploymentNetwork(
+      page,
+      new URL("../fixtures/local-pilot/dataset.json", base).href,
+    );
     await page.goto(base + "pilot-embed.html");
     await page.waitForFunction(
       () =>
@@ -231,15 +250,21 @@ try {
         timeoutMilliseconds: 60000,
       }),
     }));
+    await page.waitForTimeout(250);
+    const network = await networkProof();
     report.rows.push({
       prefix,
       display: "minimal-embedded",
+      failures,
+      network,
       ...embedded,
       passed:
         embedded.status.ready &&
         embedded.visible.visible &&
         embedded.status.audit.length === 8 &&
-        embedded.status.world.triangles === 998,
+        embedded.status.world.triangles === 998 &&
+        failures.length === network.length &&
+        network.every((r) => r.outcome === "cancelled-with-verified-content"),
     });
     await page.close();
   }

@@ -19,6 +19,7 @@ const inputs = [
   "scripts/benchmark-pilot.mjs",
   "scripts/pilot-validation.mjs",
   "scripts/pilot-process.mjs",
+  "scripts/pilot-network.mjs",
   "scripts/gl-allocation-observer.mjs",
   "scripts/setup.mjs",
   "scripts/serve.mjs",

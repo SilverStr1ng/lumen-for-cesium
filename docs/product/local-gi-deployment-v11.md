@@ -44,3 +44,8 @@ style-src 'self' 'unsafe-inline'
 64MiB不足时拒绝新分配并保留匹配旧世界，状态为degraded并记录原因。致命 Scene renderError/context loss 要销毁并重建 Scene/session；本版不承诺原地恢复。切换父子LOD或卸载显示不卸载常驻GI代理，也不意味着城市流式GI。
 
 `npm run test:pilot:deployment` 创建独立归档安装构建，核对源码、运行构建及资产，实开根/非根路径下的两个宿主和最小嵌入。`npm run test:r12` 再串行执行完整11关卡，包含30分钟真实巡航；每次使用新证据目录，失败非零。正式验收期间不要修改其冻结输入。
+# 部署资源事件
+
+部署检查保留所有原始 `requestfailed` 与 CDP `loadingFailed`。流已结束、当前会话拥有完整资源时，浏览器仍可能报告取消；这类事件只可标为 `cancelled-with-verified-content`，不改写成请求成功。
+
+该分类要求同一 CDP requestId 的 GET/Fetch、HTTP 200、`net::ERR_ABORTED` 和 `canceled=true`；请求唯一且来自当前页面、会话、已提交 generation 和资源 scope，信号未取消、scope 未关闭；canonical URL 必须由当前清单声明，当前 scope 拥有的实际完整字节必须匹配响应长度，并重新计算 SHA-256 匹配清单。任一条件缺失、脚本/Worker/导航/CSP/CORS 或其他网络错误仍使部署失败。判据有 28 项反例检查，原 strict-any-requestfailed 候选记录保留。

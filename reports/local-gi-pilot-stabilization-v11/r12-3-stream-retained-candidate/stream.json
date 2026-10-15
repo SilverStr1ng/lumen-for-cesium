@@ -1,0 +1,305 @@
+{
+  "releaseReader": true,
+  "failures": [
+    {
+      "url": "http://localhost:12765/fixtures/local-pilot/parent.glb",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      },
+      "at": 1792054454950
+    },
+    {
+      "url": "http://localhost:12765/fixtures/local-pilot/limestone.gltf",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      },
+      "at": 1792054454980
+    },
+    {
+      "url": "http://localhost:12765/fixtures/local-pilot/tile-1.glb",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      },
+      "at": 1792054455080
+    }
+  ],
+  "result": {
+    "reads": [
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/dataset.json",
+        "status": 200,
+        "declared": "5027",
+        "bytes": 5027,
+        "completedAt": 1792054454936
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/parent.glb",
+        "status": 200,
+        "declared": "391328",
+        "bytes": 391328,
+        "completedAt": 1792054454950
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/basalt.glb",
+        "status": 200,
+        "declared": "25892",
+        "bytes": 25892,
+        "completedAt": 1792054454965
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/limestone.gltf",
+        "status": 200,
+        "declared": "342600",
+        "bytes": 342600,
+        "completedAt": 1792054454980
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/plaster.glb",
+        "status": 200,
+        "declared": "49252",
+        "bytes": 49252,
+        "completedAt": 1792054454993
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/terracotta.gltf",
+        "status": 200,
+        "declared": "6478",
+        "bytes": 6478,
+        "completedAt": 1792054455006
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/oak.glb",
+        "status": 200,
+        "declared": "39600",
+        "bytes": 39600,
+        "completedAt": 1792054455019
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/emitter.gltf",
+        "status": 200,
+        "declared": "6369",
+        "bytes": 6369,
+        "completedAt": 1792054455031
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/blue-instance.glb",
+        "status": 200,
+        "declared": "4816",
+        "bytes": 4816,
+        "completedAt": 1792054455044
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/alpha-mask.glb",
+        "status": 200,
+        "declared": "2496",
+        "bytes": 2496,
+        "completedAt": 1792054455056
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-0.glb",
+        "status": 200,
+        "declared": "25900",
+        "bytes": 25900,
+        "completedAt": 1792054455068
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-1.glb",
+        "status": 200,
+        "declared": "258788",
+        "bytes": 258788,
+        "completedAt": 1792054455081
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-2.glb",
+        "status": 200,
+        "declared": "49260",
+        "bytes": 49260,
+        "completedAt": 1792054455094
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-3.glb",
+        "status": 200,
+        "declared": "4824",
+        "bytes": 4824,
+        "completedAt": 1792054455107
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-4.glb",
+        "status": 200,
+        "declared": "39608",
+        "bytes": 39608,
+        "completedAt": 1792054455118
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-5.glb",
+        "status": 200,
+        "declared": "4720",
+        "bytes": 4720,
+        "completedAt": 1792054455131
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-6.glb",
+        "status": 200,
+        "declared": "4828",
+        "bytes": 4828,
+        "completedAt": 1792054455143
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-7.glb",
+        "status": 200,
+        "declared": "2492",
+        "bytes": 2492,
+        "completedAt": 1792054455155
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/limestone.bin",
+        "status": 200,
+        "declared": "62592",
+        "bytes": 62592,
+        "completedAt": 1792054455167
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/terracotta.bin",
+        "status": 200,
+        "declared": "1152",
+        "bytes": 1152,
+        "completedAt": 1792054455179
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/emitter.bin",
+        "status": 200,
+        "declared": "1152",
+        "bytes": 1152,
+        "completedAt": 1792054455192
+      },
+      {
+        "url": "http://localhost:12765/fixtures/gallery-mineral.png",
+        "status": 200,
+        "declared": "2987",
+        "bytes": 2987,
+        "completedAt": 1792054455204
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tileset.json",
+        "status": 200,
+        "declared": "3523",
+        "bytes": 3523,
+        "completedAt": 1792054455216
+      }
+    ],
+    "aborted": false,
+    "verified": [
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/parent.glb",
+        "digest": "5c5786a1ecfd745bf975fbed37a787c393db1ef76590659366db84d49a54a887",
+        "bytes": 391328
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/basalt.glb",
+        "digest": "4b1076de65a57fe6bc79e988bfcd3351a2151a02641845993839f1cb98b87e39",
+        "bytes": 25892
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/limestone.gltf",
+        "digest": "dc3556feaff6cd2efae3157735b86cdb3868382867f17a873332dc77bc23e111",
+        "bytes": 342600
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/plaster.glb",
+        "digest": "5c68c72dfb781dbe0800885e539622ef12754b1ea3713e46a59e6bc306268bea",
+        "bytes": 49252
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/terracotta.gltf",
+        "digest": "00060f23f2ba1da7cd75d97ba9d12c238213c4fe3234783082517f096cd2aa15",
+        "bytes": 6478
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/oak.glb",
+        "digest": "479f08b411bb11d1556010802617ac18ba13c8321ddfe606a898caf984e220a1",
+        "bytes": 39600
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/emitter.gltf",
+        "digest": "3814132bf8e0269448f143b9d52ee25cd94e4137ac68ee9327c1f553e18d0c3e",
+        "bytes": 6369
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/blue-instance.glb",
+        "digest": "f73aad48f37bfd1b9ae2efd5144e94518728afc51bf2b836d602a692a28bdb0f",
+        "bytes": 4816
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/alpha-mask.glb",
+        "digest": "7573ba217e766839d1e23ebc6d6ba5ec45324f6408c7aef8318c211c2c1e4be7",
+        "bytes": 2496
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-0.glb",
+        "digest": "2e3b092d022150142e37a3e69f308343fd96bf399bf55345a0b19f21790c85c2",
+        "bytes": 25900
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-1.glb",
+        "digest": "e9f2b0a7a3d4a8de13770917495d636b3d478bda9132b57a86ddc15f6ede2ff0",
+        "bytes": 258788
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-2.glb",
+        "digest": "2f7915a457bec4e164c75f3fe95beb85940f3276280fc94bd3eae3708eb80d53",
+        "bytes": 49260
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-3.glb",
+        "digest": "a3993ce7ed34975c30678b42216bdbf3a5f1f56cb578a41882766f9adddaf80b",
+        "bytes": 4824
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-4.glb",
+        "digest": "52e7b369a40a9bdb506cf01628302391a1525374e453ce8f5a27ad7a0999be59",
+        "bytes": 39608
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-5.glb",
+        "digest": "1c76f92acafc44e81ea5750bf542f265005dfe9b99ebcbf4f3e43a1a1c3d4d1d",
+        "bytes": 4720
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-6.glb",
+        "digest": "826c1a17386cf101491af17c62eeac705cdcf70dbbcef659c405c7228eab0ec7",
+        "bytes": 4828
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tile-7.glb",
+        "digest": "10f35492b94574020465a7a8414e9fa26a528f0ad6530ae593ba2cd7b042fe64",
+        "bytes": 2492
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/limestone.bin",
+        "digest": "6c3ebc6b854114e159bddbca128593528d9052df5dd92a8b01febfb8064a0b19",
+        "bytes": 62592
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/terracotta.bin",
+        "digest": "a3fa448d1bae0b2ea3b5446b45fca82bcc3d3d8738a5cfbbb80d92f0738f2d95",
+        "bytes": 1152
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/emitter.bin",
+        "digest": "6a1d8eb7128ad34224cbf54f0104dfa0f74da80d6ffed814efc13ea01d0b843f",
+        "bytes": 1152
+      },
+      {
+        "url": "http://localhost:12765/fixtures/gallery-mineral.png",
+        "digest": "a1897f36c3d9df7bdebd51e7939c849895943ef3d7d4b3c7efe009ad7db9f702",
+        "bytes": 2987
+      },
+      {
+        "url": "http://localhost:12765/fixtures/local-pilot/tileset.json",
+        "digest": "354c0cc631fa92b6ad7fcf5f1c029ab153c0d8b0de853b56ab9a8a578bb2615a",
+        "bytes": 3523
+      }
+    ],
+    "at": 1792054455227
+  }
+}
