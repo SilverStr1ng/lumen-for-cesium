@@ -1,4 +1,41 @@
 // Explicit synchronous diagnostics. This module never runs in production frames.
+// Camera.update reorthogonalizes doubles every frame. Bound that roundoff in
+// pose space (64 machine epsilons), rather than compare ECEF matrix strings.
+// At Earth radius the position allowance is below 0.1 micrometre; actual
+// camera motion, projection changes and drawing-buffer changes still reject.
+export function sameDiagnosticCamera(a, b) {
+  const vector = (v, n) =>
+    Array.isArray(v) && v.length === n && v.every(Number.isFinite);
+  if (!a || !b || !vector(a.position, 3) || !vector(b.position, 3))
+    return false;
+  const roundoff = 64 * Number.EPSILON,
+    positionScale = Math.max(
+      1,
+      ...a.position.map(Math.abs),
+      ...b.position.map(Math.abs),
+    );
+  for (const key of ["position", "direction", "up", "right"]) {
+    if (!vector(a[key], 3) || !vector(b[key], 3)) return false;
+    const bound = roundoff * (key === "position" ? positionScale : 1);
+    if (a[key].some((v, i) => Math.abs(v - b[key][i]) > bound)) return false;
+  }
+  return ["projection", "buffer"].every(
+    (key) =>
+      vector(a[key], key === "projection" ? 16 : 2) &&
+      vector(b[key], key === "projection" ? 16 : 2) &&
+      a[key].every((v, i) => v === b[key][i]),
+  );
+}
+function cameraPose(C, scene) {
+  return {
+    position: C.Cartesian3.pack(scene.camera.positionWC, []),
+    direction: C.Cartesian3.pack(scene.camera.directionWC, []),
+    up: C.Cartesian3.pack(scene.camera.upWC, []),
+    right: C.Cartesian3.pack(scene.camera.rightWC, []),
+    projection: C.Matrix4.toArray(scene.camera.frustum.projectionMatrix),
+    buffer: [scene.drawingBufferWidth, scene.drawingBufferHeight],
+  };
+}
 export async function capturePixels(
   session,
   pixels,
@@ -26,33 +63,37 @@ export async function capturePixels(
     revision = world.requestedRevision,
     profile = session.profile,
     signal = session._controller.signal;
-  const camera = C.Matrix4.toArray(scene.camera.viewMatrix).join(","),
-    inverse = C.Matrix4.inverseTransformation(session.frame, new C.Matrix4());
-  const rays = pixels.map(([x, y]) => {
-    const ray = scene.camera.getPickRay(
-      new C.Cartesian2(
-        ((x + 0.5) * scene.canvas.clientWidth) / width,
-        ((y + 0.5) * scene.canvas.clientHeight) / height,
-      ),
-    );
-    return {
-      origin: C.Cartesian3.pack(
-        C.Matrix4.multiplyByPoint(inverse, ray.origin, new C.Cartesian3()),
-        [],
-      ),
-      direction: C.Cartesian3.pack(
-        C.Cartesian3.normalize(
-          C.Matrix4.multiplyByPointAsVector(
-            inverse,
-            ray.direction,
+  const inverse = C.Matrix4.inverseTransformation(
+    session.frame,
+    new C.Matrix4(),
+  );
+  let camera, rays;
+  const captureRays = () =>
+    pixels.map(([x, y]) => {
+      const ray = scene.camera.getPickRay(
+        new C.Cartesian2(
+          ((x + 0.5) * scene.canvas.clientWidth) / width,
+          ((y + 0.5) * scene.canvas.clientHeight) / height,
+        ),
+      );
+      return {
+        origin: C.Cartesian3.pack(
+          C.Matrix4.multiplyByPoint(inverse, ray.origin, new C.Cartesian3()),
+          [],
+        ),
+        direction: C.Cartesian3.pack(
+          C.Cartesian3.normalize(
+            C.Matrix4.multiplyByPointAsVector(
+              inverse,
+              ray.direction,
+              new C.Cartesian3(),
+            ),
             new C.Cartesian3(),
           ),
-          new C.Cartesian3(),
+          [],
         ),
-        [],
-      ),
-    };
-  });
+      };
+    });
   const previousMode = scene.lumen.debugMode,
     previousFreeze = fg.freezeSampling;
   const lease = session.budget.tryReserve(
@@ -67,6 +108,7 @@ export async function capturePixels(
   fg.freezeSampling = true;
   const values = {},
     frameStates = {};
+  let firstPublication;
   try {
     for (const [name, mode] of usedOnly
       ? [["usedE", 4]]
@@ -78,6 +120,24 @@ export async function capturePixels(
         ]) {
       scene.lumen.debugMode = mode;
       values[name] = await session._afterFrame(() => {
+        session._guard(token, signal);
+        if (
+          world !== session.world ||
+          revision !== world.requestedRevision ||
+          profile !== session.profile
+        )
+          throw Error("Diagnostic frame ownership changed");
+        const renderedCamera = cameraPose(C, scene);
+        if (!camera) {
+          camera = renderedCamera;
+          rays = captureRays();
+        }
+        if (
+          width !== scene.drawingBufferWidth ||
+          height !== scene.drawingBufferHeight ||
+          !sameDiagnosticCamera(camera, renderedCamera)
+        )
+          throw Error("Diagnostic rendered camera changed");
         const color = scene._view.sceneFramebuffer._colorFramebuffer,
           framebuffer =
             color._multisampleFramebuffer?.getColorFramebuffer() ??
@@ -86,7 +146,16 @@ export async function capturePixels(
           requestedRevision: world.requestedRevision,
           publishedRevision: world.publishedRevision,
           round: world.publishedBounce,
+          camera: renderedCamera,
+          frameNumber: scene._frameState.frameNumber,
         };
+        firstPublication ??= frameStates[name];
+        if (
+          frameStates[name].publishedRevision !==
+            firstPublication.publishedRevision ||
+          frameStates[name].round !== firstPublication.round
+        )
+          throw Error("Diagnostic publication changed between capture frames");
         return pixels.map(([x, y]) =>
           Array.from(
             world
@@ -100,8 +169,10 @@ export async function capturePixels(
     if (
       world !== session.world ||
       revision !== world.requestedRevision ||
+      world.publishedRevision !== firstPublication.publishedRevision ||
+      world.publishedBounce !== firstPublication.round ||
       profile !== session.profile ||
-      camera !== C.Matrix4.toArray(scene.camera.viewMatrix).join(",")
+      !sameDiagnosticCamera(camera, cameraPose(C, scene))
     )
       throw Error("Diagnostic frame ownership/camera changed");
     return {
@@ -109,6 +180,8 @@ export async function capturePixels(
       height,
       pixels,
       rays,
+      camera,
+      cameraRoundoffFactor: 64,
       ...values,
       frameStates,
       version: session.manifest.version,

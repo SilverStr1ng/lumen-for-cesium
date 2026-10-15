@@ -1,0 +1,12 @@
+
+> test:pilot:quality
+> node scripts/verify-pilot-quality.mjs
+
+{"display":"models","profile":"baseline","light":"day","view":"overview","phase":"capture"}
+page.evaluate: Error: Diagnostic frame ownership/camera changed
+    at capturePixels (http://localhost:8090/lumen/session-diagnostics.js:106:13)
+    at async <anonymous>:396:30
+    at D:\Nothing\lumen-for-cesium\scripts\verify-pilot-quality.mjs:107:34 {
+  log: []
+}
+{"status":"failed","rows":0,"errors":["Error: page.evaluate: Error: Diagnostic frame ownership/camera changed\n    at capturePixels (http://localhost:8090/lumen/session-diagnostics.js:106:13)\n    at async <anonymous>:396:30"]}

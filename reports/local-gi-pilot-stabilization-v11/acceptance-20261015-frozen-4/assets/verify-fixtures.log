@@ -1,0 +1,18 @@
+PASS untextured: actual WebGL2 GPU world, valid probes and nonempty geometry
+PASS untextured: finite HDR irradiance and accounted texture memory
+PASS untextured: valid 1x1 material atlas
+PASS sky lighting produces actual receiver irradiance changes
+PASS exhausted GPU traversal is Unknown
+PASS untextured: GL has no framebuffer feedback or errors
+PASS two-rooms: actual WebGL2 GPU world, valid probes and nonempty geometry
+PASS two-rooms: finite HDR irradiance and accounted texture memory
+PASS two-rooms: real wall agrees with independent CPU intersection
+PASS two-rooms: wall blocks red emissive transport
+PASS two-rooms: GL has no framebuffer feedback or errors
+PASS alpha-mask: actual WebGL2 GPU world, valid probes and nonempty geometry
+PASS alpha-mask: finite HDR irradiance and accounted texture memory
+PASS alpha mask: transparent texel passes through; opaque texel occludes
+PASS black light preserves valid coverage and zero irradiance
+PASS destroy releases owned resources and reload restores GPU lighting
+PASS alpha-mask: GL has no framebuffer feedback or errors
+PASS no render, worker, browser or GL exceptions
