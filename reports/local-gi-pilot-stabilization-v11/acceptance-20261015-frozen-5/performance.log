@@ -1,0 +1,21 @@
+
+> benchmark:pilot
+> node scripts/benchmark-pilot.mjs
+
+Measuring models/baseline/stationary
+{"display":"models","profile":"baseline","motion":"stationary","passed":true,"gpuP95":4.811424,"cpuP95":5.100000001490116,"intervalP95":7.100000001490116}
+Measuring models/baseline/moving
+{"display":"models","profile":"baseline","motion":"moving","passed":true,"gpuP95":5.253216,"cpuP95":6.100000001490116,"intervalP95":8.399999998509884}
+Measuring models/enhanced/stationary
+{"display":"models","profile":"enhanced","motion":"stationary","passed":true,"gpuP95":11.628416,"cpuP95":11.599999994039536,"intervalP95":13.699999995529652}
+Measuring models/enhanced/moving
+{"display":"models","profile":"enhanced","motion":"moving","passed":true,"gpuP95":11.51728,"cpuP95":11.600000001490116,"intervalP95":13.899999998509884}
+Measuring tiles/baseline/stationary
+{"display":"tiles","profile":"baseline","motion":"stationary","passed":true,"gpuP95":7.993856,"cpuP95":8.600000001490116,"intervalP95":13.100000001490116}
+Measuring tiles/baseline/moving
+{"display":"tiles","profile":"baseline","motion":"moving","passed":true,"gpuP95":8.43984,"cpuP95":9.299999997019768,"intervalP95":14.100000001490116}
+Measuring tiles/enhanced/stationary
+{"display":"tiles","profile":"enhanced","motion":"stationary","passed":true,"gpuP95":13.022624,"cpuP95":12.899999998509884,"intervalP95":16.899999998509884}
+Measuring tiles/enhanced/moving
+{"display":"tiles","profile":"enhanced","motion":"moving","passed":true,"gpuP95":14.0512,"cpuP95":14.5,"intervalP95":18.799999997019768}
+{"status":"passed","rows":8,"errors":[]}

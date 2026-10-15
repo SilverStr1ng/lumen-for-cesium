@@ -51,7 +51,10 @@ const version = sourceVersion(inputs),
     soakSeconds: 1800,
     pilotBase: pilotBase(),
     browserMode: process.env.LUMEN_HEADFUL === "1" ? "headed" : "headless",
-    soakBrowserMode: "headed-natural-focus",
+    soakBrowserMode:
+      process.env.LUMEN_SOAK_HEADED === "1"
+        ? "headed-natural-focus"
+        : "headless-native-tabs",
     required: [
       "assets",
       "session-lifecycle",

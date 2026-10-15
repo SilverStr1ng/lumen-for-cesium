@@ -1,0 +1,41 @@
+
+> build
+> npm --prefix cesium-1.146 run build
+
+
+> cesium@1.146.0 build
+> gulp build
+
+[17:35:58] Using gulpfile D:\Nothing\lumen-for-cesium\artifacts\r12-clean-1792056904331\cesium-1.146\gulpfile.js
+[17:35:58] Starting 'build'...
+
+  packages\core\Build\Unminified\index.js      1.6mb
+  packages\core\Build\Unminified\index.js.map  3.2mb
+
+Done in 206ms
+
+  packages\engine\Build\Unminified\index.js       9.1mb
+  packages\engine\Build\Unminified\index.js.map  18.1mb
+
+Done in 1137ms
+
+  packages\widgets\Build\Unminified\index.js      534.3kb
+  packages\widgets\Build\Unminified\index.js.map  952.9kb
+
+Done in 92ms
+
+  Build\CesiumUnminified\index.js      11.0mb
+  Build\CesiumUnminified\index.js.map  21.9mb
+
+Done in 218ms
+
+  Build\CesiumUnminified\Cesium.js      15.3mb
+  Build\CesiumUnminified\Cesium.js.map  25.7mb
+
+Done in 302ms
+
+  Build\CesiumUnminified\index.cjs      11.1mb
+  Build\CesiumUnminified\index.cjs.map  22.0mb
+
+Done in 213ms
+[17:36:05] Finished 'build' after 7.19 s

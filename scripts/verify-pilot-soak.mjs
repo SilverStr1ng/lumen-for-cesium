@@ -8,7 +8,8 @@ import {
 import { newOutput, openPilot, waitFg } from "./pilot-validation.mjs";
 const output = await newOutput("soak");
 const seconds = Number(process.env.LUMEN_SOAK_SECONDS ?? 1800),
-  requiredSeconds = 1800;
+  requiredSeconds = 1800,
+  headed = process.env.LUMEN_SOAK_HEADED === "1";
 const report = {
   version: sourceVersion([
     "scripts/verify-pilot-soak.mjs",
@@ -25,8 +26,7 @@ const report = {
     lodSwitches: 50,
     budget: 64 * 1048576,
     renderDriver: "Actual CesiumWidget RAF, wall-clock cruise and relighting",
-    browser:
-      "headed; security enabled; natural focus/background throttling, Playwright focus emulation disabled",
+    browser: `${headed ? "headed" : "headless"}; security enabled; native tab visibility/background throttling, Playwright focus emulation disabled`,
   },
   samples: [],
   replacements: [],
@@ -37,13 +37,53 @@ const report = {
 };
 let browser;
 try {
-  browser = await launchBrowser({ naturalFocus: true });
+  browser = await launchBrowser({ naturalFocus: true, headless: !headed });
   const context = browser.contexts()[0];
   const page = await context.newPage();
   await page.setViewportSize({ width: 1920, height: 1080 });
+  const browserSession = await browser.newBrowserCDPSession();
+  const { arguments: browserArguments } = await browserSession.send(
+    "Browser.getBrowserCommandLine",
+  );
+  report.browserControl = {
+    headless: browserArguments.some((a) => a.startsWith("--headless")),
+    chromiumSandbox: !browserArguments.includes("--no-sandbox"),
+    focusEmulation: false,
+    defaultBackgroundOverrides: browserArguments.filter((a) =>
+      [
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding",
+      ].includes(a),
+    ),
+    scope:
+      "Native browser tab visibility; OS window occlusion is a separate headed deployment concern",
+  };
+  await browserSession.detach();
   await page.addInitScript(installGlObserver);
   page.on("pageerror", (e) => report.errors.push(String(e)));
   await openPilot(page, "tiles");
+  report.environment = await page.evaluate(() => {
+    const gl = pilotHost.scene.context._gl,
+      info = gl.getExtension("WEBGL_debug_renderer_info");
+    return {
+      browser: navigator.userAgent,
+      renderer: info
+        ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL)
+        : "not-run",
+      drawingBuffer: [gl.drawingBufferWidth, gl.drawingBufferHeight],
+      visibility: document.visibilityState,
+    };
+  });
+  const environmentValid =
+    report.browserControl.headless === !headed &&
+    report.browserControl.chromiumSandbox &&
+    report.browserControl.defaultBackgroundOverrides.length === 0 &&
+    /5080/.test(report.environment.renderer) &&
+    report.environment.drawingBuffer[0] === 1920 &&
+    report.environment.drawingBuffer[1] === 1080 &&
+    report.environment.visibility === "visible";
+  assert(environmentValid, "Soak browser/device contract did not match");
   await waitFg(page);
   await page.evaluate(() => {
     window.pilotCruise = {
@@ -292,6 +332,7 @@ try {
     ),
   );
   report.checks = {
+    environment: environmentValid,
     duration: enough,
     budget: report.final.status.resources.peakAdmittedBytes <= 64 * 1048576,
     residentLod: report.lod.every((r) => r.passed),

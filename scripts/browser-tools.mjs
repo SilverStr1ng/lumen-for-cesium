@@ -132,7 +132,10 @@ export function demoUrl(backend, extra = "") {
     url.searchParams.set(key, value);
   return url.href;
 }
-export async function launchBrowser({ naturalFocus = false } = {}) {
+export async function launchBrowser({
+  naturalFocus = false,
+  headless = !naturalFocus && process.env.LUMEN_HEADFUL !== "1",
+} = {}) {
   const { chromium } = require("@playwright/test");
   const cache =
     process.env.PLAYWRIGHT_BROWSERS_PATH ??
@@ -171,7 +174,7 @@ export async function launchBrowser({ naturalFocus = false } = {}) {
   const owned = await chromium.launch({
     executablePath,
     chromiumSandbox: true,
-    headless: !naturalFocus && process.env.LUMEN_HEADFUL !== "1",
+    headless,
     ...(naturalFocus
       ? {
           args: ["--remote-debugging-port=0", "--enable-automation"],
