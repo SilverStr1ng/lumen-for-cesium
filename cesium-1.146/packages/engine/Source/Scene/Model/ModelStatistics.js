@@ -60,6 +60,7 @@ function ModelStatistics() {
   // Sets of buffers and textures that have already been counted.
   // This is to prevent double-counting cached assets.
   this._bufferIdSet = {};
+  this._bufferByteLengths = {};
 
   /**
    * The mapping from `texture.id` strings to the byte length of the
@@ -118,6 +119,7 @@ ModelStatistics.prototype.clear = function () {
   this.propertyTablesByteLength = 0;
 
   this._bufferIdSet = {};
+  this._bufferByteLengths = {};
   this._textureIdByteLengths = {};
   this._batchTextureIdMap.removeAll();
 };
@@ -142,6 +144,8 @@ ModelStatistics.prototype.addBuffer = function (buffer, hasCpuCopy) {
     // If there's a CPU copy, count the memory twice.
     const copies = hasCpuCopy ? 2 : 1;
     this.geometryByteLength += buffer.sizeInBytes * copies;
+    // Allocation identity/actual GPU size, independent of optional CPU copies.
+    this._bufferByteLengths[buffer._id] = buffer.sizeInBytes;
   }
 
   // Simulate set insertion.

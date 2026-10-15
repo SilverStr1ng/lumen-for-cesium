@@ -187,9 +187,23 @@ self.onmessage = async ({ data: m }) => {
   try {
     if (m.type === "load") {
       const preparationStart = performance.now();
-      const g = await loadGeometry(m.url, m.axisMatrix, (phase) =>
-        send("progress", { phase }),
-      );
+      const g =
+        m.geometry ??
+        (await loadGeometry(m.url, m.axisMatrix, (phase) =>
+          send("progress", { phase }),
+        ));
+      if (
+        m.geometry &&
+        (!(g.positions instanceof Float32Array) ||
+          !g.positions.length ||
+          g.positions.length > 9 * 200000 ||
+          g.positions.length % 9 ||
+          g.normals.length !== g.positions.length / 3 ||
+          g.uvs.length !== (g.positions.length * 2) / 3 ||
+          g.materialIds.length !== g.positions.length / 9 ||
+          !g.bounds.every(Number.isFinite))
+      )
+        throw Error("Invalid prepared static geometry");
       send("progress", { phase: "packing GPU BVH" });
       const start = performance.now();
       bvh = new BVH(g, {

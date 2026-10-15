@@ -33,7 +33,12 @@ export class LatestRequests {
             requestId: request.id,
           });
       } catch (error) {
-        if (!this.closed) request.reject(error);
+        if (!this.closed) {
+          request.reject(error);
+          this.close(
+            "Lighting operation failed; retry requires an available dataset",
+          );
+        }
       } finally {
         this.active = undefined;
       }

@@ -21,6 +21,7 @@ export function sourceVersion(extraFiles = []) {
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js",
     "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
+    "cesium-1.146/packages/engine/Source/Scene/Model/ModelStatistics.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherReconstruction.js",
@@ -134,6 +135,7 @@ export async function launchBrowser() {
     );
   return chromium.launch({
     executablePath,
+    chromiumSandbox: true,
     headless: process.env.LUMEN_HEADFUL !== "1",
   });
 }

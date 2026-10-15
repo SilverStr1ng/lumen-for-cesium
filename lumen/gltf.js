@@ -49,6 +49,7 @@ export async function loadGeometry(
   axisMatrix,
   progress = () => {},
   signal,
+  imageCache = new Map(),
 ) {
   const container = await readContainer(url, signal),
     gltf = container.gltf;
@@ -114,34 +115,44 @@ export async function loadGeometry(
   await Promise.all(
     [...usedImages].map(async (i) => {
       const image = gltf.images[i];
-      const blob = image.uri
-        ? await fetched(new URL(image.uri, url), "blob")
-        : new Blob(
-            [
-              buffers[gltf.bufferViews[image.bufferView].buffer].slice(
-                gltf.bufferViews[image.bufferView].byteOffset ?? 0,
-                (gltf.bufferViews[image.bufferView].byteOffset ?? 0) +
-                  gltf.bufferViews[image.bufferView].byteLength,
-              ),
-            ],
-            { type: image.mimeType },
-          );
-      const bitmap = await createImageBitmap(blob, {
-        colorSpaceConversion: "none",
-        premultiplyAlpha: "none",
-      });
-      const ratio = Math.min(1, 512 / Math.max(bitmap.width, bitmap.height)),
-        w = Math.max(1, Math.round(bitmap.width * ratio)),
-        h = Math.max(1, Math.round(bitmap.height * ratio));
-      const canvas = new OffscreenCanvas(w, h),
-        ctx = canvas.getContext("2d", { willReadFrequently: true });
-      ctx.drawImage(bitmap, 0, 0, w, h);
-      bitmap.close();
-      images[i] = {
-        width: w,
-        height: h,
-        data: ctx.getImageData(0, 0, w, h).data,
+      const cacheKey = image.uri ? new URL(image.uri, url).href : undefined;
+      if (cacheKey && imageCache.has(cacheKey)) {
+        images[i] = await imageCache.get(cacheKey);
+        return;
+      }
+      const decode = async () => {
+        const blob = image.uri
+          ? await fetched(new URL(image.uri, url), "blob")
+          : new Blob(
+              [
+                buffers[gltf.bufferViews[image.bufferView].buffer].slice(
+                  gltf.bufferViews[image.bufferView].byteOffset ?? 0,
+                  (gltf.bufferViews[image.bufferView].byteOffset ?? 0) +
+                    gltf.bufferViews[image.bufferView].byteLength,
+                ),
+              ],
+              { type: image.mimeType },
+            );
+        const bitmap = await createImageBitmap(blob, {
+          colorSpaceConversion: "none",
+          premultiplyAlpha: "none",
+        });
+        const ratio = Math.min(1, 512 / Math.max(bitmap.width, bitmap.height)),
+          w = Math.max(1, Math.round(bitmap.width * ratio)),
+          h = Math.max(1, Math.round(bitmap.height * ratio));
+        const canvas = new OffscreenCanvas(w, h),
+          ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(bitmap, 0, 0, w, h);
+        bitmap.close();
+        return {
+          width: w,
+          height: h,
+          data: ctx.getImageData(0, 0, w, h).data,
+        };
       };
+      const decoded = decode();
+      if (cacheKey) imageCache.set(cacheKey, decoded);
+      images[i] = await decoded;
     }),
   );
   progress("textures decoded");

@@ -7,10 +7,13 @@ export function finalGatherSnapshotBytes(world, extra) {
     snapshots.add(extra);
   }
   let bytes = 0;
+  const textures = new Set();
   for (const snapshot of snapshots) {
     if (!snapshot.destroyed) {
       for (const resource of snapshot.resources ?? []) {
-        bytes += resource.texture.sizeInBytes;
+        if (!textures.has(resource.texture))
+          bytes += resource.texture.sizeInBytes;
+        textures.add(resource.texture);
       }
     }
   }
@@ -85,6 +88,7 @@ class LumenFinalGatherSnapshot {
         PixelDatatype.FLOAT,
         undefined,
         source.sampler,
+        "snapshotGpu",
       );
       // Register each successful allocation immediately. A failed FBO must not
       // strand its texture outside this snapshot's rollback list.

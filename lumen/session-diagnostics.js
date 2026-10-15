@@ -72,7 +72,6 @@ export async function capturePixels(
           framebuffer =
             color._multisampleFramebuffer?.getColorFramebuffer() ??
             color.framebuffer;
-        const image = world._read(framebuffer, width, height);
         frameStates[name] = {
           requestedRevision: world.requestedRevision,
           publishedRevision: world.publishedRevision,
@@ -80,10 +79,9 @@ export async function capturePixels(
         };
         return pixels.map(([x, y]) =>
           Array.from(
-            image.slice(
-              ((height - 1 - y) * width + x) * 4,
-              ((height - 1 - y) * width + x) * 4 + 3,
-            ),
+            world
+              ._read(framebuffer, 1, 1, 0, undefined, x, height - 1 - y)
+              .subarray(0, 3),
           ),
         );
       }, signal);
@@ -106,7 +104,8 @@ export async function capturePixels(
       version: session.manifest.version,
       revision,
       profile,
-      transientCpuReadbackBytes: width * height * 16,
+      transientCpuReadbackBytes:
+        16 + pixels.length * 3 * 8 * (usedOnly ? 1 : 4),
       scope:
         "Actual main HDR linear E; explicit diagnostic readbacks, not presentation latency",
     };

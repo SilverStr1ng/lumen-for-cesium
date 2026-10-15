@@ -1,6 +1,10 @@
 import { LatestRequests, afterFrame } from "./session-requests.js";
 import { capturePixels } from "./session-diagnostics.js";
-import { readContainer, snapshotAsset, dataUri } from "./gltf-container.js";
+import { readContainer } from "./gltf-container.js";
+import ResourceBudget from "./resource-budget.js";
+import { FrozenResourceCache, imageDimensions } from "./frozen-resources.js";
+import { collectResources, bufferKeys } from "./session-resources.js";
+import { atlasBytes, worldGpuBound } from "./pilot-resource-plan.js";
 import {
   validateManifest,
   auditGltf,
@@ -16,10 +20,6 @@ const sessions = new WeakMap(),
   });
 const aborted = () =>
   new DOMException("Dataset/operation superseded or disposed", "AbortError");
-const sha = async (bytes) =>
-  Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)))
-    .map((v) => v.toString(16).padStart(2, "0"))
-    .join("");
 /** Thin bounded static integration. Owns its displays and world, never the Scene.
  * Engine internals are confined here and in LumenTilesAdapter, not host pages. */
 export default class LumenSession {
@@ -62,6 +62,28 @@ export default class LumenSession {
     this.timings = [];
     this.peakKnownBytes = 0;
     this._pendingResources = new Map();
+    this.budget = new ResourceBudget();
+    this._frozenCache = new FrozenResourceCache(this.budget);
+    this._previousBudget = scene.lumen.resourceBudget;
+    scene.lumen.resourceBudget = this.budget;
+    this.budget.refresh = () => this._account();
+    this.budget.onPressure = (bytes) => {
+      if (this._budgetRelief) return;
+      const fg = scene.lumen.finalGather;
+      if (fg.quality !== "auto" || !fg.receiver) return;
+      this._budgetRelief = true;
+      try {
+        this.budget.extraPlanningBytes = bytes;
+        const plan = fg._layout(fg.metrics.snapshotBytes ?? 0);
+        // Admission may shrink Auto's workspace during load/relight. The same
+        // resource-aware plan is used by the next production frame.
+        if (plan.supported) fg._allocate(plan);
+        else fg.release();
+      } finally {
+        this.budget.extraPlanningBytes = 0;
+        this._budgetRelief = false;
+      }
+    };
     this._displayRemovers = [];
     this.disposed = false;
     this.phase = "empty";
@@ -125,9 +147,21 @@ export default class LumenSession {
     return afterFrame(this.scene, action, signal, timeoutMilliseconds);
   }
   displayStatus() {
+    const camera = this.scene.camera;
+    const cullingVolume = camera.frustum.computeCullingVolume(
+      camera.positionWC,
+      camera.directionWC,
+      camera.upWC,
+    );
     const visible = this.tileset
       ? (this.adapter?.status().activeModels ?? 0) > 0
-      : this.models.some((model) => model.ready && model.show && this.scene.isVisible(model.boundingSphere));
+      : this.models.some(
+          (model) =>
+            model.ready &&
+            model.show &&
+            cullingVolume.computeVisibility(model.boundingSphere) !==
+              this.C.Intersect.OUTSIDE,
+        );
     return {
       outcome: visible ? "visible" : "no-visible-content",
       visible,
@@ -225,6 +259,20 @@ export default class LumenSession {
   async load(uri) {
     return this.replaceDataset(uri);
   }
+  _nativeFactory(pending, create, signal) {
+    pending.factories = (pending.factories ?? 0) + 1;
+    let promise;
+    try {
+      promise = create();
+    } catch (error) {
+      promise = Promise.reject(error);
+    }
+    const owned = Promise.resolve(promise).finally(() => {
+      pending.factories--;
+      if (pending.closed && !pending.factories) pending.release();
+    });
+    return this._wait(owned, signal);
+  }
   async replaceDataset(uri) {
     if (this.disposed) throw aborted();
     if (this._renderError)
@@ -243,12 +291,7 @@ export default class LumenSession {
     this._cacheFailure = undefined;
     this.audit = [];
     const staged = [];
-    const displayUrls = [];
-    const displayBlob = (bytes, type) => {
-      const uri = URL.createObjectURL(new Blob([bytes], { type }));
-      displayUrls.push(uri);
-      return uri;
-    };
+    const resources = this._frozenCache.scope(signal);
     let stagedTiles,
       committed = false;
     const displayRemovers = [];
@@ -257,6 +300,7 @@ export default class LumenSession {
       if (token !== this.generation || this.disposed) return;
       displayError =
         "Display loading failed: " + String(error?.message ?? error);
+      this._lightingRequests?.close(displayError);
       controller.abort();
       // Events may occur inside Model.update/tile traversal. Retire GI after it.
       queueMicrotask(() => {
@@ -272,56 +316,75 @@ export default class LumenSession {
         }
       });
     };
-    const pending = { bytes: 0, models: staged, tileset: undefined };
+    const pending = { models: staged, tileset: undefined, resources };
+    pending.release = () => {
+      pending.geometryLease?.release();
+      pending.nativeLease?.release();
+      if (!committed) resources.close();
+      this._pendingResources.delete(token);
+      this._account();
+    };
     this._pendingResources.set(token, pending);
     try {
       const absolute = new URL(uri, document.baseURI).href,
-        { gltf: raw } = await readContainer(absolute, signal),
+        raw = await resources.manifest(absolute),
         manifest = validateManifest(structuredClone(raw));
       if (!manifest.resources || !Object.keys(manifest.resources).length)
         throw Error("Immutable resource SHA manifest required");
       this.stage = "verify-resources";
-      const verified = new Map();
-      for (const [relative, digest] of Object.entries(manifest.resources)) {
-        const response = await fetch(new URL(relative, absolute), { signal });
-        if (!response.ok)
-          throw Error(`Resource ${response.status}: ${relative}`);
-        const bytes = await response.arrayBuffer();
-        if ((await sha(bytes)) !== digest)
-          throw Error("Resource version mismatch: " + relative);
-        pending.bytes += bytes.byteLength;
-        verified.set(new URL(relative, absolute).href, {
-          bytes,
-          type:
-            response.headers.get("content-type") ?? "application/octet-stream",
-        });
-      }
+      await resources.verify(manifest.resources, absolute);
       // Decode only the already verified bytes; a second network fetch could change versions.
       const fetchFrozen = async (input) => {
-        const value = verified.get(new URL(input, absolute).href);
-        if (!value) throw Error("Undeclared resource: " + input);
-        return new Response(value.bytes, {
-          headers: { "content-type": value.type },
-        });
+        return resources.response(new URL(input, absolute));
       };
       this.stage = "freeze-assets";
       const snapshots = [];
-      let snapshotBytes = 0;
+      const giImages = new Map();
+      let triangles = 0,
+        nativeBytes = 0,
+        imageBytes = 0;
       for (const a of manifest.assets) {
         this._guard(token, signal);
-        const source = await snapshotAsset(
-          new URL(a.renderUri, absolute),
-          signal,
-          fetchFrozen,
-        );
+        const source = await resources.asset(new URL(a.renderUri, absolute));
         const audit = auditGltf(source.gltf);
         const gi = a.giUri
-          ? await snapshotAsset(new URL(a.giUri, absolute), signal, fetchFrozen)
+          ? await resources.asset(new URL(a.giUri, absolute))
           : source;
         auditGltf(gi.gltf);
+        for (const image of gi.gltf.images ?? [])
+          giImages.set(
+            image.uri,
+            imageDimensions(resources.cache.byUrl.get(image.uri).bytes).bytes,
+          );
         snapshots.push({ ...a, renderUri: source.url, giUri: gi.url });
-        snapshotBytes +=
-          2 * (source.url.length + (gi === source ? 0 : gi.url.length));
+        const triangleCount = (g) => {
+          const visit = (id) => {
+            const node = g.nodes[id];
+            return (
+              (node.mesh === undefined
+                ? 0
+                : g.meshes[node.mesh].primitives.reduce(
+                    (n, p) =>
+                      n +
+                      g.accessors[p.indices ?? p.attributes.POSITION].count / 3,
+                    0,
+                  )) + (node.children ?? []).reduce((n, id) => n + visit(id), 0)
+            );
+          };
+          return g.scenes[g.scene ?? 0].nodes.reduce(
+            (n, id) => n + visit(id),
+            0,
+          );
+        };
+        triangles += triangleCount(gi.gltf);
+        nativeBytes += (source.gltf.buffers ?? []).reduce(
+          (n, b) => n + b.byteLength * 2,
+          0,
+        );
+        for (const image of source.gltf.images ?? [])
+          imageBytes += imageDimensions(
+            resources.cache.byUrl.get(image.uri).bytes,
+          ).bytes;
         this.audit.push({
           id: a.id,
           ...audit,
@@ -332,6 +395,21 @@ export default class LumenSession {
             : "same-frozen-display-bytes",
         });
       }
+      if (!Number.isSafeInteger(triangles) || triangles > 200000)
+        throw Error("Expanded dataset triangle input limit");
+      // Includes JS expansion/accessor scratch, transfer/packing CPU buffers and
+      // atlas slots. Native capacity also covers later resident parent+child LOD.
+      const geometryLease = this.budget.reserve(
+        Math.ceil(
+          triangles * 512 +
+            resources.inputBytes * 2 +
+            imageBytes * 3 +
+            atlasBytes(giImages.size) +
+            [...giImages.values()].reduce((n, bytes) => n + bytes * 3, 0),
+        ),
+        "geometry preparation",
+      );
+      pending.geometryLease = geometryLease;
       const frozen = { ...manifest, assets: snapshots },
         geometry = await loadDatasetGeometry(
           frozen,
@@ -342,14 +420,7 @@ export default class LumenSession {
           signal,
         );
       pending.geometry = geometry;
-      pending.bytes += snapshotBytes;
-      const snapshotUri = dataUri(
-        new TextEncoder().encode(JSON.stringify(frozen)),
-        "application/json",
-      );
-      snapshotBytes += snapshotUri.length * 4;
-      if (snapshotBytes > 32 * 1048576)
-        throw Error("Snapshot CPU budget exceeds 32MiB");
+      const snapshotUri = await resources.json(frozen);
       const C = this.C,
         frame = C.Transforms.eastNorthUpToFixedFrame(
           C.Cartesian3.fromDegrees(
@@ -359,40 +430,49 @@ export default class LumenSession {
           ),
         );
       if (this.display === "models") {
+        pending.nativeLease = this.budget.reserve(
+          nativeBytes +
+            imageBytes * 2 +
+            snapshots.length * 524288 +
+            resources.inputBytes * 2,
+          "native display capacity",
+        );
         for (const a of snapshots) {
           this._guard(token, signal);
           this.stage = "native-model: " + a.id;
-          const model = await this._wait(
-            C.Model.fromGltfAsync({
-              url: a.renderUri,
-              modelMatrix: C.Matrix4.multiply(
-                frame,
-                C.Matrix4.fromArray(a.localTransform ?? identity()),
-                new C.Matrix4(),
-              ),
-              upAxis: C.Axis[a.upAxis ?? "Z"],
-              forwardAxis: C.Axis[a.forwardAxis ?? "X"],
-              show: false,
-              incrementallyLoadTextures: false,
-              environmentMapOptions: {
-                enabled: true,
-                generateSphericalHarmonics: false,
-                mipmapLevels: 7,
-                gamma: 1,
-                brightness: 1,
-                atmosphereScatteringIntensity: 2,
-              },
-            }).then((model) => {
-              if (
-                this.disposed ||
-                token !== this.generation ||
-                signal.aborted
-              ) {
-                if (!model.isDestroyed()) model.destroy();
-                throw aborted();
-              }
-              return model;
-            }),
+          const model = await this._nativeFactory(
+            pending,
+            () =>
+              C.Model.fromGltfAsync({
+                url: a.renderUri,
+                modelMatrix: C.Matrix4.multiply(
+                  frame,
+                  C.Matrix4.fromArray(a.localTransform ?? identity()),
+                  new C.Matrix4(),
+                ),
+                upAxis: C.Axis[a.upAxis ?? "Z"],
+                forwardAxis: C.Axis[a.forwardAxis ?? "X"],
+                show: false,
+                incrementallyLoadTextures: false,
+                environmentMapOptions: {
+                  enabled: true,
+                  generateSphericalHarmonics: false,
+                  mipmapLevels: 7,
+                  gamma: 1,
+                  brightness: 1,
+                  atmosphereScatteringIntensity: 2,
+                },
+              }).then((model) => {
+                if (
+                  this.disposed ||
+                  token !== this.generation ||
+                  signal.aborted
+                ) {
+                  if (!model.isDestroyed()) model.destroy();
+                  throw aborted();
+                }
+                return model;
+              }),
             signal,
           );
           staged.push(model);
@@ -401,6 +481,7 @@ export default class LumenSession {
           this.scene.primitives.add(model);
         }
       } else {
+        nativeBytes = imageBytes = 0;
         if (!manifest.tilesUri) throw Error("tilesUri required");
         const tileUri = new URL(manifest.tilesUri, absolute).href,
           { gltf: tiles } = await readContainer(tileUri, signal, fetchFrozen);
@@ -418,51 +499,67 @@ export default class LumenSession {
             if (!response.ok) throw Error("Tile resource " + response.status);
             // fetchFrozen is indexed by canonical URL and already SHA-verified.
             // Basenames alias nested resources and must never identify an asset.
-            const bytes = await response.arrayBuffer();
+            const entry = resources.verified.get(resource.href);
             const container = await readContainer(
-              dataUri(bytes, "model/gltf-binary"),
+              resource.href,
               signal,
+              fetchFrozen,
             );
+            auditGltf(container.gltf);
             if (
               container.format !== "glb" ||
               container.gltf.buffers.some((b) => b.uri) ||
               (container.gltf.images ?? []).some((im) => im.uri)
             )
               throw Error("Pilot Tiles require self-contained GLB");
-            node.content.uri = displayBlob(bytes, "model/gltf-binary");
-            snapshotBytes += node.content.uri.length * 2;
+            const snapshot = await resources.asset(resource.href);
+            nativeBytes += snapshot.gltf.buffers.reduce(
+              (n, b) => n + b.byteLength * 2,
+              0,
+            );
+            for (const image of snapshot.gltf.images ?? [])
+              imageBytes += imageDimensions(
+                resources.cache.byUrl.get(image.uri).bytes,
+              ).bytes;
+            node.content.uri = entry.url;
           }
           for (const child of node.children ?? []) await freeze(child);
         };
         await freeze(tiles.root);
         tiles.root.transform = C.Matrix4.toArray(frame);
-        const tileSnapshot = displayBlob(
-          new TextEncoder().encode(JSON.stringify(tiles)),
-          "application/json",
+        const tileSnapshot = await resources.json(tiles);
+        pending.nativeLease = this.budget.reserve(
+          nativeBytes + imageBytes * 2 + 524288 + resources.inputBytes * 2,
+          "native display capacity",
         );
-        snapshotBytes += tileSnapshot.length * 2;
         this.stage = "native-tiles";
-        stagedTiles = await this._wait(
-          C.Cesium3DTileset.fromUrl(tileSnapshot, {
-            show: false,
-            cacheBytes: 8 * 1048576,
-            maximumCacheOverflowBytes: 4 * 1048576,
-            maximumScreenSpaceError: 16,
-            environmentMapOptions: {
-              enabled: true,
-              generateSphericalHarmonics: false,
-              mipmapLevels: 7,
-              gamma: 1,
-              brightness: 1,
-              atmosphereScatteringIntensity: 2,
-            },
-          }).then((tileset) => {
-            if (this.disposed || token !== this.generation || signal.aborted) {
-              if (!tileset.isDestroyed()) tileset.destroy();
-              throw aborted();
-            }
-            return tileset;
-          }),
+        stagedTiles = await this._nativeFactory(
+          pending,
+          () =>
+            C.Cesium3DTileset.fromUrl(tileSnapshot, {
+              show: false,
+              cacheBytes: 8 * 1048576,
+              maximumCacheOverflowBytes: 4 * 1048576,
+              maximumScreenSpaceError: 16,
+              environmentMapOptions: {
+                enabled: true,
+                generateSphericalHarmonics: false,
+                mipmapLevels: 7,
+                gamma: 1,
+                brightness: 1,
+                atmosphereScatteringIntensity: 2,
+              },
+            }).then((tileset) => {
+              if (
+                this.disposed ||
+                token !== this.generation ||
+                signal.aborted
+              ) {
+                if (!tileset.isDestroyed()) tileset.destroy();
+                throw aborted();
+              }
+              return tileset;
+            }),
           signal,
         );
         pending.tileset = stagedTiles;
@@ -472,18 +569,44 @@ export default class LumenSession {
         this._guard(token, signal);
         this.scene.primitives.add(stagedTiles);
       }
-      if (snapshotBytes > 32 * 1048576)
-        throw Error("Snapshot CPU budget exceeds 32MiB");
       this._guard(token, signal);
       this.stage = "commit-frame";
       await this._afterFrame(() => {
         this._guard(token, signal);
         const l = this.scene.lumen;
+        this._account();
+        const retiredKeys = bufferKeys(this.world?.packet);
+        for (const value of [
+          this.world?._prepared,
+          this.world?._order,
+          this.world?._baseMaterials,
+        ])
+          bufferKeys(value, retiredKeys);
+        if (this.world?.worker) retiredKeys.add(this.world.worker);
+        const retired = [...this.budget.entries.values()].reduce(
+          (n, e) =>
+            n +
+            (retiredKeys.has(e.key) ||
+            ["giGpu", "snapshotGpu", "fgGpu"].includes(e.category)
+              ? e.bytes
+              : 0),
+          0,
+        );
+        const prospective =
+          this.budget.admittedBytes -
+          retired +
+          worldGpuBound(geometry, this.profile !== "baseline");
+        if (prospective > this.budget.limit)
+          throw new DOMException(
+            `World admission ${prospective}/${this.budget.limit}B; matching old dataset retained`,
+            "QuotaExceededError",
+          );
         // World constructor validates/posts before old illumination is retired.
         const world = l.loadWorld({
           backend: "gpu",
           workerUrl: this.workerUrl,
           url: snapshotUri,
+          preparedGeometry: geometry,
           modelMatrix: frame,
           spacing: manifest.gi.spacing,
           rays: manifest.gi.rays,
@@ -505,33 +628,33 @@ export default class LumenSession {
         this.adapter = undefined;
         this.models.forEach((m) => this.scene.primitives.remove(m));
         if (this.tileset) this.scene.primitives.remove(this.tileset);
-        this._displayUrls?.forEach((uri) => URL.revokeObjectURL(uri));
-        this._displayUrls = displayUrls;
+        this._resources?.close();
+        this._nativeLease?.release();
+        this._resources = resources;
+        this._nativeLease = pending.nativeLease;
+        pending.nativeLease = undefined;
         this.models = staged;
         this.tileset = stagedTiles;
         this.world = world;
+        pending.world = world;
         this._datasetReady = false;
         this._lightingTarget = undefined;
         this.frame = frame;
         this.manifest = manifest;
         this.geometry = geometry;
-        this._snapshotBytes = snapshotBytes;
         this._snapshotUri = snapshotUri;
-        this._geometryUri = dataUri(
-          new TextEncoder().encode(JSON.stringify(frozen)),
-          "application/json",
-        );
+        this._frozenManifest = frozen;
         committed = true;
         this._committedGeneration = token;
         pending.models = [];
         pending.tileset = undefined;
         pending.geometry = undefined;
-        pending.bytes = 0;
         l.enabled = true;
         l.coverage = 0;
         l.iblPolicy = "enhanced";
-        this.models.forEach((m) => (m.show = true));
-        if (this.tileset) this.tileset.show = true;
+        // Start the resident GI independently. Showing native content here can
+        // synchronously compile its forward shader before the preparation
+        // worker's first message is delivered, falsely timing out GI loading.
         l.finalGather.setModels(this.models, true);
         l.finalGather.configure({
           mode: profiles[this.profile].mode,
@@ -583,6 +706,9 @@ export default class LumenSession {
       this._guard(token, signal);
       this.stage = "ready";
       this._datasetReady = true;
+      this.models.forEach((m) => (m.show = true));
+      if (this.tileset) this.tileset.show = true;
+      this.scene.requestRender();
       this.phase = this._cacheFailure ? "degraded" : "available";
       this.timings.push({
         type: "load",
@@ -595,7 +721,6 @@ export default class LumenSession {
     } catch (error) {
       controller.abort();
       if (!committed) {
-        displayUrls.forEach((uri) => URL.revokeObjectURL(uri));
         displayRemovers.forEach((remove) => remove());
         staged.forEach((m) => {
           if (!m.isDestroyed()) {
@@ -635,7 +760,8 @@ export default class LumenSession {
       }
       throw error;
     } finally {
-      this._pendingResources.delete(token);
+      pending.closed = true;
+      if (!pending.factories) pending.release();
     }
   }
   cancel() {
@@ -742,7 +868,8 @@ export default class LumenSession {
         this._runLighting(value, requestId),
       );
     const datasetGeneration = this.generation;
-    return this._lightingRequests.submit(structuredClone(this._lightingTarget))
+    return this._lightingRequests
+      .submit(structuredClone(this._lightingTarget))
       .then((result) => ({ ...result, datasetGeneration }));
   }
   async _runLighting(changes, requestId) {
@@ -762,12 +889,12 @@ export default class LumenSession {
       (changes.sunDirection && Math.hypot(...changes.sunDirection) < 1e-6)
     )
       throw Error("Finite nonnegative RGB and nonzero sun direction required");
-    this.phase = "lighting";
-    this.scene.lumen.coverage = 0;
-    this._lighting(changes);
-    const completed = world.solve(changes),
-      first = world.firstPublished;
     try {
+      this.phase = "lighting";
+      this.scene.lumen.coverage = 0;
+      this._lighting(changes);
+      const completed = world.solve(changes),
+        first = world.firstPublished;
       const progress = () => world.status + ":" + world.metrics.submittedFrames;
       const firstResult = await this._wait(first, signal, 30000, progress);
       this._guard(token, signal);
@@ -854,7 +981,12 @@ export default class LumenSession {
   async _experimental(signal) {
     signal.throwIfAborted();
     const token = this.generation;
+    let lease;
     try {
+      lease = this.budget.reserve(
+        12 * 1048576 + 16384,
+        "experimental cache preparation",
+      );
       const cache = await this.world.buildSurfaceRadiance({
         spacing: 0.08,
         samples: 256,
@@ -865,113 +997,89 @@ export default class LumenSession {
       this._guard(token, signal);
       if (error.name === "AbortError") throw error;
       this._cacheFailure = "Experimental cache unavailable: " + String(error);
+    } finally {
+      lease?.release();
     }
   }
   _account() {
-    if (this.disposed) return;
-    const w = this.world,
-      fg = this.scene.lumen.finalGather;
-    const modelBytes = (m) =>
-      (m.statistics?.geometryByteLength ??
-        m._statistics?.geometryByteLength ??
-        0) +
-      (m.statistics?.texturesByteLength ??
-        m._statistics?.texturesByteLength ??
-        0);
-    const geometryBytes = (g) =>
-      g
-        ? [g.positions, g.normals, g.uvs, g.materialIds, g.owners].reduce(
-            (s, a) => s + (a?.byteLength ?? 0),
-            0,
-          ) + g.images.reduce((s, im) => s + (im?.data?.byteLength ?? 0), 0)
-        : 0;
-    const pending = [...this._pendingResources.values()],
-      transientCpu = pending.reduce(
-        (s, p) => s + p.bytes + geometryBytes(p.geometry),
-        0,
-      ),
-      transientGpu = pending.reduce(
-        (s, p) =>
-          s +
-          p.models.reduce((n, m) => n + modelBytes(m), 0) +
-          (p.tileset?.totalMemoryUsageInBytes ?? 0),
+    if (this.disposed) {
+      const entries = this._frozenCache.allocations();
+      for (const pending of this._pendingResources.values())
+        for (const buffer of bufferKeys(pending.geometry))
+          entries.push({
+            key: buffer,
+            bytes: buffer.byteLength,
+            category: "cancelledGeometryCpu",
+          });
+      this.budget.observe(entries);
+      this.resources = {
+        ...this.budget.report(),
+        scope:
+          "Disposed; unabortable native factories retain admission until they settle",
+      };
+      return;
+    }
+    const entries = collectResources(this);
+    const sum = (categories) =>
+      entries.reduce(
+        (n, e) => n + (categories.includes(e.category) ? e.bytes : 0),
         0,
       );
-    const managers = new Set(
-      [
-        ...this.models.map((m) => m.environmentMapManager),
-        this.tileset?.environmentMapManager,
-        ...pending.flatMap((p) => p.models.map((m) => m.environmentMapManager)),
-        ...pending.map((p) => p.tileset?.environmentMapManager),
-      ].filter(Boolean),
-    );
-    const environmentTextures = new Set();
-    for (const manager of managers)
-      for (const texture of [
-        manager._radianceCubeMap,
-        manager._irradianceMapTexture,
-        ...(manager._radianceMapTextures ?? []),
-        ...(manager._specularMapTextures ?? []),
-      ])
-        if (texture && !texture.isDestroyed()) environmentTextures.add(texture);
-    const environmentGpu = [...environmentTextures].reduce(
-      (n, t) => n + (t.sizeInBytes ?? 0),
-      0,
-    );
-    const modelGpu =
-      environmentGpu +
-      transientGpu +
-      this.models.reduce(
-        (s, m) =>
-          s +
-          (m.statistics?.geometryByteLength ??
-            m._statistics?.geometryByteLength ??
-            0) +
-          (m.statistics?.texturesByteLength ??
-            m._statistics?.texturesByteLength ??
-            0),
+    const pending = [...this._pendingResources.values()];
+    // Capacity reservations are consumed by observed allocations, never added
+    // again to the bytes that already occupy those identities.
+    const nativeBytes = (models, tileset) => {
+      const owners = new Set(models);
+      models.forEach((m) => {
+        if (!m.isDestroyed()) owners.add(m.environmentMapManager);
+      });
+      owners.add(tileset?.environmentMapManager);
+      return entries.reduce(
+        (n, e) => n + ([...e.owners].some((o) => owners.has(o)) ? e.bytes : 0),
         0,
-      ) +
-      (this.tileset?.totalMemoryUsageInBytes ?? 0);
-    const g = this.geometry,
-      packetBuffers = new Set();
-    const countPacket = (v) => {
-      if (ArrayBuffer.isView(v)) {
-        if (packetBuffers.has(v.buffer)) return 0;
-        packetBuffers.add(v.buffer);
-        return v.buffer.byteLength;
-      }
-      if (v && typeof v === "object")
-        return Object.values(v).reduce((n, x) => n + countPacket(x), 0);
-      return 0;
+      );
     };
-    const cpu =
-      transientCpu +
-      (this._snapshotBytes ?? 0) +
-      geometryBytes(g) +
-      (w?.packet?.bvh?.cpuRetainedBytes ?? 0) +
-      countPacket(w?.packet);
-    const giGpu = w?.metrics?.memory?.currentBytes ?? 0;
-    fg.additionalSceneBytes = cpu + modelGpu + giGpu;
-    const known =
-      fg.additionalOwnedBytes +
-      (fg.metrics.memoryBytes ?? 0) +
-      (fg.metrics.snapshotBytes ?? 0);
-    this.peakKnownBytes = Math.max(this.peakKnownBytes, known);
+    this._nativeLease?.cover(
+      nativeBytes(
+        [...this.models, ...(this.adapter?.loaded ?? [])],
+        this.tileset,
+      ),
+    );
+    for (const p of pending) {
+      p.nativeLease?.cover(nativeBytes(p.models, p.tileset));
+      const keys = bufferKeys(p.geometry);
+      for (const v of [
+        p.world?.packet,
+        p.world?._prepared,
+        p.world?._order,
+        p.world?._baseMaterials,
+      ])
+        bufferKeys(v, keys);
+      if (p.world?.worker) keys.add(p.world.worker);
+      p.geometryLease?.cover(
+        entries.reduce((n, e) => n + (keys.has(e.key) ? e.bytes : 0), 0),
+      );
+    }
+    this.budget.observe(entries);
+    const report = this.budget.report();
+    this.peakKnownBytes = report.peakKnownBytes;
     this.resources = {
-      transientCpu,
-      transientGpu,
-      environmentGpu,
-      giGpu,
-      displayGpu: modelGpu,
-      cpuKnown: cpu,
-      fgGpu: fg.metrics.memoryBytes ?? 0,
-      snapshots: fg.metrics.snapshotBytes ?? 0,
-      knownAdditionalBytes: known,
-      peakKnownBytes: this.peakKnownBytes,
-      budget: 64 * 1048576,
-      driverVram: "not-run",
-      jsAllocator: "not-run",
+      ...report,
+      giGpu: sum(["giGpu"]),
+      snapshots: sum(["snapshotGpu"]),
+      fgGpu: sum(["fgGpu"]),
+      displayGpu: sum(["displayGpu", "environmentGpu"]),
+      cpuKnown: sum([
+        "geometryCpu",
+        "workerCpu",
+        "packetCpu",
+        "frozenCpu",
+        "blobCpu",
+        "displayCpu",
+        "ownerCpu",
+      ]),
+      queryAllowance:
+        "4KiB per live timer handle; implementation storage unmeasured",
     };
   }
   status() {
@@ -1076,7 +1184,7 @@ export default class LumenSession {
       }, this._controller.signal);
     if (geometry)
       return {
-        uri: this._geometryUri,
+        uri: await this._resources.exportManifest(this._frozenManifest),
         audit: this.audit,
         plan: this.geometry.plan,
       };
@@ -1146,23 +1254,17 @@ export default class LumenSession {
       l.enabled = this._previous.enabled;
       l.coverage = this._previous.coverage;
       l.iblPolicy = this._previous.iblPolicy;
+      l.resourceBudget = this._previousBudget;
       this.scene.light = this._previous.light;
     }
-    this._displayUrls?.forEach((uri) => URL.revokeObjectURL(uri));
-    this._displayUrls = [];
+    this._resources?.close();
+    this._nativeLease?.release();
     this.models = [];
     this.tileset = this.world = this.geometry = undefined;
     this._snapshotUri = this._geometryUri = undefined;
     this._snapshotBytes = 0;
     this.onDatasetCommitted = undefined;
-    this.resources = {
-      knownAdditionalBytes: 0,
-      peakKnownBytes: this.peakKnownBytes,
-      scope:
-        "Released logical ownership; pending cancelled construction settles asynchronously",
-      driverVram: "not-run",
-      jsAllocator: "not-run",
-    };
+    this._account();
     this.phase = "disposed";
     sessions.delete(this.scene);
   }

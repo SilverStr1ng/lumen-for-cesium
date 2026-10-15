@@ -43,6 +43,7 @@ const nearest = new Sampler({
  * Unsupported views/surfaces and resource failures use the existing DDGI. @private */
 class LumenFinalGather {
   get additionalOwnedBytes() {
+    if (this.lumen.resourceBudget) return this.lumen.resourceBudget.planBase;
     let bytes =
       (this.additionalSceneBytes ?? 0) + (this._owners?.claims.byteLength ?? 0);
     for (const cache of this.lumen?.world?._surfaceCaches ?? []) {
@@ -349,6 +350,7 @@ class LumenFinalGather {
       return;
     }
     this.release();
+    const lease = this.lumen.resourceBudget?.reserve(l.bytes, "fgGpu");
     try {
       this.receiver = new LumenReceiverPass();
       this.receiver.update(this.scene.context, l.rw, l.rh);
@@ -394,8 +396,10 @@ class LumenFinalGather {
         this.metrics.peakMemoryBytes,
         l.bytes,
       );
+      lease?.commit();
     } catch (error) {
       this.release();
+      lease?.release();
       throw error;
     }
   }
@@ -472,15 +476,33 @@ class LumenFinalGather {
       };
       this._timerFrames.set(id, frame);
     }
-    let query;
+    let query, queryLease;
     if (
       ext &&
       this._queries.length < 128 &&
       !gl.getQuery(ext.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)
     ) {
-      query = gl.createQuery();
-      gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
-      frame.submitted++;
+      const budget = this.lumen.resourceBudget;
+      queryLease = budget?.tryReserve(4096, "queryAllowance");
+      if (!budget || queryLease) {
+        try {
+          query = gl.createQuery();
+          if (query) {
+            gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+            frame.submitted++;
+          } else {
+            queryLease?.release();
+            frame.missing++;
+            this.metrics.timingUnavailable++;
+          }
+        } catch (error) {
+          queryLease?.release();
+          throw error;
+        }
+      } else {
+        frame.missing++;
+        this.metrics.timingUnavailable++;
+      }
     } else {
       this.metrics.timingUnavailable++;
       frame.missing++;
@@ -498,7 +520,8 @@ class LumenFinalGather {
           stage,
           frame: this.scene.frameState.frameNumber,
         });
-      }
+        queryLease?.commit();
+      } else queryLease?.release();
     }
   }
   _draw(name, target, width, height) {

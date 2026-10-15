@@ -94,6 +94,7 @@ class LumenGpuWorld {
       displayTransitionMilliseconds: 0,
       ...options,
     };
+    delete this.options.preparedGeometry;
     this._validate(this.options);
     this.displayTransitionMilliseconds =
       this.options.displayTransitionMilliseconds;
@@ -182,15 +183,38 @@ class LumenGpuWorld {
     };
     this.worker.onerror = (e) => this._fail(new Error(e.message));
     try {
-      this.worker.postMessage({
-        type: "load",
-        url: options.url,
-        axisMatrix: options.axisMatrix,
-        options: {
-          ...this.options,
-          maxTextureSize: ContextLimits.maximumTextureSize,
+      const geometry = options.preparedGeometry;
+      const transfers = geometry
+        ? [
+            ...new Set(
+              [
+                geometry.positions,
+                geometry.normals,
+                geometry.uvs,
+                geometry.materialIds,
+                geometry.owners,
+                ...geometry.images.filter(Boolean).map((im) => im.data),
+              ].map((a) => a.buffer),
+            ),
+          ]
+        : [];
+      this.metrics.memory.workerCpuBytes = transfers.reduce(
+        (n, b) => n + b.byteLength,
+        0,
+      );
+      this.worker.postMessage(
+        {
+          type: "load",
+          geometry,
+          url: options.url,
+          axisMatrix: options.axisMatrix,
+          options: {
+            ...this.options,
+            maxTextureSize: ContextLimits.maximumTextureSize,
+          },
         },
-      });
+        transfers,
+      );
     } catch (error) {
       this._closed = true;
       this.worker.terminate();
@@ -399,6 +423,7 @@ class LumenGpuWorld {
     datatype = PixelDatatype.FLOAT,
     data,
     filter = nearest,
+    category = "giGpu",
   ) {
     if (
       !Number.isInteger(width) ||
@@ -414,16 +439,24 @@ class LumenGpuWorld {
     if (this.memoryBytes + bytes > this.maxMemoryBytes) {
       throw new Error("GPU DDGI texture memory budget exceeded");
     }
-    const t = new Texture({
-      context: this.scene.context,
-      width,
-      height,
-      pixelFormat: PixelFormat.RGBA,
-      pixelDatatype: datatype,
-      flipY: false,
-      sampler: filter,
-      source: data ? { width, height, arrayBufferView: data } : undefined,
-    });
+    const lease = this.scene.lumen.resourceBudget?.reserve(bytes, category);
+    let t;
+    try {
+      t = new Texture({
+        context: this.scene.context,
+        width,
+        height,
+        pixelFormat: PixelFormat.RGBA,
+        pixelDatatype: datatype,
+        flipY: false,
+        sampler: filter,
+        source: data ? { width, height, arrayBufferView: data } : undefined,
+      });
+    } catch (error) {
+      lease?.release();
+      throw error;
+    }
+    t._lumenBudgetCategory = category;
     this._textures.push(t);
     this.memoryBytes += bytes;
     this.metrics.memory.currentBytes = this.memoryBytes;
@@ -432,6 +465,7 @@ class LumenGpuWorld {
       this.memoryBytes,
     );
     this.metrics.memory.textures = this._textures.length;
+    lease?.commit();
     return t;
   }
   _framebuffer(textures) {
@@ -1249,14 +1283,18 @@ class LumenGpuWorld {
             jobsThisFrame.add(job);
           }
         }
-        let query;
+        let query, queryLease;
         if (
           this._timer &&
           this._queries.length < 32 &&
           !gl.getQuery(this._timer.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)
         ) {
-          query = gl.createQuery();
-          gl.beginQuery(this._timer.TIME_ELAPSED_EXT, query);
+          const budget = this.scene.lumen.resourceBudget;
+          queryLease = budget?.tryReserve(4096, "queryAllowance");
+          if (!budget || queryLease) {
+            query = gl.createQuery();
+            gl.beginQuery(this._timer.TIME_ELAPSED_EXT, query);
+          }
         }
         try {
           if (
@@ -1314,11 +1352,13 @@ class LumenGpuWorld {
           if (query) {
             gl.endQuery(this._timer.TIME_ELAPSED_EXT);
             this._queries.push({ query, phase, count, stage, scheduleKey });
+            queryLease?.commit();
             this.metrics.queryQueuePeak = Math.max(
               this.metrics.queryQueuePeak,
               this._queries.length,
             );
           } else {
+            queryLease?.release();
             stage.timerMissing++;
             this.metrics.timerMissing++;
           }
@@ -1457,7 +1497,15 @@ class LumenGpuWorld {
     }
   }
   // Diagnostics only. Normal rendering never calls readPixels or waits for GPU completion.
-  _read(fb, width, height, attachment = 0, datatype = PixelDatatype.FLOAT) {
+  _read(
+    fb,
+    width,
+    height,
+    attachment = 0,
+    datatype = PixelDatatype.FLOAT,
+    x = 0,
+    y = 0,
+  ) {
     if (this._inUpdate) {
       this.metrics.productionReadbacks++;
     } else {
@@ -1473,7 +1521,7 @@ class LumenGpuWorld {
     try {
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, fb._framebuffer);
       gl.readBuffer(gl.COLOR_ATTACHMENT0 + attachment);
-      gl.readPixels(0, 0, width, height, gl.RGBA, datatype, data);
+      gl.readPixels(x, y, width, height, gl.RGBA, datatype, data);
       const err = gl.getError();
       if (err) {
         throw new Error(`GPU diagnostic readPixels: ${err}`);

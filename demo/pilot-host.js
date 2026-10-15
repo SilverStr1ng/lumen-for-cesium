@@ -72,9 +72,6 @@ async function setup() {
   session = new LumenSession({
     Cesium: C,
     scene: widget.scene,
-    setRenderingEnabled: (enabled) => {
-      widget.useDefaultRenderLoop = enabled;
-    },
     display,
     onDatasetCommitted: focus,
     awaitDisplay: true,
@@ -89,6 +86,9 @@ async function setup() {
     focus,
     view,
     scene: widget.scene,
+    setRenderingEnabled: (enabled) => {
+      widget.useDefaultRenderLoop = enabled;
+    },
   };
   await session.load(dataset);
   focus();

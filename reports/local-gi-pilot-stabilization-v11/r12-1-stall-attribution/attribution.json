@@ -1,0 +1,21 @@
+{
+  "status": "observed",
+  "scope": "development diagnostic; not final HEAD acceptance",
+  "source": "r12-1-lifecycle-candidate fingerprints",
+  "profileSha256": "68b8c12edac7c83a2ef59d1b9e17d4f7bbd5417d42cee13af6d52546ec0c20f6",
+  "sampledLinkMilliseconds": 29370.62,
+  "stack": [
+    "ShaderProgram.createAndLinkProgram",
+    "Context.draw",
+    "performPass",
+    "CesiumWidget RAF"
+  ],
+  "before": "display shown at world commit; synchronous forward shader link blocks delivery of first Worker progress; GI idle deadline rejects load",
+  "fix": "solve resident GI with native display hidden; publish dataset readiness then show native content; visibility waits independently",
+  "afterEvidence": "../r12-1-deferred-display/lifecycle.json",
+  "limitations": [
+    "CPU sampling identifies shader linking, not a driver compiler substage",
+    "Cold display compilation is separate startup cost",
+    "Candidate pass does not certify later source"
+  ]
+}

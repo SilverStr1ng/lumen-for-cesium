@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { LatestRequests, afterFrame } from "../lumen/session-requests.js";
+import LumenSession from "../lumen/LumenSession.js";
 const ran = [],
   releases = [];
 const queue = new LatestRequests(async (value) => {
@@ -25,6 +26,35 @@ assert.equal((await active).outcome, "cancelled");
 assert.equal((await pending).outcome, "cancelled");
 releases.shift()();
 assert.deepEqual(ran, [1, 4, 5]);
+
+let fail;
+const failing = new LatestRequests(
+  () =>
+    new Promise((_, reject) => {
+      fail = reject;
+    }),
+);
+const rejected = failing.submit(1),
+  notRun = failing.submit(2);
+const rejection = assert.rejects(rejected, /injected solve/);
+fail(Error("injected solve"));
+await rejection;
+assert.equal((await notRun).outcome, "cancelled");
+assert.equal(failing.closed, true);
+const session = Object.assign(Object.create(LumenSession.prototype), {
+  world: {
+    solve() {
+      throw Error("injected synchronous solve");
+    },
+  },
+  generation: 1,
+  _controller: new AbortController(),
+  scene: { lumen: {} },
+  _lighting() {},
+});
+await assert.rejects(session._runLighting({}, 1), /injected synchronous solve/);
+assert.equal(session.phase, "failed");
+assert.equal(session.scene.lumen.coverage, 0);
 
 const listeners = new Set(),
   scene = {

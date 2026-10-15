@@ -50,8 +50,14 @@ export function validateTransform(m) {
   return m;
 }
 export function validateManifest(m) {
-  if (Object.keys(m.gi ?? {}).some((key) => !["spacing", "rays", "bounces"].includes(key)))
-    throw Error("Only spacing/rays/bounces are permitted in dataset GI settings");
+  if (
+    Object.keys(m.gi ?? {}).some(
+      (key) => !["spacing", "rays", "bounces"].includes(key),
+    )
+  )
+    throw Error(
+      "Only spacing/rays/bounces are permitted in dataset GI settings",
+    );
   if (
     m.schemaVersion !== 1 ||
     typeof m.datasetId !== "string" ||
@@ -96,8 +102,18 @@ export function validateManifest(m) {
   return m;
 }
 export function auditGltf(g) {
-  if (Object.keys(g.extensions ?? {}).length ||
-      (g.nodes ?? []).some((node) => Object.keys(node.extensions ?? {}).length))
+  if (
+    (g.nodes?.length ?? 0) > 1024 ||
+    (g.accessors?.length ?? 0) > 4096 ||
+    (g.accessors ?? []).some(
+      (a) => !Number.isSafeInteger(a.count) || a.count < 0 || a.count > 600000,
+    )
+  )
+    throw Error("Pilot node/accessor input limit");
+  if (
+    Object.keys(g.extensions ?? {}).length ||
+    (g.nodes ?? []).some((node) => Object.keys(node.extensions ?? {}).length)
+  )
     throw Error("Root/node extensions require matching offline conversion");
   if (g.asset?.version !== "2.0" || g.animations?.length || g.skins?.length)
     throw Error(
@@ -225,6 +241,7 @@ export async function loadDatasetGeometry(
     bounds: [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity],
   };
   let owner = 1;
+  const imageCache = new Map();
   for (const asset of manifest.assets) {
     signal?.throwIfAborted();
     const assetUri = new URL(asset.giUri ?? asset.renderUri, url).href;
@@ -234,6 +251,7 @@ export async function loadDatasetGeometry(
         axisCorrection(asset.upAxis, asset.forwardAxis),
         progress,
         signal,
+        imageCache,
       ),
       matrix = asset.localTransform ?? identity(),
       start = result.positions.length / 9;
@@ -243,7 +261,6 @@ export async function loadDatasetGeometry(
     )
       throw Error("Local dataset material/triangle budget exceeded");
     const mat = result.materials.length,
-      im = result.images.length,
       tex = result.textures.length,
       sampler = result.samplers.length;
     for (const m of g.materials) {
@@ -256,12 +273,20 @@ export async function loadDatasetGeometry(
         if (info) info.index += tex;
       result.materials.push(copy);
     }
-    result.images.push(...g.images);
+    const imageIndices = g.images.map((image) => {
+      if (!image) return -1;
+      let index = result.images.indexOf(image);
+      if (index < 0) {
+        index = result.images.length;
+        result.images.push(image);
+      }
+      return index;
+    });
     result.samplers.push(...g.samplers);
     result.textures.push(
       ...g.textures.map((t) => ({
         ...t,
-        source: t.source + im,
+        source: imageIndices[t.source],
         ...(t.sampler === undefined ? {} : { sampler: t.sampler + sampler }),
       })),
     );
