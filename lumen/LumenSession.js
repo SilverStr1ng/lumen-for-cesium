@@ -1,3 +1,4 @@
+import { LatestRequests, afterFrame } from "./session-requests.js";
 import { capturePixels } from "./session-diagnostics.js";
 import { readContainer, snapshotAsset, dataUri } from "./gltf-container.js";
 import {
@@ -54,6 +55,8 @@ export default class LumenSession {
     this.profile = profile;
     this.workerUrl = workerUrl;
     this.generation = 0;
+    this._datasetReady = false;
+    this._visibleController = new AbortController();
     this.models = [];
     this.audit = [];
     this.timings = [];
@@ -75,6 +78,7 @@ export default class LumenSession {
         return;
       }
       this._renderError = String(error);
+      this._lightingRequests?.close("fatal Scene render error");
       this.error = this._renderError;
       this.phase = "failed";
       this._controller?.abort();
@@ -85,6 +89,8 @@ export default class LumenSession {
     this._lost = (event) => {
       event.preventDefault();
       this._contextLost = true;
+      this._datasetReady = false;
+      this._lightingRequests?.close("context lost");
       this.phase = "context-lost";
       this.error =
         "Context lost: recreate Scene/session; in-place restoration not certified";
@@ -109,41 +115,110 @@ export default class LumenSession {
     document.addEventListener("visibilitychange", this._visibility);
   }
   get ready() {
-    return this.phase === "available";
+    return this._datasetReady && ["available", "degraded"].includes(this.phase);
   }
   _guard(token, signal) {
     if (this.disposed || token !== this.generation || signal?.aborted)
       throw aborted();
   }
-  _afterFrame(action, signal) {
+  _afterFrame(action, signal, timeoutMilliseconds) {
+    return afterFrame(this.scene, action, signal, timeoutMilliseconds);
+  }
+  displayStatus() {
+    const visible = this.tileset
+      ? (this.adapter?.status().activeModels ?? 0) > 0
+      : this.models.some((model) => model.ready && model.show && this.scene.isVisible(model.boundingSphere));
+    return {
+      outcome: visible ? "visible" : "no-visible-content",
+      visible,
+      modelsReady: this.models.filter((model) => model.ready).length,
+      tilesLoadedForCurrentView: this.tileset?.tilesLoaded,
+      adapter: this.adapter?.status(),
+    };
+  }
+  async waitForVisible({ timeoutMilliseconds = 5000, signal } = {}) {
+    if (
+      !Number.isFinite(timeoutMilliseconds) ||
+      timeoutMilliseconds < 0 ||
+      timeoutMilliseconds > 60000
+    )
+      throw Error("Visible wait must be between 0 and 60000ms");
+    const token = this.generation,
+      signals = [
+        this._controller?.signal,
+        this._visibleController.signal,
+        signal,
+      ].filter(Boolean),
+      combined = AbortSignal.any(signals),
+      deadline = performance.now() + timeoutMilliseconds;
+    while (true) {
+      this._guard(token, combined);
+      const display = this.displayStatus();
+      if (display.visible || performance.now() >= deadline)
+        return {
+          ...display,
+          generation: token,
+          datasetReady: this._datasetReady,
+        };
+      try {
+        await this._afterFrame(
+          () => {},
+          combined,
+          Math.max(1, deadline - performance.now()),
+        );
+      } catch (error) {
+        if (error.name !== "TimeoutError") throw error;
+        return {
+          ...this.displayStatus(),
+          generation: token,
+          datasetReady: this._datasetReady,
+          reason: error.message,
+        };
+      }
+    }
+  }
+  _wait(promise, signal, timeoutMilliseconds = 30000, progress) {
     return new Promise((resolve, reject) => {
-      let remove;
+      const clean = () => {
+        clearTimeout(timer);
+        signal.removeEventListener("abort", cancel);
+      };
       const cancel = () => {
-        remove?.();
-        signal?.removeEventListener("abort", cancel);
+        clean();
         reject(aborted());
       };
-      remove = this.scene.postRender.addEventListener(() => {
-        remove();
-        signal?.removeEventListener("abort", cancel);
-        try {
-          resolve(action?.());
-        } catch (error) {
-          reject(error);
+      let previousProgress = progress?.();
+      const timer = setInterval(() => {
+        const nextProgress = progress?.();
+        if (progress && nextProgress !== previousProgress) {
+          previousProgress = nextProgress;
+          return;
         }
-      });
-      signal?.addEventListener("abort", cancel, { once: true });
-      if (signal?.aborted) cancel();
-      else this.scene.requestRender();
-    });
-  }
-  _wait(promise, signal) {
-    return new Promise((resolve, reject) => {
-      const cancel = () => reject(aborted());
+        clean();
+        reject(
+          new DOMException(
+            "Session stage exceeded deadline: " +
+              JSON.stringify({
+                phase: this.phase,
+                worldStatus: this.world?.status,
+                submittedFrames: this.world?.metrics.submittedFrames,
+                progress: this.world?.progress,
+              }),
+            "TimeoutError",
+          ),
+        );
+      }, timeoutMilliseconds);
       signal.addEventListener("abort", cancel, { once: true });
-      Promise.resolve(promise)
-        .then(resolve, reject)
-        .finally(() => signal.removeEventListener("abort", cancel));
+      Promise.resolve(promise).then(
+        (value) => {
+          clean();
+          resolve(value);
+        },
+        (error) => {
+          clean();
+          reject(error);
+        },
+      );
       if (signal.aborted) cancel();
     });
   }
@@ -156,21 +231,32 @@ export default class LumenSession {
       throw Error("Scene rendering stopped: recreate host before loading");
     const token = ++this.generation;
     this._controller?.abort();
+    this._lightingRequests?.close();
+    this._visibleController.abort();
+    this._visibleController = new AbortController();
     const controller = (this._controller = new AbortController()),
       signal = controller.signal,
       start = performance.now();
     this.phase = "auditing";
+    this.stage = "fetch-manifest";
     this.error = undefined;
     this._cacheFailure = undefined;
     this.audit = [];
     const staged = [];
+    const displayUrls = [];
+    const displayBlob = (bytes, type) => {
+      const uri = URL.createObjectURL(new Blob([bytes], { type }));
+      displayUrls.push(uri);
+      return uri;
+    };
     let stagedTiles,
       committed = false;
     const displayRemovers = [];
     let displayError;
     const failDisplay = (error) => {
       if (token !== this.generation || this.disposed) return;
-      displayError = "Display loading failed: " + String(error?.message ?? error);
+      displayError =
+        "Display loading failed: " + String(error?.message ?? error);
       controller.abort();
       // Events may occur inside Model.update/tile traversal. Retire GI after it.
       queueMicrotask(() => {
@@ -179,7 +265,8 @@ export default class LumenSession {
         this.error = displayError;
         if (committed && !this.scene.isDestroyed()) {
           this.scene.lumen.coverage = 0;
-          if (this.scene.lumen.world === this.world) this.scene.lumen.unloadWorld();
+          if (this.scene.lumen.world === this.world)
+            this.scene.lumen.unloadWorld();
           this.world = undefined;
           this.scene.lumen.finalGather.setModels([], true);
         }
@@ -193,6 +280,7 @@ export default class LumenSession {
         manifest = validateManifest(structuredClone(raw));
       if (!manifest.resources || !Object.keys(manifest.resources).length)
         throw Error("Immutable resource SHA manifest required");
+      this.stage = "verify-resources";
       const verified = new Map();
       for (const [relative, digest] of Object.entries(manifest.resources)) {
         const response = await fetch(new URL(relative, absolute), { signal });
@@ -216,6 +304,7 @@ export default class LumenSession {
           headers: { "content-type": value.type },
         });
       };
+      this.stage = "freeze-assets";
       const snapshots = [];
       let snapshotBytes = 0;
       for (const a of manifest.assets) {
@@ -247,7 +336,9 @@ export default class LumenSession {
         geometry = await loadDatasetGeometry(
           frozen,
           absolute,
-          () => {},
+          (phase) => {
+            this.stage = "geometry: " + phase;
+          },
           signal,
         );
       pending.geometry = geometry;
@@ -270,26 +361,40 @@ export default class LumenSession {
       if (this.display === "models") {
         for (const a of snapshots) {
           this._guard(token, signal);
-          const model = await C.Model.fromGltfAsync({
-            url: a.renderUri,
-            modelMatrix: C.Matrix4.multiply(
-              frame,
-              C.Matrix4.fromArray(a.localTransform ?? identity()),
-              new C.Matrix4(),
-            ),
-            upAxis: C.Axis[a.upAxis ?? "Z"],
-            forwardAxis: C.Axis[a.forwardAxis ?? "X"],
-            show: false,
-            incrementallyLoadTextures: false,
-            environmentMapOptions: {
-              enabled: true,
-              generateSphericalHarmonics: false,
-              mipmapLevels: 7,
-              gamma: 1,
-              brightness: 1,
-              atmosphereScatteringIntensity: 2,
-            },
-          });
+          this.stage = "native-model: " + a.id;
+          const model = await this._wait(
+            C.Model.fromGltfAsync({
+              url: a.renderUri,
+              modelMatrix: C.Matrix4.multiply(
+                frame,
+                C.Matrix4.fromArray(a.localTransform ?? identity()),
+                new C.Matrix4(),
+              ),
+              upAxis: C.Axis[a.upAxis ?? "Z"],
+              forwardAxis: C.Axis[a.forwardAxis ?? "X"],
+              show: false,
+              incrementallyLoadTextures: false,
+              environmentMapOptions: {
+                enabled: true,
+                generateSphericalHarmonics: false,
+                mipmapLevels: 7,
+                gamma: 1,
+                brightness: 1,
+                atmosphereScatteringIntensity: 2,
+              },
+            }).then((model) => {
+              if (
+                this.disposed ||
+                token !== this.generation ||
+                signal.aborted
+              ) {
+                if (!model.isDestroyed()) model.destroy();
+                throw aborted();
+              }
+              return model;
+            }),
+            signal,
+          );
           staged.push(model);
           displayRemovers.push(model.errorEvent.addEventListener(failDisplay));
           this._guard(token, signal);
@@ -311,12 +416,9 @@ export default class LumenSession {
             const resource = new URL(node.content.uri, tileUri);
             const response = await fetchFrozen(resource);
             if (!response.ok) throw Error("Tile resource " + response.status);
-            const bytes = await response.arrayBuffer(),
-              relative = decodeURIComponent(
-                resource.pathname.split("/").at(-1),
-              );
-            if ((await sha(bytes)) !== manifest.resources[relative])
-              throw Error("Tile content version mismatch");
+            // fetchFrozen is indexed by canonical URL and already SHA-verified.
+            // Basenames alias nested resources and must never identify an asset.
+            const bytes = await response.arrayBuffer();
             const container = await readContainer(
               dataUri(bytes, "model/gltf-binary"),
               signal,
@@ -327,40 +429,53 @@ export default class LumenSession {
               (container.gltf.images ?? []).some((im) => im.uri)
             )
               throw Error("Pilot Tiles require self-contained GLB");
-            node.content.uri = dataUri(bytes, "model/gltf-binary");
+            node.content.uri = displayBlob(bytes, "model/gltf-binary");
             snapshotBytes += node.content.uri.length * 2;
           }
           for (const child of node.children ?? []) await freeze(child);
         };
         await freeze(tiles.root);
         tiles.root.transform = C.Matrix4.toArray(frame);
-        const tileSnapshot = dataUri(
+        const tileSnapshot = displayBlob(
           new TextEncoder().encode(JSON.stringify(tiles)),
           "application/json",
         );
         snapshotBytes += tileSnapshot.length * 2;
-        stagedTiles = await C.Cesium3DTileset.fromUrl(tileSnapshot, {
-          show: false,
-          cacheBytes: 8 * 1048576,
-          maximumCacheOverflowBytes: 4 * 1048576,
-          maximumScreenSpaceError: 16,
-          environmentMapOptions: {
-            enabled: true,
-            generateSphericalHarmonics: false,
-            mipmapLevels: 7,
-            gamma: 1,
-            brightness: 1,
-            atmosphereScatteringIntensity: 2,
-          },
-        });
+        this.stage = "native-tiles";
+        stagedTiles = await this._wait(
+          C.Cesium3DTileset.fromUrl(tileSnapshot, {
+            show: false,
+            cacheBytes: 8 * 1048576,
+            maximumCacheOverflowBytes: 4 * 1048576,
+            maximumScreenSpaceError: 16,
+            environmentMapOptions: {
+              enabled: true,
+              generateSphericalHarmonics: false,
+              mipmapLevels: 7,
+              gamma: 1,
+              brightness: 1,
+              atmosphereScatteringIntensity: 2,
+            },
+          }).then((tileset) => {
+            if (this.disposed || token !== this.generation || signal.aborted) {
+              if (!tileset.isDestroyed()) tileset.destroy();
+              throw aborted();
+            }
+            return tileset;
+          }),
+          signal,
+        );
         pending.tileset = stagedTiles;
-        displayRemovers.push(stagedTiles.tileFailed.addEventListener(failDisplay));
+        displayRemovers.push(
+          stagedTiles.tileFailed.addEventListener(failDisplay),
+        );
         this._guard(token, signal);
         this.scene.primitives.add(stagedTiles);
       }
       if (snapshotBytes > 32 * 1048576)
         throw Error("Snapshot CPU budget exceeds 32MiB");
       this._guard(token, signal);
+      this.stage = "commit-frame";
       await this._afterFrame(() => {
         this._guard(token, signal);
         const l = this.scene.lumen;
@@ -390,9 +505,13 @@ export default class LumenSession {
         this.adapter = undefined;
         this.models.forEach((m) => this.scene.primitives.remove(m));
         if (this.tileset) this.scene.primitives.remove(this.tileset);
+        this._displayUrls?.forEach((uri) => URL.revokeObjectURL(uri));
+        this._displayUrls = displayUrls;
         this.models = staged;
         this.tileset = stagedTiles;
         this.world = world;
+        this._datasetReady = false;
+        this._lightingTarget = undefined;
         this.frame = frame;
         this.manifest = manifest;
         this.geometry = geometry;
@@ -448,24 +567,22 @@ export default class LumenSession {
           },
         );
       }, signal);
-      await this._wait(this.world.completed, signal);
+      this.stage = "gi-solve";
+      await this._wait(
+        this.world.completed,
+        signal,
+        30000,
+        () => this.world?.status + ":" + this.world?.metrics.submittedFrames,
+      );
       this._guard(token, signal);
       await this._afterFrame(() => {}, signal);
-      while (
-        this.models.some((model) => !model.ready) ||
-        (this.awaitDisplay &&
-          this.tileset &&
-          (!this.tileset.tilesLoaded ||
-            this.adapter.status().activeModels === 0))
-      ) {
-        this._guard(token, signal);
-        await this._afterFrame(() => {}, signal);
-      }
-      await this._afterFrame(() => {}, signal);
+      // GI/data readiness is independent of viewport visibility and tile traversal.
       this._guard(token, signal);
       if (this.profile === "contact-experimental")
         await this._experimental(signal);
       this._guard(token, signal);
+      this.stage = "ready";
+      this._datasetReady = true;
       this.phase = this._cacheFailure ? "degraded" : "available";
       this.timings.push({
         type: "load",
@@ -476,7 +593,9 @@ export default class LumenSession {
       });
       return this.status();
     } catch (error) {
+      controller.abort();
       if (!committed) {
+        displayUrls.forEach((uri) => URL.revokeObjectURL(uri));
         displayRemovers.forEach((remove) => remove());
         staged.forEach((m) => {
           if (!m.isDestroyed()) {
@@ -504,11 +623,11 @@ export default class LumenSession {
           ? "context-lost"
           : this._renderError
             ? "failed"
-              : displayError
-                ? "failed"
-                : error.name === "AbortError"
-              ? "cancelled"
-              : "failed";
+            : displayError
+              ? "failed"
+              : error.name === "AbortError"
+                ? "cancelled"
+                : "failed";
         this.error = this._contextLost
           ? "Context lost: recreate Scene/session"
           : (displayError ?? this._renderError ?? String(error));
@@ -520,7 +639,10 @@ export default class LumenSession {
     }
   }
   cancel() {
+    this._visibleController.abort();
+    this._visibleController = new AbortController();
     if (this.disposed || this.ready) return this.status();
+    this._lightingRequests?.close();
     const generation = this.generation;
     this._controller?.abort();
     ++this.generation;
@@ -589,8 +711,41 @@ export default class LumenSession {
       manager.reset();
     }
   }
-  async setLighting(changes) {
-    if (!this.ready || !this.world) throw Error("Dataset is not available");
+  setLighting(changes) {
+    if (
+      !this._datasetReady ||
+      !this.world ||
+      !["available", "degraded", "lighting"].includes(this.phase)
+    )
+      return Promise.reject(Error("Dataset is not available"));
+    const allowed = ["sunDirection", "sunRadiance", "skyRadiance"];
+    if (
+      !changes ||
+      Object.keys(changes).some((k) => !allowed.includes(k)) ||
+      Object.values(changes).some(
+        (v) => !Array.isArray(v) || v.length !== 3 || !v.every(Number.isFinite),
+      ) ||
+      ["sunRadiance", "skyRadiance"].some((k) =>
+        changes[k]?.some((v) => v < 0),
+      ) ||
+      (changes.sunDirection && Math.hypot(...changes.sunDirection) < 1e-6)
+    )
+      return Promise.reject(
+        Error("Finite nonnegative RGB and nonzero sun direction required"),
+      );
+    this._lightingTarget ??= Object.fromEntries(
+      allowed.map((key) => [key, [...this.world.options[key]]]),
+    );
+    Object.assign(this._lightingTarget, structuredClone(changes));
+    if (!this._lightingRequests || this._lightingRequests.closed)
+      this._lightingRequests = new LatestRequests((value, requestId) =>
+        this._runLighting(value, requestId),
+      );
+    const datasetGeneration = this.generation;
+    return this._lightingRequests.submit(structuredClone(this._lightingTarget))
+      .then((result) => ({ ...result, datasetGeneration }));
+  }
+  async _runLighting(changes, requestId) {
     const world = this.world,
       token = this.generation,
       signal = this._controller.signal,
@@ -613,21 +768,27 @@ export default class LumenSession {
     const completed = world.solve(changes),
       first = world.firstPublished;
     try {
-      const firstResult = await this._wait(first, signal);
+      const progress = () => world.status + ":" + world.metrics.submittedFrames;
+      const firstResult = await this._wait(first, signal, 30000, progress);
       this._guard(token, signal);
       const firstSubmitted = performance.now() - start;
       await this._afterFrame(() => {}, signal);
       const firstFrameSubmitted = performance.now() - start;
-      await this._wait(completed, signal);
+      await this._wait(completed, signal, 30000, progress);
       this._guard(token, signal);
       const finalPublished = performance.now() - start;
       await this._afterFrame(() => {}, signal);
       if (this.profile === "contact-experimental")
         await this._experimental(signal);
       this._guard(token, signal);
-      this.phase = this._cacheFailure ? "degraded" : "available";
+      this.phase = this._lightingRequests.pending
+        ? "lighting"
+        : this._cacheFailure
+          ? "degraded"
+          : "available";
       this.timings.push({
         type: "lighting",
+        requestId,
         firstSubmitted,
         firstFrameSubmitted,
         firstVisible: "not-run",
@@ -640,7 +801,7 @@ export default class LumenSession {
       });
       return this.status();
     } catch (error) {
-      if (token === this.generation && !this.disposed) {
+      if (token === this.generation && !this.disposed && !signal.aborted) {
         this.phase = "failed";
         this.error = String(error);
         this.scene.lumen.coverage = 0;
@@ -825,10 +986,17 @@ export default class LumenSession {
       };
     return {
       pilotReady: false,
+      datasetReady: this._datasetReady && !!this.world,
+      displayState: this.displayStatus(),
+      lightingRequests: {
+        active: this._lightingRequests?.active?.id,
+        pending: this._lightingRequests?.pending?.id,
+      },
       anchor: this.manifest?.anchor,
       phase: this.phase,
       ready: this.ready,
       error: this.error,
+      stage: this.stage,
       display: this.display,
       profile: this.profile,
       effectiveProfile: this._cacheFailure ? "enhanced" : this.profile,
@@ -953,6 +1121,9 @@ export default class LumenSession {
   dispose() {
     if (this.disposed) return;
     this.disposed = true;
+    this._datasetReady = false;
+    this._lightingRequests?.close();
+    this._visibleController.abort();
     clearInterval(this._sceneMonitor);
     ++this.generation;
     this._controller?.abort();
@@ -977,6 +1148,8 @@ export default class LumenSession {
       l.iblPolicy = this._previous.iblPolicy;
       this.scene.light = this._previous.light;
     }
+    this._displayUrls?.forEach((uri) => URL.revokeObjectURL(uri));
+    this._displayUrls = [];
     this.models = [];
     this.tileset = this.world = this.geometry = undefined;
     this._snapshotUri = this._geometryUri = undefined;

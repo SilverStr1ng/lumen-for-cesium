@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "baselineDate": "2026-10-14",
+  "reviewedHead": "328629ef5449978cf4a822cd3de6191d9b2f8c1d",
+  "branch": "feat/local-gi-pilot-v10",
+  "testedImplementation": null,
+  "independentGpuRerun": false,
+  "scoringKind": "reviewer-defined weighted evidence maturity; not measured work-hours or success probability",
+  "anchors": {
+    "0": "目标能力未实现",
+    "25": "有基础或受限入口，产品集成缺口明显",
+    "50": "可运行，但关键验收仍未完成",
+    "75": "主要实现与关键测试已完成，跨场景/产品收口未完成",
+    "100": "在冻结产品范围与目标设备上完成全部必需验收"
+  },
+  "primaryScope": "园区/街区级Cesium桌面WebGL2动态漫反射GI；包括业务多资产、Tiles驻留、地形参与、少量刚体；不含镜面/玻璃/焦散/完整UE等价移植",
+  "primary": {
+    "rows": [
+      {
+        "id": "render",
+        "name": "材质、HDR、阴影与光照接入",
+        "weight": 15,
+        "maturity": 75,
+        "reason": "关键分量和多项受控回归已建立；材质/跨设备边界未完整产品验证",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 11.25
+      },
+      {
+        "id": "gi",
+        "name": "静态世界查询、DDGI、FG与重建",
+        "weight": 20,
+        "maturity": 75,
+        "reason": "主要链路可运行；最终接触像素和一轮表面缓存仍有失败",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 15.0
+      },
+      {
+        "id": "assets",
+        "name": "业务资产管线与可嵌入接口",
+        "weight": 15,
+        "maturity": 50,
+        "reason": "GLB/multi-asset/session and two hosts exist; key quality, resource, lifecycle and deployment gates remain incomplete.",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 7.5
+      },
+      {
+        "id": "tiles",
+        "name": "3D Tiles、LOD和GI驻留",
+        "weight": 10,
+        "maturity": 25,
+        "reason": "Bounded two-level display with resident GI proxy implemented; same geometry batching, recovery/LOD soak unfinished, no city GI streaming.",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 2.5
+      },
+      {
+        "id": "terrain",
+        "name": "地理坐标、区域与地形GI",
+        "weight": 10,
+        "maturity": 25,
+        "reason": "局部坐标和Globe展示已接通；地形/跨区完整GI未实现",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 2.5
+      },
+      {
+        "id": "dynamic",
+        "name": "少量运动刚体的连续GI",
+        "weight": 10,
+        "maturity": 0,
+        "reason": "物理预览与定格重算不计为连续动态GI",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 0.0
+      },
+      {
+        "id": "performance",
+        "name": "目标设备性能、预算与降级",
+        "weight": 10,
+        "maturity": 50,
+        "reason": "Auto和预算已有验证；活动性能未全过，仅高端GPU证据",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 5.0
+      },
+      {
+        "id": "delivery",
+        "name": "稳定性、部署、运维与回归",
+        "weight": 10,
+        "maturity": 50,
+        "reason": "多项生命周期/回归已建立；通用加载异常、部署和跨设备验收待补",
+        "sources": [
+          "current-head-source-and-candidate-report"
+        ],
+        "creditedPoints": 5.0
+      }
+    ],
+    "scorePercent": 48.75,
+    "displayPercent": 49,
+    "uncertaintyDescription": "Reviewer-defined discrete maturity, not a measured completion percentage or remaining-work estimate."
+  },
+  "limitedPilotScope": "指定桌面设备、有限局部区域、静态多模型、太阳/天空可重照明；仅常驻GI代理；不含连续动态GI/城市流式/完整地形GI",
+  "limitedPilot": {
+    "rows": [
+      {
+        "id": "render",
+        "name": "材质、HDR、阴影与光照接入",
+        "weight": 20,
+        "maturity": 75,
+        "creditedPoints": 15.0
+      },
+      {
+        "id": "gi",
+        "name": "静态世界查询、DDGI、FG与重建",
+        "weight": 25,
+        "maturity": 75,
+        "creditedPoints": 18.75
+      },
+      {
+        "id": "assets",
+        "name": "业务资产管线与可嵌入接口",
+        "weight": 20,
+        "maturity": 50,
+        "creditedPoints": 10.0
+      },
+      {
+        "id": "performance",
+        "name": "目标设备性能、预算与降级",
+        "weight": 15,
+        "maturity": 50,
+        "creditedPoints": 7.5
+      },
+      {
+        "id": "delivery",
+        "name": "稳定性、部署、运维与回归",
+        "weight": 15,
+        "maturity": 50,
+        "creditedPoints": 7.5
+      },
+      {
+        "id": "demo",
+        "name": "演示与用户文档",
+        "weight": 5,
+        "maturity": 100,
+        "creditedPoints": 5.0
+      }
+    ],
+    "scorePercent": 63.75,
+    "displayApproximatePercent": 64,
+    "uncertaintyDescription": "63.75 weighted maturity; launch remains blocked."
+  },
+  "rules": [
+    "权重与产品范围从本轮冻结，后续变更须增加版本并并列旧口径",
+    "不以提交数、文件数、测试passed比例推断完成度",
+    "分数不是剩余工时比例",
+    "硬性发布阻断不被其他高分抵消",
+    "不倒推历史百分比",
+    "旧实验失败保留；profile试点通过不改写全产品或历史recommended"
+  ],
+  "sources": {
+    "current-head-source-and-candidate-report": {
+      "title": "Current code and checkpoint report",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/328629ef5449978cf4a822cd3de6191d9b2f8c1d/docs/progress/latest.md"
+    },
+    "baseline": {
+      "title": "Immutable previous assessment",
+      "sha256": "e4d27c5ab63f4e65ce76f728875f46c78af3c2bd3a15231abd1536f3d9f0d674"
+    }
+  },
+  "releaseReady": false,
+  "pilotReleaseReady": false,
+  "assessmentDate": "2026-10-15",
+  "testEvidenceScope": "Candidate batches; no single completed final-HEAD acceptance. See docs/progress/latest.md.",
+  "previousAssessmentHead": "127d9ef39f48da7f51b35d2e156a34ec70c656ad",
+  "baselineArtifactSHA256": "e4d27c5ab63f4e65ce76f728875f46c78af3c2bd3a15231abd1536f3d9f0d674",
+  "scorePolicyVersion": 1,
+  "independentChecks": "Four isolated JS checks; not a Cesium/GPU run.",
+  "deltas": {
+    "primary": 6.25,
+    "limitedPilot": 5.0
+  },
+  "releaseBlockers": [
+    "final-image/query quality candidate 34/40 failed",
+    "Tiles failure recovery timeout",
+    "resource double counting and unverified unique allocation peaks",
+    "visible relight latency not-run",
+    "soak and clean deployment not-run",
+    "no final-HEAD aggregate acceptance"
+  ]
+}

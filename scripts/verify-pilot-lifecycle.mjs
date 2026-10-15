@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, appendFile } from "node:fs/promises";
 import {
   launchBrowser,
   sourceVersion,
@@ -7,7 +7,8 @@ import {
 } from "./browser-tools.mjs";
 const output =
   process.env.LUMEN_REPORT_DIRECTORY ??
-  "reports/local-gi-pilot-v10/lifecycle-first";
+  "reports/local-gi-pilot-stabilization-v11/lifecycle-" +
+    new Date().toISOString().replaceAll(":", "-");
 await mkdir(output, { recursive: true });
 const report = {
   version: sourceVersion([
@@ -23,7 +24,7 @@ const report = {
   checks: [],
   errors: [],
 };
-let browser;
+let browser, monitor;
 try {
   browser = await launchBrowser();
   console.log("Browser launched");
@@ -32,9 +33,21 @@ try {
   });
   await page.addInitScript(installGlObserver);
   console.log("Page created");
-  page.on("console", (message) => { if (message.type() === "error") console.error(message.text().slice(0, 1200)); });
-  page.on("pageerror", (e) => report.errors.push(String(e)));
-  for (const display of ["models", "tiles"]) {
+  page.on("console", (message) => {
+    if (message.type() === "error")
+      console.error(message.text().slice(0, 1200));
+  });
+  await page.exposeFunction("recordPilotStep", async (row) => {
+    console.log(JSON.stringify(row));
+    await appendFile(output + "/steps.ndjson", JSON.stringify(row) + "\n");
+  });
+  page.on("pageerror", (e) => {
+    report.errors.push(String(e));
+    console.error(e);
+  });
+  for (const display of (
+    process.env.LUMEN_PILOT_DISPLAYS ?? "models,tiles"
+  ).split(",")) {
     console.log("Opening " + display);
     await page.goto(
       (process.env.LUMEN_PILOT_BASE ?? "http://localhost:8090/demo/") +
@@ -43,11 +56,29 @@ try {
         ".html?profile=enhanced",
     );
     console.log("Opened " + display);
+    monitor = setInterval(async () => {
+      try {
+        console.log(
+          JSON.stringify(
+            await page.evaluate(() => ({
+              phase: window.pilotSession?.phase,
+              stage: window.pilotSession?.stage,
+              worldStatus: window.pilotSession?.world?.status,
+              progress: window.pilotSession?.world?.progress,
+              submitted: window.pilotSession?.world?.metrics.submittedFrames,
+              frame: window.pilotHost?.scene._frameState?.frameNumber,
+              error: window.pilotSession?.error,
+            })),
+          ),
+        );
+      } catch {}
+    }, 2000);
     await page.waitForFunction(
       () => pilotSession?.ready || pilotSession?.phase === "failed",
       null,
       { timeout: 240000 },
     );
+    clearInterval(monitor);
     assert(
       await page.evaluate(() => pilotSession.ready),
       await page.evaluate(() => pilotSession.error),
@@ -59,13 +90,44 @@ try {
         uri = new URL("../fixtures/local-pilot/dataset.json", location.href)
           .href,
         Native = Worker;
-      const bounded = async (promise) => {
+      const compact = () => ({
+        phase: s.phase,
+        generation: s.generation,
+        requests: s.status().lightingRequests,
+        display: s.displayStatus(),
+        world: s.status().world,
+        error: s.error,
+      });
+      const bounded = async (name, promise) => {
+        await window.recordPilotStep({
+          step: name,
+          event: "start",
+          ...compact(),
+        });
         let timer;
         try {
-          return await Promise.race([promise, new Promise((_, reject) => {
-            timer = setTimeout(() => { s.cancel(); reject(Error("Operation exceeded 90 seconds")); }, 90000);
-          })]);
-        } finally { clearTimeout(timer); }
+          return await Promise.race([
+            promise,
+            new Promise((_, reject) => {
+              timer = setTimeout(() => {
+                const state = compact();
+                s.cancel();
+                reject(
+                  Error(
+                    name + " exceeded 90 seconds: " + JSON.stringify(state),
+                  ),
+                );
+              }, 90000);
+            }),
+          ]);
+        } finally {
+          clearTimeout(timer);
+          await window.recordPilotStep({
+            step: name,
+            event: "end",
+            ...compact(),
+          });
+        }
       };
       for (const fault of ["constructor", "postMessage"]) {
         const old = s.world;
@@ -76,7 +138,8 @@ try {
           fault === "constructor"
             ? class {
                 constructor(...a) {
-                  if (!String(a[0]).includes("gpu-worker.js")) return new Native(...a);
+                  if (!String(a[0]).includes("gpu-worker.js"))
+                    return new Native(...a);
                   throw Error("injected Worker construction");
                 }
               }
@@ -96,8 +159,9 @@ try {
                 }
               };
         try {
-          await bounded(s.replaceDataset(uri));
-        } catch {
+          await bounded("injected-" + fault, s.replaceDataset(uri));
+        } catch (error) {
+          if (!String(error).includes("injected")) throw error;
           failed = true;
         } finally {
           window.Worker = Native;
@@ -112,7 +176,7 @@ try {
           created,
           terminated,
         });
-        await bounded(s.replaceDataset(uri));
+        await bounded("recover-" + fault, s.replaceDataset(uri));
       }
       const old = s.world;
       const pending = s.replaceDataset(uri);
@@ -128,10 +192,13 @@ try {
         name: "cancel-audit-keeps-matching-world",
         passed: cancelled && s.world === old && !old.isDestroyed(),
       });
-      await bounded(s.replaceDataset(uri));
+      await bounded("recover-cancel", s.replaceDataset(uri));
       const first = s.replaceDataset(uri),
         second = s.replaceDataset(uri);
-      const settled = await bounded(Promise.allSettled([first, second]));
+      const settled = await bounded(
+        "rapid-supersession",
+        Promise.allSettled([first, second]),
+      );
       results.push({
         name: "rapid-supersession",
         passed:
@@ -144,16 +211,81 @@ try {
       s.onDatasetCommitted = (dataset) => {
         originalCommit?.(dataset);
         queueMicrotask(() => {
-          if (s.display === "models") s.models[0].errorEvent.raiseEvent(Error("injected late Model loader failure"));
-          else s.tileset.tileFailed.raiseEvent({ message: "injected late Tile loader failure" });
+          if (s.display === "models")
+            s.models[0].errorEvent.raiseEvent(
+              Error("injected late Model loader failure"),
+            );
+          else
+            s.tileset.tileFailed.raiseEvent({
+              message: "injected late Tile loader failure",
+            });
         });
       };
       let displayRejected = false;
-      try { await bounded(s.replaceDataset(uri)); }
-      catch { displayRejected = true; }
-      finally { s.onDatasetCommitted = originalCommit; }
-      results.push({ name: "late-display-error-terminates-load", passed: displayRejected && s.phase === "failed" && !s.world, error: s.error });
-      await bounded(s.replaceDataset(uri));
+      try {
+        await bounded("late-display-error", s.replaceDataset(uri));
+      } catch {
+        displayRejected = true;
+      } finally {
+        s.onDatasetCommitted = originalCommit;
+      }
+      results.push({
+        name: "late-display-error-terminates-load",
+        passed: displayRejected && s.phase === "failed" && !s.world,
+        error: s.error,
+      });
+      await bounded("recover-late-display", s.replaceDataset(uri));
+      const savedFocus = s.onDatasetCommitted;
+      s.onDatasetCommitted = () => {};
+      pilotHost.view({ eye: [35, -43, 30], target: [300, -400, 300] });
+      await bounded("offscreen-dataset-ready", s.replaceDataset(uri));
+      const invisible = await s.waitForVisible({ timeoutMilliseconds: 200 });
+      results.push({
+        name: "offscreen-data-ready-independent",
+        passed: s.ready && invisible.outcome === "no-visible-content",
+        displayState: invisible,
+      });
+      s.onDatasetCommitted = savedFocus;
+      pilotHost.focus();
+      const visible = await s.waitForVisible();
+      results.push({
+        name: "independent-visible-wait",
+        passed: visible.visible,
+      });
+      const world = s.world,
+        beforeRevision = world.requestedRevision;
+      const burst = await bounded(
+        "lighting-burst",
+        Promise.all(
+          Array.from({ length: 8 }, (_, i) =>
+            s.setLighting({ sunRadiance: [1 + i / 10, 1, 1] }),
+          ),
+        ),
+      );
+      results.push({
+        name: "last-write-wins-lighting",
+        passed:
+          burst.filter((r) => r.outcome === "completed").length === 2 &&
+          burst.filter((r) => r.outcome === "superseded").length === 6 &&
+          s.world === world &&
+          world.requestedRevision - beforeRevision === 2 &&
+          world.options.sunRadiance[0] === 1.7,
+        outcomes: burst.map((r) => r.outcome),
+      });
+      pilotHost.setRenderingEnabled(false);
+      let frameTimeout = false;
+      try {
+        await bounded("stopped-render-loop", s.replaceDataset(uri));
+      } catch (error) {
+        frameTimeout = error.name === "TimeoutError";
+      } finally {
+        pilotHost.setRenderingEnabled(true);
+      }
+      results.push({
+        name: "stopped-render-loop-bounded",
+        passed: frameTimeout && s.world === world && !world.isDestroyed(),
+      });
+      await bounded("recover-render-loop", s.replaceDataset(uri));
       let rejected = false;
       try {
         await s.diagnostics({
@@ -237,6 +369,7 @@ try {
   report.errors.push(String(error));
   console.error(error);
 } finally {
+  clearInterval(monitor);
   await browser?.close();
 }
 await writeFile(output + "/lifecycle.json", JSON.stringify(report, null, 2), {
