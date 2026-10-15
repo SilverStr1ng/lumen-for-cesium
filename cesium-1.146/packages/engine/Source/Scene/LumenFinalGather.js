@@ -483,8 +483,11 @@ class LumenFinalGather {
       !gl.getQuery(ext.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)
     ) {
       const budget = this.lumen.resourceBudget;
-      queryLease = budget?.tryReserve(4096, "queryAllowance");
-      if (!budget || queryLease) {
+      queryLease =
+        budget && !budget.queryCapacity
+          ? budget.tryReserve(4096, "queryAllowance")
+          : undefined;
+      if (!budget || budget.queryCapacity || queryLease) {
         try {
           query = gl.createQuery();
           if (query) {

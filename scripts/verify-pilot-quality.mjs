@@ -1,16 +1,19 @@
 import assert from "node:assert/strict";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { launchBrowser, sourceVersion } from "./browser-tools.mjs";
 import { installFixtureImageDecoder } from "./cpu-image-fixtures.mjs";
-import { loadGeometry, accepts } from "../lumen/gltf.js";
+import { accepts } from "../lumen/gltf.js";
 import { BVH } from "../lumen/bvh.js";
 import { referenceIrradiance } from "../lumen/path-reference.js";
 import { cross, sub, normalize, dot } from "../lumen/math.js";
+import {
+  newOutput,
+  openPilot,
+  referenceDataset,
+  waitFg,
+} from "./pilot-validation.mjs";
 installFixtureImageDecoder();
-const output =
-  process.env.LUMEN_REPORT_DIRECTORY ??
-  "reports/local-gi-pilot-v10/quality-first";
-await mkdir(output, { recursive: true });
+const output = await newOutput("quality");
 const configuration = {
   buffer: [1920, 1080],
   views: ["overview", "courtyard", "skylight", "doorway", "emitter"],
@@ -33,10 +36,15 @@ const configuration = {
   limits: { queryNRMSE: 0.12, usedNRMSE: 0.2 },
   denominatorFloor: 1e-5,
   cache: false,
+  convergence:
+    "32 fresh FG epochs and stable history at same generation/revision/final round; baseline no FG",
+  physicalReference: true,
+  legacyCounterpart: true,
 };
 const report = {
   version: sourceVersion([
     "scripts/verify-pilot-quality.mjs",
+    "scripts/pilot-validation.mjs",
     "docs/product/local-gi-v0.1.md",
   ]),
   configuration,
@@ -67,24 +75,14 @@ try {
   });
   page.on("pageerror", (e) => report.errors.push(String(e)));
   for (const display of configuration.displays) {
-    await page.goto("http://localhost:8090/demo/pilot-" + display + ".html");
-    await page.waitForFunction(
-      () => pilotSession?.ready || pilotSession?.phase === "failed",
-      null,
-      { timeout: 240000 },
+    await openPilot(page, display, "baseline");
+    const { manifest, geometry, diagnosticCpuPeak } = await referenceDataset();
+    assert.equal(
+      manifest.version,
+      await page.evaluate(() => pilotSession.manifest.version),
     );
-    assert(
-      await page.evaluate(() => pilotSession.ready),
-      await page.evaluate(() => pilotSession.error),
-    );
-    const source = await page.evaluate(() =>
-        pilotSession.diagnostics({ geometry: true }),
-      ),
-      geometry = await loadGeometry(
-        source.uri,
-        [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-      ),
-      bvh = new BVH(geometry);
+    report.referencePreparationPeak = diagnosticCpuPeak;
+    const bvh = new BVH(geometry);
     for (const profile of configuration.profiles) {
       if ((await page.evaluate(() => pilotSession.profile)) !== profile)
         await page.evaluate((p) => pilotSession.setQuality(p), profile);
@@ -98,21 +96,10 @@ try {
             (camera) => pilotHost.view(camera),
             metadata.cameras[view],
           );
-          await page.evaluate(
-            () =>
-              new Promise((resolve) => {
-                let n = 0;
-                const remove = pilotHost.scene.postRender.addEventListener(
-                  () => {
-                    if (++n === 32) {
-                      remove();
-                      resolve();
-                    }
-                  },
-                );
-                pilotHost.scene.requestRender();
-              }),
-          );
+          const convergence =
+            profile === "enhanced"
+              ? await waitFg(page)
+              : await page.evaluate(() => pilotSession.waitForVisible());
           const pixels = Array.from({ length: 24 }, (_, i) => [
               Math.floor((((i % 6) + 0.5) * 1920) / 6),
               Math.floor(((Math.floor(i / 6) + 0.5) * 1080) / 4),
@@ -197,6 +184,23 @@ try {
                 );
               return references.get(key);
             });
+          const legacy = points.map((p, i) =>
+            referenceIrradiance(
+              bvh,
+              p.position,
+              p.normal,
+              {
+                ...lighting,
+                bounces: 3,
+                environmentMode: "upper-hemisphere",
+                rayOriginPolicy: "legacy",
+              },
+              8192,
+              5019 + i,
+              p.geometricNormal,
+              p.sourceHit,
+            ),
+          );
           const usedNRMSE = nrmse(
               points.map((p) => p.usedE),
               refs.map((r) => r.irradiance),
@@ -244,6 +248,16 @@ try {
               background,
               query,
               reference: refs,
+              legacyReference: legacy,
+              legacyQueryNRMSE: nrmse(
+                query.values.map((q) => q.irradiance),
+                legacy.map((r) => r.irradiance),
+              ),
+              physicalLegacyNRMSE: nrmse(
+                legacy.map((r) => r.irradiance),
+                refs.map((r) => r.irradiance),
+              ),
+              convergence,
               usedNRMSE,
               queryNRMSE,
               regions,
@@ -306,6 +320,28 @@ try {
 } finally {
   await browser?.close();
 }
+report.caseStatuses = configuration.displays.flatMap((display) =>
+  configuration.profiles.flatMap((profile) =>
+    Object.keys(configuration.lights).flatMap((light) =>
+      configuration.views.map((view) => {
+        const row = report.rows.find(
+          (r) =>
+            r.display === display &&
+            r.profile === profile &&
+            r.light === light &&
+            r.view === view,
+        );
+        return {
+          display,
+          profile,
+          light,
+          view,
+          status: row ? (row.passed ? "passed" : "failed") : "not-run",
+        };
+      }),
+    ),
+  ),
+);
 await writeFile(output + "/quality.json", JSON.stringify(report, null, 2), {
   flag: "wx",
 });

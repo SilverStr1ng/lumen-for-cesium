@@ -77,7 +77,8 @@ export default class ResourceBudget {
       cover: (committed) => {
         if (closed) return;
         reservation.remaining = Math.max(0, bytes - committed);
-        this._record();
+        // Inventory and consumed capacity publish together in observe().
+        // Recording here would combine new capacity with stale freed handles.
       },
       commit: () => {
         if (closed) return;

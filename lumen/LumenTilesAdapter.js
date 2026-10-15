@@ -12,6 +12,7 @@ export default class LumenTilesAdapter {
     this.loads = 0;
     this.unloads = 0;
     this.membershipChanges = 0;
+    this.detail = "auto";
     const models = (content) =>
       content?.innerContents
         ? content.innerContents.flatMap(models)
@@ -32,6 +33,7 @@ export default class LumenTilesAdapter {
     this.removeFrame = scene.postRender.addEventListener(() => {
       if (this.closed) return;
       this.frames++;
+      this.applyDetail();
       this.unloaded.forEach((m) => this.loaded.delete(m));
       this.unloaded.clear();
       const targets = [...this.pending].filter((m) => !m.isDestroyed());
@@ -47,6 +49,8 @@ export default class LumenTilesAdapter {
   }
   status() {
     return {
+      detail: this.detail,
+      maximumScreenSpaceError: this.tileset.maximumScreenSpaceError,
       loads: this.loads,
       unloads: this.unloads,
       frames: this.frames,
@@ -55,6 +59,25 @@ export default class LumenTilesAdapter {
       loadedModels: this.loaded.size,
       geometryResidency: "manifest proxy; unchanged by tile events",
     };
+  }
+  setDetail(detail) {
+    this.detail = detail;
+    this.applyDetail();
+  }
+  applyDetail() {
+    if (this.detail !== "parent") {
+      this.tileset.maximumScreenSpaceError =
+        this.detail === "children" ? 1 : 16;
+      return;
+    }
+    // Cesium skips the entire root when SSE exceeds its *parent* error.
+    // Stay between the two real errors, updating as the camera moves.
+    const root = this.tileset.root,
+      state = this.scene._frameState;
+    const childError = root.getScreenSpaceError(state, false);
+    const parentError = root.getScreenSpaceError(state, true);
+    if (Number.isFinite(childError) && parentError > childError)
+      this.tileset.maximumScreenSpaceError = (childError + parentError) * 0.5;
   }
   dispose() {
     if (this.closed) return;

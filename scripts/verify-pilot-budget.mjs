@@ -41,3 +41,17 @@ assert.equal(budget.report().peakAdmittedBytes, 90);
 console.log(
   "PASS shared allocation identities, disjoint snapshot class, pre-allocation rejection and reservation rollback",
 );
+const atomic = new ResourceBudget(100),
+  old = {},
+  live = {};
+atomic.observe([{ key: old, bytes: 80, category: "cpu" }]);
+const capacity = atomic.reserve(20, "native");
+capacity.cover(20);
+atomic.observe([
+  { key: old, bytes: 80, category: "cpu" },
+  { key: live, bytes: 20, category: "displayGpu" },
+]);
+capacity.cover(0);
+atomic.observe([{ key: old, bytes: 80, category: "cpu" }]);
+assert.equal(atomic.report().peakAdmittedBytes, 100);
+capacity.release();

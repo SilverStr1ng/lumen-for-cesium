@@ -1,4 +1,5 @@
 import { readContainer, readBuffers, dataUri } from "./gltf-container.js";
+import { auditGltf } from "./local-dataset.js";
 const hash = async (bytes) =>
   Array.from(
     new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
@@ -268,7 +269,8 @@ class FrozenResources {
       const container = await readContainer(canonical, this.signal, (uri) =>
           this.response(uri),
         ),
-        gltf = structuredClone(container.gltf);
+        gltf = container.gltf;
+      auditGltf(gltf);
       lease = this.cache.budget.reserve(
         entry.bytes.byteLength * 2 +
           (gltf.buffers ?? []).reduce((n, b) => {
@@ -334,8 +336,47 @@ class FrozenResources {
   async exportManifest(manifest) {
     // Explicit diagnostics may fail admission. They never free production
     // history or silently exclude their encoding scratch from the fixed limit.
-    const bytes = [...this.owned].reduce((n, e) => n + e.bytes.byteLength, 0);
-    const lease = this.cache.budget.reserve(bytes * 16, "diagnostic export");
+    this.guard();
+    const snapshots = new Map(
+      [...this.snapshots.values()].map((s) => [s.url, s.gltf]),
+    );
+    const uriBounds = new Map();
+    const uriBound = (uri) => {
+      if (uriBounds.has(uri)) return uriBounds.get(uri);
+      const gltf = snapshots.get(uri);
+      if (!gltf)
+        throw Error("Diagnostic export requires an owned frozen snapshot");
+      let bytes = this.cache.byUrl.get(uri).bytes.byteLength;
+      for (const item of [...(gltf.buffers ?? []), ...(gltf.images ?? [])])
+        if (item.uri) {
+          const binary = this.cache.byUrl.get(item.uri);
+          if (!binary) throw Error("Diagnostic snapshot resource retired");
+          bytes +=
+            32 +
+            binary.type.length +
+            4 * Math.ceil(binary.bytes.byteLength / 3);
+        }
+      const bound = 64 + 4 * Math.ceil(bytes / 3);
+      uriBounds.set(uri, bound);
+      return bound;
+    };
+    // Memoization shares the intermediate string, but JSON repeats each URI.
+    // Count every render/GI occurrence before producing any base64/JSON scratch.
+    const expanded =
+      jsonBound(manifest) +
+      manifest.assets.reduce(
+        (n, a) => n + uriBound(a.renderUri) + uriBound(a.giUri ?? a.renderUri),
+        0,
+      );
+    const lease = this.cache.budget.tryReserve(
+      expanded * 16,
+      "diagnostic export",
+    );
+    if (!lease)
+      throw new DOMException(
+        `Diagnostic export needs ${expanded * 16}B; history preserved`,
+        "QuotaExceededError",
+      );
     try {
       const assets = [];
       const memo = new Map();

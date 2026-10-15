@@ -52,6 +52,19 @@ try {
   assert(
     exportedJson.assets.every((asset) => asset.renderUri.startsWith("data:")),
   );
+  const oldLimit = budget.limit;
+  budget.limit = budget.admittedBytes + 1048576;
+  await assert.rejects(
+    second.exportManifest({
+      ...manifest,
+      assets: Array.from({ length: 32 }, (_, i) => ({
+        ...assets[0],
+        id: "repeat-" + i,
+      })),
+    }),
+    { name: "QuotaExceededError" },
+  );
+  budget.limit = oldLimit;
   first.close();
   budget.refresh();
   assert.equal(budget.committedBytes, before);

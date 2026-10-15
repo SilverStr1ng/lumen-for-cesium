@@ -1290,8 +1290,11 @@ class LumenGpuWorld {
           !gl.getQuery(this._timer.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)
         ) {
           const budget = this.scene.lumen.resourceBudget;
-          queryLease = budget?.tryReserve(4096, "queryAllowance");
-          if (!budget || queryLease) {
+          queryLease =
+            budget && !budget.queryCapacity
+              ? budget.tryReserve(4096, "queryAllowance")
+              : undefined;
+          if (!budget || budget.queryCapacity || queryLease) {
             query = gl.createQuery();
             gl.beginQuery(this._timer.TIME_ELAPSED_EXT, query);
           }
@@ -1602,48 +1605,63 @@ class LumenGpuWorld {
     if (points.length > ContextLimits.maximumTextureSize) {
       throw new Error("Too many diagnostic points");
     }
-    const c = this.scene.context,
-      a = new Float32Array(points.length * 4),
-      b = new Float32Array(points.length * 4);
-    points.forEach((p, i) => {
-      a.set([...(p.position ?? p.origin), p.maxDistance ?? 100], i * 4);
-      b.set([...(p.normal ?? p.direction), p.ignore ?? -1], i * 4);
-    });
-    const make = (data) =>
-      new Texture({
-        context: c,
-        width: points.length,
-        height: 1,
-        pixelFormat: PixelFormat.RGBA,
-        pixelDatatype: PixelDatatype.FLOAT,
-        flipY: false,
-        sampler: nearest,
-        source: { width: points.length, height: 1, arrayBufferView: data },
-      });
-    const geometric = points.some((p) => p.geometricNormal)
-      ? new Float32Array(points.length * 4)
-      : undefined;
-    points.forEach((p, i) =>
-      geometric?.set(
-        [...(p.geometricNormal ?? p.normal ?? p.direction), 0],
-        i * 4,
-      ),
+    const budget = this.scene.lumen.resourceBudget;
+    const lease = budget?.tryReserve(
+      points.length * 256 + 65536,
+      "diagnostic query",
     );
-    const oldPrevious = this._previous,
+    if (budget && !lease)
+      throw new DOMException(
+        "Diagnostic query exceeds budget; production history preserved",
+        "QuotaExceededError",
+      );
+    const textures = [],
+      framebuffers = [],
+      oldPrevious = this._previous,
       oldPhase = this._phase;
-    const inputA = make(a),
-      inputB = make(b),
-      inputNg = geometric ? make(geometric) : inputB,
-      output = make(new Float32Array(a.length));
-    const fb = new Framebuffer({
-      context: c,
-      colorTextures: [output],
-      destroyAttachments: false,
-    });
     try {
-      this._queryOrigin = inputA;
-      this._queryDirection = inputB;
-      this._queryGeometricNormal = inputNg;
+      const c = this.scene.context,
+        a = new Float32Array(points.length * 4),
+        b = new Float32Array(points.length * 4);
+      points.forEach((p, i) => {
+        a.set([...(p.position ?? p.origin), p.maxDistance ?? 100], i * 4);
+        b.set([...(p.normal ?? p.direction), p.ignore ?? -1], i * 4);
+      });
+      const make = (data) => {
+        const texture = new Texture({
+          context: c,
+          width: points.length,
+          height: 1,
+          pixelFormat: PixelFormat.RGBA,
+          pixelDatatype: PixelDatatype.FLOAT,
+          flipY: false,
+          sampler: nearest,
+          source: { width: points.length, height: 1, arrayBufferView: data },
+        });
+        textures.push(texture);
+        return texture;
+      };
+      const geometric = points.some((p) => p.geometricNormal)
+        ? new Float32Array(points.length * 4)
+        : undefined;
+      points.forEach((p, i) =>
+        geometric?.set(
+          [...(p.geometricNormal ?? p.normal ?? p.direction), 0],
+          i * 4,
+        ),
+      );
+      this._queryOrigin = make(a);
+      this._queryDirection = make(b);
+      this._queryGeometricNormal = geometric
+        ? make(geometric)
+        : this._queryDirection;
+      const output = make(new Float32Array(a.length)),
+        fb = new Framebuffer({
+          context: c,
+          colorTextures: [output],
+          destroyAttachments: false,
+        });
+      framebuffers.push(fb);
       this._previous = this._published;
       this._phase = "query";
       this._draw(name, fb, 0, 0, points.length, 1);
@@ -1658,13 +1676,9 @@ class LumenGpuWorld {
           undefined;
       this._previous = oldPrevious;
       this._phase = oldPhase;
-      fb.destroy();
-      inputA.destroy();
-      inputB.destroy();
-      if (inputNg !== inputB) {
-        inputNg.destroy();
-      }
-      output.destroy();
+      framebuffers.forEach((f) => f.destroy());
+      textures.forEach((t) => t.destroy());
+      lease?.release();
     }
   }
   _finalGatherQueryUniforms() {

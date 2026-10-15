@@ -61,6 +61,8 @@ function ModelStatistics() {
   // This is to prevent double-counting cached assets.
   this._bufferIdSet = {};
   this._bufferByteLengths = {};
+  this._bufferHandles = {};
+  this._textureHandles = {};
 
   /**
    * The mapping from `texture.id` strings to the byte length of the
@@ -120,6 +122,8 @@ ModelStatistics.prototype.clear = function () {
 
   this._bufferIdSet = {};
   this._bufferByteLengths = {};
+  this._bufferHandles = {};
+  this._textureHandles = {};
   this._textureIdByteLengths = {};
   this._batchTextureIdMap.removeAll();
 };
@@ -146,6 +150,7 @@ ModelStatistics.prototype.addBuffer = function (buffer, hasCpuCopy) {
     this.geometryByteLength += buffer.sizeInBytes * copies;
     // Allocation identity/actual GPU size, independent of optional CPU copies.
     this._bufferByteLengths[buffer._id] = buffer.sizeInBytes;
+    this._bufferHandles[buffer._id] = buffer._buffer;
   }
 
   // Simulate set insertion.
@@ -174,6 +179,7 @@ ModelStatistics.prototype.addTexture = function (texture) {
   if (!this._textureIdByteLengths.hasOwnProperty(texture._id)) {
     this.texturesByteLength += texture.sizeInBytes;
     this._textureIdByteLengths[texture._id] = texture.sizeInBytes;
+    this._textureHandles[texture._id] = texture._texture;
   }
 };
 

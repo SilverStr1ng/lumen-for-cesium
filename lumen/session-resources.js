@@ -4,7 +4,7 @@ export function collectResources(session) {
   const entries = [],
     seen = new Map(),
     C = session._frozenCache;
-  const add = (key, bytes, category, owner) => {
+  const add = (key, bytes, category, owner, handle) => {
     if (!key || !bytes) return;
     if (seen.has(key)) {
       if (owner) seen.get(key).owners.add(owner);
@@ -15,6 +15,7 @@ export function collectResources(session) {
       bytes,
       category,
       owners: new Set(owner ? [owner] : []),
+      handle,
     };
     seen.set(key, entry);
     entries.push(entry);
@@ -26,6 +27,7 @@ export function collectResources(session) {
         t.sizeInBytes,
         category,
         owner,
+        t._texture,
       );
   };
   const arrays = (value, category, visited = new Set(), owner) => {
@@ -43,6 +45,15 @@ export function collectResources(session) {
   for (const e of C?.allocations() ?? []) add(e.key, e.bytes, e.category);
   const world = session.world,
     fg = session.scene.lumen.finalGather;
+  const context = session.scene.context;
+  for (const t of [
+    context?._defaultTexture,
+    context?._defaultEmissiveTexture,
+    context?._defaultNormalTexture,
+    context?._defaultCubeMap,
+    session.scene._brdfLutGenerator?.colorTexture,
+  ])
+    texture(t, "displayGpu", session);
   for (const t of world?._textures ?? [])
     texture(t, t._lumenBudgetCategory ?? "giGpu");
   arrays(world?.packet, "packetCpu");
@@ -120,9 +131,9 @@ export function collectResources(session) {
     if (s?.geometryByteLength && !s._bufferByteLengths)
       throw Error("Rebuild Cesium: allocation identity statistics required");
     for (const [id, bytes] of Object.entries(s?._bufferByteLengths ?? {}))
-      add(`buffer:${id}`, bytes, "displayGpu", model);
+      add(`buffer:${id}`, bytes, "displayGpu", model, s._bufferHandles?.[id]);
     for (const [id, bytes] of Object.entries(s?._textureIdByteLengths ?? {}))
-      add(`texture:${id}`, bytes, "displayGpu", model);
+      add(`texture:${id}`, bytes, "displayGpu", model, s._textureHandles?.[id]);
     nativeSeen = new Set();
     native(model._loader, model);
   }

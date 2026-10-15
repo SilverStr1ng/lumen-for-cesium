@@ -84,6 +84,11 @@ export default class LumenSession {
         this._budgetRelief = false;
       }
     };
+    // Existing producer queue limits: world 32 + FG 128 timer handles.
+    // Reserve their entire disclosed allowance once; no full inventory scan
+    // is needed for every draw/query in a production frame.
+    this._queryLease = this.budget.reserve(160 * 4096, "query capacity");
+    this.budget.queryCapacity = true;
     this._displayRemovers = [];
     this.disposed = false;
     this.phase = "empty";
@@ -92,6 +97,7 @@ export default class LumenSession {
       coverage: scene.lumen.coverage,
       iblPolicy: scene.lumen.iblPolicy,
       light: scene.light,
+      continuousSampling: scene.lumen.finalGather.continuousSampling,
     };
     sessions.set(scene, this);
     this._removeRenderError = scene.renderError.addEventListener((_, error) => {
@@ -358,7 +364,10 @@ export default class LumenSession {
           );
         snapshots.push({ ...a, renderUri: source.url, giUri: gi.url });
         const triangleCount = (g) => {
+          let visits = 0;
           const visit = (id) => {
+            if (++visits > 200000)
+              throw Error("Expanded node occurrence input limit");
             const node = g.nodes[id];
             return (
               (node.mesh === undefined
@@ -434,7 +443,8 @@ export default class LumenSession {
           nativeBytes +
             imageBytes * 2 +
             snapshots.length * 524288 +
-            resources.inputBytes * 2,
+            resources.inputBytes * 2 +
+            262208,
           "native display capacity",
         );
         for (const a of snapshots) {
@@ -529,7 +539,11 @@ export default class LumenSession {
         tiles.root.transform = C.Matrix4.toArray(frame);
         const tileSnapshot = await resources.json(tiles);
         pending.nativeLease = this.budget.reserve(
-          nativeBytes + imageBytes * 2 + 524288 + resources.inputBytes * 2,
+          nativeBytes +
+            imageBytes * 2 +
+            524288 +
+            resources.inputBytes * 2 +
+            262208,
           "native display capacity",
         );
         this.stage = "native-tiles";
@@ -656,6 +670,7 @@ export default class LumenSession {
         // synchronously compile its forward shader before the preparation
         // worker's first message is delivered, falsely timing out GI loading.
         l.finalGather.setModels(this.models, true);
+        l.finalGather.continuousSampling = true;
         l.finalGather.configure({
           mode: profiles[this.profile].mode,
           quality: "auto",
@@ -756,6 +771,22 @@ export default class LumenSession {
         this.error = this._contextLost
           ? "Context lost: recreate Scene/session"
           : (displayError ?? this._renderError ?? String(error));
+        if (
+          !committed &&
+          error.name === "QuotaExceededError" &&
+          this._datasetReady &&
+          this.world?.ready &&
+          !this.world.isDestroyed() &&
+          !this._contextLost &&
+          !this._renderError &&
+          !displayError
+        ) {
+          // Admission rejected the replacement. The old display/light/world
+          // remain matched and usable, with a fresh operation cancellation scope.
+          this._controller = new AbortController();
+          this.phase = "degraded";
+          this.stage = "retained-after-budget-rejection";
+        }
         this.scene.requestRender();
       }
       throw error;
@@ -793,8 +824,7 @@ export default class LumenSession {
     )
       throw Error("Available Tiles session/detail required");
     await this._afterFrame(() => {
-      this.tileset.maximumScreenSpaceError =
-        detail === "parent" ? 1000000 : detail === "children" ? 1 : 16;
+      this.adapter.setDetail(detail);
       this.scene.requestRender();
     }, this._controller.signal);
     return this.status();
@@ -1020,6 +1050,12 @@ export default class LumenSession {
       return;
     }
     const entries = collectResources(this);
+    this._queryLease?.cover(
+      entries.reduce(
+        (n, e) => n + (e.category === "queryAllowance" ? e.bytes : 0),
+        0,
+      ),
+    );
     const sum = (categories) =>
       entries.reduce(
         (n, e) => n + (categories.includes(e.category) ? e.bytes : 0),
@@ -1030,6 +1066,7 @@ export default class LumenSession {
     // again to the bytes that already occupy those identities.
     const nativeBytes = (models, tileset) => {
       const owners = new Set(models);
+      if (models.length || tileset) owners.add(this);
       models.forEach((m) => {
         if (!m.isDestroyed()) owners.add(m.environmentMapManager);
       });
@@ -1092,6 +1129,8 @@ export default class LumenSession {
         targets: 0,
         error: "Scene destroyed",
       };
+    const { completedTimings, stages, ...fgMetrics } =
+      this.scene.lumen.finalGather.metrics;
     return {
       pilotReady: false,
       datasetReady: this._datasetReady && !!this.world,
@@ -1110,7 +1149,17 @@ export default class LumenSession {
       effectiveProfile: this._cacheFailure ? "enhanced" : this.profile,
       fg: {
         requestedMode: this.scene.lumen.finalGather.mode,
-        ...this.scene.lumen.finalGather.metrics,
+        ...fgMetrics,
+        timerRecords: completedTimings?.length ?? 0,
+        stageTimings: Object.fromEntries(
+          Object.entries(stages ?? {}).map(([name, values]) => [
+            name,
+            {
+              records: values.length,
+              lastMilliseconds: values.at(-1)?.milliseconds,
+            },
+          ]),
+        ),
         receiverSize: [
           this.scene.lumen.finalGather.receiverSize.x,
           this.scene.lumen.finalGather.receiverSize.y,
@@ -1173,14 +1222,27 @@ export default class LumenSession {
     if (pixels) return capturePixels(this, pixels, { usedOnly });
     if (image)
       return this._afterFrame(() => {
-        this.world.metrics.diagnosticReadbacks++;
-        return {
-          png: this.canvas.toDataURL("image/png"),
-          width: this.scene.drawingBufferWidth,
-          height: this.scene.drawingBufferHeight,
-          scope:
-            "Explicit normal-render canvas serialization; no production reads",
-        };
+        const lease = this.budget.tryReserve(
+          this.scene.drawingBufferWidth * this.scene.drawingBufferHeight * 8,
+          "diagnostic PNG encoding",
+        );
+        if (!lease)
+          throw new DOMException(
+            "Diagnostic PNG exceeds available budget",
+            "QuotaExceededError",
+          );
+        try {
+          this.world.metrics.diagnosticReadbacks++;
+          return {
+            png: this.canvas.toDataURL("image/png"),
+            width: this.scene.drawingBufferWidth,
+            height: this.scene.drawingBufferHeight,
+            scope:
+              "Explicit normal-render canvas serialization; no production reads",
+          };
+        } finally {
+          lease.release();
+        }
       }, this._controller.signal);
     if (geometry)
       return {
@@ -1190,6 +1252,7 @@ export default class LumenSession {
       };
     if (
       !Array.isArray(points) ||
+      points.length > 256 ||
       points.some(
         (p) =>
           [p.position, p.normal, p.geometricNormal ?? p.normal].some(
@@ -1255,10 +1318,12 @@ export default class LumenSession {
       l.coverage = this._previous.coverage;
       l.iblPolicy = this._previous.iblPolicy;
       l.resourceBudget = this._previousBudget;
+      l.finalGather.continuousSampling = this._previous.continuousSampling;
       this.scene.light = this._previous.light;
     }
     this._resources?.close();
     this._nativeLease?.release();
+    this._queryLease?.release();
     this.models = [];
     this.tileset = this.world = this.geometry = undefined;
     this._snapshotUri = this._geometryUri = undefined;

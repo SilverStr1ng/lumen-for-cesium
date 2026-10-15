@@ -10,6 +10,7 @@ export async function capturePixels(
     height = scene.drawingBufferHeight;
   if (
     !Array.isArray(pixels) ||
+    pixels.length > 256 ||
     pixels.some(
       ([x, y]) =>
         !Number.isInteger(x) ||
@@ -54,6 +55,15 @@ export async function capturePixels(
   });
   const previousMode = scene.lumen.debugMode,
     previousFreeze = fg.freezeSampling;
+  const lease = session.budget.tryReserve(
+    65536 + pixels.length * 256,
+    "diagnostic pixel capture",
+  );
+  if (!lease)
+    throw new DOMException(
+      "Diagnostic capture exceeds available budget",
+      "QuotaExceededError",
+    );
   fg.freezeSampling = true;
   const values = {},
     frameStates = {};
@@ -110,6 +120,7 @@ export async function capturePixels(
         "Actual main HDR linear E; explicit diagnostic readbacks, not presentation latency",
     };
   } finally {
+    lease.release();
     if (!scene.isDestroyed()) {
       scene.lumen.debugMode = previousMode;
       fg.freezeSampling = previousFreeze;

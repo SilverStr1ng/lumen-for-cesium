@@ -103,6 +103,14 @@ export function validateManifest(m) {
 }
 export function auditGltf(g) {
   if (
+    (g.images?.length ?? 0) > 64 ||
+    (g.buffers?.length ?? 0) > 128 ||
+    (g.textures?.length ?? 0) > 128 ||
+    (g.materials?.length ?? 0) > 4096 ||
+    (g.meshes ?? []).reduce((n, m) => n + m.primitives.length, 0) > 8192
+  )
+    throw Error("Pilot image/buffer/texture/material/primitive input limit");
+  if (
     (g.nodes?.length ?? 0) > 1024 ||
     (g.accessors?.length ?? 0) > 4096 ||
     (g.accessors ?? []).some(
