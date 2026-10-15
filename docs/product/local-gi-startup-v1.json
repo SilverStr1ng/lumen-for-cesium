@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "scope": "R13 bounded Local GI startup; independent of physical quality readiness",
+  "frozenBeforeMeasurement": true,
+  "device": "RTX 5080 / Ryzen 7 9800X3D / Windows 11 / Chrome WebGL2",
+  "buffer": [1920, 1080],
+  "dataset": "fixtures/local-pilot/dataset.json",
+  "independentStartsPerHost": 5,
+  "profiles": ["baseline", "enhanced"],
+  "limitsMilliseconds": {
+    "shellInteractive": 1000,
+    "firstAssetFrame": 3000,
+    "firstNewGIFrame": 5000,
+    "inputP95": 100,
+    "inputMax": 250,
+    "maxMainThreadGap": 250
+  },
+  "targetFG": {"samples": 32, "freshEpochs": 32, "round": 3},
+  "unchanged": {"spacing": 2, "rays": 128, "bounces": 3, "shadow": 2048, "exposure": 1, "additionalBudget": 67108864},
+  "measurementDeadlineMilliseconds": 180000,
+  "deadlineScope": "Evidence collection ceiling; does not extend any acceptance threshold",
+  "cacheConditions": ["fresh browser profile/process; driver cache uncontrolled", "new WebGL context", "same context dataset reload", "same context profile switch"],
+  "fallback": "Without KHR the same limits apply; an individual blocking native call remains failed/degraded",
+  "readiness": "startupReady cannot override query/final-image quality failures or generate pilotReady alone"
+}

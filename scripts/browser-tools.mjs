@@ -29,6 +29,10 @@ export function sourceVersion(extraFiles = []) {
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGather.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenReceiverPass.js",
     "cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
+    ...["ShaderProgram", "ShaderCache", "ShaderBuilder", "Context", "DrawCommand", "ComputeEngine"].map(
+      (file) => `cesium-1.146/packages/engine/Source/Renderer/${file}.js`,
+    ),
+    "cesium-1.146/packages/engine/Source/Scene/Model/ImageBasedLightingPipelineStage.js",
     "cesium-1.146/packages/engine/Source/Scene/Model/ModelStatistics.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherSampling.js",
     "cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js",

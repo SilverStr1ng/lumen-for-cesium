@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "baselineDate": "2026-10-14",
+  "reviewedHead": "96dd1e7408369abdc0c3358e23f9dd5282a7bf38",
+  "branch": "feat/local-gi-pilot-stabilization-v11",
+  "testedImplementation": "67638369841a1ff2a8dbecddcca37f4ac0962503",
+  "independentGpuRerun": false,
+  "scoringKind": "reviewer-defined weighted evidence maturity; not measured work-hours or success probability",
+  "anchors": {
+    "0": "目标能力未实现",
+    "25": "有基础或受限入口，产品集成缺口明显",
+    "50": "可运行，但关键验收仍未完成",
+    "75": "主要实现与关键测试已完成，跨场景/产品收口未完成",
+    "100": "在冻结产品范围与目标设备上完成全部必需验收"
+  },
+  "primaryScope": "园区/街区级Cesium桌面WebGL2动态漫反射GI；包括业务多资产、Tiles驻留、地形参与、少量刚体；不含镜面/玻璃/焦散/完整UE等价移植",
+  "primary": {
+    "rows": [
+      {
+        "id": "render",
+        "name": "材质、HDR、阴影与光照接入",
+        "weight": 15,
+        "maturity": 75,
+        "reason": "关键分量和多项受控回归已建立；材质/跨设备边界未完整产品验证",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 11.25
+      },
+      {
+        "id": "gi",
+        "name": "静态世界查询、DDGI、FG与重建",
+        "weight": 20,
+        "maturity": 75,
+        "reason": "主要静态链路已实现，但40案例仍34失败，保持75且禁止发布；不由基础设施通过抵消质量。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 15.0
+      },
+      {
+        "id": "assets",
+        "name": "业务资产管线与可嵌入接口",
+        "weight": 15,
+        "maturity": 75,
+        "reason": "多资产GLB/API已有同冻结对象的路径、加载恢复及两宿主/嵌入部署证据，50→75；受控输入与跨设备边界仍在。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 11.25
+      },
+      {
+        "id": "tiles",
+        "name": "3D Tiles、LOD和GI驻留",
+        "weight": 10,
+        "maturity": 25,
+        "reason": "有界常驻代理和显示LOD生命周期有验证；仍非跨区域GI流式，保持25。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 2.5
+      },
+      {
+        "id": "terrain",
+        "name": "地理坐标、区域与地形GI",
+        "weight": 10,
+        "maturity": 25,
+        "reason": "局部坐标和Globe展示已接通；地形/跨区完整GI未实现",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 2.5
+      },
+      {
+        "id": "dynamic",
+        "name": "少量运动刚体的连续GI",
+        "weight": 10,
+        "maturity": 0,
+        "reason": "物理预览与定格重算不计为连续动态GI",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 0.0
+      },
+      {
+        "id": "performance",
+        "name": "目标设备性能、预算与降级",
+        "weight": 10,
+        "maturity": 50,
+        "reason": "热态本机30FPS合同通过；用户报告及历史native编译长阻塞说明冷启动未认证，中端未测，保持50。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 5.0
+      },
+      {
+        "id": "delivery",
+        "name": "稳定性、部署、运维与回归",
+        "weight": 10,
+        "maturity": 75,
+        "reason": "取消、预算拥有/预留、30分钟、20次替换、50次LOD、后台与非根路径有最终证据，50→75；启动与OS遮挡恢复/跨设备仍未认证。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ],
+        "creditedPoints": 7.5
+      }
+    ],
+    "scorePercent": 55.0,
+    "displayPercent": 55,
+    "uncertaintyDescription": "55为离散证据成熟度加权评分，不是工时或上线概率。"
+  },
+  "limitedPilotScope": "指定桌面设备、有限局部区域、静态多模型、太阳/天空可重照明；仅常驻GI代理；不含连续动态GI/城市流式/完整地形GI",
+  "limitedPilot": {
+    "rows": [
+      {
+        "id": "render",
+        "name": "材质、HDR、阴影与光照接入",
+        "weight": 20,
+        "maturity": 75,
+        "creditedPoints": 15.0,
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ]
+      },
+      {
+        "id": "gi",
+        "name": "静态世界查询、DDGI、FG与重建",
+        "weight": 25,
+        "maturity": 75,
+        "creditedPoints": 18.75,
+        "reason": "主要静态链路已实现，但40案例仍34失败，保持75且禁止发布；不由基础设施通过抵消质量。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ]
+      },
+      {
+        "id": "assets",
+        "name": "业务资产管线与可嵌入接口",
+        "weight": 20,
+        "maturity": 75,
+        "creditedPoints": 15.0,
+        "reason": "多资产GLB/API已有同冻结对象的路径、加载恢复及两宿主/嵌入部署证据，50→75；受控输入与跨设备边界仍在。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ]
+      },
+      {
+        "id": "performance",
+        "name": "目标设备性能、预算与降级",
+        "weight": 15,
+        "maturity": 50,
+        "creditedPoints": 7.5,
+        "reason": "热态本机30FPS合同通过；用户报告及历史native编译长阻塞说明冷启动未认证，中端未测，保持50。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ]
+      },
+      {
+        "id": "delivery",
+        "name": "稳定性、部署、运维与回归",
+        "weight": 15,
+        "maturity": 75,
+        "creditedPoints": 11.25,
+        "reason": "取消、预算拥有/预留、30分钟、20次替换、50次LOD、后台与非根路径有最终证据，50→75；启动与OS遮挡恢复/跨设备仍未认证。",
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ]
+      },
+      {
+        "id": "demo",
+        "name": "演示与用户文档",
+        "weight": 5,
+        "maturity": 100,
+        "creditedPoints": 5.0,
+        "sources": [
+          "R12-final-report",
+          "R12-source-review"
+        ]
+      }
+    ],
+    "scorePercent": 72.5,
+    "displayApproximatePercent": 73,
+    "uncertaintyDescription": "72.5近似显示73%；启动与质量硬阻断仍在，不表示可发布。"
+  },
+  "rules": [
+    "权重与产品范围从本轮冻结，后续变更须增加版本并并列旧口径",
+    "不以提交数、文件数、测试passed比例推断完成度",
+    "分数不是剩余工时比例",
+    "硬性发布阻断不被其他高分抵消",
+    "不倒推历史百分比",
+    "旧实验失败保留；profile试点通过不改写全产品或历史recommended"
+  ],
+  "sources": {
+    "R12-final-report": {
+      "title": "Frozen R12 evidence reported by repository",
+      "url": "https://github.com/SilverStr1ng/lumen-for-cesium/blob/96dd1e7408369abdc0c3358e23f9dd5282a7bf38/docs/progress/latest.md"
+    },
+    "R12-source-review": {
+      "title": "Session and shader initialization paths",
+      "urls": [
+        "https://github.com/SilverStr1ng/lumen-for-cesium/blob/96dd1e7408369abdc0c3358e23f9dd5282a7bf38/cesium-1.146/packages/engine/Source/Renderer/ShaderProgram.js",
+        "https://github.com/SilverStr1ng/lumen-for-cesium/blob/96dd1e7408369abdc0c3358e23f9dd5282a7bf38/cesium-1.146/packages/engine/Source/Scene/Model/LightingPipelineStage.js",
+        "https://github.com/SilverStr1ng/lumen-for-cesium/blob/96dd1e7408369abdc0c3358e23f9dd5282a7bf38/lumen/LumenSession.js",
+        "https://github.com/SilverStr1ng/lumen-for-cesium/blob/96dd1e7408369abdc0c3358e23f9dd5282a7bf38/cesium-1.146/packages/engine/Source/Scene/LumenFinalGatherGeometry.js"
+      ]
+    },
+    "previousAssessment": {
+      "file": "lumen_readiness_v10_review.json",
+      "sha256": "0f1561ea81d9b473dd0257010d48fe974c559954f98b69d15ba5a68273d2df3d"
+    }
+  },
+  "releaseReady": false,
+  "pilotReleaseReady": false,
+  "assessmentDate": "2026-10-15",
+  "testEvidenceScope": "Final frozen R12 evidence reported by repository; targeted source review and isolated JS checks only, no independent browser/GPU rerun.",
+  "previousAssessmentHead": "328629ef5449978cf4a822cd3de6191d9b2f8c1d",
+  "baselineArtifactSHA256": "e4d27c5ab63f4e65ce76f728875f46c78af3c2bd3a15231abd1536f3d9f0d674",
+  "scorePolicyVersion": 1,
+  "independentChecks": "Two isolated JS checks of inspected admission conditions and load/draw ordering. No GPU test.",
+  "deltas": {
+    "primary": 6.25,
+    "limitedPilot": 8.75
+  },
+  "releaseBlockers": [
+    "startup responsiveness and cold shader compilation not certified",
+    "query/final-image quality 34/40 failed",
+    "target assets/devices outside the current bounded validation scope unverified",
+    "full product: regional GI streaming, terrain transport and continuous rigid-body GI absent"
+  ],
+  "repositoryRecordedScores": {
+    "primary": 48.75,
+    "limitedPilot": 63.75,
+    "note": "Prior assessment retained by repository; this is a new reviewer assessment, not a historical overwrite."
+  }
+}
