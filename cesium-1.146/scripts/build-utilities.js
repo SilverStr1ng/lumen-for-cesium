@@ -266,7 +266,7 @@ export async function createIndexJs(workspace, sourceGlobs) {
   let contents = `globalThis.CESIUM_VERSION = "${version}";\n`;
 
   // Iterate over all provided source files for the workspace and export the assignment based on file name.
-  const files = await globby(sourceGlobs);
+  const files = (await globby(sourceGlobs)).sort();
   files.forEach(function (file) {
     file = path.relative(`packages/${workspace}`, file);
 
@@ -451,10 +451,12 @@ export const inlineWorkerPath = "Build/InlineWorkers.js";
  */
 export async function bundleWorkers(options) {
   // Copy ThirdParty workers
-  const thirdPartyWorkers = await globby([
-    "packages/engine/Source/ThirdParty/Workers/**.js",
-    "!packages/engine/Source/ThirdParty/Workers/basis_transcoder.js",
-  ]);
+  const thirdPartyWorkers = (
+    await globby([
+      "packages/engine/Source/ThirdParty/Workers/**.js",
+      "!packages/engine/Source/ThirdParty/Workers/basis_transcoder.js",
+    ])
+  ).sort();
 
   const thirdPartyWorkerConfig = defaultESBuildOptions();
   thirdPartyWorkerConfig.bundle = false;
@@ -465,7 +467,7 @@ export async function bundleWorkers(options) {
   await esbuild.build(thirdPartyWorkerConfig);
 
   // Bundle Cesium workers
-  const workers = await globby(["packages/engine/Source/Workers/**"]);
+  const workers = (await globby(["packages/engine/Source/Workers/**"])).sort();
   const workerConfig = defaultESBuildOptions();
   workerConfig.bundle = true;
   workerConfig.external = ["fs", "path"];

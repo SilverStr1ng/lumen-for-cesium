@@ -207,7 +207,8 @@ export async function createCesiumJs() {
     if (!sources) {
       continue;
     }
-    const files = await globby(sources);
+    // Filesystem enumeration order differs between a checkout and an archive.
+    const files = (await globby(sources)).sort();
     const declarations = files.map((file) =>
       generateDeclaration(workspace, file),
     );
