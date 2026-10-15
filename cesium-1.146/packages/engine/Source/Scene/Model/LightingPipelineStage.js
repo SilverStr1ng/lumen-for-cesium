@@ -127,7 +127,10 @@ LightingPipelineStage.process = function (
         registered.ballId < 4096 &&
         !defined(primitive.material.normalTexture) &&
         primitive.material.alphaMode !== "MASK";
-      const id = curved ? 4096 + registered.ballId : owners.map.get(ownerKey),
+      const id = curved
+          ? 4096 + registered.ballId
+          : (frameState.lumen?.finalGather?.surfaceOwner(model, ownerKey) ??
+            owners.map.get(ownerKey)),
         fg = () => frameState.lumen?.finalGather,
         source = () => {
           const world = frameState.lumen?.world;
@@ -154,7 +157,10 @@ LightingPipelineStage.process = function (
             fg().mode !== "raw" &&
             fg().sampling !== "fixed-reference",
         ],
-        u_lumenFgSurfaceId: ["float", () => id],
+        u_lumenFgSurfaceId: [
+          "float",
+          () => (curved ? id : (fg()?.surfaceOwner(model, ownerKey) ?? id)),
+        ],
         u_lumenFgFallbackCode: ["float", () => fg()?.fallbackReason ?? 1],
         u_lumenReceiverSupported: [
           "bool",

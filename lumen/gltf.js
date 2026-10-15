@@ -1,4 +1,6 @@
 import { linear, normalize, cross, sub, clamp } from "./math.js";
+import { readContainer, readBuffers } from "./gltf-container.js";
+import { loadDatasetGeometry } from "./local-dataset.js";
 
 const identity = () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 function multiply(a, b) {
@@ -42,8 +44,16 @@ async function fetched(url, type) {
   return r[type]();
 }
 /** glTF static triangle loader. Axis correction is supplied by the display model. */
-export async function loadGeometry(url, axisMatrix, progress = () => {}) {
-  const gltf = await fetched(url, "json");
+export async function loadGeometry(
+  url,
+  axisMatrix,
+  progress = () => {},
+  signal,
+) {
+  const container = await readContainer(url, signal),
+    gltf = container.gltf;
+  if (gltf.schemaVersion === 1 && gltf.assets)
+    return loadDatasetGeometry(gltf, url, progress, signal);
   if (gltf.animations?.length || gltf.skins?.length)
     throw new Error("World GI currently accepts static, unskinned glTF only");
   const unsupported = (gltf.extensionsRequired ?? []).filter(
@@ -51,9 +61,7 @@ export async function loadGeometry(url, axisMatrix, progress = () => {}) {
   );
   if (unsupported.length)
     throw new Error(`Unsupported required glTF extensions: ${unsupported}`);
-  const buffers = await Promise.all(
-    gltf.buffers.map((b) => fetched(new URL(b.uri, url), "arrayBuffer")),
-  );
+  const buffers = await readBuffers(gltf, container.bin, url, signal);
   const accessor = (i) => {
     const a = gltf.accessors[i],
       v = gltf.bufferViews[a.bufferView];

@@ -54,6 +54,9 @@ class LumenFinalGather {
     this.mode = "ddgi";
     this.quality = "balanced";
     this.model = undefined;
+    this.models = new Set();
+    this._surfaceOwners = new WeakMap();
+    this._nextSurfaceOwner = 1;
     this.maxMemoryBytes = 64 * 1048576;
     this.additionalSceneBytes = 0;
     this.maxRayInvocations = 16 * 1048576;
@@ -223,9 +226,44 @@ class LumenFinalGather {
     // group under query latency instead of filling the cap halfway through FG.
     this._profileFrame = this._queries.length <= 32;
   }
+  /** One receiver atlas/history for a resident world and multiple display Models.
+   * Called at a safe Scene boundary; a membership change invalidates history. */
+  setModels(models, resetOwners = false) {
+    const next = new Set(models);
+    if (
+      !resetOwners &&
+      next.size === this.models.size &&
+      [...next].every((model) => this.models.has(model))
+    )
+      return;
+    this.release();
+    this.models = next;
+    this.model = undefined;
+    if (resetOwners) {
+      this._surfaceOwners = new WeakMap();
+      this._nextSurfaceOwner = 1;
+    }
+    this.scene.requestRender();
+  }
+  surfaceOwner(model, primitive) {
+    let owners = this._surfaceOwners.get(model);
+    if (!owners) {
+      owners = new WeakMap();
+      this._surfaceOwners.set(model, owners);
+    }
+    if (!owners.has(primitive)) {
+      if (this._nextSurfaceOwner === 4096) this._nextSurfaceOwner = 8192;
+      if (this._nextSurfaceOwner >= 1048576)
+        throw new DeveloperError(
+          "Receiver owner namespace exhausted; replace dataset",
+        );
+      owners.set(primitive, this._nextSurfaceOwner++);
+    }
+    return owners.get(primitive);
+  }
   supported(model, frameState) {
     return (
-      this.model === model &&
+      (this.model === model || this.models.has(model)) &&
       !model?.isDestroyed() &&
       this.mode !== "ddgi" &&
       this.lumen.enabled &&
@@ -266,7 +304,12 @@ class LumenFinalGather {
       maximumTextureSize: ContextLimits.maximumTextureSize,
       maximumRenderbufferSize: ContextLimits.maximumRenderbufferSize,
       samplerUnits: ContextLimits.maximumTextureImageUnits,
-      requiredSamplers: LumenReceiverPass.requiredSamplers(this.model),
+      requiredSamplers: Math.max(
+        LumenReceiverPass.requiredSamplers(this.model),
+        ...[...this.models]
+          .filter((m) => !m.isDestroyed())
+          .map((m) => LumenReceiverPass.requiredSamplers(m)),
+      ),
       colorAttachments: ContextLimits.maximumColorAttachments,
       floatRenderable: !!c?.webgl2 && !!c.colorBufferFloat,
     };
@@ -545,8 +588,8 @@ class LumenFinalGather {
       return;
     }
     if (
-      !this.model ||
-      this.model.isDestroyed() ||
+      ((!this.model || this.model.isDestroyed()) &&
+        ![...this.models].some((model) => !model.isDestroyed())) ||
       !w?.ready ||
       w.isDestroyed() ||
       !w.finalGatherSnapshot
@@ -910,6 +953,7 @@ class LumenFinalGather {
     this.release();
     this._unregisterTimer();
     this._destroyed = true;
+    this.models.clear();
     this.model = undefined;
     this.lumen = this.scene = undefined;
     return destroyLumenResource(this);

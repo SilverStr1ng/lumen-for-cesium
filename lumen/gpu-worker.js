@@ -156,6 +156,7 @@ function pack(b, options) {
         g.uvs,
         g.normals,
         g.materialIds,
+        ...(g.owners ? [g.owners] : []),
         ...g.images.filter(Boolean).map((i) => i.data),
       ].reduce((sum, a) => sum + a.byteLength, 0),
       cpuRetainedBytes:
@@ -165,6 +166,7 @@ function pack(b, options) {
           g.uvs,
           g.normals,
           g.materialIds,
+          ...(g.owners ? [g.owners] : []),
           ...g.images.filter(Boolean).map((i) => i.data),
         ].reduce((sum, a) => sum + a.byteLength, 0),
       typedPreparationBytes:
