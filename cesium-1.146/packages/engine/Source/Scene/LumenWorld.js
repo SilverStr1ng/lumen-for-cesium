@@ -59,13 +59,17 @@ class LumenWorld {
       this._resolve = resolve;
       this._reject = reject;
     });
-    this.worker.postMessage({
+    try { this.worker.postMessage({
       type: "load",
       url: options.url,
       axisMatrix: options.axisMatrix,
       options: this.options,
       revision: this.revision,
-    });
+    }); } catch (error) {
+      this.worker.terminate();
+      this._closed = true;
+      throw error;
+    }
   }
   _fail(error) {
     this.worker.terminate();

@@ -112,15 +112,32 @@ Object.defineProperties(Lumen.prototype, {
  * @returns {object} The world adapter.
  */
 Lumen.prototype.loadWorld = function (options) {
-  this.finalGather.release();
-  this.world?.destroy();
+  if (!options || !["gpu", "cpu"].includes(options.backend ?? "cpu")) {
+    throw new DeveloperError("World options require a gpu or cpu backend");
+  }
   const World = options.backend === "gpu" ? LumenGpuWorld : LumenWorld;
-  this.world = new World(this._scene, {
+  const candidate = new World(this._scene, {
     ...options,
     captureFinalGather:
       options.captureFinalGather ?? this.finalGather.mode !== "ddgi",
   });
+  try {
+    this.unloadWorld();
+    this.world = candidate;
+  } catch (error) {
+    candidate.destroy();
+    throw error;
+  }
   return this.world;
+};
+/** Remove resident illumination before replacing display geometry. Constructor
+ * failures leave a usable base-lighting state, never a destroyed world reference. */
+Lumen.prototype.unloadWorld = function () {
+  const previous = this.world;
+  this.world = undefined;
+  this.finalGather.release();
+  previous?.destroy();
+  this._scene.requestRender();
 };
 Lumen.prototype.update = function () {
   this.finalGather.beginFrame();
