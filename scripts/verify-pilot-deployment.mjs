@@ -18,13 +18,14 @@ const output = await newOutput("deployment"),
       "package-lock.json",
       "cesium-1.146/package-lock.json",
       "docs/product/local-gi-v0.1.md",
+      "docs/product/local-gi-deployment-v11.md",
     ]),
     configuration: {
       clean: true,
       root: true,
       nonRoot: "/deploy/lumen",
       browserSecurity: "enabled",
-      csp: "default-src 'self'; script-src 'self'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'",
+      csp: "default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'",
     },
     rows: [],
     errors: [],
@@ -209,7 +210,8 @@ try {
     await page.goto(base + "pilot-embed.html");
     await page.waitForFunction(
       () =>
-        window.embedded?.session.ready || embedded?.session.phase === "failed",
+        window.embedded?.session.ready ||
+        window.embedded?.session.phase === "failed",
       null,
       { timeout: 240000 },
     );

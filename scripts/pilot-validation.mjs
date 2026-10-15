@@ -44,7 +44,7 @@ export async function referenceDataset() {
 export async function openPilot(page, display, profile = "enhanced") {
   await page.goto(pilotBase() + `pilot-${display}.html?profile=${profile}`);
   await page.waitForFunction(
-    () => window.pilotSession?.ready || pilotSession?.phase === "failed",
+    () => window.pilotSession?.ready || window.pilotSession?.phase === "failed",
     null,
     { timeout: 240000 },
   );

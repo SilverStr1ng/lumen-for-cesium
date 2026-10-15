@@ -18,6 +18,8 @@ npm start
 
 开发服务启动在 [http://localhost:8090](http://localhost:8090)。继续开发时修改源码后运行 `npm run build`，然后刷新页面。
 
+Local GI v0.1 的 [Models 宿主](http://localhost:8090/demo/pilot-models.html)、[Tiles 宿主](http://localhost:8090/demo/pilot-tiles.html)及[最小嵌入](http://localhost:8090/demo/pilot-embed.html)均使用本地资产和同一 session。设备/质量、64MiB及可见响应合同保持冻结；独立画质失败仍阻止投入使用。操作与剩余阻断见[用户报告](docs/progress/latest.md)，非根路径、Worker与CSP要求见[部署说明](docs/product/local-gi-deployment-v11.md)。完整验收执行 `npm run test:r12`，会串行运行30分钟巡航，必需失败或not-run返回非零。
+
 无需 token 或 Sponza 服务可直接打开 [Earth GI Lab](http://localhost:8090/demo/globe.html)：真实 Cesium Globe、本地 NaturalEarthII 与椭球地形，以及同一 glTF 驱动显示/GI 的原创展馆。设置面板可选填仅保存在内存中的 ion token。外围地形只作为背景，不参与完整 GI。见[页面与配置说明](demo/globe-README.md)、[本轮截图和验证记录](reports/globe-visibility-v3/README.md)。
 
 [Ball Pool](http://localhost:8090/demo/ballpool.html) 提供默认 64 球的静态曲面漫反射 GI、本地 Rapier 物理播放/暂停/投球，以及“定格并更新 GI”。运动期间使用明确的基础照明预览，定格后从同一姿态重建显示与 GI。Gallery 也有入口。

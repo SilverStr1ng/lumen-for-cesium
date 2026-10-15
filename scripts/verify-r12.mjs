@@ -27,6 +27,7 @@ const inputs = [
   "cesium-1.146/package-lock.json",
   "docs/product/local-gi-v0.1.md",
   "docs/product/local-gi-resource-scope-v11.md",
+  "docs/product/local-gi-deployment-v11.md",
   "docs/progress/readiness/baseline-v1.json",
   "docs/progress/readiness/v10-review.json",
   ...[
