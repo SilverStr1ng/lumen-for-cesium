@@ -48,4 +48,4 @@ style-src 'self' 'unsafe-inline'
 
 部署检查保留所有原始 `requestfailed` 与 CDP `loadingFailed`。流已结束、当前会话拥有完整资源时，浏览器仍可能报告取消；这类事件只可标为 `cancelled-with-verified-content`，不改写成请求成功。
 
-该分类要求同一 CDP requestId 的 GET/Fetch、HTTP 200、`net::ERR_ABORTED` 和 `canceled=true`；请求唯一且来自当前页面、会话、已提交 generation 和资源 scope，信号未取消、scope 未关闭；canonical URL 必须由当前清单声明，当前 scope 拥有的实际完整字节必须匹配响应长度，并重新计算 SHA-256 匹配清单。哈希结束后重查拥有权，世界必须仍 ready、无错误、已发布相同 revision 的最终第3轮。任一条件缺失、脚本/Worker/导航/CSP/CORS 或其他网络错误仍使部署失败。判据有32项反例检查，原 strict-any-requestfailed 候选记录保留。
+该分类要求同一 CDP requestId 的 GET/Fetch、HTTP 200、`net::ERR_ABORTED` 和 `canceled=true`；请求唯一且来自当前页面、会话、已提交 generation 和资源 scope，信号未取消、scope 未关闭；canonical URL 必须由当前清单声明，当前 scope 拥有的实际完整字节必须匹配响应长度，并重新计算 SHA-256 匹配清单。哈希结束后重查拥有权，世界必须仍 ready、无错误、已发布相同 revision 的最终第3轮。版本必须是正安全整数，取消/关闭状态必须明确为false。任一条件缺失、脚本/Worker/导航/CSP/CORS 或其他网络错误仍使部署失败。判据有包含缺失字段的反例检查，原 strict-any-requestfailed 候选记录保留。

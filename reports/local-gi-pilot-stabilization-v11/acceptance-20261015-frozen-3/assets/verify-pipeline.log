@@ -1,0 +1,10 @@
+PASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for specular environment maps
+PASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for spherical harmonics
+PASS Scene/Model/ImageBasedLightingPipelineStage configures the render resources for default image-based lighting
+PASS Scene/Model/ImageBasedLightingPipelineStage updates Lumen uniforms without rebuilding and disables them during picking
+PASS Scene/Model/LightingPipelineStage keeps unsupported material paths on the original lighting
+PASS Scene/Model/LightingPipelineStage exports supported opaque and alpha-mask PBR triangles with normals
+PASS Scene/Model/LightingPipelineStage supports unlit lighting
+PASS Scene/Model/LightingPipelineStage supports light color
+PASS Scene/Model/LightingPipelineStage supports PBR lighting
+9 pipeline specs; 0 failed; passed

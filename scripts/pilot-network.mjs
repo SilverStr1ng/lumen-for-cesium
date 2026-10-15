@@ -6,6 +6,7 @@ export function classifyDeploymentCancellation({
   failure,
   proof,
 }) {
+  const positiveInteger = (n) => Number.isSafeInteger(n) && n > 0;
   const verified =
     request &&
     response &&
@@ -29,10 +30,19 @@ export function classifyDeploymentCancellation({
     proof.worldRound === 3 &&
     proof.worldRevision === proof.worldPublishedRevision &&
     !proof.worldError &&
+    [
+      proof.generation,
+      proof.committedGeneration,
+      proof.startedGeneration,
+      proof.worldRevision,
+      proof.worldPublishedRevision,
+      proof.bytes,
+      proof.declaredBytes,
+    ].every(positiveInteger) &&
     proof.generation === proof.committedGeneration &&
     proof.startedGeneration === proof.generation &&
-    !proof.closed &&
-    !proof.aborted &&
+    proof.closed === false &&
+    proof.aborted === false &&
     proof.owned &&
     proof.url === request.request.url &&
     /^[0-9a-f]{64}$/.test(proof.expected ?? "") &&

@@ -61,6 +61,30 @@ reject((r) => (r.proof.url += "x"));
 reject((r) => (r.proof.worldRound = 2));
 reject((r) => (r.proof.worldPublishedRevision = 2));
 reject((r) => (r.proof.worldError = "Worker failed"));
+for (const field of [
+  "generation",
+  "committedGeneration",
+  "startedGeneration",
+  "worldRevision",
+  "worldPublishedRevision",
+]) {
+  reject((r) => delete r.proof[field]);
+  reject((r) => (r.proof[field] = 0));
+  reject((r) => (r.proof[field] = 0.5));
+}
+reject((r) => {
+  delete r.proof.generation;
+  delete r.proof.committedGeneration;
+  delete r.proof.startedGeneration;
+});
+reject((r) => {
+  delete r.proof.worldRevision;
+  delete r.proof.worldPublishedRevision;
+});
+reject((r) => delete r.proof.closed);
+reject((r) => delete r.proof.aborted);
+reject((r) => (r.proof.bytes = r.proof.declaredBytes = Infinity));
+reject((r) => (r.proof.bytes = r.proof.declaredBytes = "4"));
 reject((r) => (r.response.requestId = "different"));
 reject((r) => (r.failure.requestId = "different"));
 reject((r) => (r.response.response.url += "x"));
