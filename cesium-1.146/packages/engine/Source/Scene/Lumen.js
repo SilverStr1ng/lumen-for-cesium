@@ -141,7 +141,12 @@ Lumen.prototype.unloadWorld = function () {
 };
 Lumen.prototype.update = function () {
   this.finalGather.beginFrame();
-  this.world?.update();
+  if (this.world?.isDestroyed()) {
+    this.world = undefined;
+    this.finalGather.release();
+  } else {
+    this.world?.update();
+  }
 };
 
 Lumen.prototype.isDestroyed = function () {
